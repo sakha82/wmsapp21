@@ -146,6 +146,103 @@
   }
 }
 
+/*** Yahays ***/
+
+   .privacy-policy {
+      background-color: #f9fafb; /* Light gray background */
+      color: #1f2937; /* Dark gray text */
+      font-family: 'Inter', sans-serif;
+    }
+
+    .privacy-policy .container {
+      max-width: 800px; /* Center the content */
+      margin: 0 auto; /* Center horizontally */
+      padding: 2rem;
+      background-color: #ffffff; /* White background for the card */
+      border-radius: 0.75rem; /* Rounded corners */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+
+    .privacy-policy h2,
+    .privacy-policy h3 {
+      color: #111827; /* Darker gray for headings */
+      margin-bottom: 0.5rem;
+    }
+
+    .privacy-policy h2 {
+      font-size: 1.75rem; /* Text-2xl */
+      font-weight: 600; /* Semi-bold */
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .privacy-policy h3 {
+      font-size: 1.25rem; /* Text-lg */
+      font-weight: 600; /* Semi-bold */
+      margin-top: 1rem;
+    }
+
+    .privacy-policy p {
+      margin-bottom: 1rem;
+      line-height: 1.8;
+    }
+
+    .privacy-policy ul {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .privacy-policy ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .privacy-policy a {
+      color: #2563eb; /* Blue for links */
+      text-decoration: underline;
+    }
+
+    .privacy-policy .highlight-box {
+      background-color: #e8f4f8; /* Light blue background */
+      border-left: 4px solid #0066cc; /* Blue border */
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0.375rem; /* Rounded corners */
+    }
+
+    .privacy-policy .highlight-box ul {
+      margin-bottom: 0;
+    }
+
+    .privacy-policy .section-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* =========================
    PrimeNG CUSTOMIZATION
 ========================= */
@@ -156,6 +253,12 @@
 /* =========================
    DATATABLE CUSTOMIZATION
 ========================= */
+.p-datatable {
+  min-width: 50rem; /* Ensures the table has a minimum width of 50rem (800px) */
+  font-size: 14px; /* Sets the font size for the entire table */
+  border-collapse: separate; /* Ensures table cells are visually separated */
+  border-spacing: 0px 3px; /* Adds vertical spacing of 3px between rows */
+}
 
 .p-datatable .p-datatable-thead > tr,
 .table-header-row {
@@ -229,7 +332,7 @@
 
 /* This fix is for select option when it is selected with check mark then this will work */
 .p-select-option[data-p-selected="true"] {
-  background-color: var(--p-primary-500) !important; /* Primary background color */
+  background-color: var(--p-primary-400) !important; /* Primary background color */
   color: var(--p-primary-contrast) !important; /* Contrast text color */
 }
 
@@ -250,4 +353,64 @@
 .p-autocomplete-item:hover {
   background-color: var(--p-primary-700) !important; /* Slightly darker primary color */
   color: var(--p-primary-contrast) !important; /* Contrast text color */
+}
+
+// Menu 
+/* Hover state */
+/* Hover */
+.p-menu .p-menu-item-content:hover {
+    background: var(--p-primary-hover-color);
+}
+/* Focused / Active (selected via routerLinkActive) */
+.p-menu .p-menu-item[data-p-focused="true"] > .p-menu-item-content {
+    background: var(--p-primary-color);
+    color: var(--p-primary-contrast-color);
+}
+
+/* Make text + icon follow color */
+.p-menu .p-menu-item[data-p-focused="true"] .p-menu-item-icon,
+.p-menu .p-menu-item[data-p-focused="true"] .p-menu-item-label {
+    color: inherit;
+}
+/* 1. Bold text */
+.p-menu .p-menu-item-label {
+    font-weight: 500;
+}
+
+/* 2. More vertical spacing */
+.p-menu .p-menu-item-content {
+    padding: 0.25rem 0.5rem;
+}
+
+/* Remove outer container styling */
+.p-menu {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+}
+
+/* Remove UL border / radius */
+.p-menu .p-menu-list {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0; /* optional - cleaner sidebar look */
+}
+
+/* Remove focus outline if appearing */
+.p-menu:focus,
+.p-menu .p-menu-list:focus {
+    outline: none;
+}
+
+/* Background */
+.p-menu .active-menu-item {
+    background: var(--p-primary-color);
+}
+
+/* Text + icon */
+.p-menu .active-menu-item .p-menu-item-label,
+.p-menu .active-menu-item .p-menu-item-icon {
+    color: var(--p-primary-contrast-color) !important;
 }

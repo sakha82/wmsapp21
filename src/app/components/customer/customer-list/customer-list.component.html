@@ -44,6 +44,8 @@
             <!-- Right Section: Search -->
             <div class="rounded-md ml-auto">
               <div class=" w-full ps-2 h-10 rounded-md ">
+                <p-iconfield>
+                <p-inputicon class="pi pi-search" />
                 <p-autoComplete formControlName="customerName"
                   [placeholder]="this.sharedService.T('search') + ' ' + this.sharedService.T('customer')" [suggestions]="customers"
                   (onClear)="onClearCustomerName()" (keyup)="keyupCustomerName($event.target)"
@@ -56,6 +58,7 @@
                     </div>
                   </ng-template>
                 </p-autoComplete>
+                </p-iconfield>
               </div>
             </div>
           </div>
@@ -81,7 +84,6 @@
           [value]="customers" 
           [rows]="10"
           [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-          [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
           (onLazyLoad)="sortColumn($event)" 
           sortField="customerId" 
           responsiveLayout="scroll" 

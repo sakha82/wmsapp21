@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router,  RouterModule, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router,  RouterModule, RouterOutlet } from '@angular/router';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { IEnum, IWorkshop } from 'app/app.model';
 import { MenuItem, MessageService } from 'primeng/api';
-import { catchError, concatMap, lastValueFrom, of, switchMap, tap } from 'rxjs';
+import { catchError, concatMap, filter, lastValueFrom, of, switchMap, tap } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { PrimeNG } from 'primeng/config';
 import { HttpClient } from '@angular/common/http';
@@ -38,6 +38,7 @@ export class LayoutComponent implements OnInit {
   ];
   selected = 'rose';
    isDark = false;
+   selectedRoute: string = '';
     constructor(
               public readonly sharedService:SharedService,
               private readonly router:Router,
@@ -49,80 +50,17 @@ export class LayoutComponent implements OnInit {
               private theme: ThemeService
   ) {
       this.version = environment.Version; 
+        this.router.events
+    .pipe(filter(e => e instanceof NavigationEnd))
+    .subscribe((e: any) => {
+      this.selectedRoute = e.urlAfterRedirects;
+      this.buildMenu();
+    });
   }
-              
+       
   ngOnInit(): void {
     this.theme.setPrimaryPalette(this.selected);
     this.selectedLang = sessionStorage.getItem('lang') || 'sv';
-    this.items = [
-            {
-                label: 'Menu',
-                items: [
-                    {
-                        label: this.sharedService.T('dashboard'),
-                        icon: 'pi pi-palette',
-                        routerLink: '/sv/dashboard'
-                    },
-                    {
-                        label: this.sharedService.T('customers'),
-                        icon: 'pi pi-link',
-                        routerLink:'/sv/customer'
-                    },
-                    {
-                        label: this.sharedService.T('bookings'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/booking'
-                    },
-                                        {
-                        label: this.sharedService.T('offers'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/offer'
-                    },
-                    {
-                        label: this.sharedService.T('workorders'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/workorder'
-                    },
-                    {
-                        label: this.sharedService.T('invoices'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/invoice'
-                    },
-                                        {
-                        label: this.sharedService.T('digitalServiceBook'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/digitalservice'
-                    },
-                    {
-                        label: this.sharedService.T('products'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/product'
-                    },
-                    {
-                        label: this.sharedService.T('suppliers'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/supplier'
-                    },
-
-                   {
-                        label: this.sharedService.T('employees'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/employee'
-                    },
-                    {
-                       label: this.sharedService.T('attendanceRegister'),
-                        icon: 'pi pi-home',
-                        routerLink: '/sv/employment'
-                    }
-
-
-
-
-
-                ]
-            }
-        ];
-
 
 
 
@@ -141,7 +79,93 @@ export class LayoutComponent implements OnInit {
       }
     });
   }
-ChangeLang(event:any){
+
+  buildMenu() {
+        this.items = [
+            {
+                label: '',
+                items: [
+                    {
+                        label: this.sharedService.T('dashboard'),
+                        materialIcon: 'dashboard',
+                        routerLink: '/sv/dashboard',
+                        styleClass: this.selectedRoute === '/sv/dashboard' ? 'active-menu-item' : ''
+                    },
+                    {
+                        label: this.sharedService.T('customers'),
+                        materialIcon: 'group',
+                        routerLink:'/sv/customer',
+                        styleClass: this.selectedRoute === '/sv/customer' ? 'active-menu-item' : ''
+
+                    },
+                    {
+                        label: this.sharedService.T('bookings'),
+                        materialIcon: 'calendar_today',
+                        routerLink: '/sv/booking',
+                        styleClass: this.selectedRoute === '/sv/booking' ? 'active-menu-item' : ''
+
+                    },
+                                        {
+                        label: this.sharedService.T('offers'),
+                        materialIcon: 'assignment_turned_in',
+                        routerLink: '/sv/offer',
+                        styleClass: this.selectedRoute === '/sv/offer' ? 'active-menu-item' : ''
+                    },
+                    {
+                        label: this.sharedService.T('workorders'),
+                        materialIcon: 'engineering',
+                        routerLink: '/sv/workorder',
+                        styleClass: this.selectedRoute === '/sv/workorder' ? 'active-menu-item' : ''
+                    },
+                    {
+                        label: this.sharedService.T('invoices'),
+                        materialIcon: 'request_quote', 
+                        routerLink: '/sv/invoice',
+                        styleClass: this.selectedRoute === '/sv/invoice' ? 'active-menu-item' : ''
+                    },
+                                        {
+                        label: this.sharedService.T('digitalServiceBook'),
+                        materialIcon: 'book',
+                        routerLink: '/sv/digitalservice',
+                        styleClass: this.selectedRoute === '/sv/digitalservice' ? 'active-menu-item' : ''
+                    },
+                    {
+                        label: this.sharedService.T('products'),
+                        materialIcon: 'inventory_2',
+                        routerLink: '/sv/product',
+                        styleClass: this.selectedRoute === '/sv/product' ? 'active-menu-item' : ''
+                    },
+                    {
+                        label: this.sharedService.T('suppliers'),
+                        materialIcon: 'storefront',
+                        routerLink: '/sv/supplier',
+                        styleClass: this.selectedRoute === '/sv/supplier' ? 'active-menu-item' : ''
+                    },
+
+                   {
+                        label: this.sharedService.T('employees'),
+                        materialIcon: 'id_card',
+                        routerLink: '/sv/employee',
+                        styleClass: this.selectedRoute === '/sv/employee' ? 'active-menu-item' : ''
+                    },
+                    {
+                       label: this.sharedService.T('attendanceRegister'),
+                        materialIcon: 'calendar_today',
+                        routerLink: '/sv/employment',
+                        styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
+                    }
+
+
+
+
+
+                ]
+            }
+        ];
+
+
+  }
+  ChangeLang(event:any){
 
   this.logger.info('language changed::' + event.value);
   sessionStorage.setItem('lang',event.value);

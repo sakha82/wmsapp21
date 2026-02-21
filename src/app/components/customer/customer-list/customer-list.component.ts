@@ -6,13 +6,13 @@ import { SHARED_IMPORTS } from '../../../sharedimports';
 import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager } from 'app/app.model';
 import { SharedService, CustomerService, LogService, WorkshopService } from 'app/services';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-
-
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [...SHARED_IMPORTS, GenericLoaderComponent,],
+  imports: [...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule],
   templateUrl: './customer-list.component.html'
 })
 

@@ -11,6 +11,8 @@ import { SelectChangeEvent } from 'primeng/select';
 import { catchError, filter, firstValueFrom, map, switchMap } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 
 @Component({
@@ -19,7 +21,7 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
   imports: [
     ...SHARED_IMPORTS,
     RemovePlaceholderOnFocusDirective,
-    GenericLoaderComponent
+    GenericLoaderComponent,IconFieldModule,InputIconModule
   ],  
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
