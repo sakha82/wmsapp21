@@ -12,11 +12,14 @@ import { Popover } from 'primeng/popover';
 import { catchError, filter, of } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+
 @Component({
   selector: 'app-order-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent
+    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
   ], providers: [ConfirmationService, MessageService],
   styleUrl: './workorder-list.component.css',
   templateUrl: './workorder-list.component.html'

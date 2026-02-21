@@ -9,12 +9,15 @@ import { catchError, debounceTime, distinctUntilChanged, firstValueFrom, switchM
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent
+    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
   ],
   styleUrl: './product-list.component.css',
   templateUrl: './product-list.component.html',

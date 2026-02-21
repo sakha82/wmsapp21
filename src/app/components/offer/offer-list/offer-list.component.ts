@@ -10,12 +10,13 @@ import { SelectChangeEvent } from 'primeng/select';
 import { catchError, filter } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent
+    ...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule
   ], templateUrl: './offer-list.component.html',
   styleUrl: './offer-list.component.css',
   providers: [ConfirmationService, MessageService]

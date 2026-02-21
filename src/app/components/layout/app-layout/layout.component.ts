@@ -148,13 +148,24 @@ export class LayoutComponent implements OnInit {
                         routerLink: '/sv/employee',
                         styleClass: this.selectedRoute === '/sv/employee' ? 'active-menu-item' : ''
                     },
-                    {
-                       label: this.sharedService.T('attendanceRegister'),
+      {
+                        label: this.sharedService.T('attendanceRegister'),
                         materialIcon: 'calendar_today',
                         routerLink: '/sv/employment',
                         styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
+                    },
+                  {
+                       label: this.sharedService.T('settings'),
+                        materialIcon: 'calendar_today',
+                        routerLink: '/sv/setting',
+                        styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
+                    },
+                    {
+                       label: this.sharedService.T('logout'),
+                        materialIcon: 'calendar_today',
+                        routerLink: '/sv/setting',
+                        styleClass: this.selectedRoute === '/sv/employment' ? 'active-menu-item' : ''
                     }
-
 
 
 

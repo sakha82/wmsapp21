@@ -35,11 +35,13 @@
 
                 </div>
                 <div class="rounded-md flex justify-end items-end md:ml-auto">
-                        <div class="ps-2 h-10 rounded-md">
+                        <div class="ps-2 rounded-md">
+                             <p-iconfield>
+                             <p-inputicon class="pi pi-search" />
                             <input type="text" formControlName="productName"
-                                class="w-64 max-w-full ps-2 h-10 rounded-md border border-gray-300"
                                 placeholder="{{this.sharedService.T('search') }} {{this.sharedService.T('product') }}"
-                                (input)="onProductKeyup($event)" />
+                                (input)="onProductKeyup($event)" pInputText />
+                             </p-iconfield>
                         </div>
                 </div>
             </div>
@@ -47,7 +49,6 @@
 
         <div class="mb-10">
             <p-table styleClass="text-sm custom-table" [lazy]="true"
-                [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
                 [value]="products" [rows]="10" [first]="(filters.get('currentPage')?.value - 1) * 10"
                 responsiveLayout="scroll" (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" sortField="productId"
                 data-testid="product-table">
@@ -57,15 +58,16 @@
                         <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="productId">
                             <p-sortIcon field="productId" />
                         </th>
-                        <th class="table-header-cell">{{ this.sharedService.T('category') }}</th>
-                        <th class="table-header-cell">{{ this.sharedService.T('productService') }}</th>
-                        <th class="table-header-cell text-center">{{ this.sharedService.T('freeText') }}</th>
-                        <th class="table-header-cell text-center">{{ this.sharedService.T('quantity') }}</th>
-                        <th class="table-header-cell text-center">{{ this.sharedService.T('unit') }}</th>
-                        <th class="table-header-cell text-center">{{ this.sharedService.T('pricewithoutvat') }}</th>
-                        <th class="table-header-cell text-center">{{ this.sharedService.T('vat')}}%</th>
-                        <th class="table-header-cell text-center">{{ this.sharedService.T('remainingQuantity') }}</th>
-                        <th class="table-header-cell text-center rounded-r-xl">{{ this.sharedService.T('actions') }}
+                        <th>{{ this.sharedService.T('category') }}</th>
+                        <th>{{ this.sharedService.T('productService') }}</th>
+                        <th>{{ this.sharedService.T('freeText') }}</th>
+                        <th>{{ this.sharedService.T('quantity') }}</th>
+                        <th>{{ this.sharedService.T('unit') }}</th>
+                        <th>{{ this.sharedService.T('pricewithoutvat') }}</th>
+                        <th>{{ this.sharedService.T('vat')}}%</th>
+                        <th>{{ this.sharedService.T('remainingQuantity') }}</th>
+                        <th class="table-header-cell rounded-r-xl">{{ this.sharedService.T('actions') }}
+                        
                         </th>
                     </tr>
                 </ng-template>
@@ -80,30 +82,25 @@
                             <div class="flex items-center gap-2 cursor-pointer"
                                 (click)="redirectToProductDetail(product.productId)">
                                 <span class="id-text">{{ product.productId }}</span>
-                                <span class="material-icons text-blue-500 hover:text-blue-700"
-                                    style="font-size: 18px;">open_in_new</span>
+                                <i class="pi pi-external-link icon-primary" ></i>
                             </div>
                         </td>
 
-                        <td class="!bg-White !border-0">{{ this.sharedService.getEnumByValue('detailCategory',
+                        <td>{{ this.sharedService.getEnumByValue('detailCategory',
                             product.category).text }}</td>
-                        <td class="!bg-White !border-0">{{ product.productName }}</td>
-                        <td class="!bg-White !border-0 text-center">{{ product.productDescription }}</td>
-                        <td class="!bg-White !border-0 text-center">{{ product.quantity }}</td>
-                        <td class="!bg-White !border-0 text-center">{{ product.unit }}</td>
-                        <td class="!bg-White !border-0 text-center">{{ product.unitPrice }}</td>
-                        <td class="!bg-White !border-0 text-center">{{ product.vatPercentage }}</td>
-                        <td class="!bg-White !border-0 text-center">{{ product.inHouseQuantity - product.invoiceQuantity
-                            }}</td>
-
-                        <td class="!bg-White !border-0 text-center text-Darkgray rounded-r-lg">
+                        <td>{{ product.productName }}</td>
+                        <td>{{ product.productDescription }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.unit }}</td>
+                        <td>{{ product.unitPrice }}</td>
+                        <td>{{ product.vatPercentage }}</td>
+                        <td>{{ product.inHouseQuantity - product.invoiceQuantity}}</td>
+                        <td>
                             <div class="flex gap-2 justify-center">
-                                <p-button size="small" label="{{ this.sharedService.T('edit') }}"
-                                    [disabled]="product.isActive === 0" (onClick)="productCrud(product.productId)">
-                                    <img src="assets/icons/product/edit_square.svg" alt="" />
+                                <p-button size="small" icon="pi pi-pencil" severity="secondary" [disabled]="product.isActive === 0" (onClick)="productCrud(product.productId)">
                                 </p-button>
 
-                                <p-button size="small" severity="danger" label="{{ this.sharedService.T('delete') }}"
+                                <p-button size="small" severity="danger" 
                                     icon="pi pi-trash" [disabled]="loadingDelete" (onClick)="deleteProduct(product)">
                                 </p-button>
                             </div>
@@ -116,14 +113,12 @@
         <!-- Page Size Dropdown -->
         <div class="flex items-center">
           <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
-            styleClass="bg-white border border-CustomBorder rounded-md"
             (onChange)="onPageSizeChange($event)"></p-select>
         </div>
         <!-- Paginator -->
         <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
               (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-              styleClass="!bg-transparent">
+              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}">
               <ng-template pTemplate="firstpagelinkicon">
                 <img src="assets/icons/paginator/previus.svg" alt="">
               </ng-template>

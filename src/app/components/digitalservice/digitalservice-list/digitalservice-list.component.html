@@ -1,6 +1,6 @@
 <app-generic-loader *ngIf="isLoading"></app-generic-loader>
 <!-- header start -->
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16">
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
     <p class="font-normal text-2xl">{{ this.sharedService.T('digitalServiceRecord') }}</p>
   </div>
@@ -43,33 +43,34 @@
         <!-- Right Filters -->
         <div class="ds-date-line lg:ml-auto">
           <p-datepicker formControlName="year" size="large" view="year" dateFormat="yy"
-            class="ds-underline-control ds-filter-item ds-year w-16 shrink-0" (onSelect)="onSelectYear($event)">
+            class="w-19" (onSelect)="onSelectYear($event)">
           </p-datepicker>
 
 
           <div class="ds-date-range">
             <p-date-picker dataType="string" formControlName="fromDate"
-              class="ds-underline-control ds-filter-item ds-date small-calendar w-[105px] shrink-0"
+              class="w-30"
               dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false" (onSelect)="onSelectFromDate()">
             </p-date-picker>
 
             <span class="ds-date-connector" aria-hidden="true"></span>
 
             <p-date-picker dataType="string" formControlName="toDate"
-              class="ds-underline-control ds-filter-item ds-date small-calendar w-[105px] shrink-0"
+              class="w-30"
               dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false" (onSelect)="onSelectToDate()">
             </p-date-picker>
           </div>
-
+          <p-iconfield>
+          <p-inputicon class="pi pi-search" />
           <p-autoComplete formControlName="vehiclePlate" [suggestions]="vehiclePlates"
-            styleClass="ds-underline-control ds-filter-item ds-search shrink-0"
             placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('vehiclePlate') }}"
             (onSelect)="onSelectNumberPlate($event)" (onClear)="onClearNumberPlate()"
-            (keyup)="keyupNumberPlate($event.target)" [showClear]="true" inputStyleClass="w-64 ps-2 h-10 rounded-md">
+            (keyup)="keyupNumberPlate($event.target)" [showClear]="true" inputStyleClass="w-64 ps-2 rounded-md">
             <ng-template let-plate pTemplate="item">
               <div>{{ plate }}</div>
             </ng-template>
           </p-autoComplete>
+          </p-iconfield>
         </div>
       </div>
       <hr class="border-CustomBorder">
@@ -79,53 +80,41 @@
 
     <div class="mb-12">
       <!-- Digital Services Table -->
-      <p-table styleClass="text-sm custom-table" [lazy]="true" [value]="digitalServices" [rows]="10"
+      <p-table [lazy]="true" [value]="digitalServices" [rows]="10"
         [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-        [tableStyle]="{ 'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px' }"
         (onLazyLoad)="sortColumn($event)" sortField="creationDate" responsiveLayout="scroll" [sortOrder]="-1">
 
         <!-- Header -->
         <ng-template pTemplate="header">
-          <tr class="table-header-row">
+          <tr>
             <th class="table-header-cell id-column-header rounded-l-xl" pSortableColumn="creationDate">
               <p-sortIcon field="creationDate" />
             </th>
-            <th class="table-header-cell">{{ this.sharedService.T('vehiclePlate') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('vehicleMake') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('vehicleModel') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('vehicleYear') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('serviceType') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('serviceDate') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('nextServiceDate') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('nextServiceMileage') }}</th>
-            <th class="table-header-cell">{{ this.sharedService.T('workshop') }}</th>
-            <th class="table-header-cell rounded-r-xl">{{ this.sharedService.T('comments') }}</th>
+            <th>{{ this.sharedService.T('vehiclePlate') }}</th>
+            <th>{{ this.sharedService.T('vehicleMake') }}</th>
+            <th>{{ this.sharedService.T('vehicleModel') }}</th>
+            <th>{{ this.sharedService.T('vehicleYear') }}</th>
+            <th>{{ this.sharedService.T('serviceType') }}</th>
+            <th>{{ this.sharedService.T('serviceDate') }}</th>
+            <th>{{ this.sharedService.T('nextServiceDate') }}</th>
+            <th>{{ this.sharedService.T('nextServiceMileage') }}</th>
+            <th>{{ this.sharedService.T('workshop') }}</th>
+            <th class="rounded-r-xl">{{ this.sharedService.T('comments') }}</th>
           </tr>
         </ng-template>
 
         <!-- Body -->
         <ng-template pTemplate="body" let-ds>
-          <tr class="p-selectable-row">
-            <!-- Workshop -->
-            <!-- <td title="{{ ds.workshopName }}">
-              {{ ds.workshopName?.length > 18 ? (ds.workshopName | slice : 0 : 18) + '...' : ds.workshopName }}
-            </td> -->
-            <!-- <td
-              pTooltip="WorkshopName: {{ ds.workshopName }},Address: {{ ds.workshopAddress }}, {{ ds.workshopCity }}&#10;Telephone: {{ ds.telephone }}&#10;Email: {{ ds.email }}"
-              tooltipPosition="top">
-              {{ ds.workshopName?.length > 18 ? (ds.workshopName | slice : 0 : 18) + '...' : ds.workshopName }}
-            </td> -->
+          <tr>
             <td class="id-column-cell rounded-l-lg">
               {{ ds.creationDate }}
             </td>
             <td>
-                            <div class="flex items-center gap-2 cursor-pointer"
+                <div class="flex items-center gap-2 cursor-pointer"
                 (click)="redirectToVehicleDetailComponent(ds.vehiclePlate)"
                 [title]="'Vehicle Number: ' + ds.vehiclePlate">
                 <span class="id-text">{{ ds.vehiclePlate }}</span>
-                <span class="material-icons text-blue-500 hover:text-blue-700">
-                  open_in_new
-                </span>
+                <i class="pi pi-external-link icon-primary" ></i>
               </div>
 
             </td>

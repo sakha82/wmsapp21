@@ -1,5 +1,5 @@
 <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16">
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
     <div class="ml-[30px]">
         <p class="font-normal text-2xl">{{ this.sharedService.T('workshopCalendar') }}</p>
     </div>
@@ -63,8 +63,7 @@
             </div>
         </div>
         <div>
-            <p-table styleClass="text-sm" [tableStyle]="{'min-width': '50rem', 'font-size': '12px',}"
-                [value]="weekCalendar" showGridlines responsiveLayout="scroll">
+            <p-table [value]="weekCalendar" showGridlines responsiveLayout="scroll">
                 <!-- Header -->
                 <ng-template pTemplate="header">
                     <tr>
@@ -234,9 +233,9 @@
                         <!-- Monday -->
                         <td class="relative booking-cell" [ngClass]="selectedDay == 1 ? 'booking-current-day' : ''"
                             (click)="openMenuKey = null">
-                            <p-button label="" icon="pi pi-plus" size="small"
+                            <p-button icon="pi pi-plus" size="small"
                                 class="justify-center flex booking-icon-btn" variant="text" [raised]="true"
-                                styleClass="text-blue" (onClick)="createBooking(calendar.mondayDate,calendar.cTime)" />
+                                 (onClick)="createBooking(calendar.mondayDate,calendar.cTime)" />
                             @if(calendar.mondayBookings.length > 1)
                             {
                             <div class="booking-slider">
