@@ -362,27 +362,27 @@
   opacity: 1;
 }
 
-.booking-icon-btn {
+/* .booking-icon-btn {
   position: absolute;
-  top: 4px;
+  top: 50%;
   right: 6px;
   z-index: 3;
-}
+} */
 
 :host ::ng-deep .booking-icon-btn > button {
   height: 26px;
   width: 26px;
   padding: 0;
   border-radius: 9999px;
-  background: var(--booking-primary);
-  border: 1px solid var(--booking-primary-dark);
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.35);
+  /* background: var(--booking-primary); */
+  /* border: 1px solid var(--booking-primary-dark); */
+  /* color: #ffffff; */
+  /* box-shadow: 0 4px 10px rgba(59, 130, 246, 0.35); */
 }
 
-:host ::ng-deep .booking-icon-btn > button:hover {
+/* :host ::ng-deep .booking-icon-btn > button:hover {
   background: var(--booking-primary-dark);
-}
+} */
 
 :host ::ng-deep .booking-icon-btn > button .pi {
   font-size: 12px;
@@ -390,7 +390,7 @@
 
 .booking-cell {
   position: relative;
-  padding-top: 26px;
+  /* padding-top: 26px; */
   width: 220px;
   max-width: 220px;
 }
