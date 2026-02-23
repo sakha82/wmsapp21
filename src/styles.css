@@ -210,24 +210,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* =========================
    PrimeNG CUSTOMIZATION
 ========================= */
@@ -239,13 +221,6 @@ Final revision done We only need following 2 properties to change for tables
 .p-datatable { border-spacing: 0px 2px; }
 .p-datatable .p-datatable-tbody > tr:hover,.p-selectable-row:hover {  background-color: var(--p-primary-100) !important; } 
 
-
-
-.p-paginator {
-  background-color: transparent !important; /* Set background as transparent */
-  box-shadow: none !important; /* Remove any shadow if present */
-  border: none !important; /* Remove any border if present */
-}
 
 
 /* This fix is for select option when it is selected with check mark then this will work */
