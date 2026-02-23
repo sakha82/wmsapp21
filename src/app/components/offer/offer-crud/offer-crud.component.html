@@ -1,476 +1,380 @@
-        <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-        <!-- header start -->
-        <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-            <div class="">
-                <p class="font-normal text-2xl">{{isNewObject ? this.sharedService.T('newOffer') : this.sharedService.T('editOffer')}}
- #{{offer.get('offerId')?.value}}</p>
-            </div>
-            <div class="flex gap-2">
-                <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-                <div class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-                   <p>AS</p>
-                </div>
-            </div>
-        </header>
-        <!-- header end -->
+<app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<!-- header start -->
+<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
+    <div class="">
+        <p class="font-normal text-2xl">{{isNewObject ? this.sharedService.T('newOffer') :
+            this.sharedService.T('editOffer')}}
+            #{{offer.get('offerId')?.value}}</p>
+    </div>
+    <div class="flex gap-2">
+        <span class="my-auto">{{ this.sharedService.workshopName}}</span>
+        <div
+            class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
+            <p>AS</p>
+        </div>
+    </div>
+</header>
+<!-- header end -->
 
 <section class="p-5 pb-10">
-    <form [formGroup]="offer" (keydown.enter)="onEnter($event)"> 
-        <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white"> 
-        <div class="grid grid-cols-12 gap-5">
-            <div class="md:col-span-6 mb-2">
-                <p-iconfield>
-                    <p-inputicon class=" icon-primary pi pi-users" />
-                    <label class="block mb-2" for="customerId">{{ this.sharedService.T('customerName') }}</label>
-                    <app-customer-input [customerId]="defaultCustomerId" [customerName]="defaultCustomerName" [showFooter]=false (customerIdChange)="onChangeCustomer($event)"></app-customer-input>
-                   </p-iconfield>
-            </div> 
-            <div class="md:col-span-2 mb-2">
-                <label class="block mb-2" for="offerDate">{{ this.sharedService.T('validFrom') }}</label>
-                <p-date-picker 
-                formControlName= "validFrom" 
-                dataType= "string"
-                dateFormat="yy-mm-dd"
-                icon="pi pi-calendar"
-                (onSelect)="updateValidTillDate()"
-                 />
-            </div>
-            <div class="md:col-span-2 mb-2">
-                <label class="block mb-2" for="validDays">{{ this.sharedService.T('offer validity(days)') }}</label>
-                <input type="number"
-                formControlName= "validDays" 
-                style="width: 100%;"
-                (keydown.enter)="$event.preventDefault()" 
-                (change)="updateValidTillDate()"
-                pInputText 
-                 />
-            </div> 
-            <div class="md:col-span-2 mb-2">
-                <label class="block mb-2" for="dueDate">{{ this.sharedService.T('validTo') }}</label>
-                <input type="text"
-                formControlName="validTill"
-                style="width: 100%;"
-                pInputText 
-                 />
-            </div>
-            <div class="col-span-3">
-                <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
-                <div class="relative">
-                   <p-iconfield>
-                    <p-inputicon class=" icon-primary pi pi-car" />
-                    <input
-                    pInputText
-                    type="text"
-                    formControlName="vehiclePlate"
-                    maxlength="10"
-                    placeholder="ABC123"
-                    (input)="onInputChange($event)"
-                    class="uppercase p-2 w-full pl-12 "
-                  />
-                   </p-iconfield>
+    <form [formGroup]="offer" (keydown.enter)="onEnter($event)">
+        <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
+            <div class="grid grid-cols-12 gap-5">
+                <div class="md:col-span-6 mb-2">
+                <label class="block mb-2" for="customerId">{{ this.sharedService.T('customerName') }}</label>
+                    <p-iconfield>
+                        <p-inputicon class=" icon-primary pi pi-users" />
+                        <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
+                            [suggestions]="customers" (completeMethod)="filterCustomer($event)"
+                            optionLabel="customerName" (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()"
+                            [showClear]="true" class="w-full" [placeholder]="sharedService.T('chooseCustomer')">
+                            <ng-template let-customer #item>
+                                <div class="flex items-center gap-2">
+                                    <div>{{ customer.customerName }}</div>
+                                </div>
+                            </ng-template>
+
+                        </p-autocomplete>
+                    </p-iconfield>
                 </div>
-              </div> 
-            <div class="md:col-span-3 mb-2">
-                <label for="vehicleManufacturer" class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
-                 <p-autoComplete 
-                    formControlName="vehicleManufacturer"
-                    placeholder="" 
-                    [maxlength]="50"  
-                    [suggestions]="manufacturers"
-                    (completeMethod)="filterManufacturers($event)"
-                    [minLength]="1"
-                    placeholder="Ange söktext "
-                    class="w-full"
-                    forceSelection="true"
-                    optionLabel=""                    
-                    [showClear]="true">
-                </p-autoComplete> 
+                <div class="md:col-span-2 mb-2">
+                    <label class="block mb-2" for="offerDate">{{ this.sharedService.T('validFrom') }}</label>
+                    <p-date-picker formControlName="validFrom" dataType="string" dateFormat="yy-mm-dd"
+                        icon="pi pi-calendar" (onSelect)="updateValidTillDate()" />
+                </div>
+                <div class="md:col-span-2 mb-2">
+                    <label class="block mb-2" for="validDays">{{ this.sharedService.T('offer validity(days)') }}</label>
+                    <input type="number" formControlName="validDays" style="width: 100%;"
+                        (keydown.enter)="$event.preventDefault()" (change)="updateValidTillDate()" pInputText />
+                </div>
+                <div class="md:col-span-2 mb-2">
+                    <label class="block mb-2" for="dueDate">{{ this.sharedService.T('validTo') }}</label>
+                    <input type="text" formControlName="validTill" style="width: 100%;" pInputText />
+                </div>
+                <div class="col-span-3">
+                    <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
+                    <div class="relative">
+                        <p-iconfield>
+                            <p-inputicon class=" icon-primary pi pi-car" />
+                            <input pInputText type="text" formControlName="vehiclePlate" maxlength="10"
+                                placeholder="ABC123" (input)="onInputChange($event)"
+                                class="uppercase p-2 w-full pl-12 " />
+                        </p-iconfield>
+                    </div>
+                </div>
+                <div class="md:col-span-3 mb-2">
+                    <label for="vehicleManufacturer" class="block mb-2">{{ this.sharedService.T('vehicleMake')
+                        }}</label>
+                    <p-autoComplete formControlName="vehicleManufacturer" placeholder="" [maxlength]="50"
+                        [suggestions]="manufacturers" (completeMethod)="filterManufacturers($event)" [minLength]="1"
+                        placeholder="Ange söktext " class="w-full" forceSelection="true" optionLabel=""
+                        [showClear]="true">
+                    </p-autoComplete>
+                </div>
+                <div class="md:col-span-2 mb-2">
+                    <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
+                    </label>
+                    <p-autoComplete formControlName="vehicleModel" [suggestions]="models"
+                        (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
+                        class="w-full"></p-autoComplete>
+                </div>
+                <div class="md:col-span-2 mb-2">
+                    <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
+                    <p-inputnumber formControlName="vehicleYear" inputId="minmax" mode="decimal" [min]="1960"
+                        [max]="2040" class="w-full" [useGrouping]="false" />
+                </div>
+                <div class="md:col-span-2 mb-2 ms-4">
+                    <label class="block mb-2" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
+                    <input type="number" formControlName="vehicleMileage" class="w-full" pInputText />
+                </div>
+                <div class="md:col-span-3 mb-2">
+                    <label class="block mb-2" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
+                    <p-select [options]="this.sharedService.getEnums('paymentType')" formControlName="paymentType"
+                        optionLabel="text" optionValue="value" class="w-full" editable=true />
+                </div>
+                <div class="md:col-span-3 mb-3">
+                    <label class="block mb-2" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>
+                    <input type="text" formControlName="yourRef" maxlength="50" class="w-full" pInputText />
+                </div>
+
             </div>
-            <div class="md:col-span-2 mb-2">
-                <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
-                </label>
-                <p-autoComplete
-                formControlName="vehicleModel"
-                [suggestions]="models"
-                (completeMethod)="filterModels($event)"
-                forceSelection="true"
-                [showClear]="true"
-                class="w-full"
-            ></p-autoComplete>
-            </div>
-            <div class="md:col-span-2 mb-2">
-                <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
-                 <p-inputnumber 
-                 formControlName="vehicleYear" 
-                 inputId="minmax" 
-                 mode="decimal" 
-                 [min]="1960" 
-                 [max]="2040"
-                 class="w-full"
-                 [useGrouping]="false"
-                  />                 
-            </div>
-            <div class="md:col-span-2 mb-2 ms-4">
-                <label class="block mb-2" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
-                <input type="number"
-                formControlName="vehicleMileage"
-                class="w-full"
-                pInputText 
-                 />
-            </div>
-            <div class="md:col-span-3 mb-2">
-                <label class="block mb-2" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
-                <p-select 
-                [options] = "this.sharedService.getEnums('paymentType')"
-                formControlName="paymentType"
-                optionLabel="text"
-                optionValue="value"
-                class="w-full"
-                editable=true
-                
-                />
-            </div>
-            <div class="md:col-span-3 mb-3">
-                <label class="block mb-2" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>
-                <input type="text"
-                formControlName="yourRef"
-                maxlength="50"
-                class="w-full"
-                pInputText 
-                 />
-            </div>
-    
-        </div>
-        
-        <!-- invoice-detail pricemode 0- inkvat 1- exvat 2- auto -->
-        <div class="">
-             <ng-template #tooltipContent>
+
+            <!-- invoice-detail pricemode 0- inkvat 1- exvat 2- auto -->
+            <div class="">
+                <ng-template #tooltipContent>
                     <div class="flex items-center text-xs">
                         {{ this.sharedService.T('category') }}
                     </div>
-            </ng-template> 
-            <div class="flex gap-2 mb-2 text-sm font-semibold">
-                <div class="w-[3%]  whitespace-nowrap"></div>
-                <div class="w-[7%]  whitespace-nowrap flex">{{ this.sharedService.T('category') }}
-                    <span class="my-auto">
-                       <div class="my-auto w-10">
-                           <img src="assets/icons/offers/help.svg"  class="w-4 h-4" [pTooltip]="tooltipContent" tooltipPosition="top" alt="">
-                       </div> 
-                    </span>
-                </div>
-                <div class="w-[15%] whitespace-nowrap">{{ this.sharedService.T('productService') }}</div>
-                <div class="w-[15%] whitespace-nowrap ps-2">{{ this.sharedService.T('freeText') }} </div>
-                <div class="w-[10%] whitespace-nowrap ps-2">{{ this.sharedService.T('quantity') }}</div>
-                <div class="w-[10%] whitespace-nowrap ps-2">{{ this.sharedService.T('unit') }}</div>
-                <div class="w-[10%] whitespace-nowrap flex ps-2">
-                @if(priceMode == 1)
-                {
-                   {{ this.sharedService.T('pricewithoutvat') }}
-                   <ng-template #pricewithoutvattp>
-                    <div class="flex items-center text-xs">
-                        {{ this.sharedService.T('pricewithoutvat.tp') }}
+                </ng-template>
+                <div class="flex gap-2 mb-2 text-sm font-semibold">
+                    <div class="w-[3%]  whitespace-nowrap"></div>
+                    <div class="w-[7%]  whitespace-nowrap flex">{{ this.sharedService.T('category') }}
+                        <span class="my-auto">
+                            <div class="my-auto w-10">
+                                <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="tooltipContent"
+                                    tooltipPosition="top" alt="">
+                            </div>
+                        </span>
                     </div>
-                  </ng-template> 
-                   <span class="my-auto">
-                        <div class="my-auto w-10">
-                            <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="pricewithoutvattp" tooltipPosition="top" tooltipStyleClass="custom-tooltip" alt="">
-                        </div> 
-                    </span>
-                }
-                @if(priceMode == 0 )
-                {
-                    {{ this.sharedService.T('pricewithvat') }}
-                    <ng-template #pricewithvattp>
-                        <div class="flex items-center text-xs">
-                            {{ this.sharedService.T('pricewithvat.tp') }}
-                        </div>
-                      </ng-template>                     
-                    <span class="my-auto">
-                        <div class="my-auto w-10">
-                            <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="pricewithvattp" tooltipPosition="top" tooltipStyleClass="custom-tooltip" alt="">
-                        </div> 
-                    </span>
-                }
-                
-              </div>
-
-
-                <div class="w-[10%] whitespace-nowrap">{{ this.sharedService.T('vat') }}%</div>
-                <div class="w-[10%] whitespace-nowrap">{{ this.sharedService.T('discount') }}%</div>
-                @if(priceMode == 1)
-                {
-                <div class="w-[10%] whitespace-nowrap ">{{ this.sharedService.T('totalwithoutvat') }}</div>
-                }
-                @if(priceMode == 0)
-                {
-                    <div class="w-[10%] whitespace-nowrap ">{{ this.sharedService.T('totalwithvat') }}</div>
-                }
-                <div class="w-[5%]"></div>
-            </div>
-            <div cdkDropList (cdkDropListDropped)="onDrop($event)" class="space-y-2">
-                <div *ngFor="let detail of details.controls; trackBy: trackByFn" 
-                [formGroup]="getFormGroup(detail)"
-                cdkDrag
-                    (cdkDragStarted)="onDragStart($event, detail)"
-                    (cdkDragEnded)="onDragEnd($event, detail)"
-                    class="invoice-detail-row flex gap-2 p-4 bg-white rounded-lg shadow-md transition-all duration-300 border border-transparent hover:shadow-lg"
-                    [ngClass]="{'dragging-active': detail.isDragging}">   
-                
-            
-            <div class="flex gap-2 mb-2 text-sm font-semibold" [formGroup]="getFormGroup(detail)">
-                <div class="w-[3%] flex items-center">
-                    <span class="material-symbols-outlined draggable-handle cdk-drag-handle">drag_indicator</span> 
-                </div>
-                    @if(detail?.get('isTextRow').value)
-                    {
-                        <div class="w-full flex items-start gap-4 relative">
-                            <textarea formControlName="textContent" rows="5" cols="130" class="w-full bg-white border border-gray-300 rounded-md p-2" pTextarea></textarea>
-                            <div class="flex flex-col gap-1">
-                                <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
-                                    {{this.sharedService.T('autoGenerateText')}}: </label>
-                                <div *ngFor="let category of this.sharedService.getEnums('invoicePromptContext')"
-                                    class="flex">
-                                    <p-checkbox [inputId]="category.key" name="group" [value]="category"
-                                        [(ngModel)]="selectedContext" [ngModelOptions]="{standalone: true}"
-                                        (onChange)="GenerateInvoiceDescription($event, category, detail.get('rowIndex')?.value)">
-                                    </p-checkbox>
-                                    <label [for]="category.key" class="mb-2 block"
-                                        style="font-size: 11px; white-space: nowrap;"> {{ category.text }} </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-[5%] justify-end flex">
-                            <div class="my-auto">
-                                <img src="assets/images/close.png" alt="" (click)="removeDetailRow(detail.get('rowIndex')?.value)">
-                            </div>
-                        </div>  
-                    }
-                    @else{
-                        <div class="w-[7%]">
-                            <p-select 
-                                [options] = "this.sharedService.getEnums('detailCategory')"
-                                formControlName="category"
-                                optionLabel="text"
-                                optionValue="value"
-                                  class="w-full" 
-                                 /> 
-                        </div> 
-                        <div class="w-[15%]">
-                            <p-autoComplete 
-                                class="white_bg_input"
-                                formControlName="product"
-                                placeholder="Väjl en produkt" 
-                                [maxlength]="38"  
-                                [suggestions]="products"
-                                (completeMethod)="getProducts($event)" 
-                                (onSelect)="onSelectProduct(detail,$event)" 
-                                optionLabel="productName" 
-                                optionValue="productId"
-                                [showClear]="false"
-                                [forceSelection]="false" 
-                                [showEmptyMessage]="false"
-                                [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
-                                [inputStyleClass]="detail.get('productName')?.value ? 'ng-invalid ng-dirty' : ''"
-                                >
-                                 <ng-template let-product pTemplate="item">
-                                    <div class="flex align-items-center gap-2">
-                                        <div><p>{{ product.productName }} <br>
-                                        {{ product.priceIncVat }} / {{ product.productQuantity }} {{ product.productUnit }} </p></div> 
-                                    </div>
-                                </ng-template> 
-                            </p-autoComplete>
-                        </div>
-                        <div class="w-[15%]">
-                            <input formControlName="description" placeholder="Extra information" type="text"style="width: 100%; background-color: white;" pInputText  />
-                        </div>
-                        <div class="w-[10%]">
-                            <p-inputnumber  
-                            formControlName="quantity"
-                            inputId="minmax" 
-                            mode="decimal" 
-                            width="30"
-                            [minFractionDigits]="0" 
-                            [maxFractionDigits]="2" 
-                            [min]="0" 
-                            [locale]="this.sharedService.currentLocale" 
-                            [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
-                            (onInput)="updateDetailRow(detail)"
-                            ></p-inputnumber> 
-                        </div>
-                        <div class="w-[10%]">
-                             <p-select [options] = "this.unitOptions"
-                                formControlName="unit"
-                                optionLabel="text"
-                                optionValue="value"
-                                styleClass="w-full bg-white" /> 
-                        </div>
-                        <div class="w-[10%]">
-                             <p-inputnumber  
-                             formControlName="unitPrice"
-                             inputId="minmax" 
-                             mode="decimal" 
-                             placeholder="0,00"
-                             [minFractionDigits]="0" 
-                             [maxFractionDigits]="2" 
-                             [min]="0"
-                             [locale]="this.sharedService.currentLocale"
-                             [ngClass]="{'ng-invalid ng-dirty': detail.get('isUnitPriceValid')?.value}"
-                             [inputStyle]="{'background-color': 'white', 'width': '100%', 'display': 'block'}"
-                             (onInput)="updateDetailRow(detail)"
-                             ></p-inputnumber> 
-                        </div>
-                        <div class="w-[10%]">
-                            <p-select 
-                            [options] = "this.sharedService.getEnums('vatPercentage')"
-                            formControlName="vatPercentage"
-                            optionLabel="text"
-                            optionValue="value"
-                            styleClass="w-full bg-white" (onChange)="onChangeVat(detail)"   /> 
-                        </div>
-                        <div class="whitespace-nowrap  w-[10%]">
-                            <input formControlName="discountPercentage" type="number" placeholder="0" style="width: 100%; background-color: white;" pInputText (change)="updateDetailRow(detail)"  />
-                        </div>
-                        
+                    <div class="w-[15%] whitespace-nowrap">{{ this.sharedService.T('productService') }}</div>
+                    <div class="w-[15%] whitespace-nowrap ps-2">{{ this.sharedService.T('freeText') }} </div>
+                    <div class="w-[10%] whitespace-nowrap ps-2">{{ this.sharedService.T('quantity') }}</div>
+                    <div class="w-[10%] whitespace-nowrap ps-2">{{ this.sharedService.T('unit') }}</div>
+                    <div class="w-[10%] whitespace-nowrap flex ps-2">
                         @if(priceMode == 1)
                         {
-                        <div class="whitespace-nowrap  w-[10%]">
-                            <p-inputnumber  
-                            formControlName="price"
-                            inputId="minmax" 
-                            mode="decimal" 
-                            [minFractionDigits]="2" 
-                            [maxFractionDigits]="2" 
-                            [locale]="this.sharedService.currentLocale"
-                            [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
-                            readonly="true"
-                            ></p-inputnumber> 
-                        
-                        </div>
+                        {{ this.sharedService.T('pricewithoutvat') }}
+                        <ng-template #pricewithoutvattp>
+                            <div class="flex items-center text-xs">
+                                {{ this.sharedService.T('pricewithoutvat.tp') }}
+                            </div>
+                        </ng-template>
+                        <span class="my-auto">
+                            <div class="my-auto w-10">
+                                <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="pricewithoutvattp"
+                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip" alt="">
+                            </div>
+                        </span>
                         }
-                        @if(priceMode == 0)
+                        @if(priceMode == 0 )
                         {
-                            <div class="whitespace-nowrap  w-[10%]">
-                                <p-inputnumber  
-                                formControlName="priceIncVat"
-                                inputId="minmax" 
-                                mode="decimal" 
-                                [minFractionDigits]="2" 
-                                [maxFractionDigits]="2" 
-                                [locale]="this.sharedService.currentLocale"
-                                [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
-                                readonly="true"
-                                ></p-inputnumber> 
-    
-                            </div>                            
+                        {{ this.sharedService.T('pricewithvat') }}
+                        <ng-template #pricewithvattp>
+                            <div class="flex items-center text-xs">
+                                {{ this.sharedService.T('pricewithvat.tp') }}
+                            </div>
+                        </ng-template>
+                        <span class="my-auto">
+                            <div class="my-auto w-10">
+                                <img src="assets/icons/offers/help.svg" class="w-4 h-4" [pTooltip]="pricewithvattp"
+                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip" alt="">
+                            </div>
+                        </span>
                         }
 
-                        <div class="w-[5%] justify-end flex">
-                                <p-button icon="pi pi-times" severity="danger"  size="small" (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
-                        </div>                        
-                    
+                    </div>
+
+
+                    <div class="w-[10%] whitespace-nowrap">{{ this.sharedService.T('vat') }}%</div>
+                    <div class="w-[10%] whitespace-nowrap">{{ this.sharedService.T('discount') }}%</div>
+                    @if(priceMode == 1)
+                    {
+                    <div class="w-[10%] whitespace-nowrap ">{{ this.sharedService.T('totalwithoutvat') }}</div>
                     }
+                    @if(priceMode == 0)
+                    {
+                    <div class="w-[10%] whitespace-nowrap ">{{ this.sharedService.T('totalwithvat') }}</div>
+                    }
+                    <div class="w-[5%]"></div>
+                </div>
+                <div cdkDropList (cdkDropListDropped)="onDrop($event)" class="space-y-2">
+                    <div *ngFor="let detail of details.controls; trackBy: trackByFn" [formGroup]="getFormGroup(detail)"
+                        cdkDrag (cdkDragStarted)="onDragStart($event, detail)"
+                        (cdkDragEnded)="onDragEnd($event, detail)"
+                        class="invoice-detail-row flex gap-2 p-4 bg-white rounded-lg shadow-md transition-all duration-300 border border-transparent hover:shadow-lg"
+                        [ngClass]="{'dragging-active': detail.isDragging}">
+
+
+                        <div class="flex gap-2 mb-2 text-sm font-semibold" [formGroup]="getFormGroup(detail)">
+                            <div class="w-[3%] flex items-center">
+                                <span
+                                    class="material-symbols-outlined draggable-handle cdk-drag-handle">drag_indicator</span>
+                            </div>
+                            @if(detail?.get('isTextRow').value)
+                            {
+                            <div class="w-full flex items-start gap-4 relative">
+                                <textarea formControlName="textContent" rows="5" cols="130"
+                                    class="w-full bg-white border border-gray-300 rounded-md p-2" pTextarea></textarea>
+                                <div class="flex flex-col gap-1">
+                                    <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
+                                        {{this.sharedService.T('autoGenerateText')}}: </label>
+                                    <div *ngFor="let category of this.sharedService.getEnums('invoicePromptContext')"
+                                        class="flex">
+                                        <p-checkbox [inputId]="category.key" name="group" [value]="category"
+                                            [(ngModel)]="selectedContext" [ngModelOptions]="{standalone: true}"
+                                            (onChange)="GenerateInvoiceDescription($event, category, detail.get('rowIndex')?.value)">
+                                        </p-checkbox>
+                                        <label [for]="category.key" class="mb-2 block"
+                                            style="font-size: 11px; white-space: nowrap;"> {{ category.text }} </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-[5%] justify-end flex">
+                                <div class="my-auto">
+                                    <img src="assets/images/close.png" alt=""
+                                        (click)="removeDetailRow(detail.get('rowIndex')?.value)">
+                                </div>
+                            </div>
+                            }
+                            @else{
+                            <div class="w-[7%]">
+                                <p-select [options]="this.sharedService.getEnums('detailCategory')"
+                                    formControlName="category" optionLabel="text" optionValue="value" class="w-full" />
+                            </div>
+                            <div class="w-[15%]">
+                                <p-autoComplete class="white_bg_input" formControlName="product"
+                                    placeholder="Väjl en produkt" [maxlength]="38" [suggestions]="products"
+                                    (completeMethod)="getProducts($event)" (onSelect)="onSelectProduct(detail,$event)"
+                                    optionLabel="productName" optionValue="productId" [showClear]="false"
+                                    [forceSelection]="false" [showEmptyMessage]="false"
+                                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
+                                    [inputStyleClass]="detail.get('productName')?.value ? 'ng-invalid ng-dirty' : ''">
+                                    <ng-template let-product pTemplate="item">
+                                        <div class="flex align-items-center gap-2">
+                                            <div>
+                                                <p>{{ product.productName }} <br>
+                                                    {{ product.priceIncVat }} / {{ product.productQuantity }} {{
+                                                    product.productUnit }} </p>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                            <div class="w-[15%]">
+                                <input formControlName="description" placeholder="Extra information" type="text"
+                                    style="width: 100%; background-color: white;" pInputText />
+                            </div>
+                            <div class="w-[10%]">
+                                <p-inputnumber formControlName="quantity" inputId="minmax" mode="decimal" width="30"
+                                    [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
+                                    [locale]="this.sharedService.currentLocale"
+                                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
+                                    (onInput)="updateDetailRow(detail)"></p-inputnumber>
+                            </div>
+                            <div class="w-[10%]">
+                                <p-select [options]="this.unitOptions" formControlName="unit" optionLabel="text"
+                                    optionValue="value" styleClass="w-full bg-white" />
+                            </div>
+                            <div class="w-[10%]">
+                                <p-inputnumber formControlName="unitPrice" inputId="minmax" mode="decimal"
+                                    placeholder="0,00" [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
+                                    [locale]="this.sharedService.currentLocale"
+                                    [ngClass]="{'ng-invalid ng-dirty': detail.get('isUnitPriceValid')?.value}"
+                                    [inputStyle]="{'background-color': 'white', 'width': '100%', 'display': 'block'}"
+                                    (onInput)="updateDetailRow(detail)"></p-inputnumber>
+                            </div>
+                            <div class="w-[10%]">
+                                <p-select [options]="this.sharedService.getEnums('vatPercentage')"
+                                    formControlName="vatPercentage" optionLabel="text" optionValue="value"
+                                    styleClass="w-full bg-white" (onChange)="onChangeVat(detail)" />
+                            </div>
+                            <div class="whitespace-nowrap  w-[10%]">
+                                <input formControlName="discountPercentage" type="number" placeholder="0"
+                                    style="width: 100%; background-color: white;" pInputText
+                                    (change)="updateDetailRow(detail)" />
+                            </div>
+
+                            @if(priceMode == 1)
+                            {
+                            <div class="whitespace-nowrap  w-[10%]">
+                                <p-inputnumber formControlName="price" inputId="minmax" mode="decimal"
+                                    [minFractionDigits]="2" [maxFractionDigits]="2"
+                                    [locale]="this.sharedService.currentLocale"
+                                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
+                                    readonly="true"></p-inputnumber>
+
+                            </div>
+                            }
+                            @if(priceMode == 0)
+                            {
+                            <div class="whitespace-nowrap  w-[10%]">
+                                <p-inputnumber formControlName="priceIncVat" inputId="minmax" mode="decimal"
+                                    [minFractionDigits]="2" [maxFractionDigits]="2"
+                                    [locale]="this.sharedService.currentLocale"
+                                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
+                                    readonly="true"></p-inputnumber>
+
+                            </div>
+                            }
+
+                            <div class="w-[5%] justify-end flex">
+                                <p-button icon="pi pi-times" severity="danger" size="small"
+                                    (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
+                            </div>
+
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div> 
-        </div>
-        <div class="grid grid-cols-12 w-full mx-auto my-5">
-            <div class="md:col-span-8">
-                <div class="flex flex-wrap gap-3 mt-4">
-                    <p-button label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus" (click) ="addDetailRow(false)"></p-button>
-                    <p-button label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus" (click) =
-                    "addDetailRow(true)"></p-button>
-                    <p-splitbutton label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
+            <div class="grid grid-cols-12 w-full mx-auto my-5">
+                <div class="md:col-span-8">
+                    <div class="flex flex-wrap gap-3 mt-4">
+                        <p-button label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus"
+                            (click)="addDetailRow(false)"></p-button>
+                        <p-button label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus"
+                            (click)="addDetailRow(true)"></p-button>
+                        <p-splitbutton label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
+                    </div>
+                </div>
+                <div class="md:col-span-4">
+                    <table class="w-full">
+                        <tbody>
+                            <tr>
+                                <td class="px-2">{{ this.sharedService.T('net') }}</td>
+                                <td class="pe-0 2xl:pe-4 text-end xl:text-center">
+                                    <p-inputnumber formControlName="price" inputId="minmax" [minFractionDigits]="2"
+                                        [maxFractionDigits]="2" mode="currency"
+                                        [locale]="this.sharedService.currentLocale" currency="SEK"
+                                        [inputStyle]="{ 'width': '120px', 'border': 'none' }"
+                                        readonly="true"></p-inputnumber>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-2">{{ this.sharedService.T('vat') }}</td>
+                                <td class="pe-0 2xl:pe-4 text-end xl:text-center">
+                                    <p-inputnumber formControlName="vat" inputId="minmax" mode="currency" currency="SEK"
+                                        [minFractionDigits]="2" [maxFractionDigits]="2"
+                                        [locale]="this.sharedService.currentLocale"
+                                        [inputStyle]="{ 'width': '120px', 'border': 'none' }"
+                                        readonly="true"></p-inputnumber>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-2 pb-3">{{ this.sharedService.T('adjustment') }}</td>
+                                <td class="pe-0 2xl:pe-4 text-end xl:text-center">
+                                    <p-inputnumber formControlName="adjustment" inputId="minmax" mode="currency"
+                                        currency="SEK" [minFractionDigits]="2" [maxFractionDigits]="2"
+                                        [locale]="this.sharedService.currentLocale" class="py-0"
+                                        [inputStyle]="{ 'width': '120px', 'border': 'none' }"
+                                        readonly="true"></p-inputnumber>
+                                </td>
+                            </tr>
+                            <tr class="border-y border-CustomBorder">
+                                <td class="px-2 font-bold text-sm whitespace-nowrap py-2">{{
+                                    this.sharedService.T('totalDue') }}</td>
+                                <td class=" pe-0 2xl:pe-4 text-end xl:text-center font-bold text-sm">
+                                    <p-inputnumber formControlName="priceIncVat" inputId="minmax" mode="currency"
+                                        currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+                                        [locale]="this.sharedService.currentLocale"
+                                        [inputStyle]="{ 'width': '120px', 'border': 'none' }"
+                                        readonly="true"></p-inputnumber>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="md:col-span-4">
-                <table class="w-full">
-                    <tbody>
-                        <tr>
-                            <td class="px-2">{{ this.sharedService.T('net') }}</td>
-                            <td class="pe-0 2xl:pe-4 text-end xl:text-center">
-                                <p-inputnumber  
-                                formControlName="price"
-                                inputId="minmax" 
-                                [minFractionDigits]="2" 
-                                [maxFractionDigits]="2" 
-                                mode="currency"
-                                [locale]="this.sharedService.currentLocale"
-                                currency="SEK"
-                                [inputStyle]="{ 'width': '120px', 'border': 'none' }"
-                                readonly="true"
-                                ></p-inputnumber> 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-2">{{ this.sharedService.T('vat') }}</td>
-                            <td class="pe-0 2xl:pe-4 text-end xl:text-center">
-                                <p-inputnumber  
-                                formControlName="vat"
-                                inputId="minmax" 
-                                mode="currency"
-                                currency="SEK"
-                                [minFractionDigits]="2" 
-                                [maxFractionDigits]="2" 
-                                [locale]="this.sharedService.currentLocale" 
-                                [inputStyle]="{ 'width': '120px', 'border': 'none' }"
-                                readonly="true"
-                                ></p-inputnumber> 
-                                </td>
-                        </tr>
-                        <tr>
-                            <td class="px-2 pb-3">{{ this.sharedService.T('adjustment') }}</td>
-                            <td class="pe-0 2xl:pe-4 text-end xl:text-center">
-                                <p-inputnumber  
-                                formControlName="adjustment"
-                                inputId="minmax" 
-                                mode="currency"
-                                currency="SEK" 
-                                [minFractionDigits]="2" 
-                                [maxFractionDigits]="2" 
-                                [locale]="this.sharedService.currentLocale" 
-                                class="py-0"
-                                [inputStyle]="{ 'width': '120px', 'border': 'none' }"
-                                readonly="true"
-                                ></p-inputnumber> 
-                                </td>
-                        </tr>
-                        <tr class="border-y border-CustomBorder">
-                            <td class="px-2 font-bold text-sm whitespace-nowrap py-2">{{ this.sharedService.T('totalDue') }}</td>
-                            <td class=" pe-0 2xl:pe-4 text-end xl:text-center font-bold text-sm">
-                                <p-inputnumber  
-                                formControlName="priceIncVat"
-                                inputId="minmax" 
-                                mode="currency"
-                                currency="SEK"
-                                [minFractionDigits]="0" 
-                                [maxFractionDigits]="0" 
-                                [locale]="this.sharedService.currentLocale" 
-                                [inputStyle]="{ 'width': '120px', 'border': 'none' }"
-                                readonly="true"
-                                ></p-inputnumber>
-                        </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="">
+                <!-- end invoice detail     -->
+                <div class="border-t-2 border-Thead px-3 my-3">
+                </div>
+
+                <div class="flex mb-5 gap-3">
+                    @if(createOffer)
+                    {
+                    <p-button type="submit" size="large" icon="pi pi-plus"
+                        label="{{ this.sharedService.T('createOffer') }}" (click)="onFormSubmit()"></p-button>
+                    }
+                    @else {
+                    <p-button type="submit" size="large" icon="pi pi-plus"
+                        label="{{ this.sharedService.T('updateOffer') }} " (click)="onFormSubmit()"></p-button>
+                    }
+                    <p-button size="large" severity="secondary" label="{{ this.sharedService.T('cancel') }}"
+                        (onClick)="onCancelForm()"></p-button>
+
+                </div>
             </div>
         </div>
-        <div class="">
-            <!-- end invoice detail     -->
-            <div class="border-t-2 border-Thead px-3 my-3">
-            </div>
-    
-            <div class="flex mb-5 gap-3">
-                @if(createOffer)
-                {
-                    <p-button type="submit" size="large"  icon="pi pi-plus" label="{{ this.sharedService.T('createOffer') }}"  (click)="onFormSubmit()" ></p-button>
-                }
-                @else {
-                    <p-button type="submit" size="large" icon="pi pi-plus" label="{{ this.sharedService.T('updateOffer') }} "  (click)="onFormSubmit()" ></p-button>
-                }
-                    <p-button size="large"   severity="secondary" label="{{ this.sharedService.T('cancel') }}" (onClick)="onCancelForm()"></p-button>                
-                
-            </div>
-        </div>
-    </div>
-    </form>    
+    </form>
 </section>
