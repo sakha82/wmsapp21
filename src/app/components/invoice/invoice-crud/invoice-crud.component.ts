@@ -383,6 +383,14 @@ export class InvoiceCrudComponent implements OnInit {
     }
   }
 
+  onDragStart(event: any, detail: any) {
+    detail.isDragging = true;
+  }
+
+  onDragEnd(event: any, detail: any) {
+    detail.isDragging = false;
+  }
+
   addTemplate(templateId: number) {
     this.logger.info('inside template', templateId);
     this.isLoading= true;

@@ -3,7 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { IEnums, IOffer, IProduct } from 'app/app.model';
+import { IEnums, IInvoiceDetailPrompt, IOffer, IProduct } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
 import { SharedService } from 'app/services/shared.service';
 import { OfferService } from 'app/services/offer.service';
@@ -18,6 +18,7 @@ import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { AiService } from 'app/services/ai.service';
 
 
 @Component({
@@ -52,7 +53,7 @@ export class OfferCrudComponent implements OnInit {
   defaultCustomerName:string |null = null;
   customerType:string = '';
   unitOptions: IEnums[] = [];
-
+selectedContext:IEnums[] | null = null;
   // added flag to mirror workOrder logic
   submitted: boolean = false;
   
@@ -67,7 +68,8 @@ export class OfferCrudComponent implements OnInit {
               private readonly location: Location,
               private messageService: MessageService,
             private workshopService: WorkshopService,
-          private productService: ProductService) { 
+          private productService: ProductService,
+        private aiService: AiService,) { 
     
     this.offer = this.fb.group({
       offerId:'',
@@ -146,13 +148,6 @@ export class OfferCrudComponent implements OnInit {
       detail.isProductValid = true;
       detail.isUnitPriceValid = true;
     });
-    
-    // this.translateService
-    // .get(key)
-    // .subscribe((translated: string) => {
-    //   this.sharedService.setPageHeader(`${translated} [# ${response.offerId}]`);
-    // });
-        
     this.offer.patchValue(response);
     response.details.forEach((element:any) => {
       element.vatPercentage = element.vatPercentage.toString();  
@@ -188,6 +183,13 @@ export class OfferCrudComponent implements OnInit {
       
     });
      this.isLoading = false;
+  }
+  onDragStart(event: any, detail: any) {
+    detail.isDragging = true;
+  }
+
+  onDragEnd(event: any, detail: any) {
+    detail.isDragging = false;
   }
 
   onChangeCustomer($event:any) {
@@ -428,7 +430,50 @@ export class OfferCrudComponent implements OnInit {
     const keyboardEvent = event as KeyboardEvent;
     event.preventDefault();  // Prevents form submission
   }
-
+GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
+    this.selectedContext = [selectedCategory];
+    let selectectContextValue = '';
+    if (this.selectedContext) {
+      selectectContextValue = this.selectedContext[0].value; 
+    }
+  const items: IInvoiceDetailPrompt[] = this.details.controls.map((item:any) => ({
+  type: item.get('category')?.value,
+  name: item.get('product')?.value,
+  description: item.get('description')?.value,
+  quantity: item.get('quantity')?.value,
+  unit: item.get('unit')?.value,
+  }));
+  this.logger.info('index=' + index);
+  const textareaControl = this.details.controls[index].get('textContent');
+  this.aiService
+      .getInvoiceDescription({context: selectectContextValue,items:items})
+      .pipe(
+        catchError((err) => {
+          this.isLoading = false;
+          console.log(err);
+          throw err;
+        })
+      )
+      .subscribe((res: any) => {
+        this.isLoading = false;
+        if (res) {
+          textareaControl.setValue(res.text);
+          this.messageService.add({
+            severity: 'success',
+            detail: this.sharedService.T('aiTextAdded'),
+          });
+          
+        }
+          else {
+          this.messageService.add({
+            severity: 'error',
+            detail: this.sharedService.T('errorMessage'),
+          });
+          }
+          //this.selectedContext = null;
+          
+        });
+  }
   onFormSubmit() {
  this.isLoading = true;
     this.errorOnCustomer = false;  
