@@ -34,11 +34,12 @@
       <div class="col-span-3">
         <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
         <div class="relative">
+             <p-iconfield>
+             <p-inputicon class=" icon-primary pi pi-car" />
           <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
             (input)="onInputChange($event)"
-            class="uppercase p-2 border border-gray-300 rounded-md focus:outline-none w-full pl-12 " />
-          <img src="assets/images/eu-flag.png" alt="EU Flag"
-            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-auto" />
+            class="uppercase p-2 w-full pl-12 " />
+            </p-iconfield>
         </div>
       </div>
 
