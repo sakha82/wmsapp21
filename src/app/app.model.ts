@@ -607,4 +607,93 @@ quantity:number;
 unit:string;
 }
 
-    
+///// vehicle
+export interface VehicleSearchResponse {
+  wmsId: string;
+  vehiclePlate: string;
+
+  // Vehicle Info
+  vehicleManufacturer?: string;
+  vehicleModel?: string;
+  vehicleYear?: number;
+  latestVehicleMileage?: number;
+  vin?: string;
+
+  // Customer
+  customerId?: number;
+  customerName?: string;
+  organizationNo?: string;
+  telephone?: string;
+  email?: string;
+
+  // Invoice Aggregations
+  totalInvoiceCount: number;
+  totalInvoiceAmount: number;
+  paidInvoiceAmount: number;
+  unpaidInvoiceAmount: number;
+  lastInvoiceDate?: string; // ISO string from API
+
+  // WorkOrders
+  totalWorkOrderCount: number;
+  lastWorkOrderDate?: string;
+
+  // Offers
+  totalOfferCount: number;
+
+  // Digital Services
+  totalDigitalServiceCount: number;
+  lastDigitalServiceDate?: string;
+
+  // Purchases
+  totalWOPurchaseCount: number;
+
+  // Hierarchy
+  dataPayload?: VehicleHierarchy;
+
+  refreshedAt: string;
+}
+
+export interface VehicleHierarchy {
+  customerId: number;
+  customerName: string;
+  invoices?: InvoiceDto[];
+  workOrders?: WorkOrderDto[];
+  offers?: OfferDto[];
+  digitalServices?: DigitalServiceDto[];
+}
+export interface InvoiceDto {
+  invoiceId: number;
+  invoiceDate?: string;
+  priceIncVat: number;
+  isPaid: boolean;
+}
+export interface WorkOrderDto {
+  workOrderId: number;
+  workOrderDate?: string;
+  workOrderStatus?: string;
+
+  services?: WOServiceDto[];
+  purchases?: WOPurchaseDto[];
+}
+export interface WOServiceDto {
+  woServiceId: number;
+  serviceName: string;
+  serviceHours?: number;
+}
+export interface WOPurchaseDto {
+  woPurchaseId: number;
+  supplierName: string;
+  purchaseReference: string;
+}
+export interface OfferDto {
+  offerId: number;
+  offerDate?: string;
+  priceIncVat?: number;
+  isAccepted?: boolean;
+}
+export interface DigitalServiceDto {
+  digitalServiceId: number;
+  serviceDate: string;
+  serviceType: string;
+  vehicleMileage: number;
+}

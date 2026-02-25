@@ -36,6 +36,7 @@ import { ProductDetailComponent } from './components/product/product-list/produc
 import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { SaleComponent } from './components/sale/sale.component';
+import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 
 export const routes: Routes =  [
   { path: '', component:HomeComponent},
@@ -75,6 +76,7 @@ export const routes: Routes =  [
               {path: 'setting',component:SettingCrudComponent},
               {path: 'reports',component:ReportsComponent},
               {path: 'sales',component:SaleComponent},
+              {path: 'vehicle',component:VehicleListComponent},
               ]
   },
 ];

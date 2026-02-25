@@ -84,7 +84,7 @@ percentage: number = 0;
    }
 
    ngOnInit() {
-    
+    this.loadvehicle();
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   let cyear: number;
@@ -111,6 +111,24 @@ percentage: number = 0;
     this.getUnpaidInvoices();
     
   }
+  loadvehicle()
+  {
+    this.sharedService
+      .getVehicleInfo('AAM14L')
+      .pipe(
+        catchError((err) => {
+          console.log(err);
+          throw err;
+        })
+      )
+      .subscribe((response: any) => {
+        if (response) {
+          this.logger.info('Vehicle Info:');
+          this.logger.info(response);
+        }
+      });
+  }
+
 loadMonths(): Observable<void> {
   const months = this.monthKeys.map((key) => ({
     key,

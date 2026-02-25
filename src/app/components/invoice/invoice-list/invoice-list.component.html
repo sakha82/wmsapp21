@@ -13,10 +13,11 @@
     </div>
 </header>
 <!-- header end -->
-<section class="px-5 mb-10 pb-10 bg-bgColor">
+<section class="p-6 pb-10">
   <form [formGroup]="filters">
+    <div class="p-8 rounded-lg shadow-lg bg-white">
     <!-- Filter Section -->
-    <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+    <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
       <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
         <!-- Left Filters -->
         <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
@@ -49,7 +50,7 @@
               <div class="flex text-center gap-3">
                 <p-datepicker formControlName="fromDate" dataType="string" class="w-30"
                   dateFormat="yy-mm-dd" [iconDisplay]="'input'" [showIcon]="false"
-                  (onSelect)="onSelectFromDate($event)"></p-datepicker>
+                  (onSelect)="onSelectFromDate($event)"></p-datepicker> 
               </div>
               <span class="my-auto">
                 <img src="assets/images/line.png" alt="" />
@@ -246,7 +247,7 @@
         <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
               (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
               currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-              styleClass="!bg-transparent">
+              >
               <ng-template pTemplate="firstpagelinkicon">
                 <img src="assets/icons/paginator/previus.svg" alt="">
               </ng-template>
@@ -266,7 +267,7 @@
               </ng-template>
             </p-paginator>
       </div>
-
+    </div>
     </div>
   </form>
   <p-toast />
