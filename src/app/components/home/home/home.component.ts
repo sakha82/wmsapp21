@@ -202,7 +202,7 @@ export class HomeComponent {
         if (!res) return;
 
         // Store user data in session storage
-        sessionStorage.setItem('userName', res.Email); 
+        sessionStorage.setItem('userName', res.userName); 
         sessionStorage.setItem('accessToken', res.token);
         sessionStorage.setItem('wmsId', res.wmsId);
         sessionStorage.setItem('workshopName', res.displayName);

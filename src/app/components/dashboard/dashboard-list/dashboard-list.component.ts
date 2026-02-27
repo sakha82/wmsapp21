@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, ChangeDetectorRef, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Form, FormBuilder, FormGroup } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
@@ -9,29 +9,30 @@ import { DashboardService } from 'app/services/dashboard.service';
 import {TooltipItem } from 'chart.js';
 
 // RxJS
-import { catchError, concatMap, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, concatMap, forkJoin, map, Observable, of, switchMap, tap, Subject } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
 import { InvoiceService } from 'app/services/invoice.service';
 import { SelectChangeEvent } from 'primeng/select';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-dashboard-list',
   standalone: true,
  imports: [
-    ...SHARED_IMPORTS,GenericLoaderComponent
+    ...SHARED_IMPORTS,GenericLoaderComponent,ProgressBarModule 
   ],
     templateUrl: './dashboard-list.component.html',
   styleUrl: './dashboard-list.component.css'
 })
-export class DashboardListComponent implements OnInit {
+export class DashboardListComponent implements OnInit, OnDestroy {
   
   private readonly monthKeys = [
   'january','february','march','april','may','june',
   'july','august','september','october','november','december'
 ];
 months: { key: string; value: string }[] = [];
+progressPercentage:number = 0;
 
   
   unpaidInvoices: IUnpaidInvoice[] = [];
@@ -60,6 +61,9 @@ months: { key: string; value: string }[] = [];
   isLoading:boolean = false;
 percentage: number = 0;
 
+  statMonths:any[] = [];
+  selectedStatMonths = '3';
+  private destroy$ = new Subject<void>();
   
   constructor(private cd: ChangeDetectorRef,
               private readonly router: Router,
@@ -76,15 +80,18 @@ percentage: number = 0;
       sortBy:'priceIncVat',
       sortDir:'-1'
     });
-  // const currentDate = new Date();
-  // const monthName = currentDate.toLocaleString('default', { month: 'long' }); // Get full month name
-  // const year = currentDate.getFullYear();
-  // this.selectedMonth = `${monthName} ${year}`;
+  
   
    }
 
    ngOnInit() {
-    this.loadvehicle();
+   this.statMonths = [
+            { value:'3',text:this.sharedService.T('previous3Months')},
+            { value:'6',text:this.sharedService.T('previous6Months')},
+            { value:'12',text:this.sharedService.T('previousYear')},
+        ];
+          
+  this.loadvehicle();
   const currentDate = new Date();
   const currentDay = currentDate.getDate();
   let cyear: number;
@@ -110,7 +117,66 @@ percentage: number = 0;
     this.loadLineChart("3");
     this.getUnpaidInvoices();
     
+    // Listen for theme/palette changes and refresh chart
+    this.listenForThemeChanges();
+
+    
   }
+
+  /**
+   * Listen for theme/palette changes using MutationObserver
+   * When user changes theme in layout, CSS variables update, this triggers chart refresh
+   */
+  private listenForThemeChanges(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Find the dynamic style element that contains primary palette CSS
+    const dynamicStyleEl = document.getElementById('dynamic-primary');
+    
+    if (dynamicStyleEl) {
+      // Observe changes to the style element's content (childList includes text nodes)
+      const observer = new MutationObserver(() => {
+        // When theme palette changes, CSS variables update
+        // Refresh the chart to pick up new colors
+        if (this.topSales && this.topSales.length > 0) {
+          // Add a small delay to ensure CSS variables have been updated
+          setTimeout(() => {
+            this.lineChart();
+            this.cd.markForCheck();
+          }, 50);
+        }
+      });
+
+      // Observe text content changes in the style element
+      observer.observe(dynamicStyleEl, {
+        childList: true,    // Watch for child nodes being added/removed
+        characterData: true, // Watch for text node changes
+        subtree: true       // Watch subtree
+      });
+    }
+
+    // Also observe document root for class changes (dark mode toggle)
+    const rootObserver = new MutationObserver(() => {
+      if (this.topSales && this.topSales.length > 0) {
+        setTimeout(() => {
+          this.lineChart();
+          this.cd.markForCheck();
+        }, 50);
+      }
+    });
+
+    rootObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: false
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadvehicle()
   {
     this.sharedService
@@ -193,6 +259,10 @@ loadCurrentMonthStats(cyear: string, cmonth: string) {
       // Assign the results to the respective properties
       this.currentMonthSaleTarget = Number(results.currentMonthSaleTarget);
       this.currentMonthSale = Number(results.currentMonthSale);
+      this.progressPercentage = Math.round(
+  (Number(results.currentMonthSale) / Number(results.currentMonthSaleTarget)) * 100
+);
+
       this.currentMonthOrders = results.currentMonthOrders;
       this.currentMonthOffers = results.currentMonthOffers;
       this.currentMonthDigitalServices = results.currentMonthDigitalServices;
@@ -256,8 +326,11 @@ loadLineChart(noOfPreviousMonths:string){
 
 }
 
-onPeriodChange(event: Event): void {
-  const selectedValue = (event.target as HTMLSelectElement).value; // Get the selected value
+onPeriodChange(event: any): void {
+  if (!event.value)
+      event.value = '';
+  const selectedValue = event.value; // Get the selected value
+  this.selectedStatMonths = selectedValue; // Update the selected value
   this.loadLineChart(selectedValue); // Update the chart based on the selected period
 }
 
@@ -341,18 +414,72 @@ onPeriodChange(event: Event): void {
   });
 }
 
+  /**
+   * Convert hex color to rgba format
+   */
+  hexToRgba(hex: string, alpha: number): string {
+    // Remove '#' if present and trim whitespace
+    hex = hex.trim().replace('#', '');
+    
+    // Handle short hex format (e.g., #FFF)
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  /**
+   * Generate a complementary color for better contrast
+   * Takes a hex color and returns a contrasting lighter color
+   */
+  getContrastColor(hexColor: string): string {
+    const hex = hexColor.trim().replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // Create a lighter, warm complementary color (orange/amber range)
+    // Shift towards orange: boost red, reduce blue
+    const contrastR = Math.min(255, Math.floor((r + 255) / 2 + 40));
+    const contrastG = Math.min(255, Math.floor((g + 150) / 2));
+    const contrastB = Math.min(255, Math.floor(b / 2));
+
+    const contrastHex = `${contrastR.toString(16).padStart(2, '0')}${contrastG.toString(16).padStart(2, '0')}${contrastB.toString(16).padStart(2, '0')}`;
+    return `#${contrastHex}`;
+  }
+
   lineChart() {
     this.logger.info('Initializing chart with top sales data:');
     this.logger.info('Initializing chart with top sales data:', this.topSales);
 
     if (isPlatformBrowser(this.platformId)) {
+      // Get PrimeNG Design Tokens from CSS Variables (v21 Styled Mode)
       const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--p-text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+      
+      // Semantic Tokens for text and surface
+      const textColor = documentStyle.getPropertyValue('--p-text-color').trim();
+      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color').trim();
+      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color').trim();
+      
+      // Primary Color Tokens (Automatically adapts to selected theme: Rose, Indigo, Emerald, Violet)
+      const primaryColor = documentStyle.getPropertyValue('--p-primary-500').trim();
+      const primaryLight = documentStyle.getPropertyValue('--p-primary-100').trim();
+      const primaryLighter = documentStyle.getPropertyValue('--p-primary-50').trim();
+      
+      // Secondary/Success Color Tokens (for contrast)
+      const successColor = documentStyle.getPropertyValue('--p-success-500').trim();
+      const successLight = documentStyle.getPropertyValue('--p-success-100').trim();
+      const successLighter = documentStyle.getPropertyValue('--p-success-50').trim();
+      
+      // Generate a contrasting color for second dataset (derived from primary, not black)
+      const contrastColor = this.getContrastColor(primaryColor);
       
       this.lineChartData = {
-        
         labels: Array.from({ length: this.topSales.map((m: any) => m.monthYear).length }, (_, i) => (this.months.find(m => m.key === this.topSales[i].monthYear.split('-')[0])?.value ?? '') + ' ' + this.topSales[i].monthYear.split('-')[1]), 
         datasets: [
           {
@@ -360,44 +487,73 @@ onPeriodChange(event: Event): void {
             data: this.topSales.map((m: any) => Number(m.workSale)),
             fill: true,
             tension: 0.4,
-            borderColor: documentStyle.getPropertyValue('--p-blue-500'),
-            backgroundColor: 'rgba(56, 102, 255, 0.2)',
-            pointBackgroundColor: 'blue',
-            pointBorderColor: '#4F39F6',
+            borderColor: primaryColor,
+            backgroundColor: this.hexToRgba(primaryColor, 0.15),
+            pointBackgroundColor: primaryColor,
+            pointBorderColor: primaryColor,
             pointRadius: 0,
+            pointHoverRadius: 8,
+            borderWidth: 3,
+            pointBorderWidth: 2,
           },
           {
             label: 'Reservdelar',
             data: this.topSales.map((m: any) => Number(m.partsSale)),
             fill: true,
             tension: 0.4,
-            borderColor: documentStyle.getPropertyValue('--p-green-500'),
-            backgroundColor: 'rgba(34, 197, 94, 0.2)',
-            pointBackgroundColor: 'green',
-            pointBorderColor: 'green',
+            borderColor: contrastColor,
+            backgroundColor: this.hexToRgba(contrastColor, 0.15),
+            pointBackgroundColor: contrastColor,
+            pointBorderColor: contrastColor,
             pointRadius: 0,
+            pointHoverRadius: 8,
+            borderWidth: 3,
+            pointBorderWidth: 2,
           }
         ]
       };
 
-      
-  
       this.lineChartOptions = {
         maintainAspectRatio: false,
         aspectRatio: 0.6,
+        responsive: true,
         plugins: {
           legend: {
             labels: {
-              color: textColor
-            }
+              color: textColor,
+              font: {
+                size: 13,
+                weight: 600 as any,
+                family: '"Inter", sans-serif'
+              },
+              usePointStyle: true,
+              padding: 20,
+              boxWidth: 8,
+              boxHeight: 8
+            },
+            position: 'top' as const
           },
           tooltip: {
+            backgroundColor: this.hexToRgba(textColor, 0.95),
+            padding: 12,
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: primaryColor,
+            borderWidth: 1,
+            titleFont: {
+              size: 14,
+              weight: 600 as any
+            },
+            bodyFont: {
+              size: 13
+            },
+            displayColors: true,
             callbacks: {
               title: (tooltipItems: TooltipItem<'line'>[]) => {
-                return `Day ${tooltipItems[0]?.label ?? ''}`;
+                return tooltipItems[0]?.label ?? '';
               },
               label: (tooltipItem: TooltipItem<'line'>) => {
-                return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
+                return `${tooltipItem.dataset.label}: ${Number(tooltipItem.raw).toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`;
               }
             }
           }
@@ -406,36 +562,53 @@ onPeriodChange(event: Event): void {
           x: {
             ticks: {
               color: textColorSecondary,
+              font: {
+                size: 12
+              }
             },
             grid: {
-              display: false, // Hide y-axis labels
+              display: true,
               color: surfaceBorder,
+              drawBorder: false,
+              lineWidth: 0.5
             }
           },
           y: {
             ticks: {
-              display: true, // Hide y-axis labels
+              display: true,
+              color: textColorSecondary,
+              font: {
+                size: 12
+              },
+              callback: (value: any) => {
+                return Number(value).toLocaleString('sv-SE', { maximumFractionDigits: 0 });
+              }
             },
             grid: {
               color: surfaceBorder,
+              drawBorder: false,
+              lineWidth: 0.5
             }
           }
         },
         elements: {
           point: {
             radius: (context: any) => {
-              // 🎯 Only show the point when hovered
-              return context.active ? 6 : 0;
+              return context.active ? 8 : 0;
             },
-            hoverRadius: 6,
+            hoverRadius: 8,
             hoverBackgroundColor: 'white',
             hoverBorderWidth: 2,
-            hoverBorderColor: 'black'
+            hoverBorderColor: primaryColor
+          },
+          line: {
+            borderCapStyle: 'round' as const,
+            borderJoinStyle: 'round' as const
           }
         },
         interaction: {
-          mode: 'nearest', // Only activates when hovering near a point
-          intersect: true
+          mode: 'index',
+          intersect: false
         }
       };
   

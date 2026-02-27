@@ -23,7 +23,8 @@ interface WorkshopService { name: string };
     PdfViewerModule, GenericLoaderComponent,TimelineModule
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: './invoice-detail.component.html'
+  templateUrl: './invoice-detail.component.html',
+  styleUrl: './invoice-detail.component.css',
 })
 export class InvoiceDetailComponent {
 

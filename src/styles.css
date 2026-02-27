@@ -30,6 +30,10 @@
 ========================= */
 @layer components {
 
+  .header-primary {
+    @apply bg-[var(--p-primary-100)];
+  }
+  
   .container-main {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
@@ -215,6 +219,9 @@
 ========================= */
 .icon-primary { color: var(--p-primary-600) !important;},
 
+.header-primary { background-color: var(--p-primary-100) !important;},
+
+
 /* =========================
 Final revision done We only need following 2 properties to change for tables
 ========================= */
@@ -252,8 +259,14 @@ Final revision done We only need following 2 properties to change for tables
 /* Hover state */
 /* Hover */
 .p-menu .p-menu-item-content:hover {
-    background: var(--p-primary-hover-color);
+    background: var(--p-primary-color) !important;
+    color: var(--p-primary-contrast-color) !important;
 }
+.p-menu .p-menu-item-link:not(.p-disabled):hover 
+{ background: var(--p-primary-100) !important; 
+  color: var(--p-primary-contrast-color) !important; 
+}
+
 /* Focused / Active (selected via routerLinkActive) */
 .p-menu .p-menu-item[data-p-focused="true"] > .p-menu-item-content {
     background: var(--p-primary-color);
@@ -265,16 +278,6 @@ Final revision done We only need following 2 properties to change for tables
 .p-menu .p-menu-item[data-p-focused="true"] .p-menu-item-label {
     color: inherit;
 }
-/* 1. Bold text */
-.p-menu .p-menu-item-label {
-    font-weight: 500;
-}
-
-/* 2. More vertical spacing */
-.p-menu .p-menu-item-content {
-    padding: 0.25rem 0.5rem;
-}
-
 /* Remove outer container styling */
 .p-menu {
     border: 0 !important;
@@ -307,3 +310,4 @@ Final revision done We only need following 2 properties to change for tables
 .p-menu .active-menu-item .p-menu-item-icon {
     color: var(--p-primary-contrast-color) !important;
 }
+

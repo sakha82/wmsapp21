@@ -26,19 +26,31 @@ import { Menu } from 'primeng/menu';
 })
 export class LayoutComponent implements OnInit {
   items: MenuItem[] | undefined;
-  workshop:IWorkshop | undefined;
+  workshop!:IWorkshop;
+  selectedWorkshop!:IWorkshop;
+  workshops:IWorkshop[] = [];
   selectedLang:string = '';
   version = '';
   
-  palettes = [
-    { label: 'Rose', value: 'rose' },
-    { label: 'Indigo', value: 'indigo' },
-    { label: 'Emerald', value: 'emerald' },
-    { label: 'Violet', value: 'violet' }
-  ];
-  selected = 'rose';
+  // palettes = [
+  //   { label: 'Rose', value: 'rose' },
+  //   { label: 'Indigo', value: 'indigo' },
+  //   { label: 'Emerald', value: 'emerald' },
+  //   { label: 'Violet', value: 'violet' }
+  // ];
+palettes = [
+  { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     // Default
+  { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },
+  { label: 'Industrial Teal',   value: 'teal', color: '#0d9488' },
+  { label: 'Minimal Slate',     value: 'slate', color: '#64748b' },
+  { label: 'Fresh Emerald',     value: 'emerald', color: '#10b981' },
+  { label: 'Deep Red',          value: 'red', color: '#b91c1c' }       // Muted red (not alert red)
+];
+  selected = 'blue';
    isDark = false;
+   currentUser:string |null = '' ;
    selectedRoute: string = '';
+   currentMenuLabel: string = '';
     constructor(
               public readonly sharedService:SharedService,
               private readonly router:Router,
@@ -55,13 +67,15 @@ export class LayoutComponent implements OnInit {
     .subscribe((e: any) => {
       this.selectedRoute = e.urlAfterRedirects;
       this.buildMenu();
+      this.currentMenuLabel = this.getSelectedMenuLabel();
     });
   }
        
   ngOnInit(): void {
     this.theme.setPrimaryPalette(this.selected);
     this.selectedLang = sessionStorage.getItem('lang') || 'sv';
-
+    this.logger.info('selected userName::' + sessionStorage.getItem('userName'));
+    this.currentUser = sessionStorage.getItem('userName');
 
 
     this.workshopService
@@ -75,6 +89,8 @@ export class LayoutComponent implements OnInit {
     .subscribe((response: any) => {
       if(response){
         this.workshop = response; 
+        this.workshops.push(this.workshop);
+        this.selectedWorkshop = this.workshops[0];
         this.logger.info(this.workshop);
       }
     });
@@ -91,6 +107,13 @@ export class LayoutComponent implements OnInit {
                         routerLink: '/sv/dashboard',
                         styleClass: this.selectedRoute.startsWith('/sv/dashboard') ? 'active-menu-item' : ''
                     },
+                    {
+                        label: this.sharedService.T('vehicles'),
+                        materialIcon: 'directions_car',
+                        routerLink: '/sv/vehicle',
+                        styleClass: this.selectedRoute.startsWith('/sv/vehicle') ? 'active-menu-item' : ''
+                    },
+
                     {
                         label: this.sharedService.T('customers'),
                         materialIcon: 'group',
@@ -113,7 +136,7 @@ export class LayoutComponent implements OnInit {
                     },
                     {
                         label: this.sharedService.T('workorders'),
-                        materialIcon: 'engineering',
+                        materialIcon: 'handyman',
                         routerLink: '/sv/workorder',
                         styleClass: this.selectedRoute === '/sv/workorder' ? 'active-menu-item' : ''
                     },
@@ -150,25 +173,22 @@ export class LayoutComponent implements OnInit {
                     },
       {
                         label: this.sharedService.T('attendanceRegister'),
-                        materialIcon: 'calendar_today',
+                        materialIcon: 'punch_clock',
                         routerLink: '/sv/employment',
                         styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     },
-                  {
-                       label: this.sharedService.T('settings'),
-                        materialIcon: 'calendar_today',
-                        routerLink: '/sv/setting',
-                        styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
+                    {
+                       label: this.sharedService.T('reports'),
+                        materialIcon: 'exit_to_app',
+                        routerLink: '/sv/reports',
+                        styleClass: this.selectedRoute.startsWith('/sv/reports') ? 'active-menu-item' : ''
                     },
                     {
-                       label: this.sharedService.T('logout'),
-                        materialIcon: 'calendar_today',
+                       label: this.sharedService.T('settings'),
+                        materialIcon: 'settings',
                         routerLink: '/sv/setting',
                         styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     }
-
-
-
 
                 ]
             }
@@ -182,31 +202,44 @@ export class LayoutComponent implements OnInit {
   sessionStorage.setItem('lang',event.value);
   window.location.reload();
 }
-Logout()
-{
-  this.sharedService
+
+ onPaletteChange(palette: any) {
+   this.logger.info('change value to::',palette);
+    this.theme.setPrimaryPalette(palette);
+  }
+  onDarkChange(checked: boolean) {
+    this.theme.setDarkMode(checked);
+  }
+  onLogout() {
+    this.sharedService
         .logout()
         .pipe(
           catchError((error) => {
             return of(null);
           }))
         .subscribe((res) => {
-              if (!res) return;
-               sessionStorage.removeItem('userName'); 
-              sessionStorage.removeItem('accessToken');
-              sessionStorage.removeItem('wmsId');
-              sessionStorage.removeItem('country');
-              sessionStorage.removeItem('lang');
-              this.logger.info('start errot');
-              this.router.navigate(['']);
+              // Clear all sessionStorage
+              sessionStorage.clear();
+              this.logger.info('User logged out successfully');
+              // Redirect to home page
+              this.router.navigate(['/']);
             });
- }
-
- onPaletteChange(palette: any) {
-   this.logger.info('change value to::',palette);
-    this.theme.setPrimaryPalette(palette.value);
   }
-  onDarkChange(checked: boolean) {
-    this.theme.setDarkMode(checked);
+
+  getSelectedMenuLabel(): string {
+    if (!this.items || this.items.length === 0) {
+      return 'Dashboard';
+    }
+    
+    const menuItems = this.items[0]?.items || [];
+    const selected = menuItems.find(item => 
+      item.routerLink && this.selectedRoute.startsWith(item.routerLink as string)
+    );
+
+     if (selected?.label?.toLowerCase() === 'dashboard') {
+    return this.sharedService.T('welcome');
+  }
+    
+    return selected?.label || this.sharedService.T('welcome');
   }
 }

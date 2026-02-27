@@ -3,19 +3,50 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { catchError, filter, of, switchMap } from 'rxjs';
 import { SHARED_IMPORTS } from '../../../sharedimports';
-import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager, VehicleSearchResponse } from 'app/app.model';
+import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager, VehicleSearch, VehicleSearchResponse } from 'app/app.model';
 import { SharedService, CustomerService, LogService, WorkshopService } from 'app/services';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TreeTableModule } from 'primeng/treetable';
 import { CommonModule } from '@angular/common';
+import { Pipe, PipeTransform } from '@angular/core';
 
 interface TreeNode {
     data: { [key: string]: any }; // Contains the row data
     children?: TreeNode[]; // Optional child nodes
     parent?: TreeNode; // Optional parent node}
 }
+
+// Custom pipes for filtering and reducing
+// @Pipe({
+//   name: 'filter',
+//   standalone: true
+// })
+// export class FilterPipe implements PipeTransform {
+//   transform(items: TreeNode[], field: string, value: any): TreeNode[] {
+//     if (!items || !field || value === undefined) {
+//       return items;
+//     }
+//     return items.filter(item => item.data[field] === value);
+//   }
+// }
+
+// @Pipe({
+//   name: 'reduce',
+//   standalone: true
+// })
+// export class ReducePipe implements PipeTransform {
+//   transform(items: TreeNode[], field: string, initialValue: number = 0): number {
+//     if (!items || !field) {
+//       return initialValue;
+//     }
+//     return items.reduce((sum, item) => {
+//       const value = parseFloat(item.data[field]) || 0;
+//       return sum + value;
+//     }, initialValue);
+//   }
+// }
 
 @Component({
   selector: 'app-customer-list',
@@ -26,6 +57,7 @@ interface TreeNode {
 
 export class VehicleListComponent {
 
+  vehiclePlates: VehicleSearch[] = [];
   customers: ICustomer[] = [];
   vehiclesData: TreeNode[] = [];
   isLoading: boolean = false;
@@ -64,14 +96,44 @@ export class VehicleListComponent {
       { field: 'vehicleMileage', header: 'Vehicle Mileage' }
     ];
 
-    this.loadvehicle();
   }
 
-  loadvehicle()
+  keyupVehicle(event: any) {
+    if (event?.value) {
+      this.sharedService
+      .getVehicleList(event.value)
+      .pipe(
+        catchError((err) => {
+          this.isLoading = false;
+          console.log(err);
+          throw err;
+        })
+      )
+      .subscribe((response: any) => {
+        this.isLoading = false;
+        if (response) {
+          this.logger.info('Vehicle Info:');
+          this.logger.info(response);
+          this.vehiclePlates = response;
+        }
+      });
+    }
+  }
+    onClearVehicle() {
+      this.logger.info('Clearing vehicle search input and results');
+      this.vehiclePlates = [];
+      this.vehiclesData = [];
+  }
+
+  onSelectVehicle(event: any) {
+    this.logger.info('Selected vehicle plate: ' + event.value.vehiclePlate);
+    this.loadvehicle(event.value.vehiclePlate);
+  }
+  loadvehicle(vehiclePlate: string)
   {
     this.isLoading = true;
     this.sharedService
-      .getVehicleInfo('AAM14L')
+      .getVehicleInfo(vehiclePlate)
       .pipe(
         catchError((err) => {
           this.isLoading = false;
@@ -94,7 +156,13 @@ export class VehicleListComponent {
               },
               children: [
                 {
-                  data: { label: 'Invoices' },
+                  data: { 
+                    label: 'Invoices',
+                    totalInvoiceCount: response.totalInvoiceCount,
+                    totalInvoiceAmount: response.totalInvoiceAmount,
+                    paidInvoiceAmount: response.paidInvoiceAmount,
+                    unpaidInvoiceAmount: response.unpaidInvoiceAmount
+                  },
                   children: jsonData.invoices?.map((invoice: any) => ({
                     data: {
                       label: 'Invoice',
@@ -106,7 +174,12 @@ export class VehicleListComponent {
                   })) || []
                 },
                 {
-                  data: { label: 'Work Orders' },
+                  data: { 
+                    label: 'Work Orders',
+                    totalWorkOrderCount: response.totalWorkOrderCount,
+                    lastWorkOrderDate: response.lastWorkOrderDate,
+                    totalWOPurchaseCount: response.totalWOPurchaseCount
+                  },
                   children: jsonData.workOrders?.map((workOrder: any) => ({
                     data: {
                       label: 'Work Order',
@@ -117,7 +190,10 @@ export class VehicleListComponent {
                   })) || []
                 },
                 {
-                  data: { label: 'Offers' },
+                  data: { 
+                    label: 'Offers',
+                    totalOfferCount: jsonData.totalOfferCount
+                  },
                   children: jsonData.offers?.map((offer: any) => ({
                     data: {
                       label: 'Offer',
@@ -129,7 +205,11 @@ export class VehicleListComponent {
                   })) || []
                 },
                 {
-                  data: { label: 'Digital Services' },
+                  data: { 
+                    label: 'Digital Services',
+                    totalDigitalServiceCount: response.totalDigitalServiceCount,
+                    lastDigitalServiceDate: response.lastDigitalServiceDate
+                  },
                   children: jsonData.digitalServices?.map((service: any) => ({
                     data: {
                       label: 'Service',

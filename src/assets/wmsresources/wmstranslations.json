@@ -275,6 +275,11 @@
         "sv": "Skapa digital service"
     },
     {
+        "tkey": "colorTheme",
+        "en": "Color Theme",
+        "sv": "Färgtema"
+    },
+    {
         "tkey": "createNewCustomer",
         "en": "Create New Customer",
         "sv": "Skapa ny kund"
@@ -1595,6 +1600,16 @@
         "sv": "Rapporter"
     },
     {
+        "tkey": "makeDefault",
+        "en": "Make Default",
+        "sv": "Gör till standard"
+    },
+    {
+        "tkey": "vehicles",
+        "en": "Vehicles",
+        "sv": "Fordon"
+    },
+    {
         "tkey": "success",
         "en": "Success",
         "sv": "Lyckades"
@@ -1648,6 +1663,11 @@
         "tkey": "chooseCategory",
         "en": "Choose Category",
         "sv": "Välj kategori"
+    },
+    {
+        "tkey": "loggedInUser",
+        "en": "Logged In User",
+        "sv": "Inloggad användare"
     },
     {
         "tkey": "status",
@@ -1723,5 +1743,10 @@
         "tkey": "employeeName",
         "en": "Employee name",
         "sv": "Anställds namn"
+    },
+    {
+        "tkey": "welcome",
+        "en": "Welcome",
+        "sv": "Välkommen"
     }
 ]

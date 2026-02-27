@@ -1,27 +1,78 @@
 body .ui-button.rounded-button {
     border-radius: 2rem;
 }
- .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .stat-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #dde5f6 0%, #f0f4ff 100%);
-        }
- 
-.right-aligned-label {
-  text-align: right !important; /* Align text to the right */
-  margin-bottom: 1rem; /* Add spacing between <p> tags */
+
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+.stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, #dde5f6 0%, #f0f4ff 100%);
+}
+
+.right-aligned-label {
+    text-align: right !important;
+    margin-bottom: 1rem;
+}
 
 .vertical-spacing > p {
-  margin-bottom: 1rem; /* Add consistent spacing between <p> elements */
+    margin-bottom: 1rem;
+}
+
+/* PrimeNG v21 Styled Mode - Chart Styling */
+.card {
+    border-radius: 0.75rem;
+    background: var(--p-surface-card);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--p-content-border-color);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Chart Container Enhancement */
+:deep(.p-chart) {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Legend Enhancement - Inherit PrimeNG text color */
+:deep(.p-chart .p-chart-legend) {
+    padding-top: 1rem;
+}
+
+/* Canvas styling for smooth rendering */
+:deep(.p-chart canvas) {
+    max-height: 400px;
+}
+
+/* Tooltip Enhancement */
+:deep(.chartjs-tooltip) {
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+/* PrimeNG Theme Integration - Adapts to color scheme changes */
+@media (prefers-color-scheme: light) {
+    .card {
+        background: var(--p-surface-card, #ffffff);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card {
+        background: var(--p-surface-card, #1f2937);
+    }
 }
 

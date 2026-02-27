@@ -4,13 +4,6 @@
   <div class="">
     <p class="font-normal text-2xl">{{this.sharedService.T('dashboard')}} - {{ this.sharedService.workshopName}}</p>
   </div>
-  <div class="flex gap-2">
-    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-    <div
-      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-      <p>AS</p>
-    </div> 
-  </div>
 </header>
     <section class="p-6 pb-12">
       <form [formGroup]="filters">
@@ -81,25 +74,25 @@
             </div>
         </div>
 
-       <!-- Unified Revenue & Performance Section -->
+<!-- Unified Revenue & Performance Section -->
 <div class="bg-white rounded-xl p-6 card-shadow mb-6 border-t border-gray-200">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
+  <div class="flex justify-between items-center mb-8">
     <h1 class="text-xl font-semibold">{{this.sharedService.T('salePerformance')}}</h1>
     <!-- (Optional) Keep this empty or add other global actions if needed -->
   </div>
  
   <!-- Main Content -->
-  <div class="grid grid-cols-4 gap-6">
+  <div class="grid grid-cols-4 gap-8">
     <!-- Statistics Panel (Left) -->
-    <div class="col-span-1 border-r border-borderColor pr-6">
-      <h3 class="text-lg font-semibold mb-4 text-center">{{ selectedMonth }}</h3>
+    <div class="col-span-1 border-r border-gray-300 pr-8">
+      <h3 class="text-lg font-semibold mb-6 text-center">{{ selectedMonth }}</h3>
 
-      <div class="space-y-5">
+      <div class="space-y-6">
         <div class="text-center">
-          <p class="text-gray-600 text-sm mb-1">{{this.sharedService.T('totalSales')}}</p>
+          <p class="text-gray-600 text-sm mb-2">{{this.sharedService.T('totalSales')}}</p>
           <p class="text-2xl font-bold text-lightBlue">{{ currentMonthSale | number:'1.0-0' }} SEK</p>
-          <div class="flex items-center justify-center mt-1">
+          <div class="flex items-center justify-center mt-2">
             <span class="text-green-500 text-sm flex items-center">
               <i class="fas fa-arrow-up mr-1"></i> 12.5%
             </span>
@@ -108,9 +101,9 @@
         </div>
 
         <div class="text-center">
-          <p class="text-gray-600 text-sm mb-1">{{this.sharedService.T('totalOrders')}}</p>
+          <p class="text-gray-600 text-sm mb-2">{{this.sharedService.T('totalOrders')}}</p>
           <p class="text-2xl font-bold text-lightBlue">{{ currentMonthOrders }}</p>
-          <div class="flex items-center justify-center mt-1">
+          <div class="flex items-center justify-center mt-2">
             <span class="text-green-500 text-sm flex items-center">
               <i class="fas fa-arrow-up mr-1"></i> 8.2%
             </span>
@@ -119,9 +112,9 @@
         </div>
 
         <div class="text-center">
-          <p class="text-gray-600 text-sm mb-1">{{this.sharedService.T('avgOrderValue')}}</p>
+          <p class="text-gray-600 text-sm mb-2">{{this.sharedService.T('avgOrderValue')}}</p>
           <p class="text-2xl font-bold text-lightBlue">{{ getAverageperOrder() | number:'1.0-0' }} SEK</p>
-          <div class="flex items-center justify-center mt-1">
+          <div class="flex items-center justify-center mt-2">
             <span class="text-green-500 text-sm flex items-center">
               <i class="fas fa-arrow-up mr-1"></i> 4.1%
             </span>
@@ -129,30 +122,30 @@
           </div>
         </div>
 
-        <div class="text-center pt-4 border-t border-borderColor">
-          <p class="text-gray-600 text-sm mb-1">{{this.sharedService.T('monthlyTarget')}}</p>
-          <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
-            <div class="bg-lightBlue h-2.5 rounded-full" [style.width.%]="(currentMonthSale / currentMonthSaleTarget) * 100"></div>
+        <div class="text-center pt-6 border-t border-gray-300">
+          <p class="text-gray-600 text-sm mb-3">{{this.sharedService.T('monthlyTarget')}}</p>
+          <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+            <!-- <div class="bg-lightBlue h-2.5 rounded-full" [style.width.%]="(currentMonthSale / currentMonthSaleTarget) * 100"></div> -->
+          <p-progressbar [value]="progressPercentage" />
           </div>
           <p class="text-xs text-gray-500">{{ percentage | number:'1.0-0' }}% {{this.sharedService.T('achieved')}}</p>
-  
-
-        
         </div>
       </div>
     </div>
 
     <!-- Chart Area (Right) -->
     <div class="col-span-3">
-      <!-- Month change control on top-right of the chart -->
-      <div class="flex justify-end mb-3">
+      <!-- Month change control aligned with left heading -->
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-semibold invisible">Placeholder</h3>
         <div class="flex items-center gap-2">
-          <select class="border border-borderColor rounded px-3 py-1 text-sm bg-white" 
-                (change)="onPeriodChange($event)">
-                <option value="3" selected="true">{{this.sharedService.T('previous3Months')}}</option>
-                <option value="6">{{this.sharedService.T('previous6Months')}}</option>
-                <option value="12">{{this.sharedService.T('previousYear')}}</option>
-          </select>
+          <span class="text-gray-600 text-sm">Period:</span>
+          <p-select [options]="statMonths" 
+          [(ngModel)]="selectedStatMonths" [ngModelOptions]="{standalone: true}" 
+          optionLabel="text"
+           optionValue="value" 
+           (onChange)="onPeriodChange($event)" 
+           [checkmark]="true"></p-select>
         </div>
       </div>
 
@@ -163,14 +156,14 @@
           [data]="lineChartData"
           [options]="lineChartOptions"
           height="400px"
-          class="h-[400px]">
+          class="h-100">
         </p-chart>
       </div>
     </div>
   </div>
 
   <!-- Additional Metrics -->
-  <div class="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-borderColor">
+  <div class="grid grid-cols-4 gap-4 mt-8 pt-8 border-t border-gray-300">
     <div class="text-center">
       <p class="text-gray-600 text-sm">{{this.sharedService.T('newCustomers')}}</p>
       <p class="text-xl font-bold">{{ currentMonthCustomers }}</p>

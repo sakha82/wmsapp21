@@ -1,20 +1,8 @@
 <!-- header start -->
   <app-generic-loader *ngIf="isLoading"></app-generic-loader>
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-  <div class="">
-    <p class="font-normal text-2xl">{{ this.sharedService.T('customers') }}</p>
-  </div>
-  <div class="flex gap-2">
-    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-    <div
-      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-      <p>AS</p>
-    </div>
-  </div>
-</header>
-    <section class="p-6 pb-10">
+    <section class="p-6 pb-10 bg-white">
       <form [formGroup]="filters">
-      <div class="p-8 rounded-lg shadow-lg bg-white">
+      <!-- <div class="p-8 rounded-lg shadow-lg bg-white"> -->
         
         <!-- Filter Section -->
         <div class="mb-6 mt-1 text-sm font-medium shadow-sm rounded-md p-5">
@@ -161,8 +149,7 @@
             </p-paginator>
           </div>
         </div>
-
-      </div>        
+            
       </form>
     </section>
   <!-- </div>

@@ -1614,5 +1614,23 @@
         "index": 1,
         "isdefault": false,
         "text": "Fokus på diagnostik"
+    },
+    {
+        "country": "se",
+        "lang": "en",
+        "key": "detailCategory",
+        "value": "others",
+        "index": 1,
+        "isdefault": false,
+        "text": "Others"
+    },
+    {
+        "country": "se",
+        "lang": "sv",
+        "key": "detailCategory",
+        "value": "others",
+        "index": 1,
+        "isdefault": false,
+        "text": "Övrigt"
     }
 ]

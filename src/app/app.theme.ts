@@ -15,6 +15,7 @@ const makePrimary = (name: string) => ({
 }
 );
 
+
 // Base Material (no overrides)
 export const MaterialPreset = definePreset(Material, {});
 
@@ -23,9 +24,9 @@ export const MaterialEmerald = definePreset(Material, {
   semantic: { primary: makePrimary('emerald') }
 });
 
-export const MaterialGreen = definePreset(Material, {
+export const MaterialBlue = definePreset(Material, {
   semantic: {
-    primary: makePrimary('green')
+    primary: makePrimary('blue')
   }
 
  

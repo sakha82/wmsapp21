@@ -19,6 +19,7 @@ export interface WmsUser {
   displayName: string,
   country: string,
   token: string,
+  userName:string
 }
 export interface ResetPassword {
   Email: string,
@@ -608,6 +609,13 @@ unit:string;
 }
 
 ///// vehicle
+
+export interface VehicleSearch{
+  vehiclePlate: string;
+  vehicleManufacturer?: string;
+  vehicleModel?: string;
+  vehicleYear?: number;
+}
 export interface VehicleSearchResponse {
   wmsId: string;
   vehiclePlate: string;

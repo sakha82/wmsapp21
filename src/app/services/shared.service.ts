@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ITokenClaims, ITranslate, IVehicle, IWmsLog, IWorkshop, ResetPassword, VehicleSearchResponse} from 'app/app.model'
+import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ITokenClaims, ITranslate, IVehicle, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, concatMap, firstValueFrom, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -107,14 +107,26 @@ get lang(): 'en' | 'sv' {
       `${this.fileUrl}/delete-file?key=${encodeURIComponent(key)}`
     );
   }
+  
+  getVehicleList(vehiclePlate:string)
+  {
+     const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.wmsId);
+    queryParams.append("vehiclePlate", vehiclePlate);
+    const url = `${this.coreUrl}/vehicle-list?${queryParams}`;
+    return this.http.get<VehicleSearch>(url);
+  }
+  
   getVehicleInfo(vehiclePlate:string)
   {
      const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", '5591800080');
+    queryParams.append("wmsId", this.wmsId);
     queryParams.append("vehiclePlate", vehiclePlate);
-    const url = `${this.coreUrl}/vehicle?${queryParams}`;
+    const url = `${this.coreUrl}/vehicle-info?${queryParams}`;
     return this.http.get<VehicleSearchResponse>(url);
   }
+
+
   downloadFile(key: string): void {
     const params = new HttpParams().set('key', key);
 
