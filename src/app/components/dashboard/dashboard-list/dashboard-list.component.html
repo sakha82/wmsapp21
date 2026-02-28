@@ -13,6 +13,8 @@
         <!-- Header with Create Buttons -->
         <div class="flex justify-between items-center mb-6">
         <div class="flex gap-3">
+          
+          <p-button label="{{this.sharedService.T('searchVehicle')}}" (click)="redirectToVehicleComponent()" icon="pi pi-search"></p-button>
           <p-button label="{{this.sharedService.T('createWorkorder')}}" (click)="redirectToOrderCrudComponent()" icon="pi pi-plus"></p-button>
           <p-button icon="pi pi-plus" label="{{this.sharedService.T('createCustomer')}}"  (click)="redirectToCustomerCrudComponent()"></p-button>
           <p-button icon="pi pi-plus" label="{{this.sharedService.T('createOffer')}} "  (click)="redirectToOfferCrudComponent()" ></p-button>

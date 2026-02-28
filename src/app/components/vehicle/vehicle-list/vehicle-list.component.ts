@@ -77,23 +77,34 @@ export class VehicleListComponent {
 
   ngOnInit() {
     this.cols = [
-      { field: 'label', header: 'Label' },
-      { field: 'customerId', header: 'Customer ID' },
-      { field: 'customerName', header: 'Customer Name' },
-      { field: 'invoiceId', header: 'Invoice ID' },
-      { field: 'invoiceDate', header: 'Invoice Date' },
-      { field: 'priceIncVat', header: 'Price (Inc. VAT)' },
-      { field: 'isPaid', header: 'Is Paid' },
-      { field: 'workOrderId', header: 'Work Order ID' },
-      { field: 'workOrderDate', header: 'Work Order Date' },
-      { field: 'workOrderStatus', header: 'Work Order Status' },
-      { field: 'offerId', header: 'Offer ID' },
-      { field: 'offerDate', header: 'Offer Date' },
-      { field: 'isAccepted', header: 'Is Accepted' },
-      { field: 'digitalServiceId', header: 'Digital Service ID' },
-      { field: 'serviceDate', header: 'Service Date' },
-      { field: 'serviceType', header: 'Service Type' },
-      { field: 'vehicleMileage', header: 'Vehicle Mileage' }
+      { field: 'label', header: '' },
+      { field: 'customerId', header: this.sharedService.T('id') },
+      { field: 'customerName', header: this.sharedService.T('customerName') },
+      { field: 'invoiceId', header: this.sharedService.T('id') },
+      { field: 'invoiceDate', header: this.sharedService.T('invoiceDate') },
+      { field: 'dueDate', header: this.sharedService.T('dueDate') },
+      { field: 'totalInvoiceAmount', header: this.sharedService.T('totalInvoiceAmount') },
+      { field: 'labourAmount', header: this.sharedService.T('labourAmount') },
+      { field: 'partsAmount', header: this.sharedService.T('partsAmount') },
+      { field: 'paymentDate', header: this.sharedService.T('paymentDate') },
+      { field: 'paymentAmount', header: this.sharedService.T('paymentAmount') },
+      { field: 'remainingBalance', header: this.sharedService.T('remainingBalance') },
+     
+      { field: 'workOrderId', header: this.sharedService.T('id') },
+      { field: 'bookingDate', header: this.sharedService.T('bookingDate') },
+      { field: 'bookingTime', header: this.sharedService.T('bookingTime') },
+      { field: 'employeeName', header: this.sharedService.T('employeeName') },
+      { field: 'workOrderStatus', header: this.sharedService.T('status') },
+      { field: 'supplierPurchaseDetails', header: this.sharedService.T('supplierPurchaseDetails') },
+      
+      
+      { field: 'offerId', header: this.sharedService.T('id') },
+      { field: 'offerDate', header: this.sharedService.T('offerDate') },
+      { field: 'isAccepted', header: this.sharedService.T('isAccepted') },
+      { field: 'digitalServiceId', header: this.sharedService.T('id') },
+      { field: 'serviceDate', header: this.sharedService.T('serviceDate') },
+      { field: 'serviceType', header: this.sharedService.T('serviceType') },
+      { field: 'vehicleMileage', header: this.sharedService.T('vehicleMileage') }
     ];
 
   }
@@ -150,14 +161,14 @@ export class VehicleListComponent {
           this.vehiclesData = [
             {
               data: {
-                label: 'Customer',
+                label: this.sharedService.T('customer'),
                 customerId: jsonData.customerId,
                 customerName: jsonData.customerName
               },
               children: [
                 {
                   data: { 
-                    label: 'Invoices',
+                    label: 'invoices',
                     totalInvoiceCount: response.totalInvoiceCount,
                     totalInvoiceAmount: response.totalInvoiceAmount,
                     paidInvoiceAmount: response.paidInvoiceAmount,
@@ -165,40 +176,49 @@ export class VehicleListComponent {
                   },
                   children: jsonData.invoices?.map((invoice: any) => ({
                     data: {
-                      label: 'Invoice',
+                      label: this.sharedService.T('invoice'),
                       invoiceId: invoice.invoiceId,
-                      invoiceDate: invoice.invoiceDate,
-                      priceIncVat: invoice.priceIncVat,
-                      isPaid: invoice.isPaid
+                      invoiceDate: this.getDateString(invoice.invoiceDate),
+                      dueDate: this.getDateString(invoice.dueDate),
+                      totalInvoiceAmount: invoice.totalInvoiceAmount,
+                      labourAmount: invoice.labourAmount,
+                      partsAmount: invoice.partsAmount,
+                      paymentDate: this.getDateString(invoice.paymentDate),
+                      paymentAmount: invoice.paymentAmount,
+                      remainingBalance: invoice.remainingBalance
                     }
                   })) || []
                 },
                 {
                   data: { 
-                    label: 'Work Orders',
+                    label: 'workorders',
                     totalWorkOrderCount: response.totalWorkOrderCount,
-                    lastWorkOrderDate: response.lastWorkOrderDate,
+                    lastWorkOrderDate: this.getDateString(response.lastWorkOrderDate),
                     totalWOPurchaseCount: response.totalWOPurchaseCount
                   },
                   children: jsonData.workOrders?.map((workOrder: any) => ({
                     data: {
-                      label: 'Work Order',
+                      label: this.sharedService.T('workorder'),
                       workOrderId: workOrder.workOrderId,
-                      workOrderDate: workOrder.workOrderDate,
-                      workOrderStatus: workOrder.workOrderStatus
+                      bookingDate: this.getDateString(workOrder.bookingDate),
+                      bookingTime: workOrder.bookingTime,
+                      employeeName: workOrder.employeeName,                       
+                      workOrderStatus: workOrder.workOrderStatus,
+                      supplierPurchaseDetails:workOrder.supplierPurchaseDetails
+
                     }
                   })) || []
                 },
                 {
                   data: { 
-                    label: 'Offers',
+                    label: 'offers',
                     totalOfferCount: jsonData.totalOfferCount
                   },
                   children: jsonData.offers?.map((offer: any) => ({
                     data: {
-                      label: 'Offer',
+                      label: this.sharedService.T('offer'),
                       offerId: offer.offerId,
-                      offerDate: offer.offerDate,
+                      offerDate: this.getDateString(offer.offerDate),
                       priceIncVat: offer.priceIncVat,
                       isAccepted: offer.isAccepted
                     }
@@ -206,15 +226,15 @@ export class VehicleListComponent {
                 },
                 {
                   data: { 
-                    label: 'Digital Services',
+                    label: 'digitalServiceRecord',
                     totalDigitalServiceCount: response.totalDigitalServiceCount,
-                    lastDigitalServiceDate: response.lastDigitalServiceDate
+                    lastDigitalServiceDate: this.getDateString(response.lastDigitalServiceDate)
                   },
                   children: jsonData.digitalServices?.map((service: any) => ({
                     data: {
-                      label: 'Service',
+                      label: this.sharedService.T('digitalServiceRecord'),
                       digitalServiceId: service.digitalServiceId,
-                      serviceDate: service.serviceDate,
+                      serviceDate: this.getDateString(service.serviceDate),
                       serviceType: service.serviceType,
                       vehicleMileage: service.vehicleMileage
                     }
@@ -231,7 +251,12 @@ export class VehicleListComponent {
   toggleNode(idx: number): void {
     this.expandedNodes[idx] = !this.expandedNodes[idx];
   }
-
+  getDateString(dateStr: string): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    let formattedDate = date.toISOString().split('T')[0];
+    return formattedDate;
+  }
   toggleChildNode(idx: number, cidx: number): void {
     const key = `${idx}-${cidx}`;
     this.expandedChildNodes[key] = !this.expandedChildNodes[key];
@@ -246,10 +271,11 @@ export class VehicleListComponent {
       return this.cols.filter(c => c.field === 'label');
     } else if (level === 'invoice') {
       // Invoice items: show invoice-related columns
-      return this.cols.filter(c => ['label', 'invoiceId', 'invoiceDate', 'priceIncVat', 'isPaid'].includes(c.field));
+      return this.cols.filter(c => ['label', 'invoiceId', 'invoiceDate', 'dueDate', 'totalInvoiceAmount', 'labourAmount', 'partsAmount', 'paymentDate', 'paymentAmount', 'remainingBalance'].includes(c.field));
+    
     } else if (level === 'workorder') {
       // Work order items: show work order-related columns
-      return this.cols.filter(c => ['label', 'workOrderId', 'workOrderDate', 'workOrderStatus'].includes(c.field));
+      return this.cols.filter(c => ['label', 'workOrderId','bookingDate','bookingTime', 'workOrderDate','employeeName', 'workOrderStatus','supplierPurchaseDetails'].includes(c.field));
     } else if (level === 'offer') {
       // Offer items: show offer-related columns
       return this.cols.filter(c => ['label', 'offerId', 'offerDate', 'priceIncVat', 'isAccepted'].includes(c.field));

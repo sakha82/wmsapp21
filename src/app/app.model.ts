@@ -672,14 +672,22 @@ export interface VehicleHierarchy {
 export interface InvoiceDto {
   invoiceId: number;
   invoiceDate?: string;
-  priceIncVat: number;
-  isPaid: boolean;
+  dueDate?: string;
+  totalInvoiceAmount:number;
+  labourAmount:number;
+  partsAmount:number;
+  paymentDate?: string;
+  paymentAmount: number;
+  remainingBalance: number;
+
 }
 export interface WorkOrderDto {
   workOrderId: number;
-  workOrderDate?: string;
+  bookingDate?: string;
+  bookingTime?: string;
+  employeeName?: string;
   workOrderStatus?: string;
-
+  supplierPurchaseDetails?: string;
   services?: WOServiceDto[];
   purchases?: WOPurchaseDto[];
 }

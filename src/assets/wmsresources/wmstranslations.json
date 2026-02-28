@@ -1610,6 +1610,56 @@
         "sv": "Fordon"
     },
     {
+        "tkey": "id",
+        "en": "ID",
+        "sv": "ID"
+    },
+    {
+        "tkey": "totalInvoiceAmount",
+        "en": "Total Invoice Amount",
+        "sv": "Totalt fakturabelopp"
+    },
+    {
+        "tkey": "labourAmount",
+        "en": "Labour Amount",
+        "sv": "Arbetskostnad"
+    },
+    {
+        "tkey": "partsAmount",
+        "en": "Spare Parts Amount",
+        "sv": "Reservdelskostnad"
+    },
+    {
+        "tkey": "paymentAmount",
+        "en": "Payment Amount",
+        "sv": "Betalningsbelopp"
+    },
+    {
+        "tkey": "count",
+        "en": "Count",
+        "sv": "Antal"
+    },
+    {
+        "tkey": "total",
+        "en": "Total",
+        "sv": "Totalt"
+    },
+    {
+        "tkey": "unpaid",
+        "en": "Unpaid",
+        "sv": "Obetald"
+    },
+    {
+        "tkey": "supplierPurchaseDetails",
+        "en": "Purchase Details",
+        "sv": "inköpsdetaljer"
+    },
+    {
+        "tkey": "isAccepted",
+        "en": "Accepted",
+        "sv": "Godkänd"
+    },
+    {
         "tkey": "success",
         "en": "Success",
         "sv": "Lyckades"
@@ -1748,5 +1798,10 @@
         "tkey": "welcome",
         "en": "Welcome",
         "sv": "Välkommen"
+    },
+    {
+        "tkey": "searchVehicle",
+        "en": "Search Vehicle",
+        "sv": "Sök fordon"
     }
 ]

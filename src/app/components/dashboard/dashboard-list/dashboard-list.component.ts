@@ -629,6 +629,9 @@ onPeriodChange(event: any): void {
     redirectToCustomerCrudComponent() {
     this.router.navigate(['sv/customer/crud', {}]);
   }
+  redirectToVehicleComponent() {
+    this.router.navigate(['sv/vehicle', {}]);
+  }
     redirectToProductCrudComponent() {
     this.router.navigate(['sv/product', {}]);
   }

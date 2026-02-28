@@ -94,7 +94,24 @@
     
     <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 header-primary">
     <div class="">
-      <p class="font-normal text-2xl">{{ currentMenuLabel }}</p>
+      <!-- @if(selectedRoute === 'sv/dashboard')
+      {
+        <p class="font-normal text-2xl"> wwee {{selectedRoute}} {{ this.sharedService.T('welcome') }}</p>
+      }
+      @else if (selectedRoute === 'sv/vehicle') {
+        
+        <p class="font-normal text-2xl"> vehicle {{selectedRoute}} {{ this.sharedService.T('vehicleSearch') }}</p>
+      }
+      @else {
+        <p class="font-normal text-2xl"> {{selectedRoute}} {{ currentMenuLabel }}</p> 
+         
+      } -->
+    <!-- <p class="font-normal text-2xl" *ngIf=""> 1 {{ selectedRoute }} {{ this.sharedService.T('welcome') }}</p>
+    <p class="font-normal text-2xl" *ngIf="selectedRoute === 'sv/vehicle'"> 2 {{ selectedRoute }}{{ this.sharedService.T('vehicleSearch') }}</p>
+    <p class="font-normal text-2xl" *ngIf="selectedRoute !== 'sv/dashboard' || selectedRoute !== 'sv/vehicle'">
+      3 {{ selectedRoute }} 
+    </p> -->
+    <p class="font-normal text-2xl"> {{ currentMenuLabel }} </p>
     </div>
     <div class="flex gap-2">
       <p-select [options]="workshops"  [(ngModel)]="selectedWorkshop" [ngModelOptions]="{standalone: true}" optionLabel="workshopName" class="w-full md:w-56">

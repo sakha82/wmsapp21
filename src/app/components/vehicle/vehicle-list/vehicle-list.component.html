@@ -1,17 +1,3 @@
-<!-- header start -->
-
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-  <div class="">
-    <p class="font-normal text-2xl">{{ this.sharedService.T('customers') }}</p>
-  </div>
-  <div class="flex gap-2">
-    <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-    <div
-      class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-      <p>AS</p>
-    </div>
-  </div>
-</header>
     <section class="p-6 pb-10">
       <div class="p-8 rounded-lg shadow-lg bg-white">
         <div *ngIf="isLoading" class="flex justify-center items-center h-96">
@@ -22,32 +8,40 @@
 
         <div>
           <!-- Vehicle Search Section -->
-          <div class="mb-8">
-            <div class="rounded-md">
-              <div class="w-full ps-2 h-10 rounded-md">
+          <div class="mb-8" style="position: relative;">
+            <div class="rounded-md" style="position: relative;">
+              <div class="w-full ps-2 h-10 rounded-md" style="max-width: 400px;">
                 <p-iconfield>
                   <p-inputicon class="pi pi-search icon-primary" />
-                  <p-autoComplete 
-                    [placeholder]="this.sharedService.T('search') + ' ' + this.sharedService.T('customer')" 
+                  <p-autoComplete
+                    [placeholder]="this.sharedService.T('searchVehicle')"
                     [suggestions]="vehiclePlates"
-                    (onClear)="onClearVehicle()" (keyup)="keyupVehicle($event.target)"
-                    (onSelect)="onSelectVehicle($event)" optionValue="vehiclePlate" optionLabel="vehiclePlate" [showClear]="true"
-                    class="w-full max-w-md">
+                    (onClear)="onClearVehicle()"
+                    (keyup)="keyupVehicle($event.target)"
+                    (onSelect)="onSelectVehicle($event)"
+                    optionValue="vehiclePlate"
+                    optionLabel="vehiclePlate"
+                    [showClear]="true"  
+                    class="w-full"
+                    [panelStyle]="{'width': '400px', 'max-height': '400px'}"
+                    [appendTo]="'body'">
+
                     <ng-template let-vehicle pTemplate="item">
-                      <div class="flex items-center gap-2">
-                        <div>{{  vehicle.vehiclePlate + ' | '}} {{  vehicle.vehicleManufacturer + ' - '}} {{ vehicle.vehicleModel + ' - ' }} {{ vehicle.vehicleYear  }} </div>
+                      <div style="border-bottom: 1px solid var(--p-surface-border); font-size: 0.875rem; padding: 0.75rem; display: flex; gap: 0.25rem; align-items: center; overflow: hidden;">
+                        <span style="color: var(--p-primary-600); font-weight: 600; flex-shrink: 0; white-space: nowrap;">{{ vehicle.vehiclePlate }}</span>
+                        <span style="color: var(--p-text-muted-color); font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">{{ vehicle.vehicleManufacturer + ' ' + vehicle.vehicleModel + ' (' + vehicle.vehicleYear + ')' }}</span>
                       </div>
                     </ng-template>
-                  </p-autoComplete>
+                  </p-autoComplete>                  
                 </p-iconfield>
               </div>
             </div>
           </div>
 
           <!-- Text Information Section -->
-          <div class="mb-10 p-6 bg-linear-to-r from-blue-50 to-indigo-50 rounded-lg border-l-4 border-blue-500">
-            <p class="text-gray-800 text-base leading-relaxed font-medium">
-              <span class="text-blue-600 font-semibold">📋 Vehicle Information:</span> 
+          <div class="mb-10 p-6 rounded-lg border-l-4" style="background-color: var(--p-primary-50, #f0f9ff); border-left-color: var(--p-primary-500);">
+            <p class="text-base leading-relaxed font-medium" style="color: var(--p-text-color);">
+              <span style="color: var(--p-primary-600); font-weight: 600;">Vehicle Information:</span> 
               This section displays comprehensive information about the selected vehicle. 
               You can view detailed records including invoices, work orders, service offers, and digital services. 
               Each category is organized hierarchically for easy navigation and analysis.
@@ -69,47 +63,67 @@
               <tbody>
                 <ng-container *ngFor="let node of vehiclesData; let idx = index">
                   <!-- Parent row (Customer) -->
-                  <tr style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-blue-50">
+                  <tr style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color); cursor: pointer;" 
+                      (click)="toggleNode(idx)"
+                      class="hover:opacity-80">
                     <td class="px-4 py-3 text-center">
-                      <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px;">group</span>
+                      <span class="material-symbols-outlined" 
+                            style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
+                            [style.transform]="expandedNodes[idx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
+                        keyboard_arrow_down
+                      </span>
                     </td>
                     <td *ngFor="let col of getRelevantColumns({}, 'customer')" class="px-4 py-3 font-semibold" style="color: var(--p-text-color);">
-                      {{ node.data[col.field] || '—' }}
+                      <ng-container *ngIf="col.field === 'label'; else otherCol">
+                        <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">group</span>
+                        <span class="font-bold" style="white-space: nowrap;">
+                        {{ node.data[col.field] }}
+                        </span>
+                      </ng-container>
+                      <ng-template #otherCol>
+                        <span class="font-bold" style="white-space: nowrap;">
+                        {{ node.data[col.field] || '—' }}
+                        </span>
+                      </ng-template>
                     </td>
                   </tr>
+                  
+                  <!-- Child rows - Show/Hide based on expanded state -->
+                  <ng-container *ngIf="expandedNodes[idx] !== false">
                   
                   <!-- Child rows (Categories: Invoices, Work Orders, Offers, Digital Services) - Always Expanded -->
                   <ng-container *ngIf="node.children && node.children.length > 0">
                     <ng-container *ngFor="let childNode of node.children; let cidx = index">
                       
                       <!-- Invoices Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'Invoices'">
+                      <ng-container *ngIf="childNode.data['label'] === 'invoices'">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
                             class="hover:opacity-80">
                           <td class="px-4 py-3 text-center">
                           </td>
-                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="getRelevantColumns({}, 'invoice').length">
-                            <div class="flex items-center justify-between gap-4">
-                              <!-- Icon and Label -->
-                              <div class="flex items-center gap-2">
+                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="5">
+                            <div class="grid grid-cols-12 gap-4 items-center">
+                              <!-- Icon and Label - 4 span column -->
+                              <div class="col-span-4 flex items-center gap-2">
                                 <span class="material-symbols-outlined" 
-                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
+                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
                                   keyboard_arrow_down
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px;">request_quote</span>
-                                <span class="font-bold">{{ childNode.data['label'] }}</span>
+                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">request_quote</span>
+                                <span class="font-bold" style="white-space: nowrap;"> {{ this.sharedService.T(childNode.data['label']) }} </span>
                               </div>
-                              <!-- Summary Information -->
-                              <div class="flex gap-6 flex-wrap text-xs" style="color: var(--p-text-color);">
-                                <span>Count: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalInvoiceCount'] || '0' }}</span></span>
-                                <span>Total: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalInvoiceAmount'] || '0' }} SEK</span></span>
-                                <span>Paid: <span style="color: var(--p-success-600); font-weight: 600;">{{ childNode.data['paidInvoiceAmount'] || '0' }} SEK</span></span>
-                                <span>Unpaid: <span style="color: var(--p-warning-600); font-weight: 600;">{{ childNode.data['unpaidInvoiceAmount'] || '0' }} SEK</span></span>
+                              <!-- Summary Information - 8 span column with 2-span sub-columns -->
+                              <div class="col-span-8 grid grid-cols-4 gap-4 text-xs" style="color: var(--p-text-color);">
+                                <div class="col-span-1">{{ this.sharedService.T('count') }}: <span class="font-bold" style="font-weight: 600;white-space: nowrap;">{{ childNode.data['totalInvoiceCount'] || '0' }}</span></div>
+                                <div class="col-span-1">{{ this.sharedService.T('total') }}: <span class="font-bold"style="font-weight: 600;white-space: nowrap;">{{ childNode.data['totalInvoiceAmount'] || '0' }} SEK</span></div>
+                                <div class="col-span-1">{{ this.sharedService.T('paid') }}: <span class="font-bold"style="font-weight: 600;white-space: nowrap;">{{ childNode.data['paidInvoiceAmount'] || '0' }} SEK</span></div>
+                                <div class="col-span-1">{{ this.sharedService.T('unpaid') }}: <span class="font-bold" style="font-weight: 600;white-space: nowrap;">{{ childNode.data['unpaidInvoiceAmount'] || '0' }} SEK</span></div>
                               </div>
                             </div>
+
                           </td>
                         </tr>
                         
@@ -141,31 +155,32 @@
                       </ng-container>
 
                       <!-- Work Orders Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'Work Orders'">
+                      <ng-container *ngIf="childNode.data['label'] === 'workorders'">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
                             class="hover:opacity-80">
                           <td class="px-4 py-3 text-center">
                           </td>
-                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="getRelevantColumns({}, 'workorder').length">
-                            <div class="flex items-center justify-between gap-4">
-                              <!-- Icon and Label -->
-                              <div class="flex items-center gap-2">
+                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="5">
+                            <div class="grid grid-cols-12 gap-4 items-center">
+                              <!-- Icon and Label - 4 span column -->
+                              <div class="col-span-4 flex items-center gap-2" >
                                 <span class="material-symbols-outlined" 
-                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
+                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
                                   keyboard_arrow_down
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px;">handyman</span>
-                                <span class="font-bold">{{ childNode.data['label'] }}</span>
+                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">handyman</span>
+                                <span class="font-bold" style="white-space: nowrap;"> {{ this.sharedService.T(childNode.data['label'])   }} </span>
                               </div>
-                              <!-- Summary Information -->
-                              <div class="flex gap-6 flex-wrap text-xs" style="color: var(--p-text-color);">
-                                <span>Count: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalWorkOrderCount'] || '0' }}</span></span>
-                                <span>Purchase: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalWOPurchaseCount'] || '0' }}</span></span>
-                                <span>LastDate: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['lastWorkOrderDate'] || 'N/A' }}</span></span>
+
+                              <!-- Summary Information - Fixed width columns for alignment -->
+                               <div class="col-span-8 grid grid-cols-4 gap-4 text-xs" style="color: var(--p-text-color);">
+                                <div class="col-span-1">{{ this.sharedService.T('count') }}: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalInvoiceCount'] || '0' }}</span></div>
                               </div>
+
+
                             </div>
                           </td>
                         </tr>
@@ -198,28 +213,31 @@
                       </ng-container>
 
                       <!-- Offers Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'Offers'">
+                      <ng-container *ngIf="childNode.data['label'] === 'offers'">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
                             class="hover:opacity-80">
                           <td class="px-4 py-3 text-center">
                           </td>
-                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="getRelevantColumns({}, 'offer').length">
-                            <div class="flex items-center justify-between gap-4">
-                              <!-- Icon and Label -->
-                              <div class="flex items-center gap-2">
+                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="5">
+                            <div class="grid grid-cols-12 gap-4 items-center">
+                              <!-- Icon and Label - 4 span column -->
+                              <div class="col-span-4 flex items-center gap-2">
                                 <span class="material-symbols-outlined" 
-                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
+                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
                                   keyboard_arrow_down
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px;">assignment_turned_in</span>
-                                <span class="font-bold">{{ childNode.data['label'] }}</span>
+                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">assignment_turned_in</span>
+                                <span class="font-bold" style="white-space: nowrap;">{{ childNode.data['label'] }}</span>
                               </div>
-                              <!-- Summary Information -->
-                              <div class="flex gap-6 flex-wrap text-xs" style="color: var(--p-text-color);">
-                                <span>Count: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalOfferCount'] || '0' }}</span></span>
+                              <!-- Summary Information - 8 span column with 4-span sub-columns -->
+                              <div class="col-span-8 grid grid-cols-4 gap-4 text-xs" style="color: var(--p-text-color);">
+                                <div class="col-span-1">{{ this.sharedService.T('count') }}: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalOfferCount'] || '0' }}</span></div>
+                                <div class="col-span-1"></div>
+                                <div class="col-span-1"></div>
+                                <div class="col-span-1"></div>
                               </div>
                             </div>
                           </td>
@@ -253,29 +271,30 @@
                       </ng-container>
 
                       <!-- Digital Services Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'Digital Services'">
+                      <ng-container *ngIf="childNode.data['label'] === 'digitalServiceRecord'">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
                             class="hover:opacity-80">
                           <td class="px-4 py-3 text-center">
                           </td>
-                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="getRelevantColumns({}, 'service').length">
-                            <div class="flex items-center justify-between gap-4">
-                              <!-- Icon and Label -->
-                              <div class="flex items-center gap-2">
+                          <td class="px-4 py-3" style="color: var(--p-primary-600);" [attr.colspan]="5">
+                            <div class="grid grid-cols-12 gap-4 items-center">
+                              <!-- Icon and Label - 4 span column -->
+                              <div class="col-span-4 flex items-center gap-2" >
                                 <span class="material-symbols-outlined" 
-                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
+                                      style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
                                   keyboard_arrow_down
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px;">book</span>
-                                <span class="font-bold">{{ childNode.data['label'] }}</span>
+                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">book</span>
+                                <span class="font-bold" style="white-space: nowrap;">{{ this.sharedService.T(childNode.data['label']) }}</span>
                               </div>
-                              <!-- Summary Information -->
-                              <div class="flex gap-6 flex-wrap text-xs" style="color: var(--p-text-color);">
-                                <span>Count: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalDigitalServiceCount'] || '0' }}</span></span>
-                                <span>LastDate: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['lastDigitalServiceDate'] || 'N/A' }}</span></span>
+                              <!-- Summary Information - 8 span column with 4-span sub-columns -->
+                              <div class="col-span-8 grid grid-cols-4 gap-4 text-xs" style="color: var(--p-text-color);">
+                                <div class="col-span-1">{{ this.sharedService.T('count') }}: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalDigitalServiceCount'] || '0' }}</span></div>
+                                <div class="col-span-1"></div>
+                                <div class="col-span-1"></div>
                               </div>
                             </div>
                           </td>
@@ -309,6 +328,7 @@
                       </ng-container>
 
                     </ng-container>
+                  </ng-container>
                   </ng-container>
                 </ng-container>
               </tbody>

@@ -107,12 +107,12 @@ palettes = [
                         routerLink: '/sv/dashboard',
                         styleClass: this.selectedRoute.startsWith('/sv/dashboard') ? 'active-menu-item' : ''
                     },
-                    {
-                        label: this.sharedService.T('vehicles'),
-                        materialIcon: 'directions_car',
-                        routerLink: '/sv/vehicle',
-                        styleClass: this.selectedRoute.startsWith('/sv/vehicle') ? 'active-menu-item' : ''
-                    },
+                    // {
+                    //     label: this.sharedService.T('vehicles'),
+                    //     materialIcon: 'directions_car',
+                    //     routerLink: '/sv/vehicle',
+                    //     styleClass: this.selectedRoute.startsWith('/sv/vehicle') ? 'active-menu-item' : ''
+                    // },
 
                     {
                         label: this.sharedService.T('customers'),
@@ -227,19 +227,46 @@ palettes = [
   }
 
   getSelectedMenuLabel(): string {
-    if (!this.items || this.items.length === 0) {
-      return 'Dashboard';
-    }
+    // if (!this.items || this.items.length === 0) {
+    //   return 'Dashboard';
+    // }
     
-    const menuItems = this.items[0]?.items || [];
-    const selected = menuItems.find(item => 
-      item.routerLink && this.selectedRoute.startsWith(item.routerLink as string)
-    );
-
-     if (selected?.label?.toLowerCase() === 'dashboard') {
+    // const menuItems = this.items[0]?.items || [];
+    // const selected = menuItems.find(item => 
+    //   item.routerLink && this.selectedRoute.startsWith(item.routerLink as string)
+    // );
+    // return selected?.label || this.sharedService.T('welcome');
+  if (this.selectedRoute.startsWith('/sv/dashboard')) {
     return this.sharedService.T('welcome');
+  } else if (this.selectedRoute.startsWith('/sv/customer')) {
+    return this.sharedService.T('customers');
+  } else if (this.selectedRoute.startsWith('/sv/booking')) {
+    return this.sharedService.T('bookings');
+  } else if (this.selectedRoute.startsWith('/sv/offer')) {
+    return this.sharedService.T('offers');
+  } else if (this.selectedRoute.startsWith('/sv/workorder')) {
+    return this.sharedService.T('workorders');
+  } else if (this.selectedRoute.startsWith('/sv/invoice')) {
+    return this.sharedService.T('invoices');
+  } else if (this.selectedRoute.startsWith('/sv/digitalservice')) {
+    return this.sharedService.T('digitalServiceBook');
+  } else if (this.selectedRoute.startsWith('/sv/product')) {
+    return this.sharedService.T('products');
+  } else if (this.selectedRoute.startsWith('/sv/supplier')) {
+    return this.sharedService.T('suppliers');
+  } else if (this.selectedRoute.startsWith('/sv/employee')) {
+    return this.sharedService.T('employees');
+  } else if (this.selectedRoute.startsWith('/sv/employment')) {
+    return this.sharedService.T('attendanceRegister');
+  } else if (this.selectedRoute.startsWith('/sv/reports')) {
+    return this.sharedService.T('reports');
+  } else if (this.selectedRoute.startsWith('/sv/setting')) {
+    return this.sharedService.T('settings');
+  } else if (this.selectedRoute.startsWith('/sv/vehicle')) {
+    return this.sharedService.T('searchVehicle');
+  } else {
+    return '';
   }
-    
-    return selected?.label || this.sharedService.T('welcome');
+
   }
 }
