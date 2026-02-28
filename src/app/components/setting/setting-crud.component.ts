@@ -11,6 +11,7 @@ import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from '../shared/generic-loader/generic-loader.component';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
+import { SaleService } from 'app/services/sale.service ';
 
 @Component({
   selector: 'app-customer-list',
@@ -27,6 +28,11 @@ export class SettingCrudComponent implements OnInit {
   langCode: string = 'en';
   workshop: FormGroup;
   serviceForm: FormGroup;
+  //for sale
+  salesForm: FormGroup;
+  salesList: any[] = [];
+  salesPager: IPager = <IPager>{};
+    isEditMode: boolean = false;
   // pager: IPager = <IPager>{};
   // Services related properties
   services: IWorkShopService[] = [];
@@ -35,11 +41,8 @@ export class SettingCrudComponent implements OnInit {
   editingService: IWorkShopService | null = null;
   isLoading: boolean = false;
   // Pagination properties (outside constructor)
-  pager: IPager = <IPager>{
-    firstPage: 0,
-    pageSize: 10,  // This will show 10 records per page
-    totalRecords: 0
-  };
+  pager: IPager = <IPager>{};
+
   customerTags: ICustomerTag[] = [];
   products: IProduct[] = [];
   ProductTemplates: IProductTemplate[] = [];
@@ -95,7 +98,8 @@ export class SettingCrudComponent implements OnInit {
     private readonly workshopService: WorkshopService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private productService: ProductService
+    private productService: ProductService,
+    private saleService: SaleService
   ) {
     this.workshop = this.fb.group({
       workshopName: [],
@@ -119,6 +123,13 @@ export class SettingCrudComponent implements OnInit {
       serviceName: ['', Validators.required],
       serviceHours: [1, [Validators.required, Validators.min(0)]],
     });
+
+//sale 
+this.salesForm = this.fb.group({
+  wmsId: [null],
+  datePeriod: [null, Validators.required],
+  turnover: [0, [Validators.required, Validators.min(1)]]
+});
 
   }
 
@@ -167,6 +178,7 @@ export class SettingCrudComponent implements OnInit {
     this.loadServices(); // This will load workshop services
     this.loadLogo();
     this.loadProductTemplates();
+    this.loadAllSales();
   }
 
   selectTab(index: number) {
@@ -1196,4 +1208,88 @@ export class SettingCrudComponent implements OnInit {
   getFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }
+ sortColumn(e: any) {
+    if (e) {
+      let pageIndex = e.first / e.rows;
+      // If the current page is already set, use it instead of resetting
+      if (this.salesForm.get('currentPage')?.value) {
+        pageIndex = +this.salesForm.get('currentPage')?.value - 1; // Convert to zero-based index
+      }
+      // Update the pager and filters
+      this.pager.firstPage = e.first;
+      this.salesForm.patchValue({
+        currentPage: (pageIndex + 1).toString(), // Convert back to one-based index
+        pageSize: e.rows,
+        sortDir: e.sortOrder,
+        sortBy: e.sortField,
+      });
+      this.sharedService.updateFiltersInNavigation(this.salesForm);
+      this.loadAllSales();
+    }
+  }
+  //sale 
+  loadAllSales() {
+  this.isLoading = true;
+  this.saleService.getAllSales().subscribe({
+    next: (res: any) => {
+      this.salesList = res.objectList || [];
+      if (res.pager) this.salesPager = res.pager;
+      this.isLoading = false;
+    },
+    error: (err) => {
+      this.isLoading = false;
+      console.error("Sales load fail:", err);
+    }
+  });
+}
+
+onSalesSubmit() {
+  if (this.salesForm.invalid) return;
+  this.isLoading = true;
+  const selectedDate = this.salesForm.value.datePeriod as Date;
+  const payload = {
+    wmsId: this.sharedService.wmsId,
+    saleYear: selectedDate.getFullYear(),
+    saleMonth: selectedDate.getMonth() + 1,
+    turnover: this.salesForm.value.turnover
+  };
+
+  this.saleService.upsertSale(payload).subscribe({
+    next: () => {
+      this.loadAllSales();
+      this.resetSalesForm();
+      this.isLoading = false;
+    },
+    error: () => this.isLoading = false
+  });
+}
+
+deleteSale(sale: any) {
+  this.confirmationService.confirm({
+    message: 'Are you sure you want to delete this sales target?',
+    header: 'Confirm Deletion',
+    accept: () => {
+      this.isLoading = true;
+      this.saleService.deleteSale(sale.wmsId, sale.saleYear, sale.saleMonth).subscribe(() => {
+        this.isLoading = false;
+        this.messageService.add({ severity: 'success', detail: 'Deleted successfully!' });
+        this.loadAllSales();
+      });
+    }
+  });
+}
+
+resetSalesForm() {
+  this.isEditMode = false;
+  this.salesForm.reset({ turnover: 0 });
+}
+
+// Pagination methods (Sales specific)
+onSalesPageChange(e: any) {
+  this.loadAllSales(); // Add logic if API supports server side paging for sales
+}
+
+onSalesPageSizeChange(event: any) {
+  this.loadAllSales();
+}
 }

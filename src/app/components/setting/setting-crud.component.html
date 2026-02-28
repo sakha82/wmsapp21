@@ -24,6 +24,7 @@
         <p-tab value="3">{{ this.sharedService.T('services') }}</p-tab>
         <p-tab value="2">{{ this.sharedService.T('customers') }}</p-tab>
         <p-tab value="4">{{ this.sharedService.T('products') }}</p-tab>
+        <p-tab value="5">{{ this.sharedService.T('report') }}</p-tab>
       </p-tablist>
 
       <p-tabpanels>
@@ -45,20 +46,18 @@
                   <div class="company-row">
                     <div class="settings-field">
                       <label class="block mb-2" for="workshopName">{{ this.sharedService.T('companyName') }}
-                        </label>
-                      <input type="text" formControlName="workshopName" placeholder="" class="settings-input"
-                        pInputText />
+                      </label>
+                      <input type="text" formControlName="workshopName" placeholder="" pInputText />
                     </div>
                     <div class="settings-field">
                       <label class="block mb-2" for="registrationId">{{ this.sharedService.T('organizationNumber') }}
-                        </label>
-                      <input type="text" formControlName="registrationId" placeholder="" class="settings-input"
-                        pInputText />
+                      </label>
+                      <input type="text" formControlName="registrationId" placeholder="" pInputText />
                     </div>
                     <div class="settings-field">
                       <label class="block mb-2" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}
-                        </label>
-                      <input type="text" formControlName="vatId" placeholder="" class="settings-input" pInputText />
+                      </label>
+                      <input type="text" formControlName="vatId" placeholder="" pInputText />
                     </div>
                   </div>
                   <div class="mt-7 form-toggle-row">
@@ -66,19 +65,13 @@
                       <label class="block mb-2">
                         {{ this.sharedService.T('approvedForFTax') }}
                       </label>
-                      <p-selectButton
-                        class="settings-selectbutton"
-                        [options]="fTaxOptions"
-                        optionLabel="label"
-                        optionValue="value"
-                        formControlName="isFskat"></p-selectButton>
+                      <p-selectButton class="settings-selectbutton" [options]="fTaxOptions" optionLabel="label"
+                        optionValue="value" formControlName="isFskat"></p-selectButton>
                     </div>
                     <div class="settings-field form-toggle-block">
-                      <label class="block mb-2">{{this.sharedService.T('priceMode')}} [{{this.sharedService.T('priceModeText')}}]</label>
-                      <p-selectButton
-                        class="settings-selectbutton"
-                        [options]="priceModeOptions"
-                        optionLabel="text"
+                      <label class="block mb-2">{{this.sharedService.T('priceMode')}}
+                        [{{this.sharedService.T('priceModeText')}}]</label>
+                      <p-selectButton class="settings-selectbutton" [options]="priceModeOptions" optionLabel="text"
                         formControlName="priceMode"></p-selectButton>
                     </div>
                   </div>
@@ -88,11 +81,10 @@
               <div class="settings-card">
                 <h5 class="settings-title text-center">{{ this.sharedService.T('logo') }}</h5>
                 <div class="logo-frame mt-5">
-                  <p-image [src]="imageUrl" [alt]="'Workshop Logo'" [preview]="true" styleClass="blah"></p-image>
+                  <p-image [src]="imageUrl" [alt]="'Workshop Logo'" [preview]="true"></p-image>
                 </div>
                 <div class="logo-actions">
                   <p-button label="Ladda upp fil" icon="pi pi-upload" size="large"
-                    styleClass="p-button-sm p-button-outlined p-button-primary"
                     (onClick)="fileInput.click()"></p-button>
                   <input type="file" id="u_img" class="hidden" #fileInput (change)="onFileSelected($event)">
                 </div>
@@ -102,23 +94,20 @@
                 <h5 class="settings-title mb-5">{{ this.sharedService.T('address') }}</h5>
                 <div class="settings-field mb-7">
                   <label class="block mb-2" for="street">{{ this.sharedService.T('address') }}</label>
-                  <input type="text" formControlName="workshopStreet" placeholder="" class="settings-input settings-input-wide" pInputText />
+                  <input type="text" formControlName="workshopStreet" placeholder="" pInputText />
                 </div>
                 <div class="grid grid-cols-12 gap-5 settings-card-grid">
                   <div class="col-span-12 md:col-span-4 settings-field">
                     <label class="block mb-2" for="postNo">{{ this.sharedService.T('postalCode') }}</label>
-                    <input type="text" formControlName="workshopPostNo" placeholder="" class="settings-input settings-input-wide"
-                      pInputText />
+                    <input type="text" formControlName="workshopPostNo" placeholder="" pInputText />
                   </div>
                   <div class="col-span-12 md:col-span-4 settings-field">
                     <label class="block mb-2" for="city">{{ this.sharedService.T('city') }}</label>
-                    <input type="text" formControlName="workshopCity" placeholder="" class="settings-input settings-input-wide"
-                      pInputText />
+                    <input type="text" formControlName="workshopCity" placeholder="" pInputText />
                   </div>
                   <div class="col-span-12 md:col-span-4 settings-field">
                     <label class="block mb-2" for="country">Country</label>
-                    <input type="text" formControlName="workshopCountry" placeholder="Sweden" class="settings-input settings-input-wide"
-                      readonly pInputText />
+                    <input type="text" formControlName="workshopCountry" placeholder="Sweden" readonly pInputText />
                   </div>
                 </div>
               </div>
@@ -128,13 +117,11 @@
                 <div class="contact-row">
                   <div class="settings-field">
                     <label class="block mb-2" for="email">{{ this.sharedService.T('companyEmail') }}</label>
-                    <input type="email" formControlName="email" placeholder="" class="settings-input" [ngClass]="{
-                        'border-red-500': workshop.get('email')?.touched && workshop.get('email')?.invalid
-                      }" pInputText />
+                    <input type="email" formControlName="email" placeholder="" pInputText />
                   </div>
                   <div class="settings-field">
                     <label class="block mb-2" for="telephone">{{ this.sharedService.T('phone') }}</label>
-                    <input type="tel" formControlName="telephone" placeholder="" class="settings-input" pInputText />
+                    <input type="tel" formControlName="telephone" placeholder="" pInputText />
                   </div>
                 </div>
               </div>
@@ -144,28 +131,24 @@
                 <div class="payment-row">
                   <div class="payment-field settings-field">
                     <label class="block mb-2" for="bankgiro">Bankgiro</label>
-                    <input type="text" class="my-auto" formControlName="bankgiro" placeholder="" style="width: 100%;"
-                      pInputText />
+                    <input type="text" class="my-auto" formControlName="bankgiro" placeholder="" pInputText />
                   </div>
                   <div class="payment-field settings-field">
                     <label class="block mb-2" for="swish">Swish</label>
-                    <input type="number" class="my-auto" formControlName="swish" placeholder="" style="width: 100%;"
-                      pInputText />
+                    <input type="number" class="my-auto" formControlName="swish" placeholder="" pInputText />
                   </div>
                   <div class="payment-field settings-field">
                     <label class="block mb-2" for="bic">BIC/Swift</label>
-                    <input type="text" class="my-auto" formControlName="bic" placeholder="" style="width: 100%;"
-                      pInputText />
+                    <input type="text" class="my-auto" formControlName="bic" placeholder="" pInputText />
                   </div>
                   <div class="payment-field settings-field">
                     <label class="block mb-2" for="iban">IBAN</label>
-                    <input type="text" class="my-auto" formControlName="iban" placeholder="" style="width: 100%;"
-                      pInputText />
+                    <input type="text" class="my-auto" formControlName="iban" placeholder="" pInputText />
                   </div>
                 </div>
                 <hr class="border border-CustomBorder my-5" />
                 <div class="settings-actions">
-                  <p-button type="submit" [raised]="true" styleClass="!mt-2" label="{{ this.sharedService.T('saveSettings') }}"
+                  <p-button type="submit" [raised]="true" label="{{ this.sharedService.T('saveSettings') }}"
                     size="large" icon="pi pi-plus" (click)="onFormSubmit()" />
                 </div>
               </div>
@@ -235,7 +218,7 @@
                   </div>
                   <div class="col-span-4">
                     <label class="block mb-2" for="serviceHours">{{ this.sharedService.T('estimatedWorkingTime') }}
-                       <span class="text-red-500">*</span></label>
+                      <span class="text-red-500">*</span></label>
                     <input type="number" formControlName="serviceHours" min="0" placeholder="Enter hours" class="w-full"
                       pInputText />
                   </div>
@@ -244,9 +227,7 @@
                     <p-button type="submit" size="large" icon="pi pi-plus"
                       [label]="isCreateMode ? 'Create Service' : 'Update Service'" (click)="onServiceFormSubmit()">
                     </p-button>
-                    <p-button size="large"
-                     severity="secondary" label="Cancel"
-                      (onClick)="onCancelServiceForm()">
+                    <p-button size="large" severity="secondary" label="Cancel" (onClick)="onCancelServiceForm()">
                     </p-button>
                   </div>
                 </div>
@@ -254,28 +235,26 @@
             </form>
 
             <div class="mb-10">
-              <p-table styleClass="text-sm"
-                [tableStyle]="{'min-width': '50rem', 'font-size': '14px', 'border-collapse': 'separate', 'border-spacing': '0px 3px'}"
-                [value]="services" [paginator]="true" [rows]="pager.pageSize" [first]="pager.firstPage"
-                [totalRecords]="pager.totalRecords" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-                currentPageReportTemplate="{first} - {last} of {totalRecords}" (onPageChange)="onPageChange($event)"
-                responsiveLayout="scroll">
-                <ng-template pTemplate="header">
+              <p-table [paginator]="true" [lazy]="true" [value]="services" [showGridlines]="false" [rows]="10"
+                [first]="(serviceForm.get('currentPage')?.value - 1) * serviceForm.get('pageSize')?.value"
+                (onLazyLoad)="sortColumn($event)" [sortOrder]="-1" data-testid="service-table">
+                <ng-template #header>
                   <tr>
-                    <th class="!bg-sky !border-bgColor !border-y-4">{{ this.sharedService.T('serviceName') }}</th>
-                    <th class="!bg-sky !border-bgColor text-center !border-y-4">{{ this.sharedService.T('estimatedWorkingTime') }}
-                      </th>
-                    <th class="!bg-sky !border-bgColor text-center !border-y-4 rounded-r-xl">{{ this.sharedService.T('actions') }}
-                      </th>
+                    <th class="rounded-l-xl">{{ this.sharedService.T('serviceName') }}</th>
+                    <th>{{
+                      this.sharedService.T('estimatedWorkingTime') }}
+                    </th>
+                    <th class="rounded-r-xl">{{
+                      this.sharedService.T('actions') }}
+                    </th>
                   </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-service>
-                  <tr [ngClass]="{'bg-green-100': service.wmsId === latestServiceId}"
-                    style="transition: background-color 0.8s ease;">
-                    <td class="!border-0">{{ service.serviceName }}</td>
-                    <td class="!border-0 text-center">{{ service.serviceHours }}</td>
-                    <td class="!border-0 text-center text-Darkgray rounded-r-lg">
+                <ng-template #body let-service>
+                  <tr>
+                    <td class="rounded-l-lg">{{ service.serviceName }}</td>
+                    <td>{{ service.serviceHours }}</td>
+                    <td>
                       <p-button size="small" label="Edit" class="pe-3 w-6" (onClick)="editService(service)">
                         <img src="assets/icons/product/edit_square.svg" alt="" />
                       </p-button>
@@ -286,13 +265,21 @@
                     </td>
                   </tr>
                 </ng-template>
-                <ng-template pTemplate="paginatorleft">
-                  <div class="flex align-items-center gap-2">
-                    <p-select [options]="[10,20,30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
-                      (onChange)="onPageSizeChange($event)" styleClass="w-26" />
-                  </div>
-                </ng-template>
               </p-table>
+               <div *ngIf="pager.totalRecords > 0" class="flex items-center justify-between py-6">
+              <div class="flex items-center">
+                <p-select [options]="[10, 20, 30]" [(ngModel)]="pager.pageSize"
+                  [ngModelOptions]="{standalone: true}" 
+                  (onChange)="onSalesPageSizeChange($event)">
+                </p-select>
+              </div>
+              <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize"
+                [totalRecords]="pager.totalRecords" (onPageChange)="onSalesPageChange($event)"
+                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+               >
+              </p-paginator>
+            </div>
             </div>
           </section>
         </p-tabpanel>
@@ -310,13 +297,12 @@
                     placeholder="Enter customer tag name"
                     class="p-inputtext p-component customer-input focus:outline-none" />
                   <div class="customer-form-actions">
-                    <button pButton type="button" [label]="isTagEditing ? 'Update Tag' : 'Add Tag'"
-                      class="p-button p-component whitespace-nowrap border-none"
-                      [ngClass]="isTagEditing ? 'bg-green-500 hover:bg-green-600' : 'bg-customBlue'"
-                      (click)="saveTag()"></button>
-                    <button *ngIf="isTagEditing" pButton type="button" label="Cancel"
-                      class="p-button p-component !bg-darkSky !border-BorderColor !text-lightBlue border px-4 py-2 rounded-md"
-                      (click)="resetNewTag()"></button>
+
+                    <p-button type="submit" size="large" icon="pi pi-plus"
+                      [label]="isTagEditing ? 'Update Tag' : 'Add Tag'" (click)="saveTag()">
+                    </p-button>
+                    <p-button *ngIf="isTagEditing" severity="secondary" size="large" type="button" label="Cancel"
+                      (click)="resetNewTag()"></p-button>
                   </div>
                 </div>
                 <div class="customer-toggle-row">
@@ -350,17 +336,16 @@
               </div>
               <div class="customer-form">
                 <div class="customer-form-row">
-                  <input type="text" [(ngModel)]="newCustomerType.customerTypeName" [ngModelOptions]="{standalone: true}"
-                    placeholder="Enter customer type name"
+                  <input type="text" [(ngModel)]="newCustomerType.customerTypeName"
+                    [ngModelOptions]="{standalone: true}" placeholder="Enter customer type name"
                     class="p-inputtext p-component customer-input focus:outline-none" />
                   <div class="customer-form-actions">
-                    <button pButton type="button" [label]="isTypeEditing ? 'Update Type' : 'Add Type'"
-                      class="p-button p-component whitespace-nowrap border-none"
-                      [ngClass]="isTypeEditing ? 'bg-green-500 hover:bg-green-600' : 'bg-customBlue'"
-                      (click)="saveType()"></button>
-                    <button *ngIf="isTypeEditing" pButton type="button" label="Cancel"
-                      class="p-button p-component !bg-darkSky !border-BorderColor !text-lightBlue border px-4 py-2 rounded-md"
-                      (click)="resetNewType()"></button>
+                    <p-button type="submit" size="large" icon="pi pi-plus"
+                      [label]="isTypeEditing ? 'Update Type' : 'Add Type'" (click)="saveType()">
+                    </p-button>
+
+                    <p-button *ngIf="isTypeEditing"  severity="secondary" size="large" type="button" label="Cancel"
+                      (click)="resetNewType()"></p-button>
                   </div>
                 </div>
                 <div class="customer-toggle-row">
@@ -412,13 +397,11 @@
                 <input type="text" [(ngModel)]="newProductTemplate.productTemplateName"
                   [ngModelOptions]="{standalone: true}" placeholder="Enter product template name"
                   class="p-inputtext p-component rounded-md px-4 py-2 w-full focus:outline-none" />
-                <button pButton type="button"icon="pi pi-plus" [label]="isTemplateEditing ? this.sharedService.T('updateTemplate') : this.sharedService.T('addTemplate')"
-                  class="p-button p-component whitespace-nowrap border-none"
-                  [ngClass]="isTemplateEditing ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'"
-                  (click)="saveProductTemplates()"></button>
-                <p-button  *ngIf="isTemplateEditing" severity="secondary"  size="large"  label="Cancel"
-                  
-                  (click)="resetNewTemplate()"></p-button >
+                <p-button type="button" icon="pi pi-plus"
+                  [label]="isTemplateEditing ? this.sharedService.T('updateTemplate') : this.sharedService.T('addTemplate')"
+                  (click)="saveProductTemplates()"></p-button>
+                <p-button *ngIf="isTemplateEditing" severity="secondary" size="large" label="Cancel"
+                  (click)="resetNewTemplate()"></p-button>
               </div>
             </div>
             <!-- invoice-detail pricemode 0=inkvat,  1=exvat  -->
@@ -560,14 +543,12 @@
                       </p-autoComplete>
                     </div>
                     <div class="w-[15%]">
-                      <input formControlName="description" placeholder="Extra information" type="text"
-                        style="width: 100%; background-color: white;" pInputText />
+                      <input formControlName="description" placeholder="Extra information" type="text" pInputText />
                     </div>
                     <div class="w-[10%]">
                       <p-inputnumber formControlName="quantity" inputId="minmax" mode="decimal" width="30"
                         [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
                         [locale]="this.sharedService.currentLocale"
-                        [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
                         (onInput)="updateDetailRow(detail)"></p-inputnumber>
                     </div>
                     <div class="w-[10%]">
@@ -578,8 +559,6 @@
                       <p-inputnumber formControlName="unitPrice" inputId="minmax" mode="decimal" placeholder="0,00"
                         [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
                         [locale]="this.sharedService.currentLocale" class="'input-error'"
-                        [ngClass]="{'ng-invalid ng-dirty': detail.get('isUnitPriceValid')?.value}"
-                        [inputStyle]="{'background-color': 'white', 'width': '100%', 'display': 'block'}"
                         (onInput)="updateDetailRow(detail)"></p-inputnumber>
                     </div>
                     <div class="w-[10%]">
@@ -588,8 +567,7 @@
                         (onChange)="onChangeVat(detail)" />
                     </div>
                     <div class="whitespace-nowrap  w-[10%]">
-                      <input formControlName="discountPercentage" type="number" placeholder="0"
-                        style="width: 100%; background-color: white;" pInputText (change)="updateDetailRow(detail)" />
+                      <input formControlName="discountPercentage" type="number" placeholder="0" pInputText (change)="updateDetailRow(detail)" />
                     </div>
                     @if(priceMode == 1)
                     {
@@ -625,10 +603,10 @@
 
             </div>
             <div class="flex flex-wrap gap-3 mt-4">
-              <p-button size="large"
-                label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus" (click)="addDetailRow(false)"></p-button>
-              <p-button size="large"
-                label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus" (click)="addDetailRow(true)"></p-button>
+              <p-button size="large" label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus"
+                (click)="addDetailRow(false)"></p-button>
+              <p-button size="large" label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus"
+                (click)="addDetailRow(true)"></p-button>
 
             </div>
           </div>
@@ -637,6 +615,87 @@
 
         </p-tabpanel>
 
+        <p-tabpanel value="5">
+          <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+
+          <form [formGroup]="salesForm">
+            <div class="bg-White p-5 mb-5 rounded-xl shadow-md mt-4">
+              <div class="grid grid-cols-12 gap-3 text-sm font-medium">
+                <div class="col-span-6">
+                  <label class="mb-1 text-Darkgray block">{{ this.sharedService.T('selectPeriod') }} <span
+                      class="text-red-500">*</span></label>
+                  <p-datepicker formControlName="datePeriod" view="month" dateFormat="mm/yy" [showIcon]="true"
+                    iconDisplay="input" placeholder="MM/YYYY" appendTo="body" styleClass="w-full">
+                  </p-datepicker>
+                </div>
+
+                <div class="col-span-4">
+                  <label class="mb-1 text-Darkgray block">{{ this.sharedService.T('turnover') }} <span
+                      class="text-red-500">*</span></label>
+                  <input type="number" formControlName="turnover" pInputText placeholder="Enter turnover"
+                    class="w-full" />
+                </div>
+
+                <div class="flex gap-3 mt-4 col-span-12">
+                  <p-button type="submit"
+                    [label]="isEditMode ? this.sharedService.T('update') : this.sharedService.T('add')"
+                    (onClick)="onSalesSubmit()">
+                  </p-button>
+                  <p-button label="{{ this.sharedService.T('cancel') }}"  severity="secondary" size="large" type="button"
+                    (onClick)="resetSalesForm()">
+                  </p-button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="mb-10">
+            <p-table [lazy]="true" [value]="salesList" [showGridlines]="false" [rows]="10"
+              [first]="(salesForm.get('currentPage')?.value - 1) * salesForm.get('pageSize')?.value"
+              (onLazyLoad)="sortColumn($event)" [sortOrder]="-1"
+              data-testid="sale-table">
+
+              <ng-template #header>
+                <tr>
+                  <th class="rounded-l-xl"> {{this.sharedService.T('year') }}</th>
+                  <th>{{ this.sharedService.T('month') }}</th>
+                  <th>{{ this.sharedService.T('turnover') }}
+                  </th>
+                  <th class="rounded-r-xl">{{this.sharedService.T('actions') }}</th>
+                </tr>
+              </ng-template>
+
+              <ng-template #body let-sale>
+                <tr data-testid="customer-row">
+                  <td>{{ sale.saleYear }}</td>
+                  <td>{{ sale.saleMonth }}</td>
+                  <td>{{ sale.turnover | number }}
+                  </td>
+                  <td>
+                    <div class="flex gap-2 justify-center">
+                      <p-button icon="pi pi-trash" severity="danger" (onClick)="deleteSale(sale)"></p-button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+            <div *ngIf="salesPager.totalRecords > 0" class="flex items-center justify-between py-6">
+              <div class="flex items-center">
+                <p-select [options]="[10, 20, 30]" [(ngModel)]="salesPager.pageSize"
+                  [ngModelOptions]="{standalone: true}" 
+                  (onChange)="onSalesPageSizeChange($event)">
+                </p-select>
+              </div>
+              <p-paginator [first]="salesPager.firstPage" [rows]="salesPager.pageSize"
+                [totalRecords]="salesPager.totalRecords" (onPageChange)="onSalesPageChange($event)"
+                [showCurrentPageReport]="true" [showFirstLastIcon]="true"
+                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+               >
+              </p-paginator>
+            </div>
+          </div>
+        </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
   </div>
@@ -645,4 +704,3 @@
   <p-toast></p-toast>
 </section>
 <!-- </div> -->
-

@@ -35,7 +35,6 @@ import { OptOutComponent } from './components/opt-out/opt-out.component';
 import { ProductDetailComponent } from './components/product/product-list/product-detail/product-detail.component';
 import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
 import { ReportsComponent } from './components/reports/reports.component';
-import { SaleComponent } from './components/sale/sale.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 
 export const routes: Routes =  [
@@ -75,7 +74,6 @@ export const routes: Routes =  [
               {path: 'booking',component:BookingListComponent},
               {path: 'setting',component:SettingCrudComponent},
               {path: 'reports',component:ReportsComponent},
-              {path: 'sales',component:SaleComponent},
               {path: 'vehicle',component:VehicleListComponent},
               ]
   },

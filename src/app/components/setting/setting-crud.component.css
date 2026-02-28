@@ -124,11 +124,6 @@
   margin-bottom: 0;
 }
 
-.settings-input {
-  width: 100%;
-  max-width: 420px;
-  min-height: 42px;
-}
 
 .settings-input-wide {
   max-width: 420px;
