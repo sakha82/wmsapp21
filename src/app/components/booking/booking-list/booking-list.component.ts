@@ -10,23 +10,28 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { catchError, firstValueFrom } from 'rxjs';
 import { SHARED_IMPORTS } from 'app/sharedimports';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-
+import { CarouselModule } from 'primeng/carousel';
 @Component({
   selector: 'app-booking-list',
   standalone: true,
   imports: [
-    ...SHARED_IMPORTS, GenericLoaderComponent
+    ...SHARED_IMPORTS,CarouselModule
   ], templateUrl: './booking-list.component.html',
   providers: [ConfirmationService, MessageService, ConfirmDialogModule],
-  styleUrls: ['./booking-list.component.css', './booking-list.colors.css']
+  styleUrls: ['./booking-list.component.css']
 })
 export class BookingListComponent {
 
   @ViewChild('op') popover: any;
+  days: string[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+  hoveredSlot: { day: string; time: string } | null = null; 
   filters: FormGroup;
-  weekCalendar: IWeeklyCalendar[] = [];
+  //weekCalendar: IWeeklyCalendar[] = [];
+  weekCalendar:any[] = [];
+  bookingsCount: { [key: string]: number } = {};
+  serviceHoursCount: { [key: string]: number } = {};
 
   selectedDay: number = new Date().getDay();
   selectedYear: number;
@@ -142,7 +147,9 @@ async getEmployees(): Promise<void> {
 // setTimeout(() => {
 //    this.isLoading = false;
 // }, 500);  }
-
+getKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
   getBookings() {
     this.isLoading = true;
     this.bookingService
@@ -158,41 +165,109 @@ async getEmployees(): Promise<void> {
         if (res) {
           this.weekCalendar = res;
           this.logger.info(this.weekCalendar);
-          this.currentWeekMondayDate = this.weekCalendar[0].mondayDate;
-          this.currentWeekTuesdayDate = this.weekCalendar[0].tuesdayDate;
-          this.currentWeekWednesdayDate = this.weekCalendar[0].wednesdayDate;
-          this.currentWeekThursdayDate = this.weekCalendar[0].thursdayDate;
-          this.currentWeekFridayDate = this.weekCalendar[0].fridayDate;
-          this.currentWeekSaturdayDate = this.weekCalendar[0].saturdayDate;
-          this.currentWeekSundayDate = this.weekCalendar[0].sundayDate;
-          this.currentWeekMondayBookingCount = this.weekCalendar.reduce(
+          this.bookingsCount['monday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.mondayBookings?.length ?? 0),
             0
           );
-          this.currentWeekTuesdayBookingCount = this.weekCalendar.reduce(
+
+          this.serviceHoursCount['monday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.mondayBookings) {
+                                   const bookingServiceHours = row.mondayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.serviceHoursCount['tuesday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.tuesdayBookings) {
+                                   const bookingServiceHours = row.tuesdayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.serviceHoursCount['wednesday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.wednesdayBookings) {
+                                   const bookingServiceHours = row.wednesdayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.serviceHoursCount['thursday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.thursdayBookings) {
+                                   const bookingServiceHours = row.thursdayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.serviceHoursCount['friday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.fridayBookings) {
+                                   const bookingServiceHours = row.fridayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.serviceHoursCount['saturday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.saturdayBookings) {
+                                   const bookingServiceHours = row.saturdayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.serviceHoursCount['sunday'] = this.weekCalendar.reduce((total, row) => {
+          if (row.sundayBookings) {
+                                   const bookingServiceHours = row.sundayBookings.reduce((bookingTotal:any, booking:any) => {
+                                   return bookingTotal + (booking.woServices?.reduce((woTotal:any, service:any) => woTotal + (service.serviceHours ?? 0), 0) ?? 0);
+                                   }, 0);
+           return total + bookingServiceHours;
+                                            }
+                                            return total;
+                                          }, 0);
+
+          this.bookingsCount['tuesday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.tuesdayBookings?.length ?? 0),
             0
           );
-          this.currentWeekWednesdayBookingCount = this.weekCalendar.reduce(
+          this.bookingsCount['wednesday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.wednesdayBookings?.length ?? 0),
             0
           );
-          this.currentWeekThursdayBookingCount = this.weekCalendar.reduce(
+          this.bookingsCount['thursday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.thursdayBookings?.length ?? 0),
             0
           );
-          this.currentWeekFridayBookingCount = this.weekCalendar.reduce(
+          this.bookingsCount['friday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.fridayBookings?.length ?? 0),
             0
           );
-          this.currentWeekSaturdayBookingCount = this.weekCalendar.reduce(
+          this.bookingsCount['saturday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.saturdayBookings?.length ?? 0),
             0
           );
-          this.currentWeekSundayBookingCount = this.weekCalendar.reduce(
+          this.bookingsCount['sunday'] = this.weekCalendar.reduce(
             (total, row) => total + (row.sundayBookings?.length ?? 0),
             0
           );
+          this.logger.info('Bookings count:');
+          this.logger.info(this.bookingsCount);
+          this.logger.info('Service hours count:');
+          this.logger.info(this.serviceHoursCount);
         }
       });
        setTimeout(() => {

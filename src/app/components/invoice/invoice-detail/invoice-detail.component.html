@@ -42,9 +42,8 @@
     <div class="col-span-4">
       <p-toast />
       <p-confirmdialog />
-      <div class="font-medium text-Darkgray p-4 mb-5 bg-white shadow rounded-xl">
-        <div>
-          <p-button size="large" styleClass="w-full mb-3" label="{{ this.sharedService.T('sendInvoice') }}"
+      <div class="px-2 mb-3 mt-2 bg-white shadow rounded-xl">
+          <p-button size="large" styleClass="w-full mb-3 mt-2" label="{{ this.sharedService.T('sendInvoice') }}"
             (onClick)="openEmailDialog()">
           <span class="material-symbols-outlined">forward_to_inbox</span>
           </p-button>
@@ -87,15 +86,19 @@
               <span (click)="redirectToCustomerDetailComponent()">{{ this.sharedService.T('viewCustomer') }}</span>
             </div>
           </div>
-        </div>
+        
       </div>
       <div class="bg-white shadow rounded-xl p-4">
         <h3 class="text-2xl font-semibold mb-6 text-black">{{ this.sharedService.T('invoiceHistory') }}</h3>
             <p-timeline [value]="invoiceHistory" class="w-full md:w-120" align="right">
-                <ng-template #content let-history>
-                    <p>{{ this.sharedService.getEnumByValue("history", history.actionType).text }} </p>
-                    <p>{{ history.createdOn | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+               <ng-template #opposite let-history>
+                <small class="text-surface-500 dark:text-surface-400">{{ this.sharedService.getEnumByValue("history", history.actionType).text }}</small>    
                 </ng-template>
+                <ng-template #content let-history>
+                <small class="text-surface-500 dark:text-surface-400">{{ history.createdOn | date: 'yyyy-MM-dd HH:mm:ss' }}</small>    
+                </ng-template>
+
+
             </p-timeline>
       </div>
     </div>

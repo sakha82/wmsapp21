@@ -1,37 +1,12 @@
-<app-generic-loader *ngIf="isLoading"></app-generic-loader>
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-    <div class="ml-[30px]">
-        <p class="font-normal text-2xl">{{ this.sharedService.T('workshopCalendar') }}</p>
-    </div>
-    <div class="flex gap-2">
-        <span class="my-auto">{{ this.sharedService.workshopName}}</span>
-        <div
-            class="h-11 w-11 rounded-full border border-CustomBorder uppercase justify-center items-center flex font-me dium">
-            <p>AS</p>
-        </div>
-    </div>
-</header>
-<section class="px-5 mb-10">
+<section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
-        <div class="mb-6 mt-10 text-sm font-medium shadow-sm bg-white rounded-md p-5">
+        <div *ngIf="weekCalendar.length > 0">
+        <div class="mb-6 mt-2 shadow-sm bg-white rounded-md p-5">
             <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
                 <p-datepicker [(ngModel)]="selectedMonth" [ngModelOptions]="{standalone: true}" view="month"
                     dateFormat="MM yy" dataType="string" showIcon iconDisplay="input" (onSelect)="onSelectMonth($event)"/>
                 <div class="">
-                    <p-button variant="outlined" severity="secondary"
-                        (onClick)="onClickPreviousWeek()">
-                        <img src="assets/icons/paginator/previus.svg" alt="">
-                        <span>{{ this.sharedService.T('previous') }}</span>
-                    </p-button>
-                    <div>
-                        <p>{{ this.sharedService.T('week') }}</p>
-                        <p>{{selectedWeek}}</p>
-                    </div>
-                    <p-button variant="outlined" severity="secondary"
-                        (onClick)="onClickNextWeek()">
-                        <span>{{ this.sharedService.T('next') }}</span> <img src="assets/icons/paginator/next.svg"
-                            alt="">
-                    </p-button>
+                    
                 </div>
                 <div class="flex flex-wrap items-center gap-6 lg:ml-auto">
                     @for (emp of employees; track emp.employeeId) {
@@ -46,19 +21,13 @@
                     </div>
                     }
                 </div>
-                <!-- <div class="flex items-center lg:ml-auto">
-                    <p-multiselect [options]="employees" [(ngModel)]="selectedEmployees"
-                        [ngModelOptions]="{standalone: true}" optionLabel="fullName"
-                        placeholder="{{ this.sharedService.T('chooseEmployees') }}" [filter]="false"
-                        [maxSelectedLabels]="5" (onChange)="onChangeEmployee($event)" [showClear]="true"
-                        styleClass="booking-employee-select w-60 h-[38px]" panelStyleClass="booking-employee-panel" />
-                </div> -->
             </div>
             <hr class="border-CustomBorder">
-            <div class="mt-2">
-                <p class="text-lg font-bold">
-                    {{currentWeekMondayDate}} - {{currentWeekSundayDate}}
-                </p>
+            <div class="mt-2 flex items-center justify-left gap-4 flex-wrap">
+                <p-button label="{{ this.sharedService.T('previous') }}" icon="pi pi-angle-double-left" variant="outlined" severity="primary" (onClick)="onClickPreviousWeek()"></p-button>
+                <p class="text-lg font-bold whitespace-nowrap">{{ this.sharedService.T('week') }} {{selectedWeek}}</p>                            
+                <p-button label="{{ this.sharedService.T('next') }}" icon="pi pi-angle-double-right" variant="outlined" severity="primary" (onClick)="onClickNextWeek()"></p-button>                     
+                <p class="text-lg font-bold whitespace-nowrap"> {{weekCalendar[0]['mondayDate']}} - {{weekCalendar[0]['sundayDate']}}</p>
             </div>
         </div>
         <div>
@@ -67,149 +36,24 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th class="bg-white"></th>
-                        <th
-                            [ngClass]="selectedDay == 1 ? 'booking-current-day' : 'bg-white'">
+                        <th *ngFor="let day of days; let i = index"
+                            [ngClass]="selectedDay == i + 1 ? 'booking-current-day' : 'bg-white'">
                             <div class="flex justify-between gap-3 rounded-t-lg px-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T('monday') }}</p>
-                                <p-badge value="{{currentWeekMondayDate.slice(-2)}}" badgeSize="xlarge"/>
+                                <p class="text-2xl my-auto"> {{ this.sharedService.T(day) }}</p> 
+                                <p-badge value="{{weekCalendar[0][day + 'Date']?.slice(-2)}}" badgeSize="xlarge"/>
                             </div>
                             <div>
-                                @if(currentWeekMondayBookingCount > 0)
-                                {
-                                <p-button label="{{ this.sharedService.T('bookings') }}" size="small"
-                                    variant="text" [raised]="true"
-                                    [badge]="currentWeekMondayBookingCount.toString()"
-                                    badgeClass="booking-count-badge" />
-                                <p-button icon="pi pi-print" size="small" [raised]="true"
-                                    pTooltip="{{ 'Print ' + this.sharedService.T('bookings') + ' ' + currentWeekMondayBookingCount }}"
-                                    tooltipPosition="top" (onClick)="printBookings(currentWeekMondayDate)" />
-                                }
-                                @else {
-                                <p-button label="{{ this.sharedService.T('noBookings') }}" size="small"
-                                    variant="text" [raised]="true" />
-                                }
-
+                                <p-button icon="pi pi-print" [text]="true" severity="secondary" size="small" 
+                                 pTooltip="Print" tooltipPosition="top" 
+                                 (onClick)="printBookings(weekCalendar[0][day + 'Date'])" class="p-0" />
                             </div>
-                        </th>
-                        <th
-                            [ngClass]="selectedDay == 2 ? 'booking-current-day' : 'bg-white'">
-                            <div class="flex justify-between gap-3 rounded-t-lg px-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T('tuesday') }}</p>
-                                <p-badge value="{{currentWeekTuesdayDate.slice(-2)}}" badgeSize="xlarge"/>
-                            </div>
-                            <div>
-                                @if(currentWeekTuesdayBookingCount > 0)
-                                {
-                                <p-button label="{{ this.sharedService.T('bookings') }}" size="small"
-                                     variant="text" [raised]="true"
-                                    [badge]="currentWeekTuesdayBookingCount.toString()"/>
-                                <p-button icon="pi pi-print" size="small" [raised]="true"
-                                    pTooltip="{{ 'Print ' + this.sharedService.T('bookings') + ' ' + currentWeekTuesdayBookingCount }}"
-                                    tooltipPosition="top" (onClick)="printBookings(currentWeekTuesdayDate)" />
-                                }
-                                @else {
-                                <p-button label="{{ this.sharedService.T('noBookings') }}" size="small"
-                                    variant="text" [raised]="true" />
-                                }
-
-                            </div>
-
-                        </th>
-                        <th class="booking-day-header"
-                            [ngClass]="selectedDay == 3 ? 'booking-current-day' : 'bg-white'">
-                            <div class="flex justify-between gap-3 rounded-t-lg px-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T('wednesday') }}</p>
-                                <p-badge value="{{currentWeekWednesdayDate.slice(-2)}}" badgeSize="xlarge"/>
-                            </div>
-                            <div>
-                                @if(currentWeekWednesdayBookingCount > 0)
-                                {
-                                <p-button label="{{ this.sharedService.T('bookings') }}" size="small"
-                                    variant="text" [raised]="true"
-                                    [badge]="currentWeekWednesdayBookingCount.toString()"
-                                    badgeClass="booking-count-badge" />
-                                <p-button icon="pi pi-print" size="small" [raised]="true"
-                                    pTooltip="{{ 'Print ' + this.sharedService.T('bookings') + ' ' + currentWeekWednesdayBookingCount }}"
-                                    tooltipPosition="top" (onClick)="printBookings(currentWeekWednesdayDate)" />
-                                }
-                                @else {
-                                <p-button label="{{ this.sharedService.T('noBookings') }}" size="small"
-                                 variant="text" [raised]="true" />
-                                }
-
-                            </div>
-
-                        </th>
-                        <th
-                            [ngClass]="selectedDay == 4 ? 'booking-current-day' : 'bg-white'">
-                            <div class="flex justify-between gap-3 rounded-t-lg px-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T('thursday') }}</p>
-                                <p-badge value="{{currentWeekThursdayDate.slice(-2)}}" badgeSize="xlarge"/>
-                            </div>
-                            <div>
-                                @if(currentWeekThursdayBookingCount > 0)
-                                {
-                                <p-button label="{{ this.sharedService.T('bookings') }}" size="small"
-                                    variant="text" [raised]="true"
-                                    [badge]="currentWeekThursdayBookingCount.toString()"
-                                    badgeClass="booking-count-badge" />
-                                <p-button icon="pi pi-print" size="small" [raised]="true"
-                                    pTooltip="{{ 'Print ' + this.sharedService.T('bookings') + ' ' + currentWeekThursdayBookingCount }}"
-                                    tooltipPosition="top" (onClick)="printBookings(currentWeekThursdayDate)" />
-                                }
-                                @else {
-                                <p-button label="{{ this.sharedService.T('noBookings') }}" size="small"
-                                    variant="text" [raised]="true" />
-                                }
-
-                            </div>
-                        </th>
-                        <th
-                            [ngClass]="selectedDay == 5 ? 'booking-current-day' : 'bg-white'">
-                            <div class="flex justify-between gap-3 rounded-t-lg px-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T('friday') }}</p>
-                                <p-badge value="{{currentWeekFridayDate.slice(-2)}}" badgeSize="xlarge"/>
-                            </div>
-                            <div>
-                                @if(currentWeekFridayBookingCount > 0)
-                                {
-                                <p-button label="{{ this.sharedService.T('bookings') }}" size="small"
-                                    variant="text" [raised]="true"
-                                    [badge]="currentWeekFridayBookingCount.toString()"
-                                    badgeClass="booking-count-badge" />
-                                <p-button icon="pi pi-print" size="small" [raised]="true"
-                                    pTooltip="{{ 'Print ' + this.sharedService.T('bookings') + ' ' + currentWeekFridayBookingCount }}"
-                                    tooltipPosition="top" (onClick)="printBookings(currentWeekFridayDate)" />
-                                }
-                                @else {
-                                <p-button label="{{ this.sharedService.T('noBookings') }}" size="small"
-                                    variant="text" [raised]="true" />
-                                }
-
-                            </div>
-
-                        </th>
-                        <th
-                            [ngClass]="selectedDay == 6 ? 'booking-current-day' : 'bg-white'">
-                            <div class="flex justify-between gap-2 rounded-t-lg pe-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T('saturday') }}</p>
-                                <p-badge value="{{currentWeekSaturdayDate.slice(-2)}}" badgeSize="xlarge"/>
-                            </div>
-                            <div>
-                                @if(currentWeekSaturdayBookingCount > 0)
-                                {
-                                <p-button label="{{ this.sharedService.T('bookings') }}" size="small"
-                                    variant="text" [raised]="true"
-                                    [badge]="currentWeekSaturdayBookingCount.toString()"
-                                    badgeClass="booking-count-badge" />
-                                <p-button icon="pi pi-print" size="small" [raised]="true"
-                                    pTooltip="{{ 'Print ' + this.sharedService.T('bookings') + ' ' + currentWeekSaturdayBookingCount }}"
-                                    tooltipPosition="top" (onClick)="printBookings(currentWeekSaturdayDate)" />
-                                }
-                                @else {
-                                <p-button label="{{ this.sharedService.T('noBookings') }}" size="small"
-                                    variant="text" [raised]="true" />
-                                }
+                            <div style="padding: 0.375rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                                <p-button label="No of Bookings" severity="primary" size="small" badge="{{ bookingsCount[day] || 0 }}" badgeSeverity="contrast" variant="text" 
+                                    [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.8125rem', 'font-weight': '500', 'gap': '0'}" />
+                                <p-button label="Busy Hours" severity="danger" size="small" badge="{{ serviceHoursCount[day] || 0  }}" badgeSeverity="danger" variant="text"  
+                                    [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" />
+                                <p-button label="Free Hours" severity="success" size="small" badge="{{ 8 - (serviceHoursCount[day] || 0) }}" badgeSeverity="success" variant="text" 
+                                    [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" /> 
                             </div>
                         </th>
                     </tr>
@@ -217,369 +61,47 @@
                 <!-- body -->
                 <ng-template pTemplate="body" let-calendar>
                     <tr style="background-color: white;">
-                        <td [class.time-span]="isTimeBookedAt(calendar.cTime)">
-                            <div>
-                                <p class="w-fit text-3xl font-bold"> {{calendar.cTime}}</p>
-                            </div>
+                         <td [class.time-span]="isTimeBookedAt(calendar.cTime)">
+                            <div><p class="w-fit text-3xl font-bold">{{ calendar.cTime }}</p></div>
+                         </td>
+                        <td *ngFor="let day of days; let i = index" class="relative" 
+                            [ngClass]="selectedDay == i + 1 ? 'booking-current-day' : ''"
+                            (mouseenter)="hoveredSlot = { day, time: calendar.cTime }" 
+                            (mouseleave)="hoveredSlot = null">
+                            
+                            <!-- Button that appears on hover -->
+                            <p-button 
+                            *ngIf="hoveredSlot?.day === day && hoveredSlot?.time === calendar.cTime" 
+                            label="Add Booking at {{ calendar.cTime }}" 
+                            icon="pi pi-plus" 
+                            size="small" 
+                            variant="outlined" 
+                            severity="primary" 
+                            (onClick)="createBooking(calendar[day + 'Date'], calendar.cTime)">
+                            </p-button>
+                            
+                            <!-- Carousel for bookings -->
+                            <p-carousel 
+                            *ngIf="calendar[day + 'Bookings']?.length > 0" 
+                            [value]="calendar[day + 'Bookings']" 
+                            [numVisible]="1" 
+                            [numScroll]="1" 
+                            [circular]="false">
+                            
+                            <ng-template let-booking #item>
+                                <div class="border border-surface rounded-border m-2 p-4">
+                                <div>
+                                    <p class="font-semibold">{{ booking.vehiclePlate }}</p>
+                                    <p>{{ booking.vehicleManufacturer }} {{ booking.vehicleModel }} {{ booking.vehicleYear }}</p>
+                                </div>
+                                </div>
+                            </ng-template>
+                            </p-carousel>
                         </td>
-                        <!-- Monday -->
-                        <td class="relative" [ngClass]="selectedDay == 1 ? 'booking-current-day' : ''"
-                            (click)="openMenuKey = null">
-                            <p-button icon="pi pi-plus" size="small"
-                                class="justify-center flex booking-icon-btn" [raised]="true"
-                                 (onClick)="createBooking(calendar.mondayDate,calendar.cTime)" />
-                            @if(calendar.mondayBookings.length > 1)
-                            {
-                            <div>
-                                <div>
-                                    @for(booking of calendar.mondayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <div id="monday-{{calendar.cTime}}-{{i}}">
-                                        <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                            (click)="showBookingInfo(booking)">
-                                            <div>
-                                                <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                                <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}}
-                                                    {{booking.vehicleYear}}</p>
-                                            </div>
-                                        </div>
-                                        @if(i > 0)
-                                        {
-                                        <button type="button"
-                                            [attr.aria-label]="'Previous booking'"
-                                            (click)="scrollBooking($event, -1)">&lsaquo;</button>
-                                        }
-                                        @if(i < calendar.mondayBookings.length - 1) { <button type="button"
-                                             [attr.aria-label]="'Next booking'"
-                                            (click)="scrollBooking($event, 1)">&rsaquo;</button>
-                                            }
-                                    </div>
-                                    }
-                                </div>
-                                <div>
-                                    @for(booking of calendar.mondayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <button type="button"
-                                        [attr.aria-label]="'Go to booking ' + (i + 1)"
-                                        (click)="scrollToIndex($event, i)"></button>
-                                    }
-                                </div>
-                            </div>
-                            }
-                            @else if (calendar.mondayBookings.length == 1)
-                            {
-                            @for(booking of calendar.mondayBookings; track booking.bookingId)
-                            {
-                            <div class="border-l-4  bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                (click)="showBookingInfo(booking)">
-                                <div>
-                                    <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                    <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}} {{booking.vehicleYear}}
-                                    </p>
-                                </div>
-                            </div>
-                            }
-                            }
-                        </td>
-                        <!-- Tuesday -->
-                        <td class="relative" [ngClass]="selectedDay == 2 ? 'booking-current-day' : ''"
-                            (click)="openMenuKey = null">
-                            <p-button label="" icon="pi pi-plus" size="small"
-                                class="justify-center flex booking-icon-btn" [raised]="true"
-                                (onClick)="createBooking(calendar.tuesdayDate,calendar.cTime)" />
-                            @if(calendar.tuesdayBookings.length > 1)
-                            {
-                            <div>
-                                <div>
-                                    @for(booking of calendar.tuesdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <div id="tuesday-{{calendar.cTime}}-{{i}}">
-                                        <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                            (click)="showBookingInfo(booking)">
-                                            <div>
-                                                <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                                <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}}
-                                                    {{booking.vehicleYear}}</p>
-                                            </div>
-                                        </div>
-                                        @if(i > 0)
-                                        {
-                                        <button type="button"
-                                            [attr.aria-label]="'Previous booking'"
-                                            (click)="scrollBooking($event, -1)">&lsaquo;</button>
-                                        }
-                                        @if(i < calendar.tuesdayBookings.length - 1) { <button type="button"
-                                            [attr.aria-label]="'Next booking'"
-                                            (click)="scrollBooking($event, 1)">&rsaquo;</button>
-                                            }
-                                    </div>
-                                    }
-                                </div>
-                                <div>
-                                    @for(booking of calendar.tuesdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <button type="button"
-                                        [attr.aria-label]="'Go to booking ' + (i + 1)"
-                                        (click)="scrollToIndex($event, i)"></button>
-                                    }
-                                </div>
-                            </div>
-                            }
-                            @else if (calendar.tuesdayBookings.length == 1)
-                            {
-                            @for(booking of calendar.tuesdayBookings; track booking.bookingId)
-                            {
-                            <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                (click)="showBookingInfo(booking)">
-                                <div>
-                                    <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                    <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}} {{booking.vehicleYear}}
-                                    </p>
-                                </div>
-                            </div>
-                            }
-                            }
-                        </td>
-                        <!-- Wednesday -->
-                        <td class="relative" [ngClass]="selectedDay == 3 ? 'booking-current-day' : ''"
-                            (click)="openMenuKey = null">
-                            <p-button label="" icon="pi pi-plus" size="small"
-                                class="justify-center flex booking-icon-btn" [raised]="true"
-                                (onClick)="createBooking(calendar.wednesdayDate,calendar.cTime)" />
-                            @if(calendar.wednesdayBookings.length > 1)
-                            {
-                            <div class="booking-slider">
-                                <div class="booking-track">
-                                    @for(booking of calendar.wednesdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <div class="booking-slide" id="wednesday-{{calendar.cTime}}-{{i}}">
-                                        <div class="border-l-4 border-blue bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                            (click)="showBookingInfo(booking)">
-                                            <div class="booking-card-content">
-                                                <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                                <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}}
-                                                    {{booking.vehicleYear}}</p>
-                                            </div>
-                                        </div>
-                                        @if(i > 0)
-                                        {
-                                        <button type="button"
-                                            [attr.aria-label]="'Previous booking'"
-                                            (click)="scrollBooking($event, -1)">&lsaquo;</button>
-                                        }
-                                        @if(i < calendar.wednesdayBookings.length - 1) { <button type="button"
-                                            [attr.aria-label]="'Next booking'"
-                                            (click)="scrollBooking($event, 1)">&rsaquo;</button>
-                                            }
-                                    </div>
-                                    }
-                                </div>
-                                <div>
-                                    @for(booking of calendar.wednesdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <button type="button"
-                                        [attr.aria-label]="'Go to booking ' + (i + 1)"
-                                        (click)="scrollToIndex($event, i)"></button>
-                                    }
-                                </div>
-                            </div>
-                            }
-                            @else if (calendar.wednesdayBookings.length == 1)
-                            {
-                            @for(booking of calendar.wednesdayBookings; track booking.bookingId)
-                            {
-                            <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                (click)="showBookingInfo(booking)">
-                                <div>
-                                    <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                    <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}} {{booking.vehicleYear}}
-                                    </p>
-                                </div>
-                            </div>
-                            }
-                            }
-                        </td>
-                        <!-- Thursday -->
-                        <td class="relative" [ngClass]="selectedDay == 4 ? 'booking-current-day' : ''"
-                            (click)="openMenuKey = null">
-                            <p-button label="" icon="pi pi-plus" size="small"
-                                class="justify-center flex booking-icon-btn" [raised]="true"
-                                (onClick)="createBooking(calendar.thursdayDate,calendar.cTime)" />
-                            @if(calendar.thursdayBookings.length > 1)
-                            {
-                            <div class="booking-slider">
-                                <div class="booking-track">
-                                    @for(booking of calendar.thursdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <div class="booking-slide" id="thursday-{{calendar.cTime}}-{{i}}">
-                                        <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                            (click)="showBookingInfo(booking)">
-                                            <div>
-                                                <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                                <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}}
-                                                    {{booking.vehicleYear}}</p>
-                                            </div>
-                                        </div>
-                                        @if(i > 0)
-                                        {
-                                        <button type="button"
-                                            [attr.aria-label]="'Previous booking'"
-                                            (click)="scrollBooking($event, -1)">&lsaquo;</button>
-                                        }
-                                        @if(i < calendar.thursdayBookings.length - 1) { <button type="button"
-                                             [attr.aria-label]="'Next booking'"
-                                            (click)="scrollBooking($event, 1)">&rsaquo;</button>
-                                            }
-                                    </div>
-                                    }
-                                </div>
-                                <div>
-                                    @for(booking of calendar.thursdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <button type="button"
-                                        [attr.aria-label]="'Go to booking ' + (i + 1)"
-                                        (click)="scrollToIndex($event, i)"></button>
-                                    }
-                                </div>
-                            </div>
-                            }
-                            @else if (calendar.thursdayBookings.length == 1)
-                            {
-                            @for(booking of calendar.thursdayBookings; track booking.bookingId)
-                            {
-                            <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                (click)="showBookingInfo(booking)">
-                                <div>
-                                    <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                    <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}} {{booking.vehicleYear}}
-                                    </p>
-                                </div>
-                            </div>
-                            }
-                            }
-                        </td>
-                        <!-- Friday -->
-                        <td class="relative " [ngClass]="selectedDay == 5 ? 'booking-current-day' : ''"
-                            (click)="openMenuKey = null">
-                            <p-button label="" icon="pi pi-plus" size="small"
-                                class="justify-center flex booking-icon-btn" [raised]="true"
-                                (onClick)="createBooking(calendar.fridayDate,calendar.cTime)" />
-                            @if(calendar.fridayBookings.length > 1)
-                            {
-                            <div class="booking-slider">
-                                <div class="booking-track">
-                                    @for(booking of calendar.fridayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <div class="booking-slide" id="friday-{{calendar.cTime}}-{{i}}">
-                                        <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                            (click)="showBookingInfo(booking)">
-                                            <div>
-                                                <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                                <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}}
-                                                    {{booking.vehicleYear}}</p>
-                                            </div>
-                                        </div>
-                                        @if(i > 0)
-                                        {
-                                        <button type="button"
-                                            [attr.aria-label]="'Previous booking'"
-                                            (click)="scrollBooking($event, -1)">&lsaquo;</button>
-                                        }
-                                        @if(i < calendar.fridayBookings.length - 1) { <button type="button"
-                                            [attr.aria-label]="'Next booking'"
-                                            (click)="scrollBooking($event, 1)">&rsaquo;</button>
-                                            }
-                                    </div>
-                                    }
-                                </div>
-                                <div>
-                                    @for(booking of calendar.fridayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <button type="button"
-                                        [attr.aria-label]="'Go to booking ' + (i + 1)"
-                                        (click)="scrollToIndex($event, i)"></button>
-                                    }
-                                </div>
-                            </div>
-                            }
-                            @else if (calendar.fridayBookings.length == 1)
-                            {
-                            @for(booking of calendar.fridayBookings; track booking.bookingId)
-                            {
-                            <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                (click)="showBookingInfo(booking)">
-                                <div class="booking-card-content">
-                                    <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                    <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}} {{booking.vehicleYear}}
-                                    </p>
-                                </div>
-                            </div>
-                            }
-                            }
-                        </td>
-                        <!-- Saturday -->
-                        <td class="relative"
-                            [ngClass]="selectedDay == 6 ? 'booking-current-day' : ''" (click)="openMenuKey = null">
-                            <p-button label="" icon="pi pi-plus" size="small"
-                                class="justify-center flex booking-icon-btn" [raised]="true"
-                                (onClick)="createBooking(calendar.saturdayDate,calendar.cTime)" />
-                            @if(calendar.saturdayBookings.length > 1)
-                            {
-                            <div class="booking-slider">
-                                <div class="booking-track">
-                                    @for(booking of calendar.saturdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <div class="booking-slide" id="saturday-{{calendar.cTime}}-{{i}}">
-                                        <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                            (click)="showBookingInfo(booking)">
-                                            <div>
-                                                <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                                <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}}
-                                                    {{booking.vehicleYear}}</p>
-                                            </div>
-                                        </div>
-                                        @if(i > 0)
-                                        {
-                                        <button type="button"
-                                            [attr.aria-label]="'Previous booking'"
-                                            (click)="scrollBooking($event, -1)">&lsaquo;</button>
-                                        }
-                                        @if(i < calendar.saturdayBookings.length - 1) { <button type="button"
-                                            [attr.aria-label]="'Next booking'"
-                                            (click)="scrollBooking($event, 1)">&rsaquo;</button>
-                                            }
-                                    </div>
-                                    }
-                                </div>
-                                <div>
-                                    @for(booking of calendar.saturdayBookings; let i = $index; track booking.bookingId)
-                                    {
-                                    <button type="button"
-                                        [attr.aria-label]="'Go to booking ' + (i + 1)"
-                                        (click)="scrollToIndex($event, i)"></button>
-                                    }
-                                </div>
-                            </div>
-                            }
-                            @else if (calendar.saturdayBookings.length == 1)
-                            {
-                            @for(booking of calendar.saturdayBookings; track booking.bookingId)
-                            {
-                            <div class="border-l-4 bg-sky rounded-r-md hover:bg-darkSky h-12"
-                                (click)="showBookingInfo(booking)">
-                                <div>
-                                    <p class="font-semibold">{{booking.vehiclePlate }}</p>
-                                    <p>{{booking.vehicleManufacturer}} {{booking.vehicleModel}} {{booking.vehicleYear}}
-                                    </p>
-                                </div>
-                            </div>
-                            }
-                            }
-                        </td>
-
                     </tr>
                 </ng-template>
             </p-table>
+        </div>
         </div>
     </form>
 
