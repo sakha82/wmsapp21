@@ -4,13 +4,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { catchError, filter, of, switchMap } from 'rxjs';
 import { SHARED_IMPORTS } from '../../../sharedimports';
 import { ICustomer, ICustomerTag, ICustomerType, IEnum, IPager, VehicleSearch, VehicleSearchResponse } from 'app/app.model';
-import { SharedService, CustomerService, LogService, WorkshopService } from 'app/services';
-import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { SharedService, LogService } from 'app/services';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TreeTableModule } from 'primeng/treetable';
 import { CommonModule } from '@angular/common';
-import { Pipe, PipeTransform } from '@angular/core';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface TreeNode {
     data: { [key: string]: any }; // Contains the row data
@@ -18,48 +17,38 @@ interface TreeNode {
     parent?: TreeNode; // Optional parent node}
 }
 
-// Custom pipes for filtering and reducing
-// @Pipe({
-//   name: 'filter',
-//   standalone: true
-// })
-// export class FilterPipe implements PipeTransform {
-//   transform(items: TreeNode[], field: string, value: any): TreeNode[] {
-//     if (!items || !field || value === undefined) {
-//       return items;
-//     }
-//     return items.filter(item => item.data[field] === value);
-//   }
-// }
-
-// @Pipe({
-//   name: 'reduce',
-//   standalone: true
-// })
-// export class ReducePipe implements PipeTransform {
-//   transform(items: TreeNode[], field: string, initialValue: number = 0): number {
-//     if (!items || !field) {
-//       return initialValue;
-//     }
-//     return items.reduce((sum, item) => {
-//       const value = parseFloat(item.data[field]) || 0;
-//       return sum + value;
-//     }, initialValue);
-//   }
-// }
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, ...SHARED_IMPORTS, IconFieldModule, InputIconModule, TreeTableModule],
+  imports: [CommonModule, ...SHARED_IMPORTS, IconFieldModule, InputIconModule, TreeTableModule,ProgressSpinnerModule],
   templateUrl: './vehicle-list.component.html'
 })
 
 export class VehicleListComponent {
 
   vehiclePlates: VehicleSearch[] = [];
+  vehicleInformation:string = '';
+  vehicleColor: string = '';
   customers: ICustomer[] = [];
   vehiclesData: TreeNode[] = [];
+  
+  
+  
+  partsSale: number = 0;
+  labourSale: number = 0;
+  totalTurnover: number = 0;
+  suppliers: string[] = [];
+  partsPercentage: number = 0;
+  labourPercentage: number = 0;
+  differencePercentage:number = 0;
+  serviceType: string = '';
+  mainDriver: string = '';
+  
+  typedStory: string = "";
+  fullStory: string = "";
+  typingSpeed = 20;
+
   isLoading: boolean = false;
   cols: any[] = [];
   expandedNodes: { [key: number]: boolean } = {};
@@ -109,6 +98,70 @@ export class VehicleListComponent {
 
   }
 
+
+
+
+  formatTemplate(template: string, data: any): string {
+  return template.replace(/{{(.*?)}}/g, (_, key) => data[key] ?? '');
+}
+getVehicleStory(key: string, data: any): string {
+  const template = this.sharedService.T(key);
+  return this.formatTemplate(template, data);
+}
+
+getVehicleStoryL1(): string {
+  return this.getVehicleStory('vehicleStoryL1', {
+    partsSale: this.partsSale,
+    labourSale: this.labourSale,
+    totalTurnover: this.totalTurnover
+  });
+}
+
+getVehicleStoryL2(): string {
+  return this.getVehicleStory('vehicleStoryL2', {
+    suppliers: this.suppliers
+  });
+}
+
+getVehicleStoryL3(): string {
+  return this.getVehicleStory('vehicleStoryL3', {
+    partsPercentage: this.partsPercentage,
+    labourPercentage: this.labourPercentage
+  });
+}
+
+getVehicleStoryL4(): string {
+  return this.getVehicleStory('vehicleStoryL4', {
+    serviceType: this.serviceType,
+    mainDriver: this.mainDriver
+  });
+}
+
+prepareStory() {
+
+  this.fullStory =
+    this.getVehicleStoryL1() + " " +
+    this.getVehicleStoryL2() + " " +
+    this.getVehicleStoryL3() + " " +
+    this.getVehicleStoryL4();
+
+  this.startTyping();
+}
+startTyping() {
+  let index = 0;
+  const interval = setInterval(() => {
+
+    if (index < this.fullStory.length) {
+      this.typedStory += this.fullStory.charAt(index);
+      index++;
+    }
+    else {
+      clearInterval(interval);
+    }
+
+  }, this.typingSpeed);
+
+}
   keyupVehicle(event: any) {
     if (event?.value) {
       this.sharedService
@@ -131,14 +184,38 @@ export class VehicleListComponent {
     }
   }
     onClearVehicle() {
-      this.logger.info('Clearing vehicle search input and results');
+      this.typedStory = ''
       this.vehiclePlates = [];
       this.vehiclesData = [];
+      this.vehicleInformation = '';
+      this.vehicleColor = '';
   }
 
   onSelectVehicle(event: any) {
+    this.vehicleInformation = event.value.vehicleManufacturer + ' ' + event.value.vehicleModel + ' (' + event.value.vehicleYear + ')';
+    this.logger.info('Selected vehicle plate: ' + this.vehicleInformation);
     this.logger.info('Selected vehicle plate: ' + event.value.vehiclePlate);
     this.loadvehicle(event.value.vehiclePlate);
+    
+  }
+
+  setVehicleColor(invoices:any): void {
+    const currentDate = new Date();
+    // Check if any invoice is unpaid
+    if(invoices && invoices.length > 0) {
+    for (const invoice of invoices) {
+      if (invoice.remainingBalance > 0) {
+        // Check if due date is in the future
+        const dueDate = new Date(invoice.dueDate);
+        if (dueDate >= currentDate) {
+          this.vehicleColor = 'yellow';
+        } else {
+          this.vehicleColor = 'red';
+          return; 
+        }
+      }
+    }
+    }
   }
   loadvehicle(vehiclePlate: string)
   {
@@ -155,94 +232,144 @@ export class VehicleListComponent {
       .subscribe((response: any) => {
         this.isLoading = false;
         if (response) {
-          this.logger.info('Vehicle Info:');
-          this.logger.info(response);
-          const jsonData = response.dataPayload;
-          this.vehiclesData = [
-            {
-              data: {
-                label: this.sharedService.T('customer'),
-                customerId: jsonData.customerId,
-                customerName: jsonData.customerName
-              },
-              children: [
-                {
-                  data: { 
-                    label: 'invoices',
-                    totalInvoiceCount: response.totalInvoiceCount,
-                    totalInvoiceAmount: response.totalInvoiceAmount,
-                    paidInvoiceAmount: response.paidInvoiceAmount,
-                    unpaidInvoiceAmount: response.unpaidInvoiceAmount
-                  },
-                  children: jsonData.invoices?.map((invoice: any) => ({
-                    data: {
-                      label: this.sharedService.T('invoice'),
-                      invoiceId: invoice.invoiceId,
-                      invoiceDate: this.getDateString(invoice.invoiceDate),
-                      dueDate: this.getDateString(invoice.dueDate),
-                      totalInvoiceAmount: invoice.totalInvoiceAmount,
-                      labourAmount: invoice.labourAmount,
-                      partsAmount: invoice.partsAmount,
-                      paymentDate: this.getDateString(invoice.paymentDate),
-                      paymentAmount: invoice.paymentAmount,
-                      remainingBalance: invoice.remainingBalance
-                    }
-                  })) || []
-                },
-                {
-                  data: { 
-                    label: 'workorders',
-                    totalWorkOrderCount: response.totalWorkOrderCount,
-                    lastWorkOrderDate: this.getDateString(response.lastWorkOrderDate),
-                    totalWOPurchaseCount: response.totalWOPurchaseCount
-                  },
-                  children: jsonData.workOrders?.map((workOrder: any) => ({
-                    data: {
-                      label: this.sharedService.T('workorder'),
-                      workOrderId: workOrder.workOrderId,
-                      bookingDate: this.getDateString(workOrder.bookingDate),
-                      bookingTime: workOrder.bookingTime,
-                      employeeName: workOrder.employeeName,                       
-                      workOrderStatus: workOrder.workOrderStatus,
-                      supplierPurchaseDetails:workOrder.supplierPurchaseDetails
+// Assuming response is now an array of objects
+const responseArray = response; // response is an array
 
-                    }
-                  })) || []
-                },
-                {
-                  data: { 
-                    label: 'offers',
-                    totalOfferCount: jsonData.totalOfferCount
-                  },
-                  children: jsonData.offers?.map((offer: any) => ({
-                    data: {
-                      label: this.sharedService.T('offer'),
-                      offerId: offer.offerId,
-                      offerDate: this.getDateString(offer.offerDate),
-                      priceIncVat: offer.priceIncVat,
-                      isAccepted: offer.isAccepted
-                    }
-                  })) || []
-                },
-                {
-                  data: { 
-                    label: 'digitalServiceRecord',
-                    totalDigitalServiceCount: response.totalDigitalServiceCount,
-                    lastDigitalServiceDate: this.getDateString(response.lastDigitalServiceDate)
-                  },
-                  children: jsonData.digitalServices?.map((service: any) => ({
-                    data: {
-                      label: this.sharedService.T('digitalServiceRecord'),
-                      digitalServiceId: service.digitalServiceId,
-                      serviceDate: this.getDateString(service.serviceDate),
-                      serviceType: service.serviceType,
-                      vehicleMileage: service.vehicleMileage
-                    }
-                  })) || []
-                }
-              ]
-            }
-          ];
+// Iterate over the array and sum the values
+responseArray.forEach((item: any) => {
+  this.partsSale += item.partsSale || 0; // Add partsSale, default to 0 if undefined
+  this.labourSale += item.labourSale || 0; // Add labourSale, default to 0 if undefined
+  this.totalTurnover += item.totalInvoiceAmount || 0; // Add totalInvoiceAmount, default to 0 if undefined
+
+  // Collect suppliers (avoid duplicates if necessary)
+  if (Array.isArray(item.suppliers)) {
+    this.suppliers = [...new Set([...this.suppliers, ...item.suppliers])]; // Merge and deduplicate suppliers
+  }
+  this.setVehicleColor(item.dataPayload.invoices);
+});
+
+// Calculate percentages and determine service type
+if (this.totalTurnover > 0) {
+  this.partsPercentage = Math.round((this.partsSale / this.totalTurnover) * 100);
+  this.labourPercentage = Math.round((this.labourSale / this.totalTurnover) * 100);
+  this.differencePercentage = Math.abs(this.labourPercentage - this.partsPercentage);
+} else {
+  this.partsPercentage = 0;
+  this.labourPercentage = 0;
+  this.differencePercentage = 0;
+}
+
+// Determine service type and main driver
+if (this.labourPercentage >= 70) {
+  this.serviceType = 'service-oriented';
+  this.mainDriver = 'labour work';
+} else if (this.partsPercentage >= 70) {
+  this.serviceType = 'parts-oriented';
+  this.mainDriver = 'parts replacement';
+} else {
+  this.serviceType = 'balanced';
+  this.mainDriver = 'both labour and parts';
+}
+
+// Call prepareStory after calculations
+this.prepareStory();
+
+        this.logger.info('Response Received for vehicle info:');
+        this.logger.info(response);
+        const jsonDataArray = response; // Assuming this is an array of JSON objects
+        this.vehiclesData = []; // Initialize an empty array
+// Loop through each entry in the JSON data array
+jsonDataArray.forEach((jsonData: any) => {
+  const vehicleData = {
+    data: {
+      label: this.sharedService.T('customer'),
+      customerId: jsonData.customerId,
+      customerName: jsonData.customerName
+    },
+    children: [
+      {
+        data: { 
+          label: 'invoices',
+          totalInvoiceCount: jsonData.totalInvoiceCount || 0,
+          totalInvoiceAmount: jsonData.totalInvoiceAmount || 0,
+          paidInvoiceAmount: jsonData.paidInvoiceAmount || 0,
+          unpaidInvoiceAmount: jsonData.unpaidInvoiceAmount || 0
+        },
+        children: Array.isArray(jsonData.dataPayload.invoices) ? jsonData.dataPayload.invoices.map((invoice: any) => ({
+          data: {
+            label: this.sharedService.T('invoice'),
+            invoiceId: invoice.invoiceId,
+            invoiceDate: this.getDateString(invoice.invoiceDate),
+            dueDate: this.getDateString(invoice.dueDate),
+            totalInvoiceAmount: invoice.totalInvoiceAmount,
+            labourAmount: invoice.labourSale,
+            partsAmount: invoice.partsSale,
+            paymentDate: this.getDateString(invoice.paymentDate),
+            paymentAmount: invoice.paymentAmount,
+            remainingBalance: invoice.remainingBalance
+          }
+        })) : [] // Default to an empty array if invoices is null or not an array
+      },
+      {
+        data: { 
+          label: 'workorders',
+          totalWorkOrderCount: jsonData.totalWorkOrderCount || 0,
+          lastWorkOrderDate: this.getDateString(jsonData.lastWorkOrderDate),
+          totalWOPurchaseCount: jsonData.totalWOPurchaseCount || 0
+        },
+        children: Array.isArray(jsonData.dataPayload.workOrders) ? jsonData.dataPayload.workOrders.map((workOrder: any) => ({
+          data: {
+            label: this.sharedService.T('workorder'),
+            workOrderId: workOrder.workOrderId,
+            bookingDate: this.getDateString(workOrder.bookingDate),
+            bookingTime: workOrder.bookingTime,
+            employeeName: workOrder.employeeName,                       
+            workOrderStatus: workOrder.workOrderStatus,
+            supplierPurchaseDetails: workOrder.supplierPurchaseDetails
+          }
+        })) : [] // Default to an empty array if workOrders is null or not an array
+      },
+      {
+        data: { 
+          label: 'offers',
+          totalOfferCount: jsonData.totalOfferCount || 0
+        },
+        children: Array.isArray(jsonData.dataPayload.offers) ? jsonData.dataPayload.offers.map((offer: any) => ({
+          data: {
+            label: this.sharedService.T('offer'),
+            offerId: offer.offerId,
+            offerDate: this.getDateString(offer.offerDate),
+            priceIncVat: offer.priceIncVat,
+            isAccepted: offer.isAccepted
+          }
+        })) : [] // Default to an empty array if offers is null or not an array
+      },
+      {
+        data: { 
+          label: 'digitalServiceRecord',
+          totalDigitalServiceCount: jsonData.totalDigitalServiceCount || 0,
+          lastDigitalServiceDate: this.getDateString(jsonData.lastDigitalServiceDate)
+        },
+        children: Array.isArray(jsonData.dataPayload.digitalServices) ? jsonData.dataPayload.digitalServices.map((service: any) => ({
+          data: {
+            label: this.sharedService.T('digitalServiceRecord'),
+            digitalServiceId: service.digitalServiceId,
+            serviceDate: this.getDateString(service.serviceDate),
+            serviceType: service.serviceType,
+            vehicleMileage: service.vehicleMileage
+          }
+        })) : [] // Default to an empty array if digitalServices is null or not an array
+      }
+    ]
+  };
+
+  // Push the constructed vehicle data into the vehiclesData array
+  this.vehiclesData.push(vehicleData);
+});
+
+        
+        
+        
         }
         console.log('Transformed Vehicles Data:', JSON.stringify(this.vehiclesData, null, 2));
       });

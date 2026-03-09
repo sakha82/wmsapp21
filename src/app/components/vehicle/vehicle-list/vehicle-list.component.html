@@ -1,8 +1,8 @@
     <section class="p-6 pb-10">
       <div class="p-8 rounded-lg shadow-lg bg-white">
-        <div *ngIf="isLoading" class="flex justify-center items-center h-96">
-          <div class="animate-spin">
-            <span class="material-symbols-outlined text-4xl">loading</span>
+        <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+          <div class="bg-white rounded-lg p-8 shadow-lg">
+            <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
           </div>
         </div>
 
@@ -16,14 +16,12 @@
                   <p-autoComplete
                     [placeholder]="this.sharedService.T('searchVehicle')"
                     [suggestions]="vehiclePlates"
+                    optionValue="vehiclePlate"
+                    optionLabel="vehiclePlate"
                     (onClear)="onClearVehicle()"
                     (keyup)="keyupVehicle($event.target)"
                     (onSelect)="onSelectVehicle($event)"
-                    optionValue="vehiclePlate"
-                    optionLabel="vehiclePlate"
                     [showClear]="true"  
-                    class="w-full"
-                    [panelStyle]="{'width': '400px', 'max-height': '400px'}"
                     [appendTo]="'body'">
 
                     <ng-template let-vehicle pTemplate="item">
@@ -33,24 +31,36 @@
                       </div>
                     </ng-template>
                   </p-autoComplete>                  
-                </p-iconfield>
+                </p-iconfield> 
               </div>
-            </div>
-          </div>
-
+            </div> 
+          </div>  
+          
+          <div class="mt-10">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center space-x-2 pl-6">
+              <span>{{ this.sharedService.T('vehicle') }}</span>
+              <div
+                class="w-5 h-5 rounded border border-gray-300"
+                [ngClass]="{
+                  'bg-red-500': vehicleColor === 'red',
+                  'bg-yellow-500': vehicleColor === 'yellow',
+                  'bg-green-500': vehicleColor === 'green'
+                }"
+                title="{{ vehicleColor | uppercase }}"
+              ></div>
+              <span *ngIf="vehicleInformation">{{ ': ' + vehicleInformation }}</span>
+            </h2>
+         </div>
           <!-- Text Information Section -->
-          <div class="mb-10 p-6 rounded-lg border-l-4" style="background-color: var(--p-primary-50, #f0f9ff); border-left-color: var(--p-primary-500);">
+          <div class="mt-10 mb-5 p-6 rounded-lg border-l-4" style="background-color: var(--p-primary-50, #f0f9ff); border-left-color: var(--p-primary-500);">
             <p class="text-base leading-relaxed font-medium" style="color: var(--p-text-color);">
-              <span style="color: var(--p-primary-600); font-weight: 600;">Vehicle Information:</span> 
-              This section displays comprehensive information about the selected vehicle. 
-              You can view detailed records including invoices, work orders, service offers, and digital services. 
-              Each category is organized hierarchically for easy navigation and analysis.
+              <!-- <span style="color: var(--p-primary-600); font-weight: 600;">{{ this.sharedService.T('vehicleInformation') }} </span>  -->
+                {{ typedStory }}<span class="ml-1 animate-pulse">|</span>
             </p>
-          </div>
+          </div> 
 
           <!-- TreeTable Section -->
-          <div class="mt-10">
-            <h2 class="text-2xl font-semibold mb-6 text-gray-800">Vehicle Details</h2>
+          <div class="mt-10 pl-6">
             <table class="w-full border-collapse rounded-lg overflow-hidden shadow-sm" style="border: 1px solid var(--p-content-border-color);">
               <thead style="background-color: var(--p-surface-section);">
                 <tr>
@@ -66,7 +76,7 @@
                   <tr style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color); cursor: pointer;" 
                       (click)="toggleNode(idx)"
                       class="hover:opacity-80">
-                    <td class="px-4 py-3 text-center">
+                    <td class="flex items-center gap-2">
                       <span class="material-symbols-outlined" 
                             style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
                             [style.transform]="expandedNodes[idx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
@@ -79,6 +89,10 @@
                         <span class="font-bold" style="white-space: nowrap;">
                         {{ node.data[col.field] }}
                         </span>
+
+
+
+
                       </ng-container>
                       <ng-template #otherCol>
                         <span class="font-bold" style="white-space: nowrap;">
@@ -96,7 +110,8 @@
                     <ng-container *ngFor="let childNode of node.children; let cidx = index">
                       
                       <!-- Invoices Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'invoices'">
+
+                      <ng-container *ngIf="childNode.data['label'] === 'invoices' && childNode.data['totalInvoiceCount'] > 0">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
@@ -155,7 +170,7 @@
                       </ng-container>
 
                       <!-- Work Orders Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'workorders'">
+                      <ng-container *ngIf="childNode.data['label'] === 'workorders' && childNode.data['totalWorkOrderCount'] > 0">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
@@ -177,7 +192,7 @@
 
                               <!-- Summary Information - Fixed width columns for alignment -->
                                <div class="col-span-8 grid grid-cols-4 gap-4 text-xs" style="color: var(--p-text-color);">
-                                <div class="col-span-1">{{ this.sharedService.T('count') }}: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalInvoiceCount'] || '0' }}</span></div>
+                                <div class="col-span-1">{{ this.sharedService.T('count') }}: <span style="color: var(--p-primary-600); font-weight: 600;">{{ childNode.data['totalWorkOrderCount'] || '0' }}</span></div>
                               </div>
 
 
@@ -213,7 +228,7 @@
                       </ng-container>
 
                       <!-- Offers Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'offers'">
+                      <ng-container *ngIf="childNode.data['label'] === 'offers' && childNode.data['totalOfferCount'] > 0">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
@@ -271,7 +286,7 @@
                       </ng-container>
 
                       <!-- Digital Services Section -->
-                      <ng-container *ngIf="childNode.data['label'] === 'digitalServiceRecord'">
+                      <ng-container *ngIf="childNode.data['label'] === 'digitalServiceRecord' && childNode.data['totalDigitalServiceCount'] > 0">
                         <!-- Category header row with icon, label, and summary in one line -->
                         <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
                             (click)="toggleChildNode(idx, cidx)"
@@ -337,7 +352,7 @@
         </div>
 
         <div *ngIf="!isLoading && vehiclesData.length === 0" class="text-center py-10">
-          <p class="text-gray-500">No data available</p>
+          <p class="text-gray-500">{{ this.sharedService.T('noDataFound') }}</p>
         </div>
          </div>        
       

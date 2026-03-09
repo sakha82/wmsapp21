@@ -163,7 +163,7 @@ export class WorkOrderCrudComponent implements OnInit {
         switchMap((response: any) => {
           if (response.data) {
             this.logger.info('WorkOrder Loaded', response.data);
-            return this.workshopService.getServices().pipe(
+            return this.workshopService.getServices('').pipe(
               tap((servicesResponse: any) => {
                 this.services = servicesResponse;
                 this.logger.info('Services Loaded', this.services);

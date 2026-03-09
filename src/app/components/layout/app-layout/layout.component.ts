@@ -31,13 +31,7 @@ export class LayoutComponent implements OnInit {
   workshops:IWorkshop[] = [];
   selectedLang:string = '';
   version = '';
-  
-  // palettes = [
-  //   { label: 'Rose', value: 'rose' },
-  //   { label: 'Indigo', value: 'indigo' },
-  //   { label: 'Emerald', value: 'emerald' },
-  //   { label: 'Violet', value: 'violet' }
-  // ];
+  selectedTheme = '';  
 palettes = [
   { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     // Default
   { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },
@@ -46,7 +40,6 @@ palettes = [
   { label: 'Fresh Emerald',     value: 'emerald', color: '#10b981' },
   { label: 'Deep Red',          value: 'red', color: '#b91c1c' }       // Muted red (not alert red)
 ];
-  selected = 'blue';
    isDark = false;
    currentUser:string |null = '' ;
    selectedRoute: string = '';
@@ -72,12 +65,6 @@ palettes = [
   }
        
   ngOnInit(): void {
-    this.theme.setPrimaryPalette(this.selected);
-    this.selectedLang = sessionStorage.getItem('lang') || 'sv';
-    this.logger.info('selected userName::' + sessionStorage.getItem('userName'));
-    this.currentUser = sessionStorage.getItem('userName');
-
-
     this.workshopService
     .getWorkshop()
     .pipe(
@@ -91,6 +78,10 @@ palettes = [
         this.workshop = response; 
         this.workshops.push(this.workshop);
         this.selectedWorkshop = this.workshops[0];
+        this.theme.setPrimaryPalette(this.selectedWorkshop.defaultTheme);
+        this.selectedTheme = this.selectedWorkshop.defaultTheme;
+        this.selectedLang = this.selectedWorkshop.defaultLang;
+        this.currentUser = sessionStorage.getItem('userName');
         this.logger.info(this.workshop);
       }
     });

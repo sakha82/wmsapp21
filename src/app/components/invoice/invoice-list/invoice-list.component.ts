@@ -120,6 +120,7 @@ ngOnInit(){
       .subscribe((res) => {
         //const objectData:any = res.objectList;
         this.invoices = res.objectList;
+        this.logger.info('invoices',this.invoices);
         this.pager = res.pager;
         this.totalSum = res.totalSum;
         this.totalNet = res.totalNet;

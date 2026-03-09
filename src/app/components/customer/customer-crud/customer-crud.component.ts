@@ -24,7 +24,7 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
 
   ],
   templateUrl: './customer-crud.component.html',
-  styleUrl: './customer-crud.component.css',
+  //styleUrl: './customer-crud.component.css',
   providers: [ConfirmationService, MessageService],
 })
 export class CustomerCrudComponent {

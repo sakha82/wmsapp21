@@ -57,6 +57,7 @@
 .p-autocomplete { 
   display: grid !important;
 }
+
 .cdk-drag-animating {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -70,11 +71,11 @@
   cursor: grabbing; /* Grabbing icon when dragging */
 }
 
-/* Highlight the entire row while dragging */
-.cdk-drag.dragging {
-  border: 2px dotted #B0B0B0 !important; /* Grey dotted border */
-  background-color: #F9F9F9 !important; /* Light grey background */
-}
+/* UNUSED CLASS - NOT USED IN HTML */
+/* .cdk-drag.dragging {
+  border: 2px dotted #B0B0B0 !important;
+  background-color: #F9F9F9 !important;
+} */
 
 
 /* Actually,col-span-6 is not applying on customerName field. After adding this css.it is working fine. I am not sure why it is not working without this css. */

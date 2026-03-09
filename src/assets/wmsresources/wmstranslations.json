@@ -1505,11 +1505,6 @@
         "sv": "Verkstadskalender"
     },
     {
-        "tkey": "workshopServices",
-        "en": "Workshop Services",
-        "sv": "Verkstadsservice"
-    },
-    {
         "tkey": "yes",
         "en": "Yes",
         "sv": "Ja"
@@ -1670,6 +1665,76 @@
         "sv": "Offerthistorik"
     },
     {
+        "tkey": "defaultLanguage",
+        "en": "Default language",
+        "sv": "Standardspråk"
+    },
+    {
+        "tkey": "defaultColorTheme",
+        "en": "Default color theme",
+        "sv": "Standardfärgtema"
+    },
+    {
+        "tkey": "paymentInformation",
+        "en": "Payment information",
+        "sv": "Betalningsinformation"
+    },
+    {
+        "tkey": "workshopServices",
+        "en": "Workshop services",
+        "sv": "Verkstadstjänster"
+    },
+    {
+        "tkey": "createService",
+        "en": "Create service",
+        "sv": "Skapa tjänst"
+    },
+    {
+        "tkey": "invoiceTemplate",
+        "en": "Invoice template",
+        "sv": "Fakturamall"
+    },
+    {
+        "tkey": "invoiceDetails",
+        "en": "Invoice details",
+        "sv": "Fakturadetaljer"
+    },
+    {
+        "tkey": "salesTarget",
+        "en": "Sales Target",
+        "sv": "Försäljningsmål"
+    },
+    {
+        "tkey": "addTemplate",
+        "en": "Add template",
+        "sv": "Lägg till mall"
+    },
+    {
+        "tkey": "saveTemplate",
+        "en": "Save template",
+        "sv": "Spara mall"
+    },
+    {
+        "tkey": "deleteTemplate",
+        "en": "Delete template",
+        "sv": "Ta bort mall"
+    },
+    {
+        "tkey": "year",
+        "en": "Year",
+        "sv": "År"
+    },
+    {
+        "tkey": "month",
+        "en": "Month",
+        "sv": "Månad"
+    },
+    {
+        "tkey": "turnover",
+        "en": "Turnover",
+        "sv": "Omsättning"
+    },
+    {
         "tkey": "success",
         "en": "Success",
         "sv": "Lyckades"
@@ -1728,6 +1793,31 @@
         "tkey": "loggedInUser",
         "en": "Logged In User",
         "sv": "Inloggad användare"
+    },
+    {
+        "tkey": "contactInformation",
+        "en": "Contact information",
+        "sv": "Kontaktuppgifter"
+    },
+    {
+        "tkey": "workshopService",
+        "en": "Workshop service",
+        "sv": "Verkstadstjänst"
+    },
+    {
+        "tkey": "searchWorkshopService",
+        "en": "Search workshop service",
+        "sv": "Sök verkstadstjänst"
+    },
+    {
+        "tkey": "vehicle",
+        "en": "Vehicle",
+        "sv": "Fordon"
+    },
+    {
+        "tkey": "noDataFound",
+        "en": "No data found",
+        "sv": "Ingen data hittades"
     },
     {
         "tkey": "status",
@@ -1813,5 +1903,30 @@
         "tkey": "searchVehicle",
         "en": "Search Vehicle",
         "sv": "Sök fordon"
+    },
+    {
+        "tkey": "templateName",
+        "en": "Template name",
+        "sv": "Mallnamn"
+    },
+    {
+        "tkey": "vehicleStoryL1",
+        "en": "This vehicle has generated a total parts sale of {{partsSale}} and a total labour sale of {{labourSale}}, resulting in a combined turnover of {{totalTurnover}}.",
+        "sv": "Detta fordon har genererat en total reservdelsförsäljning på {{partsSale}} och arbetsförsäljning på {{labourSale}}, vilket ger en total omsättning på {{totalTurnover}}."
+    },
+    {
+        "tkey": "vehicleStoryL2",
+        "en": "Parts for this vehicle were supplied by: {{suppliers}}.",
+        "sv": "Reservdelar för detta fordon levererades av: {{suppliers}}."
+    },
+    {
+        "tkey": "vehicleStoryL3",
+        "en": "Parts account for {{partsPercentage}}% of the total sales, while labour accounts for {{labourPercentage}}%.",
+        "sv": "Reservdelar står för {{partsPercentage}}% av den totala försäljningen medan arbete står för {{labourPercentage}}%."
+    },
+    {
+        "tkey": "vehicleStoryL4",
+        "en": "This means the vehicle is {{serviceType}}, with revenue mainly driven by {{mainDriver}}.",
+        "sv": "Detta innebär att fordonet är {{serviceType}}, där intäkterna främst drivs av {{mainDriver}}."
     }
 ]

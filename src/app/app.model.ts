@@ -496,6 +496,9 @@ export interface IWorkshop {
   iban: string;
   priceMode: number;
   isFskat: boolean;
+  defaultLang: string;
+  defaultTheme: string;
+  defaultInvoiceTemplate: string;
 }
 // Dashboard
 
@@ -625,39 +628,25 @@ export interface VehicleSearchResponse {
   vehicleModel?: string;
   vehicleYear?: number;
   latestVehicleMileage?: number;
-  vin?: string;
-
+  
   // Customer
   customerId?: number;
   customerName?: string;
-  organizationNo?: string;
-  telephone?: string;
-  email?: string;
-
-  // Invoice Aggregations
+  
   totalInvoiceCount: number;
   totalInvoiceAmount: number;
   paidInvoiceAmount: number;
   unpaidInvoiceAmount: number;
-  lastInvoiceDate?: string; // ISO string from API
-
-  // WorkOrders
+  paidInvoiceCount:number;
+  unpaidInvoiceCount:number;
+  partsSale:number;
+  labourSale:number;
+  suppliers:string;
   totalWorkOrderCount: number;
-  lastWorkOrderDate?: string;
-
-  // Offers
-  totalOfferCount: number;
-
-  // Digital Services
-  totalDigitalServiceCount: number;
-  lastDigitalServiceDate?: string;
-
-  // Purchases
   totalWOPurchaseCount: number;
-
-  // Hierarchy
+  totalOfferCount: number;
+  totalDigitalServiceCount: number;
   dataPayload?: VehicleHierarchy;
-
   refreshedAt: string;
 }
 
@@ -674,8 +663,8 @@ export interface InvoiceDto {
   invoiceDate?: string;
   dueDate?: string;
   totalInvoiceAmount:number;
-  labourAmount:number;
-  partsAmount:number;
+  labourSale:number;
+  partsSale:number;
   paymentDate?: string;
   paymentAmount: number;
   remainingBalance: number;
@@ -688,28 +677,19 @@ export interface WorkOrderDto {
   employeeName?: string;
   workOrderStatus?: string;
   supplierPurchaseDetails?: string;
-  services?: WOServiceDto[];
-  purchases?: WOPurchaseDto[];
-}
-export interface WOServiceDto {
-  woServiceId: number;
-  serviceName: string;
-  serviceHours?: number;
-}
-export interface WOPurchaseDto {
-  woPurchaseId: number;
-  supplierName: string;
-  purchaseReference: string;
 }
 export interface OfferDto {
   offerId: number;
   offerDate?: string;
   priceIncVat?: number;
   isAccepted?: boolean;
+  isRejected?: boolean;
 }
 export interface DigitalServiceDto {
-  digitalServiceId: number;
+  wmsId: string;
+  userId: number;
   serviceDate: string;
   serviceType: string;
   vehicleMileage: number;
+  services:string;
 }

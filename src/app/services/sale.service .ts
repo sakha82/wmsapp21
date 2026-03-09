@@ -13,9 +13,10 @@ export class SaleService {
   
   constructor(private http: HttpClient,private logger: LogService,private sharedService:SharedService) {}
 
-  getAllSales() {
+  getSaleTarget(saleYear: string) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("saleYear", saleYear);
     const url = `${this.baseUrl}/workshop-sale-taget?${queryParams}`;
     return this.http.get<ISale[]>(url);
   }

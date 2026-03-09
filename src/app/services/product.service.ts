@@ -94,9 +94,9 @@ export class ProductService {
 
 
 
-  getProductTemplateDetail(wmsId: string, productTemplateId: number): Observable<any> {
+  getProductTemplateDetail(productTemplateId: number): Observable<any> {
     let params = new HttpParams()
-      .set('wmsId', wmsId)
+      .set('wmsId', this.sharedService.wmsId)
       .set('productTemplateId', productTemplateId.toString());
     return this.http.get<any>(this.baseUrl + '/template-detail', { params: params });
   }

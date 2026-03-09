@@ -578,7 +578,7 @@ T(key: string): string {
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
     return this.http.post<IWorkshop>(`${this.baseUrl}/Core/UpdateWorkshop`, workshop, {headers});
   }
-
+  
   getMarkModelByRegnr(prefix: string) {
     const url = `${this.baseUrl}/Core/MarkModelByRegnr/${prefix}`;
     return this.http.get<Array<string>>(url);

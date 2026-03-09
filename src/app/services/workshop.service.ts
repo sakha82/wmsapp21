@@ -27,10 +27,19 @@ export class WorkshopService {
   updateWorkshop(workshop: IWorkshop) {
     workshop.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    this.logger.info('Updating workshop with data:', workshop);
     return this.http.post<IWorkshop>(`${this.baseUrl}/update`, workshop, { headers });
   }
 
-
+updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("priceMode", priceMode.toString());
+    queryParams.append("template", defaultTemplate);
+    const url = `${this.baseUrl}/update-invoice-settings?${queryParams}`;
+  
+     return this.http.get<boolean>(url);
+  }
   getCustomerTags() {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
@@ -60,9 +69,10 @@ export class WorkshopService {
   //   const url = `${this.baseUrl}/workshop-services?${queryParams}`;
   //   return this.http.get<ICustomerType[]>(url);
   // }
-  getServices(): Observable<any> {
+  getServices(search:string): Observable<any> {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("search", search);
     const url = `${this.baseUrl}/workshop-services?${queryParams}`;
     return this.http.get(url);
     // .pipe(
@@ -84,17 +94,17 @@ export class WorkshopService {
     const url = `${this.baseUrl}/delete-workshop-service?${queryParams.toString()}`;
     return this.http.post(url, {});
   }
-  deleteCustomerTag(wmsId: string, customerTagId: number) {
+  deleteCustomerTag(customerTagId: number) {
     const queryParams = new URLSearchParams();
-    queryParams.append('wmsId', wmsId);
+    queryParams.append('wmsId', this.sharedService.wmsId);
     queryParams.append('customerTagId', customerTagId.toString()); // convert to string for URL
 
     const url = `${this.baseUrl}/delete-customer-tag?${queryParams.toString()}`;
     return this.http.delete(url, {});
   }
-  deleteCustomerType(wmsId: string, customerTypeId: number) {
+  deleteCustomerType(customerTypeId: number) {
     const queryParams = new URLSearchParams();
-    queryParams.append('wmsId', wmsId);
+    queryParams.append('wmsId', this.sharedService.wmsId);
     queryParams.append('customerTypeId', customerTypeId.toString()); // convert to string for URL
 
     const url = `${this.baseUrl}/delete-customer-type?${queryParams.toString()}`;
@@ -112,9 +122,9 @@ export class WorkshopService {
   }
 
   // 🔹 List files for workshop
-  listFiles(wmsId: string, type: string = 'logo'): Observable<any> {
+  listFiles(type: string = 'logo'): Observable<any> {
     const queryParams = new URLSearchParams();
-    queryParams.append('wmsid', wmsId); // ✅ backend expects lowercase
+    queryParams.append('wmsid', this.sharedService.wmsId); 
     queryParams.append('type', type);
 
     const url = `${environment.BASE_URL}/api/File/list-files?${queryParams.toString()}`;
@@ -158,5 +168,14 @@ export class WorkshopService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
     return this.http.post<IProductTemplate>(`${this.baseUrl1}/upsert-template`, productTemplate, { headers });
   }
+
+  deleteProductTemplate(productTemplateId: number) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("productTemplateId", productTemplateId.toString());
+    const url = `${this.baseUrl1}/delete-template?${queryParams}`;
+    return this.http.delete(url);
+  }
+
 }
 
