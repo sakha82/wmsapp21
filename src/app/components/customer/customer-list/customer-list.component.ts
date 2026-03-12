@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { catchError, filter, of, switchMap } from 'rxjs';
@@ -8,18 +8,20 @@ import { SharedService, CustomerService, LogService, WorkshopService } from 'app
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [...SHARED_IMPORTS, GenericLoaderComponent,IconFieldModule,InputIconModule],
+  imports: [...SHARED_IMPORTS, GenericLoaderComponent, IconFieldModule, InputIconModule],
   templateUrl: './customer-list.component.html'
 })
 
 export class CustomerListComponent {
 
+  // @ViewChild('dt') dataTable!: Table;
+
   customers: ICustomer[] = [];
-  pager: IPager = <IPager>{};
   customerTags: ICustomerTag[] = [];
   customerTypes: ICustomerType[] = [];
 
@@ -27,7 +29,9 @@ export class CustomerListComponent {
   filters: FormGroup;
   currentPage: number = 1;
   isLoading: boolean = false;
-
+  sortField = 'customerId';
+  sortOrder = -1;
+  totalRecords: number = 0;
   constructor(
     private readonly router: Router,
     private readonly fb: FormBuilder,
@@ -35,8 +39,8 @@ export class CustomerListComponent {
     public readonly sharedService: SharedService,
     private readonly customerService: CustomerService,
     private readonly route: ActivatedRoute,
-    private readonly workshopService: WorkshopService) {
-
+    private readonly workshopService: WorkshopService,
+    private readonly cdr: ChangeDetectorRef) {
 
     this.filters = this.fb.group({
       customerType: '',
@@ -45,10 +49,9 @@ export class CustomerListComponent {
       customerName: '',
       currentPage: 1,
       pageSize: 10,
-      sortBy: '',
-      sortDir: ''
+      sortBy: this.sortField,
+      sortDir: this.sortOrder,
     });
-
   }
 
   ngOnInit() {
@@ -63,7 +66,10 @@ export class CustomerListComponent {
   }
 
   initializePage() {
-    this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
+    this.route.queryParams.subscribe((params) => { 
+      this.sharedService.updateFiltersFromQueryParams(this.filters, params);
+      this.logger.info('Query params applied, filters:', this.filters.value);
+    });
     this.getCustomers();
     this.loadCustomerTags();
     this.loadCustomerTypes();
@@ -77,6 +83,7 @@ export class CustomerListComponent {
       .getCustomers(this.filters)
       .pipe(
         catchError((err) => {
+          this.isLoading = false;
           this.logger.error(err);
           throw err;
         })
@@ -84,12 +91,13 @@ export class CustomerListComponent {
       .subscribe((res: any) => {
         const objectData: any = res.objectList;
         this.customers = objectData;
-        this.pager = res.pager;
+        this.logger.info(this.customers);
+        this.logger.info(`Fetched ${this.customers.length} customers.`);
+        this.totalRecords = res.pager.totalRecords;
+        //this.filters.patchValue({ totalRecords: res.pager.totalRecords }, { emitEvent: false });
+        
+        this.isLoading = false;
       });
-    setTimeout(() => {
-      this.isLoading = false;
-
-    }, 800);
   }
 
   loadCustomerTags() {
@@ -135,36 +143,25 @@ export class CustomerListComponent {
     this.isLoading = false;
   }
 
-  onPageSizeChange(event: any) {
-    this.filters.patchValue({ currentPage: 1, pageSize: event.value });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getCustomers();
-  }
   onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getCustomers();
-  }
 
-  sortColumn(e: any) {
-    if (e) {
-      let pageIndex = e.first / e.rows;
-      // If the current page is already set, use it instead of resetting
-      if (this.filters.get('currentPage')?.value) {
-        pageIndex = +this.filters.get('currentPage')?.value - 1; // Convert to zero-based index
-      }
-      // Update the pager and filters
-      this.pager.firstPage = e.first;
-      this.filters.patchValue({
-        currentPage: (pageIndex + 1).toString(), // Convert back to one-based index
-        pageSize: e.rows,
-        sortDir: e.sortOrder,
-        sortBy: e.sortField,
-      });
-      this.sharedService.updateFiltersInNavigation(this.filters);
+    const currentPage = (e.first / e.rows) + 1;
+    this.sortField = e.sortField || this.sortField || 'customerId';
+    this.sortOrder = (e.sortOrder !== undefined && e.sortOrder !== null)? e.sortOrder : this.sortOrder ?? 1;
+
+    const oldSortBy = this.filters.get('sortBy')?.value;
+    const oldSortDir = this.filters.get('sortDir')?.value;
+    const isSortChanged = (this.sortField !== oldSortBy) || (this.sortOrder !== oldSortDir);
+    const pageToSet = isSortChanged ? 1 : currentPage;
+    this.filters.patchValue({currentPage: pageToSet, pageSize: e.rows,sortBy: this.sortField,sortDir: this.sortOrder });
+    this.sharedService.updateFiltersInNavigation(this.filters);
+    
+
+     setTimeout(() => {
       this.getCustomers();
-    }
+     }, 0);
   }
+  
   onChangeCustomerType(event: any) {
     if (!event.value)
       event.value = '';

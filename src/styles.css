@@ -34,6 +34,10 @@
     @apply bg-[var(--p-primary-100)];
   }
   
+  .logo-primary {
+    filter: brightness(0) saturate(100%) invert(24%) sepia(87%) saturate(2173%) hue-rotate(263deg) brightness(102%) contrast(95%);
+  }
+  
   .container-main {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
@@ -225,8 +229,8 @@
 /* =========================
 Final revision done We only need following 2 properties to change for tables
 ========================= */
-.p-datatable { border-spacing: 0px 2px; }
-.p-datatable .p-datatable-tbody > tr:hover,.p-selectable-row:hover {  background-color: var(--p-primary-100) !important; } 
+/* .p-datatable { border-spacing: 0px 2px; }
+.p-datatable .p-datatable-tbody > tr:hover,.p-selectable-row:hover {  background-color: var(--p-primary-100) !important; }  */
 
 
 
@@ -311,3 +315,19 @@ Final revision done We only need following 2 properties to change for tables
     color: var(--p-primary-contrast-color) !important;
 }
 
+
+/* p-sorticon {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+p-sorticon svg {
+    width: 1rem;
+    height: 1rem;
+    vertical-align: middle;
+}
+.p-datatable .p-datatable-thead > tr > th.p-datatable-column-sorted p-sorticon {
+    opacity: 1;
+    visibility: visible;
+}
+ */

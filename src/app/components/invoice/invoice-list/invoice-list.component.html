@@ -1,5 +1,10 @@
 <!-- header start -->
-   <app-generic-loader *ngIf="isLoading"></app-generic-loader>
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+<div class="bg-white rounded-lg p-8 shadow-lg">
+  <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+</div>
+</div>
+
 <section class="p-6 pb-10 bg-white">
   <form [formGroup]="filters">
     <!-- Filter Section -->
@@ -98,6 +103,46 @@
               [locale]="this.sharedService.currentLocale" readonly="true" class="with-out-border"></p-inputnumber>
           </div>
         </div>
+<div class="flex justify-end mt-4">
+  <div class="flex gap-3 px-4 py-2 rounded-md">
+    <p-button 
+      size="small" 
+      variant="outlined" 
+      icon="pi pi-plus" 
+      (click)="op.toggle($event)"  
+      label="{{ this.sharedService.T('monthlyreport') }}">
+    </p-button> 
+
+    <p-popover #op>
+      <div class="flex flex-col gap-4">
+        <!-- Updated Label for Date Control -->
+        <label for="month-picker" class="font-medium mb-1">Select Month:</label>
+        
+        <!-- Date Control with Spacing -->
+        <p-datepicker 
+          id="month-picker"
+          [(ngModel)]="selectedMonth" 
+          [ngModelOptions]="{standalone: true}"
+          view="month" 
+          dateFormat="MM yy" 
+          showIcon="true" 
+          iconDisplay="input"
+          placeholder="Select Month" 
+          styleClass="w-52 custom-picker" />
+        
+        <!-- Button with Vertical Space -->
+        <p-button 
+          label="{{ this.sharedService.T('add') }}" 
+          size="small" 
+          icon="pi pi-plus"
+          (click)="downloadExcel()"
+          class="mt-2">
+        </p-button>
+      </div>
+    </p-popover>
+  </div>
+</div>
+
       </div>
     </div>
  

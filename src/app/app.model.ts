@@ -511,6 +511,7 @@ export interface ITopSale {
   monthYear: string;
   partsSale: string;
   workSale: string;
+  otherSale: string;
 
 }
 export interface ITopCustomer {

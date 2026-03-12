@@ -67,28 +67,53 @@
           [lazy]="true" 
           [value]="customers" 
           [showGridlines]="false"  
-          [rows]="10"
+          [paginator]="true"
+          [rows]="filters.get('pageSize')?.value" 
           [first]="(filters.get('currentPage')?.value - 1) * filters.get('pageSize')?.value"
-          (onLazyLoad)="sortColumn($event)" 
-          sortField="customerId" 
-          responsiveLayout="scroll" 
-          [sortOrder]="-1"
+          [totalRecords]="totalRecords"
+          [rowsPerPageOptions]="[10, 20, 30]"  
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+          [showFirstLastIcon]="true"
+          (onLazyLoad)="onPageChange($event)"
+          [sortField]="sortField"
+          [sortOrder]="sortOrder"
           data-testid="customer-table">
-            <ng-template #header>
+            <ng-template pTemplate="header">
               <tr>
-                <th class="rounded-l-xl" pSortableColumn="customerId">
-                  <p-sortIcon field="customerId" />
+                <th pSortableColumn="customerId">
+                  {{ this.sharedService.T('id') }}
+                  <p-sortIcon field="customerId"></p-sortIcon>
                 </th>
-                <th>{{ this.sharedService.T('customerName') }}</th>
-                <th>{{ this.sharedService.T('customerType') }}</th>
-                <th>{{ this.sharedService.T('customerTag') }}</th>
-                <th>{{ this.sharedService.T('creditCustomer') }}</th>
-                <th>{{ this.sharedService.T('city') }}</th>
-                <th>{{ this.sharedService.T('telephone') }}</th>
-                <th class="rounded-r-xl">{{ this.sharedService.T('email') }}</th>
+                <th pSortableColumn="customerName">
+                  {{ this.sharedService.T('customerName') }}
+                  <p-sortIcon field="customerName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="customerType">
+                  {{ this.sharedService.T('customerType') }}
+                  <p-sortIcon field="customerType"></p-sortIcon>
+                </th>
+                <th pSortableColumn="customerTag">
+                  {{ this.sharedService.T('customerTag') }}
+                  <p-sortIcon field="customerTag"></p-sortIcon>
+                </th>
+                <th>
+                  {{ this.sharedService.T('creditCustomer') }}
+                </th>
+                <th>
+                  {{ this.sharedService.T('city') }}
+                  
+                </th>
+                <th>
+                  {{ this.sharedService.T('telephone') }}
+                </th>
+                <th>
+                  {{ this.sharedService.T('email') }}
+                  
+                </th>
               </tr>
             </ng-template>
-            <ng-template #body let-customer>
+            <ng-template pTemplate="body" let-customer>
               <tr data-testid="customer-row">
                 <td class="rounded-l-lg">
                   <div class="flex items-center gap-2 cursor-pointer"
@@ -113,39 +138,6 @@
               </tr>
             </ng-template>
           </p-table>
-
-          <!-- Pager Section -->
-          <div *ngIf="pager.totalRecords > 10" class="flex items-center justify-between py-6">
-            <!-- Page Size Dropdown -->
-            <div class="flex items-center">
-              <p-select [options]="[10, 20, 30]" [(ngModel)] = "pager.pageSize" [ngModelOptions]="{standalone: true}"
-                (onChange)="onPageSizeChange($event)"></p-select>
-            </div>
-
-            <!-- Paginator -->
-            <p-paginator [first]="pager.firstPage" [rows]="pager.pageSize" [totalRecords]="pager.totalRecords"
-              (onPageChange)="onPageChange($event)" [showCurrentPageReport]="true" [showFirstLastIcon]="true"
-              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
-              >
-              <ng-template pTemplate="firstpagelinkicon">
-                <img src="assets/icons/paginator/previus.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="lastpagelinkicon">
-                <img src="assets/icons/paginator/next.svg" alt="">
-              </ng-template>
-              <ng-template pTemplate="previouspagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('previous') }}</div>
-
-                </div>
-              </ng-template>
-              <ng-template pTemplate="nextpagelinkicon">
-                <div class="flex items-center gap-2">
-                  <div>{{ this.sharedService.T('next') }}</div>
-                </div>
-              </ng-template>
-            </p-paginator>
-          </div>
         </div>
             
       </form>

@@ -116,5 +116,13 @@ export class InvoiceService {
     const url = `${this.baseUrl}/sum-by-customer?${queryParams}`;
     return this.http.get<{total:number,paid:number,balance:number}>(url);
   }
+  exportInvoicesToExcel(year: number, month: number) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("year", year.toString());
+    queryParams.append("month", month.toString());
+    const url = `${this.baseUrl}/export?${queryParams}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
 
 }

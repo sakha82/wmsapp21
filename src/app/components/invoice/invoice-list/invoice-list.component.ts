@@ -13,6 +13,7 @@ import { SHARED_IMPORTS } from 'app/sharedimports';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { InputIconModule } from 'primeng/inputicon';
   imports: [
     ...SHARED_IMPORTS,
     RemovePlaceholderOnFocusDirective,
-    GenericLoaderComponent,IconFieldModule,InputIconModule
+    GenericLoaderComponent,IconFieldModule,InputIconModule,ProgressSpinnerModule
   ],  
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
@@ -45,7 +46,7 @@ export class InvoiceListComponent implements OnInit {
   selectedRemainingBalance:number = 0.00;
   selectedCustomerName:string = '';
   isDialogVisible: boolean = false;
-
+    selectedMonth = '';
   payment:FormGroup;
   
   checked:boolean = true;
@@ -450,5 +451,24 @@ sortColumn(e: any) {
   {
     this.getInvoices();
   }
+
+  downloadExcel() {
+    this.logger.info('downloadExcel called' + this.selectedMonth); // Debugging: Trace when this is called
+    const date = new Date(this.selectedMonth);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    this.isLoading = true;
+    this.invoiceService.exportInvoicesToExcel(year, month).subscribe((response) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `invoices_${year}_${month}.xlsx`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.isLoading = false;
+    });
+  }
+
 }
 

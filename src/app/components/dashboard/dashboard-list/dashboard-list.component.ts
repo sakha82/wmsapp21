@@ -311,6 +311,7 @@ loadLineChart(noOfPreviousMonths:string){
     }),
     switchMap((res) => {
       this.topSales = res;
+      this.logger.info('Top Sales Data:', this.topSales);
       return this.loadMonths(); // Assuming loadMonths() returns an Observable
     })
   )
@@ -509,7 +510,22 @@ onPeriodChange(event: any): void {
             pointHoverRadius: 8,
             borderWidth: 3,
             pointBorderWidth: 2,
+          },
+          {
+            label: 'Others',
+            data: this.topSales.map((m: any) => Number(m.otherSale)),
+            fill: true,
+            tension: 0.4,
+            borderColor: contrastColor,
+            backgroundColor: this.hexToRgba(contrastColor, 0.15),
+            pointBackgroundColor: contrastColor,
+            pointBorderColor: contrastColor,
+            pointRadius: 0,
+            pointHoverRadius: 8,
+            borderWidth: 3,
+            pointBorderWidth: 2,
           }
+
         ]
       };
 

@@ -1619,16 +1619,16 @@
         "country": "se",
         "lang": "en",
         "key": "detailCategory",
-        "value": "others",
+        "value": "other",
         "index": 1,
         "isdefault": false,
-        "text": "Others"
+        "text": "other"
     },
     {
         "country": "se",
         "lang": "sv",
         "key": "detailCategory",
-        "value": "others",
+        "value": "other",
         "index": 1,
         "isdefault": false,
         "text": "Övrigt"

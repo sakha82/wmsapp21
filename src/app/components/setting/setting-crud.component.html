@@ -330,14 +330,29 @@
               [showGridlines]="false" 
               [globalFilterFields]="['serviceName']"
               [rows]="5"
+              [first]="0"
               [paginator]="true"
-                
-                 [sortOrder]="-1" data-testid="service-table"
-                styleClass="w-full">
+              [rowsPerPageOptions]="[5, 10, 20]"  
+              [showCurrentPageReport]="true"
+              currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
+              sortField="serviceName"
+              [sortOrder]="-1" data-testid="service-table"
+          >
                 <ng-template #header>
                   <tr class="bg-gray-50 border-b border-gray-200">
-                    <th>{{ this.sharedService.T('workshopService') }}</th>
-                    <th>{{ this.sharedService.T('estimatedWorkingTime') }}</th>
+                      <th pSortableColumn="serviceName" style="width:20%">
+                            <div class="flex items-center gap-2">
+                                {{ this.sharedService.T('workshopService') }}
+                                <p-sortIcon field="serviceName"></p-sortIcon>
+                            </div>
+                        </th>
+                      <th pSortableColumn="serviceHours" style="width:20%">
+                            <div class="flex items-center gap-2">
+                                {{ this.sharedService.T('estimatedWorkingTime') }}
+                                <p-sortIcon field="serviceHours"></p-sortIcon>
+                            </div>
+                        </th>
+
                     <th></th>
                   </tr>
                   <tr>
