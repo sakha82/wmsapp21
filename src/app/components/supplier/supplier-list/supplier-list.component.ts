@@ -20,6 +20,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { DialogModule } from 'primeng/dialog';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-supplier-list',
@@ -39,7 +40,8 @@ import { DialogModule } from 'primeng/dialog';
     ProgressSpinnerModule,
     TableModule,
     PaginatorModule,
-    DialogModule
+    DialogModule,
+    TextareaModule
   ],
   templateUrl: './supplier-list.component.html',
   providers: [ConfirmationService, MessageService],
@@ -49,12 +51,12 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   suppliers: any[] = [];
   supplierForm!: FormGroup;
   filters: FormGroup;
-  pager: IPager = <IPager>{};
-
-  isLoading: boolean = true;
+  
   showSupplierDialog = false;
   isNewObject: boolean = true;
   latestSupplierId: number | null = null;
+  sortField = 'supplierId';
+  sortOrder = -1;
 
   constructor(
     private logger: LogService,
@@ -66,29 +68,16 @@ export class SupplierListComponent implements OnInit, OnDestroy {
 
   ) {
     this.filters = this.fb.group({
-      supplierName: '',
-      currentPage: 1,
-      pageSize: 10,
-      sortBy: undefined,
-      sortDir: undefined
+      supplierName: ['', Validators.required],
+      sortBy: this.sortField,
+      sortDir: this.sortOrder
     });
 
     this.initSupplierForm();
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
     this.getSuppliers();
-
-    this.filters.get('supplierName')?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
-      this.filters.patchValue({ currentPage: 1 }, { emitEvent: false });
-       this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getSuppliers();
-    });
   }
 
   initSupplierForm() {
@@ -102,19 +91,14 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   }
 
   getSuppliers(): void {
-    this.isLoading = true;
-    this.supplierService.getSuppliers(this.filters)
+    this.supplierService.getAllSuppliers()
       .pipe(
-        finalize(() => { this.isLoading = false; }),
+        finalize(() => { }),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response: any) => {
-          if (response?.objectList && Array.isArray(response.objectList)) {
-            this.suppliers = response.objectList;
-          } else {
-            this.suppliers = [];
-          }
+            this.suppliers = response;
         },
         error: (err) => {
           this.logger.error(err);
@@ -122,24 +106,10 @@ export class SupplierListComponent implements OnInit, OnDestroy {
       });
   }
 
-  onPageChange(e: any) {
-    this.filters.patchValue({ currentPage: e.page + 1, pageSize: e.rows });
-         this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getSuppliers();
-  }
-
-  onPageSizeChange(event: any) {
-    this.filters.patchValue({ pageSize: event.value });
-         this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getSuppliers();
-  }
-
   supplierCrud(supplierId: number) {
-    this.isLoading = true;
-
     this.supplierService.getSupplier(supplierId)
       .pipe(
-        finalize(() => { this.isLoading = false; }),
+        finalize(() => { }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -180,13 +150,10 @@ export class SupplierListComponent implements OnInit, OnDestroy {
       this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Please fill required fields' });
       return;
     }
-
-    this.isLoading = true;
     const formValues = this.supplierForm.getRawValue();
-
     this.supplierService.upsertSupplier(formValues)
       .pipe(
-        finalize(() => { this.isLoading = false; }),
+        finalize(() => { }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -209,22 +176,6 @@ export class SupplierListComponent implements OnInit, OnDestroy {
     this.showSupplierDialog = false;
   }
 
-  sortColumn(e: any) {
-    if (e) {
-      this.filters.patchValue({
-        sortBy: e.sortField,
-        sortDir: e.sortOrder
-      });
-           this.sharedService.updateFiltersInNavigation(this.filters);
-      this.getSuppliers();
-    }
-  }
-
-  onSupplierKeyup(event: any) {
-    const query = event.target.value || '';
-    this.filters.get('supplierName')?.setValue(query);
-  }
-  // Helper for HTML validation
   getf(field: string) { return this.supplierForm.get(field); }
 
   ngOnDestroy(): void {

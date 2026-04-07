@@ -17,6 +17,20 @@ export class DigitalServiceService {
   constructor(private http: HttpClient, private logger: LogService, private sharedService: SharedService) {
   }
 
+  getAllVehicles() {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    const url = `${this.baseUrl}/vehicles-list?${queryParams}`;
+    return this.http.get<IDigitalService[]>(url);
+  }
+  getVehicleServices(vehiclePlate:string) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("vehiclePlate", vehiclePlate);
+    const url = `${this.baseUrl}/vehicle-services?${queryParams}`;
+    return this.http.get<IDigitalService[]>(url);
+  }
+
+
   getDigitalServices(filters: FormGroup,onlyThisWmsid:boolean) {
     const queryString = this.sharedService.buildQueryParams(filters,onlyThisWmsid);
     const url = `${this.baseUrl}/service?${queryString}`;
@@ -34,6 +48,18 @@ export class DigitalServiceService {
     digitalService.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
     return this.http.post<{ state: boolean, overlaps: IDigitalService[] }>(`${this.baseUrl}/create`, digitalService, { headers });
+  }
+
+  updateDigitalServiceStatus(digitalServiceId:number,fileAttached:number) {
+    
+    const digitalService:IDigitalService = {
+      wmsId: this.sharedService.wmsId,
+      digitalServiceId: digitalServiceId,
+      fileAttached: fileAttached,
+    } as IDigitalService;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.post<IDigitalService>(`${this.baseUrl}/update-attachment`, digitalService, {headers});
   }
 
   isValidDigitalWorkshopId(digitalWorkshopId:string) {

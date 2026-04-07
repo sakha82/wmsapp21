@@ -106,28 +106,29 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   faqItems: FaqItem[] = [
     {
-      question: 'Vad ingår i priset på 499 kr/månad?',
-      answer: 'För 499 kr per användare och månad får du tillgång till alla funktioner i Digital Workshop - kundregister, offerthantering, arbetsorder, digital servicebok, schemaläggning, rapporter, statistik och vår AI Assistant.',
-      expanded: false
-    },
-    {
-      question: 'Hur fungerar AI Assistant för vår verkstad?',
-      answer: 'Vår AI Assistant hjälper med diagnostikstöd, prisberäkning, dokumentationshjälp och kundkommunikation.',
+      question: 'Vad ingår i priset på 199 kr/månad?',
+      answer: `För 199 kr per användare och månad får du tillgång till alla funktioner i Digital Workshop – kundregister, offerthantering, arbetsorder, digital servicebok, schemaläggning, rapporter, statistik och vår AI Assistant.
+               I abonnemanget ingår dessutom 5 digitala serviceposter utan extra kostnad varje månad, så att du enkelt kan komma igång och visa värdet för dina kunder.
+               När du behöver registrera fler serviceposter kan du göra det flexibelt till en låg kostnad på endast 5 kr per extra digital servicepost.
+               Detta ger dig full kontroll över dina kostnader samtidigt som du kan växa i din egen takt och endast betala för det du faktiskt använder.`,
       expanded: false
     },
     {
       question: 'Vad är Digital Servicebok?',
-      answer: 'Digital Servicebok sparar hela servicehistoriken för varje fordon i kundregistret.',
+      answer: `Genom att erbjuda en digital servicebok ger du dina kunder en tydlig och professionell översikt över allt arbete som utförts på deras fordon. Detta ökar förtroendet och stärker relationen mellan dig och dina kunder.
+               Systemet hjälper dig även att skapa bättre uppföljning, eftersom du enkelt kan se tidigare arbeten och planera framtida service. Det blir lättare att ge rätt rekommendationer och erbjuda proaktiv service.
+               Med en digital servicebok differentierar du din verkstad från konkurrenter och visar att du arbetar modernt och digitalt. Samtidigt bidrar det till ökad kundlojalitet och fler återkommande besök.`,
       expanded: false
     },
     {
-      question: 'Hur fungerar kundkommunikationen i systemet?',
-      answer: 'Systemet erbjuder offerter via e-post, WhatsApp och automatiska påminnelser.',
+      question: 'Får jag tillgång till nya uppdateringar inom samma pris?',
+      answer: `Ja, absolut. Vi utvecklar kontinuerligt Digital Workshop och lanserar nya funktioner varje månad – utan extra kostnad för dig. Alla förbättringar och nya funktioner ingår i din befintliga prenumeration.
+                Vi arbetar nära våra kunder och lyssnar aktivt på feedback och önskemål. Många av våra nya funktioner utvecklas direkt baserat på användarnas behov, vilket innebär att du som kund är med och påverkar produktens framtid.`,
       expanded: false
     },
     {
       question: 'Kan systemet integreras med mitt bokföringsprogram?',
-      answer: 'Ja, vi har färdiga integrationer mot Fortnox, Visma m.fl.',
+      answer: `För närvarande erbjuder vi inga färdiga integrationer med bokföringsprogram. Däremot utvecklar vi kontinuerligt nya funktioner baserat på våra kunders behov. Om det finns efterfrågan på integration med ditt bokföringsprogram prioriterar vi detta och arbetar för att kunna lansera det redan i kommande uppdateringar.`,
       expanded: false
     }
   ];
@@ -144,15 +145,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       "email": ['', [Validators.required, Validators.email]],
-      "password": ['', Validators.required]
+      "password": ['', [Validators.required, Validators.minLength(6)]]
     });
 
     this.signupForm = this.formBuilder.group({
       "companyName": ['', Validators.required],
       "organizationNumber": ['', Validators.required],
+      "contactPerson": ['', Validators.required],
       "phoneNumber": ['', Validators.required],
       "email": ['', [Validators.required, Validators.email]],
-      "password": ['', [Validators.required, Validators.minLength(6)]]
+      "password": ['', [Validators.required, Validators.minLength(6)]],
+      "acceptTerms": [false, Validators.requiredTrue]
     });
 
     this.demoForm = this.formBuilder.group({
@@ -162,6 +165,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       "phoneNumber": ['', Validators.required]
     });
     
+    // Ensure forms are in clean state after initialization
+    this.loginForm.reset();
+    this.signupForm.reset();
+    this.demoForm.reset();
   }
 
   toggleFaq(index: number): void {
@@ -179,8 +186,25 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3000 });
   }
 
-  test(event: any) {
-    this.logger.info(event.value);
+  openTermsModal(event: Event) {
+    event.preventDefault();
+    // Scroll to terms section or open a full-screen modal
+    const termsModal = document.getElementById('termsModal');
+    if (termsModal) {
+      (termsModal as any).style.display = 'block';
+    }
+  }
+
+  closeTermsModal() {
+    const termsModal = document.getElementById('termsModal');
+    if (termsModal) {
+      (termsModal as any).style.display = 'none';
+    }
+  }
+
+  acceptTermsFromModal() {
+    this.signupForm.patchValue({ acceptTerms: true });
+    this.closeTermsModal();
   }
 
   onLoginFormSubmitted() {
@@ -231,11 +255,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   openDialog() {
+    // Reset both forms to ensure they're completely isolated when opening login modal
+    this.loginForm.reset();
+    this.signupForm.reset();
+    this.invalidMessage = '';
     this.isDialogVisible = true;
   }
 
   onCancel() {
     this.isDialogVisible = false;
+    // Reset login form when dialog closes for clean state
+    this.loginForm.reset();
+    this.invalidMessage = '';
   }
 
 
@@ -252,9 +283,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.isSigningUp = true;
+    
+    // Gather all signup information
+    const signupData = {
+      workshopName: this.signupForm.get('companyName')?.value,
+      wmsId: this.signupForm.get('organizationNumber')?.value,
+      contactPerson: this.signupForm.get('contactPerson')?.value,
+      telephone: this.signupForm.get('phoneNumber')?.value,
+      userEmail: this.signupForm.get('email')?.value,
+      userPassword: this.signupForm.get('password')?.value
+    };
 
+    // Call signup API
     this.sharedService
-      .signup(this.signupForm.value)
+      .signup(signupData)
       .pipe(
         finalize(() => { this.isSigningUp = false; }),
         takeUntil(this.destroy$)
@@ -263,12 +305,17 @@ export class HomeComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response) {
             this.logger.info('Signup successful:', response);
+            
+            // Send confirmation email with signup information
+            this.sendSignupConfirmationEmail(signupData);
+            
             this.signupSuccess = true;
             this.messageService.add({ severity: 'success', summary: 'Framgång', detail: 'Din registrering är genomförd. Ditt konto aktiveras snart.' });
             
             setTimeout(() => {
               this.signupSuccess = false;
               this.signupForm.reset();
+              this.loginForm.reset(); // Also reset login form for complete isolation
             }, 5000);
           }
         },
@@ -276,6 +323,31 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.logger.error('Signup error:', error);
           const errorMessage = error?.error?.message || 'Ett oväntat fel uppstod under registreringen.';
           this.messageService.add({ severity: 'error', summary: 'Registreringsfel', detail: errorMessage });
+        }
+      });
+  }
+
+  sendSignupConfirmationEmail(signupData: any): void {
+    // Call your email sending endpoint here
+    // Example endpoint: POST /api/send-email
+    const emailPayload = {
+      to: signupData.email,
+      subject: 'Välkommen till Digital Workshop',
+      companyName: signupData.companyName,
+      organizationNumber: signupData.organizationNumber,
+      phoneNumber: signupData.phoneNumber
+    };
+
+    // Call the email endpoint (implement this with your actual endpoint)
+    this.http.post(`${this.baseUrl}/api/send-signup-email`, emailPayload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.logger.info('Confirmation email sent successfully:', response);
+        },
+        error: (error) => {
+          this.logger.error('Failed to send confirmation email:', error);
+          // Don't show error to user as signup was successful
         }
       });
   }
@@ -304,9 +376,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.isDemoSubmitting = true;
-
+    const signupData = {
+      wmsId: `demo-${Math.floor(Date.now() / 1000)}`.substring(0, 14), // Generate a unique wmsId (seconds, max 14 chars)
+      contactPerson: this.demoForm.get('name')?.value,
+      workshopName: this.demoForm.get('companyName')?.value,
+      telephone: this.demoForm.get('phoneNumber')?.value,
+      userEmail: this.demoForm.get('email')?.value,
+    };
     this.sharedService
-      .bookDemo(this.demoForm.value)
+      .signup(signupData)
       .pipe(
         finalize(() => { this.isDemoSubmitting = false; }),
         takeUntil(this.destroy$)

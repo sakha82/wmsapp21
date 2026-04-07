@@ -5,20 +5,6 @@
         <p-button [raised]="true" label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('employee') }}" size="large"
           icon="pi pi-plus" (click)="redirectToEmployeeCrudComponent()"></p-button>
       </div>
-
-      <!-- <div class="ml-auto">
-        <p-autoComplete
-          placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('employee') }}" [suggestions]="employees"
-          (onClear)="onClearEmployeeName()" (keyup)="keyupEmployeeName($event.target)"
-          optionLabel="fullName" optionValue="fullName" [showClear]="true"
-          inputStyleClass="w-64 ps-2 h-10 rounded-md">
-          <ng-template let-emp pTemplate="item">
-            <div class="flex items-center gap-2">
-              <div>{{ emp.fullName }}</div>
-            </div>
-          </ng-template>
-        </p-autoComplete>
-      </div> -->
     </div>
 
     <hr class="border-CustomBorder" />

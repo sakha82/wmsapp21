@@ -164,7 +164,7 @@ export class WorkOrderListComponent implements OnInit, OnDestroy {
   setWorkOrderStatus(workOrder: IWorkOrder) {
     this.isLoading = true;
     this.workOrderService
-      .upsertWorkOrder(workOrder)
+      .updateWorkOrderStatus(workOrder)
       .pipe(
         finalize(() => {
           this.isLoading = false;

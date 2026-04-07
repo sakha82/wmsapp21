@@ -8,7 +8,7 @@ import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, TreeNode,MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { Popover } from 'primeng/popover';
 import { catchError, EMPTY, filter, switchMap, take, finalize, takeUntil, Subject } from 'rxjs';
@@ -34,21 +34,26 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { CustomerService } from 'app/services/customer.service';
 import { WorkshopService } from 'app/services/workshop.service';
+import { TreeTableModule } from 'primeng/treetable';
+
+
 
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
+  imports: [CommonModule,TreeTableModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
   providers: [ConfirmationService, MessageService],
  templateUrl: './digitalservice-list.component.html'
 })
 
 export class DigitalServiceListComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
-  digitalServices: IDigitalService[] = [];
+  digitalServices!: TreeNode[];
+  filterMode: string = 'lenient';
+  parentCols: any[] = [];
+  childCols: any[] = [];
   pager: IPager = <IPager>{};
-  selectedId: number = 0;
   sortField = 'creationDate';
   sortOrder = -1;
   totalRecords: number = 0;
@@ -68,7 +73,6 @@ export class DigitalServiceListComponent implements OnDestroy {
   // PDF Upload Properties
   selectedVehicleData: any = null;
   uploadProgress: number = 0;
-  wmsId: string = '';
   pdfBlobUrl: SafeResourceUrl | null = null;
   constructor(private logger: LogService,
     public readonly sharedService: SharedService,
@@ -102,7 +106,8 @@ export class DigitalServiceListComponent implements OnDestroy {
 
     });
 
-
+    // Initialize columns for parent and child rows
+    this.initializeColumns();
 
     // POPUP FORM INITIALIZATION
     const today = new Date();
@@ -128,6 +133,34 @@ export class DigitalServiceListComponent implements OnDestroy {
 
 
 
+  }
+
+  initializeColumns(): void {
+    // Parent columns (Vehicle information)
+    this.parentCols = [
+      { field: 'vehiclePlate', header: this.sharedService.T('regNumber') },
+      { field: 'userId', header: this.sharedService.T('digitalWorkshopId') },
+      { field: 'vehicle', header: this.sharedService.T('vehicle') }
+    ];
+
+    // Child columns (Service history information)
+    this.childCols = [
+          { field: 'creationDate', header: this.sharedService.T('creationDate') },
+          { field: 'vehicle', header: this.sharedService.T('vehicle') },
+          { field: 'serviceType', header: this.sharedService.T('serviceType') },
+          { field: 'serviceDate', header: this.sharedService.T('serviceDate') },
+          { field: 'nextServiceDate', header: this.sharedService.T('nextServiceDate') },
+          { field: 'digitalServiceId', header: this.sharedService.T('serviceId') },
+          { field: 'vehicleMileage', header: this.sharedService.T('mileage') },
+          { field: 'fileAttached', header: this.sharedService.T('comments') },
+          { field: 'comments', header: this.sharedService.T('comments') },
+          { field: 'workshopName', header: this.sharedService.T('workshopName') },
+          { field: 'workshopAddress', header: this.sharedService.T('workshopAddress') },
+          { field: 'workshopCity', header: this.sharedService.T('workshopCity') },
+          { field: 'telephone', header: this.sharedService.T('telephone') },    
+          { field: 'email', header: this.sharedService.T('email') }
+    ];    
+        
   }
 
   ngOnInit() {
@@ -166,16 +199,28 @@ export class DigitalServiceListComponent implements OnDestroy {
   getDigitalServices(onlyThisWmsId:boolean) {
     this.isLoading = true;
     this.digitalServiceService
-      .getDigitalServices(this.filters, onlyThisWmsId)
+      .getAllVehicles()
       .pipe(
         finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (res) => {
-          this.logger.info(res.objectList);
-          this.digitalServices = res.objectList;
-          this.totalRecords = res.pager.totalRecords;
+          this.digitalServices = res.map((item, index) => ({
+            key: `${item.userId}_${item.vehiclePlate}_${index}`,
+            data: {
+              userId: item.userId,
+              vehiclePlate: item.vehiclePlate,
+              vehicleManufacturer: item.vehicleManufacturer,
+              vehicleModel: item.vehicleModel,
+              vehicleYear: item.vehicleYear,
+              vehicle: `${item.vehicleManufacturer} ${item.vehicleModel} (${item.vehicleYear})`
+            },
+            children: [],
+            leaf: false,
+            expanded: false
+          }));
+          this.logger.info(`Loaded ${this.digitalServices.length} vehicles for display`);
         },
         error: (err) => {
           this.logger.error(err);
@@ -290,44 +335,40 @@ export class DigitalServiceListComponent implements OnDestroy {
     }
   }
 
-  openAttachmentDialog(selectedDigitalService: IDigitalService) {
-    this.showAttachmentDialog = true;
-    this.selectedId = selectedDigitalService.digitalServiceId;
-    
-    // Get WMS ID from shared service
-    this.wmsId = this.sharedService.wmsId;
+  openAttachmentDialog(selectedDigitalService: any) {
+    this.logger.info(`Opening attachment dialog for Digital Service ID: ${selectedDigitalService.digitalServiceId}`);
     
     const pdfFileName = `${selectedDigitalService.digitalServiceId}.pdf`;
-    const fileKey = `${this.wmsId}/digitalservice/${selectedDigitalService.digitalServiceId}.pdf`;
-    
+    const fileKey = `${this.sharedService.wmsId}/digitalservice/${selectedDigitalService.digitalServiceId}.pdf`;
+    this.showAttachmentDialog = true;
+
     // Prepare vehicle data to display in dialog
     this.selectedVehicleData = {
       digitalServiceId: selectedDigitalService.digitalServiceId,
-      vehiclePlate: selectedDigitalService.vehiclePlate,
-      manufacturer: selectedDigitalService.vehicleManufacturer,
+      creationDate: selectedDigitalService.creationDate,
+      vehiclePlate: selectedDigitalService.vehicle,
       serviceDate: selectedDigitalService.serviceDate,
+      serviceType: selectedDigitalService.serviceType,
       pdfFileName: pdfFileName,
       downloadUrl: fileKey,
-      pdfExists: false
+      pdfExists: selectedDigitalService.fileAttached == 1 ? true : false
     };
 
-    // Fetch the PDF from server and display in viewer
-    this.sharedService.getPDFBlob(fileKey).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (blob) => {
-        const blobUrl = URL.createObjectURL(blob);
-        this.pdfBlobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-        this.selectedVehicleData.pdfExists = true;
-        this.logger.info(`PDF loaded for Digital Service: ${selectedDigitalService.digitalServiceId}`);
-      },
-      error: (error) => {
-        console.error('Error fetching PDF:', error);
-        this.pdfBlobUrl = null;
-        this.selectedVehicleData.pdfExists = false;
-        this.logger.error(`Failed to load PDF for Digital Service: ${selectedDigitalService.digitalServiceId}`);
-      }
-    });
+    // Fetch and display PDF if it exists
+    if (this.selectedVehicleData.pdfExists) {
+      this.sharedService.getPDFBlob(fileKey).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+          this.pdfBlobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        },
+        error: (error) => {
+          this.logger.error(`Failed to load PDF for Digital Service: ${selectedDigitalService.digitalServiceId}`, error);
+          this.pdfBlobUrl = null;
+        }
+      });
+    }
   }
 
   onPDFSelected(event: any) {
@@ -342,8 +383,8 @@ export class DigitalServiceListComponent implements OnDestroy {
     if (!file.name.toLowerCase().endsWith('.pdf')) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Invalid File Type',
-        detail: 'Only PDF files are allowed.',
+        summary: this.sharedService.T('invalidFileType'),
+        detail: this.sharedService.T('onlyPdfFilesAllowed'),
         life: 4000
       });
       return false;
@@ -352,8 +393,8 @@ export class DigitalServiceListComponent implements OnDestroy {
     if (file.size > 10000000) {
       this.messageService.add({
         severity: 'error',
-        summary: 'File Too Large',
-        detail: 'Maximum file size is 10MB.',
+        summary: this.sharedService.T('fileTooLarge'),
+        detail: this.sharedService.T('maxFileSize'),
         life: 4000
       });
       return false;
@@ -365,8 +406,8 @@ export class DigitalServiceListComponent implements OnDestroy {
     if (!fileUpload.files || fileUpload.files.length === 0) {
       this.messageService.add({
         severity: 'warn',
-        summary: 'No File Selected',
-        detail: 'Please select a PDF file to upload.',
+        summary: this.sharedService.T('noFileSelected'),
+        detail: this.sharedService.T('selectPdfFile'),
         life: 3000
       });
       return;
@@ -377,7 +418,7 @@ export class DigitalServiceListComponent implements OnDestroy {
     if (!this.validatePDFFile(file)) {
       return;
     }
-
+    this.logger.info(`Initiating PDF upload for Digital Service ID: ${this.selectedVehicleData.digitalServiceId}, File Name: ${file.name}`);  
     this.uploadProgress = 0;
     const uploadRequest: IFileUploadRequest = {
       type: 'digitalservice',
@@ -385,14 +426,11 @@ export class DigitalServiceListComponent implements OnDestroy {
       file: file
     };
 
-    console.log('=== PDF UPLOAD INITIATED ===');
     console.log('Upload Request Type:', uploadRequest.type);
     console.log('Digital Service ID:', uploadRequest.id);
     console.log('File Name:', file.name);
     console.log('File Size:', file.size);
-    console.log('WMS ID:', this.wmsId);
     console.log('Expected Download URL:', this.selectedVehicleData.downloadUrl);
-    console.log('=============================');
     this.logger.info(`Starting PDF upload - Service ID: ${uploadRequest.id}, File: ${file.name}`);
 
     this.sharedService.uploadFile(uploadRequest)
@@ -409,13 +447,12 @@ export class DigitalServiceListComponent implements OnDestroy {
           console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
           console.log('File Name:', this.selectedVehicleData.pdfFileName);
           console.log('Download URL (File Key):', this.selectedVehicleData.downloadUrl);
-          console.log('WMS ID:', this.wmsId);
-          console.log('===========================');
           this.logger.info(`PDF uploaded successfully. File Key: ${this.selectedVehicleData.downloadUrl}`);
+          //update Status of digital service to have file attached
+          this.updateDigitalServiceStatus(this.selectedVehicleData.digitalServiceId, 1);
           this.messageService.add({
             severity: 'success',
-            summary: 'Success',
-            detail: 'PDF uploaded successfully.',
+            summary: this.sharedService.T('success'),
             life: 4000
           });
           
@@ -437,77 +474,43 @@ export class DigitalServiceListComponent implements OnDestroy {
           });
         },
         error: (error) => {
-          console.log('=== PDF UPLOAD ERROR ===');
-          console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
-          console.log('Download URL (File Key):', this.selectedVehicleData.downloadUrl);
-          console.log('Error:', error);
-          console.log('========================');
           this.logger.error('PDF upload failed:', error);
           this.messageService.add({
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to upload PDF. Please try again.',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('failedUploadPDF'),
             life: 4000
           });
         }
       });
   }
 
-  downloadPDF() {
-    if (!this.selectedVehicleData || !this.selectedVehicleData.pdfExists) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'No PDF Available',
-        detail: 'No PDF file available to download.',
-        life: 3000
-      });
-      return;
-    }
-
-    const fileKey = this.selectedVehicleData.downloadUrl;
-    console.log('=== PDF DOWNLOAD DEBUG ===');
-    console.log('File Key:', fileKey);
-    console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
-    console.log('WMS ID:', this.wmsId);
-    console.log('Selected Vehicle Data:', this.selectedVehicleData);
-    console.log('File Exists:', this.selectedVehicleData.pdfExists);
-    console.log('========================');
-    this.logger.info(`Downloading PDF with key: ${fileKey}`);
-
-    this.sharedService.downloadFile(fileKey);
-  }
-
-  viewPDF() {
-    if (!this.selectedVehicleData || !this.selectedVehicleData.pdfExists) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'No PDF Available',
-        detail: 'No PDF file available to view.',
-        life: 3000
-      });
-      return;
-    }
-
-    const fileKey = this.selectedVehicleData.downloadUrl;
-    console.log('=== PDF VIEW DEBUG ===');
-    console.log('File Key:', fileKey);
-    console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
-    console.log('WMS ID:', this.wmsId);
-    console.log('Selected Vehicle Data:', this.selectedVehicleData);
-    console.log('File Exists:', this.selectedVehicleData.pdfExists);
-    console.log('====================');
-    this.logger.info(`Viewing PDF with key: ${fileKey}`);
-
-    this.sharedService.downloadFile(fileKey);
   
-  }
-
   formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: this.sharedService.T('success'),
+        detail: this.sharedService.T('emailCopiedClipboard'),
+        life: 2000
+      });
+    }).catch(err => {
+      this.logger.error('Failed to copy to clipboard', err);
+      this.messageService.add({
+        severity: 'error',
+        summary: this.sharedService.T('error'),
+        detail: this.sharedService.T('failedCopyClipboard'),
+        life: 2000
+      });
+    });
   }
 
 
@@ -881,6 +884,98 @@ export class DigitalServiceListComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  onNodeExpand(event: any): void {
+    const node = event.node;
+    
+    if (node.children && node.children.length === 0) {
+      // Lazy load children only if the array is empty
+      node.loading = true; // Add loading state to node
+      const userId = node.data.userId;
+      const vehiclePlate = node.data.vehiclePlate;
+      
+      this.digitalServiceService.getVehicleServices(vehiclePlate)
+        .pipe(
+          finalize(() => { node.loading = false; }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe({
+          next: (res: IDigitalService[]) => {
+            // Transform the response into child nodes
+            this.logger.info(`Loaded ${res.length} services for vehicle: ${vehiclePlate}, user: ${userId}`);
+            this.logger.info(res);
+
+            // Create header row as first child
+            const headerRow = {
+              key: `${userId}_${vehiclePlate}_child_header`,
+              data: {
+                isHeader: true
+              },
+              leaf: true
+            };
+            
+            // Create data rows for each service record
+            const dataRows = res.map((item, index) => ({
+              key: `${userId}_${vehiclePlate}_child_${item.digitalServiceId}_${index}`,
+              data: {
+                creationDate: item.creationDate,
+                serviceType: item.serviceType,
+                serviceDate: item.serviceDate,
+                nextServiceDate: item.nextServiceDate,
+                digitalServiceId: item.digitalServiceId,
+                vehicleMileage: item.vehicleMileage,
+                fileAttached: item.fileAttached,
+                comments: item.comments,
+                workshopName: item.workshopName,
+                workshopAddress: item.workshopAddress,
+                workshopCity: item.workshopCity,
+                telephone: item.telephone,
+                email: item.email,
+                vehicle: `${node.data.vehicleManufacturer} ${node.data.vehicleModel} (${node.data.vehicleYear})`
+              },
+              leaf: true
+            }));
+            
+            // Combine header row with data rows
+            node.children = [headerRow, ...dataRows];
+            
+            // Create a new node object reference so PrimeNG detects the change
+            const updatedNode = { ...node };
+            const nodeIndex = this.digitalServices.findIndex(n => n.key === node.key);
+            
+            if (nodeIndex !== -1) {
+              this.digitalServices[nodeIndex] = updatedNode;
+            }
+            
+            // Reassign entire array to trigger change detection
+            this.digitalServices = [...this.digitalServices];
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            this.logger.error(`Failed to load vehicle history for user: ${userId}, vehicle: ${vehiclePlate}`, err);
+            this.messageService.add({
+              severity: 'error',
+              summary: this.sharedService.T('error'),
+              detail: this.sharedService.T('failedLoadVehicleHistory'),
+              life: 3000
+            });
+          }
+        });
+    }
+  }
+
+  updateDigitalServiceStatus(digitalServiceId:number,fileAttached:number): void {
+    this.digitalServiceService.updateDigitalServiceStatus(digitalServiceId,fileAttached)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          this.logger.info(`Digital Service status updated successfully. ID: ${digitalServiceId}`);
+        },
+        error: (err) => {
+          this.logger.error(`Failed to update Digital Service status. ID: ${digitalServiceId}`, err);
+        }
+      });
   }
 
   onPageChange(e: any) {

@@ -1960,6 +1960,11 @@
         "sv": "Mallnamn"
     },
     {
+        "tkey": "regNumber",
+        "en": "Reg. No.",
+        "sv": "Reg.nr"
+    },
+    {
         "tkey": "vehicleStoryL1",
         "en": "This vehicle has generated a total parts sale of {{partsSale}} and a total labour sale of {{labourSale}}, resulting in a combined turnover of {{totalTurnover}}.",
         "sv": "Detta fordon har genererat en total reservdelsförsäljning på {{partsSale}} och arbetsförsäljning på {{labourSale}}, vilket ger en total omsättning på {{totalTurnover}}."
@@ -2008,5 +2013,130 @@
         "tkey": "editEmployee",
         "en": "Edit Employee",
         "sv": "Redigera anställd"
+    },
+    {
+        "tkey": "uploadPDF",
+        "en": "Upload PDF",
+        "sv": "Ladda upp PDF"
+    },
+    {
+        "tkey": "noFileUploadedYet",
+        "en": "No file uploaded yet",
+        "sv": "Ingen fil uppladdad ännu"
+    },
+    {
+        "tkey": "replacePDF",
+        "en": "Replace PDF",
+        "sv": "Ersätt PDF"
+    },
+    {
+        "tkey": "selectPDF",
+        "en": "Select PDF",
+        "sv": "Välj PDF"
+    },
+    {
+        "tkey": "clearSelection",
+        "en": "Clear Selection",
+        "sv": "Rensa val"
+    },
+    {
+        "tkey": "uploadProgress",
+        "en": "Uploading...",
+        "sv": "Uppladdning..."
+    },
+    {
+        "tkey": "onlyPdfAllowed",
+        "en": "Only PDF files are allowed",
+        "sv": "Endast PDF-filer är tillåtna"
+    },
+    {
+        "tkey": "maxFileSize",
+        "en": "Maximum file size:",
+        "sv": "Max filstorlek:"
+    },
+    {
+        "tkey": "replaceExistingFileInfo",
+        "en": "Uploading a new file will replace the existing one",
+        "sv": "Uppladdning av en ny fil ersätter den befintliga"
+    },
+    {
+        "tkey": "uploadInformation",
+        "en": "Upload info",
+        "sv": "Uppladdningsinfo"
+    },
+    {
+        "tkey": "enterSearchText",
+        "en": "Enter search text",
+        "sv": "Ange söktext"
+    },
+    {
+        "tkey": "selectModel",
+        "en": "Select model",
+        "sv": "Välj modell"
+    },
+    {
+        "tkey": "invalidFileType",
+        "en": "Invalid File Type",
+        "sv": "Ogiltig filtyp"
+    },
+    {
+        "tkey": "onlyPdfFilesAllowed",
+        "en": "Only PDF files are allowed.",
+        "sv": "Endast PDF-filer är tillåtna."
+    },
+    {
+        "tkey": "fileTooLarge",
+        "en": "File Too Large",
+        "sv": "Filen är för stor"
+    },
+    {
+        "tkey": "maxFileSize",
+        "en": "Maximum file size is 10MB.",
+        "sv": "Maximal filstorlek är 10 MB."
+    },
+    {
+        "tkey": "noFileSelected",
+        "en": "No File Selected",
+        "sv": "Ingen fil vald"
+    },
+    {
+        "tkey": "selectPdfFile",
+        "en": "Please select a PDF file to upload.",
+        "sv": "Välj en PDF-fil att ladda upp."
+    },
+    {
+        "tkey": "noPdfAvailable",
+        "en": "No PDF Available",
+        "sv": "Ingen PDF tillgänglig"
+    },
+    {
+        "tkey": "noPdfDownloadAvailable",
+        "en": "No PDF file available to download.",
+        "sv": "Ingen PDF-fil tillgänglig för nedladdning."
+    },
+    {
+        "tkey": "noPdfViewAvailable",
+        "en": "No PDF file available to view.",
+        "sv": "Ingen PDF-fil tillgänglig för visning."
+    },
+    {
+        "tkey": "failedUploadPDF",
+        "en": "Failed to upload PDF. Please try again.",
+        "sv": "Det gick inte att ladda upp PDF. Försök igen."
+    },
+    {
+        "tkey": "emailCopiedClipboard",
+        "en": "Email copied to clipboard",
+        "sv": "E-post kopierad till urklipp"
+    },
+    {
+        "tkey": "failedCopyClipboard",
+        "en": "Failed to copy to clipboard",
+        "sv": "Det gick inte att kopiera till urklipp"
+    },
+    {
+        "tkey": "failedLoadVehicleHistory",
+        "en": "Failed to load vehicle history.",
+        "sv": "Det gick inte att ladda fordonets historik."
     }
 ]

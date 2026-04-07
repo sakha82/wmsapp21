@@ -49,6 +49,11 @@ export class WorkOrderService {
     return this.http.post<IWorkOrder>(`${this.baseUrl}`, workOrder, {headers});
   }
   
+  updateWorkOrderStatus(workOrder:IWorkOrder){
+    workOrder.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.post<IWorkOrder>(`${this.baseUrl}/set-status`, workOrder, {headers});
+  }
   getVehiclePlates(prefix:string) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

@@ -194,7 +194,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
   setWorkOrderStatus(workOrder: IWorkOrder) {
     this.isLoading = true;
     this.workOrderService
-      .upsertWorkOrder(workOrder)
+      .updateWorkOrderStatus(workOrder)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -204,12 +204,21 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           if (res) {
-            this.logger.info('setWorkOrderStatus success', { workOrderId: workOrder.workOrderId });
+            this.messageService.add({
+              severity: 'success',
+              summary: this.sharedService.T('success'),
+              icon: 'pi pi-check-circle'
+            });
             this.getWorkOrders(this.customer.customerId);
           }
         },
         error: (err) => {
-          this.errorHandler.handleError(err, 'setWorkOrderStatus', 'Failed to update work order status.');
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: this.sharedService.T('g.errorOccurred'),
+            life: 3000
+          });
         }
       });
   }

@@ -144,6 +144,7 @@ export interface IDigitalService {
   vin: string;
   vehiclePlate?: string | null;
   vehicleMileage?: number | null;
+  nextServiceVehicleMileage?: number | null;
   vehicleManufacturer?: string | null;
   vehicleModel?: string | null;
   vehicleYear?: number | null;
@@ -155,6 +156,8 @@ export interface IDigitalService {
   workshopCity: string;
   telephone: string;
   email: string;
+  fileAttached:number;
+
 }
 export interface ICustomer {
   wmsId: string;
@@ -471,6 +474,15 @@ export interface IWOService {
   serviceHours: number;
 }
 
+
+export interface ISignup {
+  wmsId: string;
+  workshopName: string;
+  contactPerson: string;
+  telephone: string;
+   userEmail: string;
+   userPassword: string;
+}
 export interface IWorkshop {
   wmsId: string;
   workshopName: string;

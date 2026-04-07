@@ -7,7 +7,7 @@
         <a href="#funktioner" class="nav-link">Funktioner</a>
         <a href="#priser" class="nav-link">Priser</a>
         <a href="#faq" class="nav-link">FAQ</a>
-        <a href="#contact-form" class="nav-link">Sign up</a>
+        <a href="#contact-form" class="nav-link">Skapa konto</a>
         <button class="btn-primary" (click)="openDialog()">Logga in</button>
       </div>
 
@@ -16,7 +16,7 @@
 
     <div *ngIf="mobileMenuOpen" class="md:hidden pb-4 space-y-2">
       <a href="#funktioner" class="block nav-link">Funktioner</a>
-      <a href="#ai-assistant" class="block nav-link">AI Assistant</a>
+      <a href="#funktioner" class="block nav-link">Funktioner</a>
       <a href="#priser" class="block nav-link">Priser</a>
       <a href="#faq" class="block nav-link">FAQ</a>
     </div>
@@ -39,14 +39,13 @@
 
     <div class="mt-8 fade-in visible">
       <div class="hero-price">
-        Endast 499 kr / användare / månad
+        Endast 199 kr/användare/månad
       </div>
       <p class="binding-text">3 månaders bindningstid gäller</p>
     </div>
 
     <p class="mt-8 text-xl text-white max-w-3xl mx-auto fade-in visible">
-      Sveriges första verkstadssystem med AI Assistant. Smart orderhantering,
-      tidsbokning, kundkommunikation och digital servicebok.
+      Sveriges första verkstadssystem <strong>powered by AI</strong>. Sparar timmar varje dag med intelligenta order, schemaläggning och automatisk kundkommunikation.
     </p>
 
     <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 fade-in visible">
@@ -66,7 +65,7 @@
 
     <p class="text-center mb-16 text-lg">
       Allt ingår för <span class="text-[var(--color-primary)] font-semibold">
-      499 kr/användare/månad</span>.
+      199 kr/användare/månad</span>.
     </p>
 
     <div class="feature-grid">
@@ -91,7 +90,7 @@
     </h2>
 
     <p class="section-subtitle text-custom-gray-dark fade-in">
-      Inga dolda avgifter, inga tilläggspaket. Alla funktioner inklusive AI Assistant och Digital Servicebok för en fast månadskostnad.
+      Inga dolda avgifter och inga tilläggspaket. Alla funktioner – inklusive AI Assistant och digital servicebok – ingår i en fast månadskostnad. Upp till 5 digitala serviceposter per månad ingår utan extra kostnad, och vid behov kan fler enkelt läggas till till ett lågt pris.
     </p>
 
     <div class="price-card fade-in">
@@ -101,7 +100,7 @@
       </h3>
 
       <div class="mb-6">
-        <span class="text-5xl font-extrabold text-custom-blue-primary">499</span>
+        <span class="text-5xl font-extrabold text-custom-blue-primary">199</span>
         <span class="text-lg text-custom-gray-dark ml-2">kr/användare/månad</span>
       </div>
 
@@ -109,60 +108,102 @@
         Perfekt för alla verkstäder - små som stora
       </p>
 
-      <div class="grid md:grid-cols-2 gap-6 mb-8 text-left">
+      <div class="mb-8 text-left">
+        <h4 class="font-semibold text-custom-gray-header mb-3">
+          Alla funktioner ingår
+        </h4>
 
-        <div>
-          <h4 class="font-semibold text-custom-gray-header mb-3">
-            Alla funktioner ingår
-          </h4>
-
-          <ul class="check-list">
+        <div class="grid md:grid-cols-2 gap-6">
+          <ul class="check-list space-y-3">
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span>Kundregister</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Kundregister</span>
+                <span class="text-xs text-gray-600">Smarta sökfunktioner & fullständig historik</span>
+              </div>
             </li>
 
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span class="bg-white">Offert- & orderhantering</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Skapa Offerter</span>
+                <span class="text-xs text-gray-600">Intelligenta kostnadsuppskattningar</span>
+              </div>
             </li>
 
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span>Digital Servicebok</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Arbetsorder</span>
+                <span class="text-xs text-gray-600">Optimerad arbetskraftskalkylering</span>
+              </div>
             </li>
 
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span>AI Assistant</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Fakturering med AI</span>
+                <span class="text-xs text-gray-600">Automatisk textgenerering & layout</span>
+              </div>
+            </li>
+
+            <li class="check-item bg-white">
+              <span class="material-symbols-outlined">check</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Digital Servicebok</span>
+                <span class="text-xs text-gray-600">Tillgänglig direkt i kundapp</span>
+              </div>
             </li>
           </ul>
-        </div>
 
-        <div>
-          <h4 class="font-semibold text-custom-gray-header mb-3">
-            Fördelar
-          </h4>
-
-          <ul class="check-list">
+          <ul class="check-list space-y-3">
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span>Obegränsade arbetsorder</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Schemaläggning</span>
+                <span class="text-xs text-gray-600">Individuell planering per anställd</span>
+              </div>
             </li>
 
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span>Support ingår</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Anställningsregister</span>
+                <span class="text-xs text-gray-600">Med lönberäkningar & dokumentation</span>
+              </div>
             </li>
 
             <li class="check-item bg-white">
               <span class="material-symbols-outlined">check</span>
-              <span>AI-stöd ingår</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Personalliggare</span>
+                <span class="text-xs text-gray-600">Arbetstidsöversikt per anställd</span>
+              </div>
+            </li>
+
+            <li class="check-item bg-white">
+              <span class="material-symbols-outlined">check</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Datamigration från gamla system</span>
+                <span class="text-xs text-gray-600">Hjälp med överföring av befintliga data. Alla nya funktioner ingår i samma pris.</span>
+              </div>
+            </li>
+
+            <li class="check-item bg-white">
+              <span class="material-symbols-outlined">check</span>
+              <div>
+                <span class="font-semibold text-custom-gray-header block">Nya funktioner varje månad</span>
+                <span class="text-xs text-gray-600">Alla nya features läggs till automatiskt utan extra kostnad</span>
+              </div>
             </li>
           </ul>
         </div>
 
       </div>
+
+      <p class="text-sm text-custom-gray-dark mt-4 px-4">
+        Omedelbar hjälp vid felrapportering och annan assistans
+      </p>
 
       <button class="primary-btn">
         Kom igång idag
@@ -180,7 +221,7 @@
       </p>
 
       <p class="binding-text mt-2">
-        Bindningstid på 3 månader gäller för alla abonnemang
+        3 månaders bindningstid gäller
       </p>
     </div>
 
@@ -196,11 +237,11 @@
     </h2>
 
     <p class="text-xl text-white/90 mb-2">
-      Alla funktioner ingår för endast <span class="font-bold">499 kr/användare/månad</span>
+      Starta din första vecka <span class="font-bold">helt kostnadsfritt</span>
     </p>
 
     <p class="text-lg text-white/80 mb-8 font-light">
-      Upptäck hur vår AI Assistant och Digital Servicebok kan effektivisera ditt arbete – boka en kostnadsfri demonstration.
+      Testa AI Assistant, Digital Servicebok och all intelligenta orderhantering – inga kort eller abonnemang krävs för att börja.
     </p>
 
     <button id="open-demo-modal-mid" class="cta-btn btn-white" (click)="openDemo()">
@@ -208,7 +249,7 @@
     </button>
 
     <p class="binding-text mt-4 text-white/70">
-      3 månaders bindningstid gäller
+      Från bara 199 kr/användare/månad
     </p>
 
   </div>
@@ -346,7 +387,7 @@
           </svg>
         </button>
 
-        <div *ngIf="faq.expanded" class="pt-4 mt-4 border-t border-gray-100 text-[var(--color-gray-dark)]">
+        <div *ngIf="faq.expanded" class="pt-4 mt-4 border-t border-gray-100 text-[var(--color-gray-dark)] text-justify">
           {{ faq.answer }}
         </div>
 
@@ -358,7 +399,7 @@
 
 <section id="contact-form" class="py-20 sm:py-28 bg-custom-bg-light">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-custom-gray-header text-center mb-12">Sign up </h2>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-custom-gray-header text-center mb-12">Skapa konto</h2>
         
         <!-- Success Message -->
         <div *ngIf="signupSuccess" class="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
@@ -368,62 +409,141 @@
                 </svg>
             </div>
             <h3 class="text-2xl font-bold text-green-800 mb-2">Registrering Genomförd!</h3>
-            <p class="text-green-700 text-lg">Din ansökan har mottagits. Ditt konto aktiveras snart.</p>
+            <p class="text-green-700 text-lg">Vi har mottagit din information och ditt konto aktiveras på 1-2 timmar efter verifiering.</p>
             <p class="text-green-600 text-sm mt-4">Vi kontaktar dig på den e-postadress du angav.</p>
         </div>
         
-        <!-- Sign Up Form -->
+        <!-- Skapa konto Form -->
         <form *ngIf="!signupSuccess" [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()" class="bg-white p-8 rounded-2xl shadow-xl">
             <!-- Company Information Section -->
             <div class="mb-8">
                 <h3 class="text-xl font-bold text-custom-gray-header mb-6">Företagsinformation</h3>
-                <div class="space-y-4">
-                    <input 
-                        type="text" 
-                        formControlName="companyName"
-                        placeholder="Företagsnamn" 
-                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                        required
-                    >
-                    <input 
-                        type="text" 
-                        formControlName="organizationNumber"
-                        placeholder="Organisationsnummer" 
-                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                        required
-                    >
-                    <input 
-                        type="tel" 
-                        formControlName="phoneNumber"
-                        placeholder="Telefonnummer" 
-                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                        required
-                    >
+                <div class="space-y-5">
+                    <!-- Company Name Field -->
+                    <div>
+                        <input 
+                            type="text" 
+                            formControlName="companyName"
+                            placeholder="Företagsnamn" 
+                            class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                            [ngClass]="{'border-red-500': signupForm.get('companyName')?.invalid && signupForm.get('companyName')?.touched}"
+                            required
+                        >
+                        <p *ngIf="signupForm.get('companyName')?.invalid && signupForm.get('companyName')?.touched" class="text-red-500 text-xs mt-1">
+                            Företagsnamn är obligatoriskt.
+                        </p>
+                    </div>
+
+                    <!-- Organization Number Field -->
+                    <div>
+                        <input 
+                            type="text" 
+                            formControlName="organizationNumber"
+                            placeholder="Organisationsnummer" 
+                            class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                            [ngClass]="{'border-red-500': signupForm.get('organizationNumber')?.invalid && signupForm.get('organizationNumber')?.touched}"
+                            required
+                        >
+                        <p *ngIf="signupForm.get('organizationNumber')?.invalid && signupForm.get('organizationNumber')?.touched" class="text-red-500 text-xs mt-1">
+                            Organisationsnummer är obligatoriskt.
+                        </p>
+                    </div>
+
+                    <!-- Contact Person Field -->
+                    <div>
+                        <input 
+                            type="text" 
+                            formControlName="contactPerson"
+                            placeholder="Kontaktperson" 
+                            class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                            [ngClass]="{'border-red-500': signupForm.get('contactPerson')?.invalid && signupForm.get('contactPerson')?.touched}"
+                            required
+                        >
+                        <p *ngIf="signupForm.get('contactPerson')?.invalid && signupForm.get('contactPerson')?.touched" class="text-red-500 text-xs mt-1">
+                            Kontaktperson är obligatorisk.
+                        </p>
+                    </div>
+                    <div>
+                        <input 
+                            type="tel" 
+                            formControlName="phoneNumber"
+                            placeholder="Telefonnummer" 
+                            class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                            [ngClass]="{'border-red-500': signupForm.get('phoneNumber')?.invalid && signupForm.get('phoneNumber')?.touched}"
+                            required
+                        >
+                        <p *ngIf="signupForm.get('phoneNumber')?.invalid && signupForm.get('phoneNumber')?.touched" class="text-red-500 text-xs mt-1">
+                            Telefonnummer är obligatoriskt.
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <!-- Divider Gap -->
             <div class="h-px bg-gray-200 my-8"></div>
-
             <!-- Login Information Section -->
             <div class="mb-8">
                 <h3 class="text-xl font-bold text-custom-gray-header mb-6">Loginuppgifter</h3>
-                <div class="space-y-4">
-                    <input 
-                        type="email" 
-                        formControlName="email"
-                        placeholder="E-post" 
-                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                        required
-                    >
-                    <input 
-                        type="password" 
-                        formControlName="password"
-                        placeholder="Lösenord" 
-                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                        required
-                    >
+                <div class="space-y-5">
+                    <!-- Email Field -->
+                    <div>
+                        <input 
+                            type="email" 
+                            formControlName="email"
+                            placeholder="E-post" 
+                            class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                            [ngClass]="{'border-red-500': signupForm.get('email')?.invalid && signupForm.get('email')?.touched}"
+                            required
+                        >
+                        <p class="text-gray-500 text-xs mt-1">En giltig e-postadress krävs.</p>
+                        <p *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+                            <span *ngIf="signupForm.get('email')?.errors?.['required']">E-post är obligatorisk.</span>
+                            <span *ngIf="signupForm.get('email')?.errors?.['email']">Vänligen ange en giltig e-postadress.</span>
+                        </p>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <input 
+                            type="password" 
+                            formControlName="password"
+                            placeholder="Lösenord" 
+                            class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                            [ngClass]="{'border-red-500': signupForm.get('password')?.invalid && signupForm.get('password')?.touched}"
+                            required
+                        >
+                        <p class="text-gray-500 text-xs mt-1">Minst 6 tecken krävs.</p>
+                        <p *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
+                            <span *ngIf="signupForm.get('password')?.errors?.['required']">Lösenord är obligatoriskt.</span>
+                            <span *ngIf="signupForm.get('password')?.errors?.['minlength']">Lösenord måste innehålla minst 6 tecken.</span>
+                        </p>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Terms and Conditions Section -->
+            <div class="mb-8">
+                <div class="flex items-start gap-3">
+                    <input 
+                        type="checkbox" 
+                        id="termsCheckbox"
+                        formControlName="acceptTerms"
+                        class="mt-1 w-4 h-4 text-custom-blue-primary border-gray-300 rounded focus:ring-2 focus:ring-custom-blue-primary cursor-pointer"
+                    />
+                    <label for="termsCheckbox" class="text-sm text-gray-700 cursor-pointer">
+                        Jag godkänner 
+                        <a 
+                            href="#" 
+                            (click)="openTermsModal($event)"
+                            class="text-custom-blue-primary hover:underline font-semibold"
+                        >
+                            villkoren och betingelserna
+                        </a>
+                    </label>
+                </div>
+                <p *ngIf="signupForm.get('acceptTerms')?.invalid && signupForm.get('acceptTerms')?.touched" class="text-red-500 text-xs mt-2">
+                    Du måste godkänna villkoren för att fortsätta.
+                </p>
             </div>
 
             <!-- Submit Button -->
@@ -432,12 +552,12 @@
                 [disabled]="isSigningUp"
                 class="w-full py-3 rounded-xl bg-[var(--color-primary)] text-white font-extrabold hover:bg-opacity-90 transition duration-150 shadow-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                <span *ngIf="!isSigningUp">Registrera</span>
+                <span *ngIf="!isSigningUp">Skapa konto</span>
                 <span *ngIf="isSigningUp" class="flex items-center gap-2">
                     <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8v8H4z"></path>
                     </svg>
-                    Registrerar...
+                    Skapar konto...
                 </span>
             </button>
         </form>
@@ -445,8 +565,8 @@
 </section>
 
 <!-- Demo Modal -->
-<div *ngIf="isDemoModalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-100 p-4">
-    <div class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl">
+<div *ngIf="isDemoModalVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-100 p-4" (click)="closeDemo()">
+    <div class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl" (click)="$event.stopPropagation()">
         <!-- Close Button -->
         <button 
             type="button"
@@ -462,13 +582,13 @@
         <!-- Success Message -->
         <div *ngIf="demoSuccess" class="text-center">
             <div class="mb-4">
-                <svg class="w-16 h-16 mx-auto text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-16 h-16 mx-auto text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">Tack för din intresse!</h3>
-            <p class="text-gray-600 text-lg mb-2">Din demo-förfrågan har mottagits.</p>
-            <p class="text-gray-500 text-sm">Vi kontaktar dig snart på <strong>{{ demoForm.get('email')?.value }}</strong> för att boka in en tid för demo.</p>
+            <h3 class="text-2xl font-bold text-green-800 mb-2">Tack för ditt intresse!</h3>
+            <p class="text-green-700 text-lg mb-2">Din demo-förfrågan har skickats.</p>
+            <p class="text-green-600 text-sm">Du kommer att motta en bekräftelse via e-post på <strong>{{ demoForm.get('email')?.value }}</strong> inom några minuter.</p>
         </div>
 
         <!-- Demo Form -->
@@ -480,46 +600,90 @@
             </div>
 
             <!-- Demo Form -->
-            <form [formGroup]="demoForm" (ngSubmit)="onDemoSubmit()" class="space-y-4">
-                <input 
-                    type="text" 
-                    formControlName="name"
-                    placeholder="Ditt Namn" 
-                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                    required
-                >
-                <input 
-                    type="text" 
-                    formControlName="companyName"
-                    placeholder="Företagsnamn" 
-                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                    required
-                >
-                <input 
-                    type="email" 
-                    formControlName="email"
-                    placeholder="Företags-email" 
-                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                    required
-                >
-                <input 
-                    type="tel" 
-                    formControlName="phoneNumber"
-                    placeholder="Telefonnummer" 
-                    class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
-                    required
-                >
+            <form [formGroup]="demoForm" (ngSubmit)="onDemoSubmit()" class="space-y-5">
+                <!-- Name Field -->
+                <div>
+                    <label for="demoName" class="flex justify-start font-semibold text-sm mb-1">Namn</label>
+                    <input 
+                        id="demoName"
+                        type="text" 
+                        formControlName="name"
+                        placeholder="Ditt Namn" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        [ngClass]="{'border-red-500': demoForm.get('name')?.invalid && demoForm.get('name')?.touched}"
+                        required
+                    />
+                    <p *ngIf="demoForm.get('name')?.invalid && demoForm.get('name')?.touched" class="text-red-500 text-xs mt-1">
+                        Namn är obligatoriskt.
+                    </p>
+                </div>
+
+                <!-- Company Name Field -->
+                <div>
+                    <label for="demoCompanyName" class="flex justify-start font-semibold text-sm mb-1">Företagsnamn</label>
+                    <input 
+                        id="demoCompanyName"
+                        type="text" 
+                        formControlName="companyName"
+                        placeholder="Företagsnamn" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        [ngClass]="{'border-red-500': demoForm.get('companyName')?.invalid && demoForm.get('companyName')?.touched}"
+                        required
+                    />
+                    <p *ngIf="demoForm.get('companyName')?.invalid && demoForm.get('companyName')?.touched" class="text-red-500 text-xs mt-1">
+                        Företagsnamn är obligatoriskt.
+                    </p>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label for="demoEmail" class="flex justify-start font-semibold text-sm mb-1">E-post</label>
+                    <input 
+                        id="demoEmail"
+                        type="email" 
+                        formControlName="email"
+                        placeholder="E-post" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        [ngClass]="{'border-red-500': demoForm.get('email')?.invalid && demoForm.get('email')?.touched}"
+                        required
+                    />
+                    <p *ngIf="demoForm.get('email')?.invalid && demoForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+                        <span *ngIf="demoForm.get('email')?.errors?.['required']">E-post är obligatorisk.</span>
+                        <span *ngIf="demoForm.get('email')?.errors?.['email']">Vänligen ange en giltig e-postadress.</span>
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">En giltig e-postadress krävs.</p>
+                </div>
+
+                <!-- Phone Number Field -->
+                <div>
+                    <label for="demoPhoneNumber" class="flex justify-start font-semibold text-sm mb-1">Telefonnummer</label>
+                    <input 
+                        id="demoPhoneNumber"
+                        type="tel" 
+                        formControlName="phoneNumber"
+                        placeholder="Telefonnummer" 
+                        class="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue-primary" 
+                        [ngClass]="{'border-red-500': demoForm.get('phoneNumber')?.invalid && demoForm.get('phoneNumber')?.touched}"
+                        required
+                    />
+                    <p *ngIf="demoForm.get('phoneNumber')?.invalid && demoForm.get('phoneNumber')?.touched" class="text-red-500 text-xs mt-1">
+                        Telefonnummer är obligatoriskt.
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">Vi kontaktar dig för att bekräfta tid.</p>
+                </div>
+
+                <!-- Submit Button -->
                 <button 
                     type="submit"
-                    [disabled]="isDemoSubmitting"
-                    class="w-full py-3 rounded-xl bg-custom-blue-primary text-white font-extrabold hover:bg-opacity-90 transition duration-150 shadow-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    [disabled]="isDemoSubmitting || demoForm.invalid"
+                    class="w-full py-3 rounded-xl bg-[var(--color-primary)] text-white font-extrabold hover:bg-opacity-90 transition duration-150 shadow-md flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed mt-6"
                 >
-                    <span *ngIf="!isDemoSubmitting">Boka demo</span>
+                    <span *ngIf="!isDemoSubmitting">Skicka förfrågan</span>
                     <span *ngIf="isDemoSubmitting" class="flex items-center gap-2">
                         <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12a8 8 0 018-8v8H4z"></path>
                         </svg>
-                        Bokar demo...
+                        Skickar...
                     </span>
                 </button>
             </form>
@@ -539,6 +703,136 @@
 
 
 
+<!-- Terms and Conditions Modal -->
+<div 
+  id="termsModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  style="display: none;"
+>
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-50 to-blue-100 px-8 py-6 border-b border-blue-200 flex justify-between items-center">
+      <h2 class="text-2xl font-bold text-gray-800">Villkor och betingelser</h2>
+      <button 
+        (click)="closeTermsModal()"
+        class="text-gray-500 hover:text-gray-700 transition"
+        title="Stäng"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="overflow-y-auto flex-1 px-8 py-6 text-gray-700 space-y-6">
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">1. Gällande villkor</h3>
+        <p class="text-sm leading-relaxed">
+          Digital Workshop och dess tjänster är föremål för dessa villkor. Genom att registrera dig accepterar du dessa villkor i sin helhet. 
+          Om du inte godkänner dessa villkor får du inte använda vår tjänst.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">2. Användning av tjänsten</h3>
+        <p class="text-sm leading-relaxed">
+          Du accepterar att använda Digital Workshop endast för lagliga syften och på ett sätt som inte inskränker eller hindrar andra från att använda tjänsten. 
+          Du får inte skada, avbryta, belasta eller på annat sätt skada tjänsten eller servrar/nätverk kopplade till tjänsten.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">3. Användaransvar</h3>
+        <p class="text-sm leading-relaxed">
+          Du är ansvarig för att hålla ditt lösenord hemligt och för all aktivitet som inträffar under ditt konto. Du accepterar att meddela oss omedelbar om någon 
+          obehörig användning av ditt konto eller någon annan överträdelse av säkerheten.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">4. Intellectual Property</h3>
+        <p class="text-sm leading-relaxed">
+          Alla innehål, funktioner och funktionalitet som ingår i Digital Workshop, inklusive men inte begränsat till design, text, grafik och kod, är 
+          äganderätt för Digital Workshop eller dess leverantörer och skyddas av internationell upphovsrätt och övriga immateriella rättighetslagar.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">5. Begränsning av ansvar</h3>
+        <p class="text-sm leading-relaxed">
+          I ingen händelse ska Digital Workshop, dess direktörer, anställda eller agenter vara ansvarig för någon indirekt, straffande, särskild, 
+          följdskada eller exemplarisk skada, oavsett orsak, även om Digital Workshop har blivit underrättad om möjligheten för sådan skada.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">6. Ändringar av villkoren</h3>
+        <p class="text-sm leading-relaxed">
+          Digital Workshop förbehåller sig rätten att ändra dessa villkor när som helst. Din fortsatta användning av tjänsten efter ändringar innebär din 
+          acceptans av de nya villkoren.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">7. Tredjepartswebbplatser</h3>
+        <p class="text-sm leading-relaxed">
+          Digital Workshop kan innehålla länkar till tredjepartswebbplatser. Vi är inte ansvariga för innehållet, riktigheten eller praxis för dessa externa webbplatser. 
+          Din användning av tredjepartswebbplatser regleras av dessa webbplatsers användarvillkor.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">8. Juridisk jurisdiktion</h3>
+        <p class="text-sm leading-relaxed">
+          Dessa villkor och deras tillämpning styrs av lagarna i Sverige. Du accepterar härigenom den exklusiva jurisdiktionen för domstolar belägna i Sverige.
+        </p>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">9. Fakturering och betalning</h3>
+        <div class="text-sm leading-relaxed space-y-3">
+          <p>
+            <strong>Prisnivå:</strong> Tjänsten kostar 199 kr per användare per månad och inkluderar upp till 5 digitala servicebok-poster per månad. För varje ytterligare digital servicebok-post som läggs till debiteras 5 kr per post. Digital Workshop faktureras i perioder om 3 månader åt gången.
+          </p>
+          <p>
+            <strong>Betalningsvillkår:</strong> Fakturan måste betalas inom 14 dagar från mottagandet. Vid uteblivet betalning och utan överenskommelse med Digital Workshop förbehåller vi oss rätten att stänga av ditt konto den 15:e dagen från fakturadatum.
+          </p>
+          <p>
+            <strong>Extra tjänster:</strong> Alla extra digital service-poster som läggs till under en faktureringsperiod räknas och faktureras tillsammans med nästa faktura. Dessa inkluderas sålunda i nästa faktureringsmöte.
+          </p>
+          <p>
+            <strong>Kunddatau00f6verföring:</strong> Du kan när som helst begära en export av dina kunddata. Vi förser dig gärna med en kopia i ett användarligt format.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-lg font-bold text-gray-800 mb-3">10. Kontakt</h3>
+        <p class="text-sm leading-relaxed">
+          Om du har frågor om dessa villkor, vänligen kontakta oss på support@digitalworkshop.se
+        </p>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-50 px-8 py-6 border-t border-gray-200 flex gap-4 justify-end">
+      <button 
+        (click)="closeTermsModal()"
+        class="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 transition"
+      >
+        Stäng
+      </button>
+      <button 
+        (click)="acceptTermsFromModal()"
+        class="px-6 py-2 rounded-lg bg-[var(--color-primary)] text-white font-semibold hover:bg-opacity-90 transition"
+      >
+        Jag godkänner villkoren
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container-main flex flex-col md:flex-row justify-between gap-6">
@@ -556,8 +850,19 @@
 <div 
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" 
   *ngIf="isDialogVisible"
+  (click)="isDialogVisible && onCancel()"
 >
-  <div class="bg-white rounded-xl shadow-lg w-3/4 max-w-4xl overflow-hidden">
+  <div class="bg-white rounded-xl shadow-lg w-3/4 max-w-4xl overflow-hidden relative" (click)="$event.stopPropagation()">
+    <!-- Close Button -->
+    <button 
+      (click)="onCancel()" 
+      class="absolute top-4 right-4 z-10 text-gray-500 hover:text-gray-700 transition"
+      title="Stäng"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
     <div class="grid grid-cols-2">
       <!-- Left Section -->
       <div class="bg-[#CCE0FF33] bg-dialog_background bg-contain bg-bottom bg-no-repeat me-7 rounded-l-xl">
@@ -594,8 +899,10 @@
               [ngClass]="{'border-red-500': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
             />
             <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
-              Vänligen ange en giltig e-postadress.
+              <span *ngIf="loginForm.get('email')?.errors?.['required']">E-post är obligatorisk.</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">Vänligen ange en giltig e-postadress.</span>
             </p>
+            <p class="text-gray-500 text-xs mt-1 block">En giltig e-postadress krävs.</p>
           </div>
 
           <!-- Password Field -->
@@ -610,8 +917,10 @@
               [ngClass]="{'border-red-500': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
             />
             <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
-              Lösenord krävs.
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">Lösenord är obligatoriskt.</span>
+              <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Lösenord måste innehålla minst 6 tecken.</span>
             </p>
+            <p class="text-gray-500 text-xs mt-1 block">Minst 6 tecken krävs.</p>
           </div>
 
           <!-- Forgot Password Link -->

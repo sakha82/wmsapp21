@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ITokenClaims, ITranslate, IVehicle, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
+import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, tap, finalize } from 'rxjs';
@@ -273,7 +273,7 @@ get lang(): 'en' | 'sv' {
 
   signup(signupData: any){
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<any>(`${this.authUrl}/signup`, signupData, {headers});
+    return this.http.post<any>(`${this.coreUrl}/signup`, signupData, {headers});
   }
 
   bookDemo(demoData: any){

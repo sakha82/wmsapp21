@@ -172,7 +172,7 @@
   .price-card {
     @apply bg-white border-2 border-[var(--color-primary)]
            rounded-2xl p-8 text-center 
-           max-w-md mx-auto 
+           max-w-3xl mx-auto 
            shadow-md 
            transition-all duration-300 
            hover:shadow-xl hover:-translate-y-1;

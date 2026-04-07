@@ -31,6 +31,8 @@ export class ResetPasswordViewComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   passwordResetForm!: FormGroup;
   successMessage: string | null = null;
+  isLoading: boolean = false;
+  imagesUrl = 'assets/images/';
 
   constructor(
     private logger: LogService,
@@ -69,30 +71,41 @@ export class ResetPasswordViewComponent implements OnInit, OnDestroy {
   }
 
   onResetFormSubmitted(): void {
+    this.passwordResetForm.markAllAsTouched();
+    
     if (this.passwordResetForm.invalid) {
       return;
     }
 
+    this.isLoading = true;
+    this.successMessage = null;
+
     this.sharedService
       .resetPassword(this.passwordResetForm.value)
       .pipe(
-        finalize(() => {}),
+        finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (res) => {
           if (res) {
             this.successMessage = 'Lyckat! Ditt lösenord har återställts.';
+            this.passwordResetForm.reset();
           }
         },
         error: (error) => {
           this.logger.error('Error resetting password:', error);
+          this.successMessage = null;
         }
       });
   }
 
-  navigateToLogin(): void {
-    this.router.navigate(['/login']);
+  navigateToLogin(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
+    this.logger.info('Navigating to login page');
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy(): void {

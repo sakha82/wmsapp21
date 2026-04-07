@@ -31,6 +31,8 @@ export class ForgetPasswordViewComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   forgotPasswordForm: FormGroup;
   successMessage: string | null = null;
+  isLoading: boolean = false;
+  imagesUrl = 'assets/images/';
 
   constructor(    
       private readonly fb: FormBuilder,
@@ -47,31 +49,42 @@ export class ForgetPasswordViewComponent implements OnInit, OnDestroy {
  }
 
   onForgotPasswordSubmitted() {
-    if (this.forgotPasswordForm.valid) {
-      const email = this.forgotPasswordForm.get('email')?.value;
-      console.log('Sending reset link to:', email);
-
-      this.sharedService
-        .forgotPassword(this.forgotPasswordForm.value)
-        .pipe(
-          finalize(() => {}),
-          takeUntil(this.destroy$)
-        )
-        .subscribe({
-          next: (res) => {
-            if (res) {
-              this.successMessage = 'En återställningslänk har skickats till din e-postadress.';
-            }
-          },
-          error: (error) => {
-            this.logger.error('Error forgot password:', error);
-          }
-        });
+    this.forgotPasswordForm.markAllAsTouched();
+    
+    if (this.forgotPasswordForm.invalid) {
+      return;
     }
+
+    this.isLoading = true;
+    const email = this.forgotPasswordForm.get('email')?.value;
+    this.logger.info('Sending reset link to:', email);
+
+    this.sharedService
+      .forgotPassword(this.forgotPasswordForm.value)
+      .pipe(
+        finalize(() => { this.isLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.successMessage = 'En återställningslänk har skickats till din e-postadress. Kontrollera din inkorg.';
+            this.forgotPasswordForm.reset();
+          }
+        },
+        error: (error) => {
+          this.logger.error('Error forgot password:', error);
+          this.successMessage = null;
+        }
+      });
   }
 
-  navigateToLogin() {
-    console.log('Navigating to login page');
+  navigateToLogin(event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+    this.logger.info('Navigating to login page');
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy(): void {
