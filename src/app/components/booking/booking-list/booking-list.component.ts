@@ -500,7 +500,7 @@ onChangeEmployee() {
       return Math.round(hours * 60);
     }
     if (booking.woServices?.length) {
-      const sum = booking.woServices.reduce((total, service) => total + (service.serviceHours || 0), 0);
+      const sum = booking.woServices.reduce((total, service) => total + (service.quantity || 0), 0);
       if (sum > 0) {
         return Math.round(sum * 60);
       }

@@ -25,6 +25,7 @@ export class ProductService {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);  
     queryParams.append("category", category);
+    queryParams.append("includeBase", true.toString());
     const url = `${this.baseUrl}/list?${queryParams}`;
     return this.http.get<IProduct[]>(url);
   
@@ -39,10 +40,14 @@ export class ProductService {
     return this.http.get<IProduct>(url);
   }
 
-  getProductsByprefix(prefix: string) {
+  getProductsByprefix(category:string,prefix: string, make: string, model: string, year: number) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("category", category);
     queryParams.append("prefix", prefix);
+    queryParams.append("make", make ?? '');
+    queryParams.append("model", model ?? '');
+    queryParams.append("year", (year ?? 0).toString());
     return this.http.get<IProduct[]>(`${this.baseUrl}/products-by-prefix?${queryParams}`);
   }
 

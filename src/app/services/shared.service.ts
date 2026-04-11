@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
+import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IVehicleType, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, tap, finalize } from 'rxjs';
@@ -23,10 +23,12 @@ export class SharedService {
   fileUrl: string = environment.BASE_URL + "/api/File";
   resourceFileVersion: number = 1;
   enums: IEnums[] = [];  
+  jobs: any[] = [];  
   private resourcesLoadedSubject = new BehaviorSubject<boolean>(false);
   resourcesLoaded$ = this.resourcesLoadedSubject.asObservable();
   private resourceLoadingPromise: Promise<void> | null = null;
   allManufacturers!: IVehicle[];
+  allVehicleTypes: IVehicleType[] = [];
   translations!: ITranslate[];
   
   
@@ -76,7 +78,6 @@ get lang(): 'en' | 'sv' {
     const queryParams = new URLSearchParams();
     if(includeWmsId)
       queryParams.append("wmsId", this.wmsId);
-
     Object.keys(filters.controls).forEach((key) => {
       const value = filters.get(key)?.value;
       if (value !== undefined && value !== null && value !== '') {
@@ -315,6 +316,34 @@ get lang(): 'en' | 'sv' {
     queryParamsHandling: 'merge', // Merge with existing query parameters
   });
 }
+
+  // Transform IVehicleType array into hierarchical IVehicle structure
+  private transformModelsToVehicles(vehicleTypes: IVehicleType[]): IVehicle[] {
+    const manufacturersMap = new Map<string, Set<string>>();
+    
+    // Group models by manufacturer
+    vehicleTypes.forEach((vehicle: IVehicleType) => {
+      const make = vehicle.make;
+      const model = vehicle.model;
+      
+      if (!manufacturersMap.has(make)) {
+        manufacturersMap.set(make, new Set<string>());
+      }
+      manufacturersMap.get(make)?.add(model);
+    });
+    
+    // Convert map to IVehicle array
+    const result: IVehicle[] = [];
+    manufacturersMap.forEach((models, make) => {
+      result.push({
+        name: make,
+        models: Array.from(models).sort((a, b) => a.localeCompare(b))
+      });
+    });
+    
+    return result.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   getVehicleManufacturers(query:string):any[]
   {
     return this.allManufacturers  
@@ -325,7 +354,6 @@ get lang(): 'en' | 'sv' {
   }
   getVehicleModels(manufactuererName:string,query:string)
   {
-     debugger
     let models:string[] = []
     if(manufactuererName)
     {
@@ -339,7 +367,12 @@ get lang(): 'en' | 'sv' {
     return models.filter(m => m.startsWith(query)).sort((a, b) => a.localeCompare(b)); 
   }
 
-
+  getVehicleType(make: string, model: string): IVehicleType | undefined {
+    return this.allVehicleTypes.find(v => 
+      v.make.toLowerCase() === make.toLowerCase() && 
+      v.model.toLowerCase() === model.toLowerCase()
+    );
+  }
 
 loadResources(): Observable<void> {
   this.logger.info('Start loading resource files');
@@ -357,11 +390,11 @@ loadResources(): Observable<void> {
   }
 
   // Create the actual loading operation
-  const translationsUrl = 'assets/resources/trans-1.json';
-  const enumsUrl =   'assets/resources/enums-1.json';
-  const modelsUrl =  'assets/resources/models-1.json';  
+  const translationsUrl = 'assets/resources/trans.json';
+  const enumsUrl =   'assets/resources/enums.json';
+  const modelsUrl =  'assets/resources/models.json';  
 
-  const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>, Observable<IVehicle[]>] = [
+  const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>, Observable<IVehicleType[]>] = [
     this.http.get<ITranslate[]>(translationsUrl).pipe(
       catchError(error => {
         this.logger.error('Error loading translation.json:', error);
@@ -374,20 +407,21 @@ loadResources(): Observable<void> {
         return of([] as IEnums[]);
       })
     ),
-    this.http.get<IVehicle[]>(modelsUrl).pipe(
+    this.http.get<IVehicleType[]>(modelsUrl).pipe(
       catchError(error => {
         this.logger.error('Error loading models.json:', error);
-        return of([] as IVehicle[]);
+        return of([] as IVehicleType[]);
       })
     )
   ];
 
   // Create the observable that will be memoized
-  const loadingObservable = forkJoin<[ITranslate[], IEnums[], IVehicle[]]>(fileRequests).pipe(
+  const loadingObservable = forkJoin<[ITranslate[], IEnums[], IVehicleType[]]>(fileRequests).pipe(
     tap(([wmsTranslate, wmsEnums, wmsModels]) => {
       this.translations = wmsTranslate;
-      this.enums = wmsEnums;
-      this.allManufacturers = wmsModels;
+      this.enums = wmsEnums;      
+      this.allVehicleTypes = wmsModels;      
+      this.allManufacturers = this.transformModelsToVehicles(wmsModels);
       this.logger.info('All resource files loaded successfully');
     }),
     map(() => undefined)

@@ -314,3 +314,24 @@ Final revision done We only need following 2 properties to change for tables
 }
 
 
+.text-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Workshop products */
+.workshop-icon {
+  background-color: var(--p-primary-600); /* blue */
+}
+
+/* Base products */
+.base-icon {
+  background-color: #e74c3c; /* red */
+}

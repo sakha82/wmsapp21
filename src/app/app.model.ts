@@ -402,6 +402,7 @@ export interface IProduct {
   vatPercentage: number;
   price: number;
   vat: number;
+  isBaseProduct: boolean;
   priceIncVat: number;
   inHouseQuantity:number;
   inventoryQuantity:number;
@@ -470,8 +471,11 @@ export interface IWOPurchase {
 }
 export interface IWOService {
   index: number;
-  serviceName: string;
-  serviceHours: number;
+  productId: number;
+  category: string;
+  productName: string;
+  productDescription: string;
+  quantity: number;
 }
 
 
@@ -503,6 +507,7 @@ export interface IWorkshop {
   defaultLang: string;
   defaultTheme: string;
   defaultInvoiceTemplate: string;
+  hourlyRate: number;
 }
 // Dashboard
 
@@ -698,3 +703,13 @@ export interface DigitalServiceDto {
   vehicleMileage: number;
   services:string;
 }
+export interface IVehicleType{
+  wmsId: string;
+  make: string;
+  model:string;
+  category: string;
+  segment: string;
+  fuelType: string;
+  isPremium: number;
+  year: number;
+} 

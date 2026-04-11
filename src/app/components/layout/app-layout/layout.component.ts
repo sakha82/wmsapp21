@@ -107,6 +107,7 @@ palettes = [
         next: (response: any) => {
           if (response) {
             this.workshop = response;
+            sessionStorage.setItem('HourlyRate', this.workshop.hourlyRate.toString());
             this.workshops.push(this.workshop);
             this.selectedWorkshop = this.workshops[0];
             this.theme.setPrimaryPalette(this.selectedWorkshop.defaultTheme);

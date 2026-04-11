@@ -1870,6 +1870,86 @@
         "sv": "Tecken"
     },
     {
+        "tkey": "addServices",
+        "en": "Add Services",
+        "sv": "Lägg till tjänster"
+    },
+    {
+        "tkey": "addedServices",
+        "en": "Added Services",
+        "sv": "Tillagda tjänster"
+    },
+    {
+        "tkey": "hours",
+        "en": "hours",
+        "sv": "timmar"
+    },
+    {
+        "tkey": "includeBaseProducts",
+        "en": "Include Base Products(System)",
+        "sv": "Inkludera basprodukter(System)"
+    },
+    {
+        "tkey": "monthlyReport",
+        "en": "Monthly Report",
+        "sv": "Månadsrapport"
+    },
+    {
+        "tkey": "selectMonth",
+        "en": "Select Month",
+        "sv": "Välj månad"
+    },
+    {
+        "tkey": "downloadExcelFile",
+        "en": "Download Excel file",
+        "sv": "Ladda ner Excel-fil"
+    },
+    {
+        "tkey": "updateProduct",
+        "en": "Update Product",
+        "sv": "Uppdatera produkt"
+    },
+    {
+        "tkey": "newProduct",
+        "en": "New Product",
+        "sv": "Ny produkt"
+    },
+    {
+        "tkey": "workshopProducts",
+        "en": "Workshop Products",
+        "sv": "Verkstad Produkter"
+    },
+    {
+        "tkey": "baseProducts",
+        "en": "Base Products (System)",
+        "sv": "Basprodukter (System)"
+    },
+    {
+        "tkey": "enableProduct",
+        "en": "Enable Product",
+        "sv": "Aktivera produkt"
+    },
+    {
+        "tkey": "disableProduct",
+        "en": "Disable Product",
+        "sv": "Inaktivera produkt"
+    },
+    {
+        "tkey": "duplicate",
+        "en": "Duplicate",
+        "sv": "Duplicera"
+    },
+    {
+        "tkey": "alreadyExists",
+        "en": "Already exists",
+        "sv": "Finns redan"
+    },
+    {
+        "tkey": "workshopHourlyRate",
+        "en": "Workshop Hourly Rate",
+        "sv": "Verkstadens timpris"
+    },
+    {
         "tkey": "status",
         "en": "Status",
         "sv": "Status"

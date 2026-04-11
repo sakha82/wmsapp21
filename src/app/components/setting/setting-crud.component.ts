@@ -165,6 +165,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       swish: '',
       bic: '',
       iban: '',
+      hourlyRate:'',
       
       isFskat: [false],
       defaultLang: '',
@@ -257,7 +258,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
         detail: 'Workshop updated successfully!',
       });
       this.router.navigate(['sv/setting']);
-          }
+        sessionStorage.setItem('HourlyRate', this.workshop.get('hourlyRate')?.value.toString());  
+        }
         },
         error: (err) => {
           this.logger.error('Error updating workshop:', err);
@@ -871,7 +873,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     let category = detail.get('category').value;
     this.logger.info(category);
     let query = event.query;
-    this.productService.getProductsByprefix(query)
+    this.productService.getProductsByprefix(category,query,'','',0)
       .pipe(
         finalize(() => { this.isSpinnerLoading = false; }),
         takeUntil(this.destroy$)

@@ -563,7 +563,7 @@
         "country": "se",
         "lang": "sv",
         "key": "productUnit",
-        "value": "st",
+        "value": "pcs",
         "index": 1,
         "isdefault": true,
         "text": "st",
@@ -645,7 +645,7 @@
         "key": "vatPercentage",
         "value": "12",
         "index": 1,
-        "isdefault": true,
+        "isdefault": false,
         "text": "12%",
         "severity": ""
     },
@@ -655,7 +655,7 @@
         "key": "vatPercentage",
         "value": "0",
         "index": 1,
-        "isdefault": true,
+        "isdefault": false,
         "text": "0%",
         "severity": ""
     },
@@ -695,7 +695,7 @@
         "key": "vatPercentage",
         "value": "12",
         "index": 1,
-        "isdefault": true,
+        "isdefault": false,
         "text": "12%",
         "severity": ""
     },
@@ -705,7 +705,7 @@
         "key": "vatPercentage",
         "value": "0",
         "index": 1,
-        "isdefault": true,
+        "isdefault": false,
         "text": "0%",
         "severity": ""
     },
@@ -786,7 +786,7 @@
         "value": "part",
         "index": 1,
         "isdefault": true,
-        "text": "Spt.",
+        "text": "Product",
         "severity": ""
     },
     {
@@ -796,7 +796,7 @@
         "value": "labour",
         "index": 1,
         "isdefault": false,
-        "text": "Lab.",
+        "text": "Service",
         "severity": ""
     },
     {
@@ -856,7 +856,7 @@
         "value": "part",
         "index": 1,
         "isdefault": true,
-        "text": "Res.",
+        "text": "Produkt",
         "severity": ""
     },
     {
@@ -866,7 +866,7 @@
         "value": "labour",
         "index": 1,
         "isdefault": false,
-        "text": "Arb.",
+        "text": "Tjänst",
         "severity": ""
     },
     {
@@ -1622,7 +1622,7 @@
         "value": "other",
         "index": 1,
         "isdefault": false,
-        "text": "other"
+        "text": "Other"
     },
     {
         "country": "se",

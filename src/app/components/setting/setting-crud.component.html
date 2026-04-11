@@ -38,13 +38,22 @@
                 <div class="mb-6">
                   <label class="mb-2 block text-sm font-medium" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}</label>
                   <input type="text" formControlName="vatId" placeholder="" class="w-full" pInputText />
+                
                 </div>
 
-                <!-- Approved For FTax -->
-                <div class="mb-6">
-                  <label class="mb-2 block text-sm font-medium">{{ this.sharedService.T('approvedForFTax') }}</label>
-                  <p-selectButton [options]="fTaxOptions" optionLabel="label" optionValue="value" formControlName="isFskat"></p-selectButton>
+                <!-- Approved For FTax & Workshop Hourly Rate -->
+                <div class="grid grid-cols-4 mb-6">
+                  <div class="col-span-1">
+                    <label class="mb-2 block text-sm font-medium">{{ this.sharedService.T('approvedForFTax') }}</label>
+                    <p-selectButton [options]="fTaxOptions" optionLabel="label" optionValue="value" formControlName="isFskat"></p-selectButton>
+                  </div>
+                  
+                  <div class="col-span-3">
+                    <label class="mb-2 block text-sm font-medium">{{ this.sharedService.T('workshopHourlyRate') }}</label>
+                    <p-inputnumber formControlName="hourlyRate" inputId="currency-sv" mode="currency" currency="SEK" locale="sv-SE" class="w-full" />
+                  </div>
                 </div>
+              
               </div>
 
               <!-- Right Section - Logo Upload -->

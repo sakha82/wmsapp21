@@ -257,11 +257,15 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   }
   // detail selection
     getProducts(detail:any, event: AutoCompleteCompleteEvent) {
-      this.isSpinnerLoading = true;
+      
       let category = detail.get('category').value;
       this.logger.info(category);
       let query = event.query;
-      this.productService.getProductsByprefix(query)
+      const make = this.offer.get('vehicleManufacturer')?.value;
+      const model = this.offer.get('vehicleModel')?.value;
+      const year = this.offer.get('vehicleYear')?.value;
+
+      this.productService.getProductsByprefix(category,query,make,model,year)
         .pipe(
           finalize(() => { this.isSpinnerLoading = false; }),
           takeUntil(this.destroy$)
@@ -292,7 +296,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
         description: productDescription,
         quantity: quantity,
         unit: unit,
-        unitPrice: unitPrice,
+        unitPrice: (category == 'labour' && unit == 'hour' && !unitPrice) ? Number(sessionStorage.getItem('HourlyRate')) : unitPrice,
         vatPercentage: vatPercentage
       })
       this.updateDetailRow(detail);

@@ -39,14 +39,16 @@
         <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
         <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="manufacturers"
           (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="Ange söktext "
-          forceSelection="true" optionLabel="" [showClear]="true" class="w-full"></p-autoComplete>
+          forceSelection="true" optionLabel="" [showClear]="true" class="w-full"
+          [invalid]="!this.workOrder.get('vehicleManufacturer')?.value"></p-autoComplete>
       </div>
 
       <!-- Vehicle Model -->
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
         <p-autoComplete formControlName="vehicleModel" [suggestions]="models" (completeMethod)="filterModels($event)"
-          forceSelection="true" [showClear]="true" class="w-full"></p-autoComplete>
+          forceSelection="true" [showClear]="true" (onSelect)="onModelSelect($event)" class="w-full"
+          [invalid]="!this.workOrder.get('vehicleModel')?.value"></p-autoComplete>
       </div>
 
       <!-- Gap Between First 3 and Last 2 -->
@@ -54,7 +56,7 @@
         <!-- Vehicle Year -->
         <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }}</label>
         <p-inputnumber formControlName="vehicleYear" placeholder="2015" mode="decimal" [min]="1960" [max]="2040"
-          [useGrouping]="false"></p-inputnumber>
+          [useGrouping]="false" (onBlur)="loadLabourTimings()"></p-inputnumber>
       </div>
 
       <!-- Vehicle Mileage -->
@@ -213,40 +215,7 @@
       </div>
 
       <!-- LINE 3: Status, Payment Type, Mechanic -->
-      <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('Verkstadstjänster') }}</label>
-
-        <p-multiselect [options]="services" [(ngModel)]="selectedServices"
-          [ngModelOptions]="{ standalone: true }" optionLabel="productName" placeholder="select"
-          (onChange)="onSelectService($event)" [maxSelectedLabels]="5" class="w-full"
-          [invalid]="selectedServices.length === 0"   />
-
-
-      </div>
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('estimatedWorkingTime') }} (timmar)</label>
-        <p-inputnumber formControlName="serviceDuration" inputId="minmaxfraction" [minFractionDigits]="1"
-          [maxFractionDigits]="1" mode="decimal" [min]="0" [max]="125" class="w-full text-black"
-          [locale]="this.sharedService.currentLocale"></p-inputnumber>
-      </div>
-      <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('mechanic') }}</label>
-        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullName" optionValue="employeeId"
-          [showClear]="true" class="w-full"></p-select>
-      </div>
-      <div class="col-span-2">
-        <label class="block mb-2">{{this.sharedService.T('oilType')}}</label>
-        <p-select [options]="oilTypes" formControlName="oilType" class="w-full"></p-select>
-      </div>
-
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('oilCapacity') }}</label>
-        <p-inputnumber formControlName="oilCapacity" inputId="minmaxfraction" [minFractionDigits]="1"
-          [maxFractionDigits]="1" suffix=" litre" mode="decimal" [min]="0" [max]="25" class="w-full text-black"
-          [locale]="this.sharedService.currentLocale"></p-inputnumber>
-      </div>
-      <!-- Booking Line -->
-      <div class="col-span-3">
+ <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('bookingDate') }}</label>
         <p-date-picker formControlName="bookingDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
           (onSelect)="onSelectCalendarDate()" class="w-full">
@@ -268,12 +237,89 @@
             </div>
           </ng-template>
         </p-select>
+      </div>       
+      <div class="col-span-3">
+        <label class="block mb-2">{{ this.sharedService.T('mechanic') }}</label>
+        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullName" optionValue="employeeId"
+          [showClear]="true" class="w-full"></p-select>
       </div>
-      <div class="col-span-7"></div>
+      <div class="col-span-2">
+        <label class="block mb-2">{{this.sharedService.T('oilType')}}</label>
+        <p-select [options]="oilTypes" formControlName="oilType" class="w-full"></p-select>
+      </div>
+
+      <div class="col-span-2">
+        <label class="block mb-2">{{ this.sharedService.T('oilCapacity') }}</label>
+        <p-inputnumber formControlName="oilCapacity" inputId="minmaxfraction" [minFractionDigits]="1"
+          [maxFractionDigits]="1" suffix=" litre" mode="decimal" [min]="0" [max]="25" class="w-full text-black"
+          [locale]="this.sharedService.currentLocale"></p-inputnumber>
+      </div>
+
+      <div class="col-span-12">
+        <!-- Headers outside picklist -->
+        <div class="grid grid-cols-2 gap-4 mb-2 mt-2">
+          <div class="block mb-2">{{ this.sharedService.T('addServices') }}</div>
+          <div class="flex items-center justify-between">
+            <div class="block mb-2">{{ this.sharedService.T('addedServices') }}</div>
+            <span class="font-bold pr-22">
+              <i class="pi pi-clock" style="font-size: 0.8rem; margin-right: 0.5rem;"></i>
+              {{ this.workOrder.get('serviceDuration')?.value }} {{ this.sharedService.T('hours') }}
+            </span>
+          </div>
+        </div>
+        
+        <p-picklist
+                [source]="products"
+                [target]="selectedProducts"
+                [dragdrop]="true"
+                [responsive]="true"
+                filterBy="productName"
+                sourceFilterPlaceholder="{{ this.sharedService.T('search') }}"
+                showTargetFilter="false"
+                showSourceControls="false"
+                breakpoint="1400px"
+                scrollHeight="20rem"
+                (onMoveToTarget)="onSelectService($event)"
+                (onMoveToSource)="onSelectService($event)"
+                (onMoveAllToTarget)="onSelectService($event)"
+                (onMoveAllToSource)="onSelectService($event)"
+            >
+                <ng-template let-product pTemplate="item">
+                    <div class="flex flex-wrap p-1 items-center gap-4 w-full">
+                        <div class="flex-shrink-0">
+                          <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
+                          <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
+                          <!-- <i *ngIf="!product.isBaseProduct" 
+                              class="pi pi-shopping-bag icon-primary" 
+                              style="color: #2196F3; font-size: 0.9rem;"></i>
+                              <span class="base-icon">V</span>
+                            <i *ngIf="product.isBaseProduct" 
+                              class="pi pi-box icon-primary" 
+                              style="color: #e74c3c; font-size: 0.9rem;"></i> -->
+                        </div>
+                      <div class="flex-1 flex flex-col">
+                            <span class="font-medium text-sm">{{ product.productName }}</span>
+                            <span class="text-surface-500 dark:text-surface-400 text-sm">
+                                {{ product.productDescription }}
+                            </span>
+                        </div>
+                        <span class="font-bold sm:ml-8">
+                            <i class="pi pi-clock" style="font-size: 0.8rem; margin-right: 0.5rem;"></i>
+                            {{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}
+                        </span>
+                    </div>
+                </ng-template>
+            </p-picklist>
+      </div>
+
+
+      <!-- Booking Line -->
+     
+      <!-- <div class="col-span-7"></div> -->
       
       <!-- Add Purchaseorder Line -->
-      <div class="col-span-1">
-        <p-button label="{{ this.sharedService.T('purchaseorder') }}" variant="outlined" icon="pi pi-plus" (click)="op.toggle($event)" />
+      <div class="col-span-2 mt-4">
+        <p-button label="{{ this.sharedService.T('add') }} {{ this.sharedService.T('purchaseorder') }}" variant="outlined" icon="pi pi-plus" (click)="op.toggle($event)" />
         <p-popover #op>
         <div class="flex flex-col gap-4 w-[25rem]">
           <label class="block mb-2">{{ this.sharedService.T('supplier') }}</label>

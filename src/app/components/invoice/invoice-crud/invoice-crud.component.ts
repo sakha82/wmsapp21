@@ -33,6 +33,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AiService } from 'app/services/ai.service';
 import { CustomerService } from 'app/services/customer.service';
 import { TextareaModule } from 'primeng/textarea';
+import { WorkOrderService } from 'app/services/workorder.service';
 
 
 
@@ -110,6 +111,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private aiService: AiService,
     private readonly customerService: CustomerService,
+    private readonly workOrderService: WorkOrderService,
   ) {
     this.invoice = this.fb.group({
       invoiceId: '',
@@ -285,9 +287,12 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   getProducts(detail:any, event: AutoCompleteCompleteEvent) {
     this.isSpinnerLoading = true;
     let category = detail.get('category').value;
-    this.logger.info(category);
     let query = event.query;
-    this.productService.getProductsByprefix(query)
+    const make = this.invoice.get('vehicleManufacturer')?.value;
+    const model = this.invoice.get('vehicleModel')?.value;
+    const year = this.invoice.get('vehicleYear')?.value;
+    
+    this.productService.getProductsByprefix(category,query,make,model,year)
       .pipe(
         finalize(() => { this.isSpinnerLoading = false; }),
         takeUntil(this.destroy$)
@@ -318,7 +323,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
           description: productDescription,
           quantity: quantity,
           unit: unit,
-          unitPrice: unitPrice,
+          unitPrice: (category == 'labour' && unit == 'hour' && !unitPrice) ? Number(sessionStorage.getItem('HourlyRate')) : unitPrice,
           vatPercentage: vatPercentage
         })
         this.updateDetailRow(detail);

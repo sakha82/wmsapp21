@@ -361,7 +361,7 @@ loadLineChart(noOfPreviousMonths:string){
         labels: Array.from({ length: this.topSales.map((m: any) => m.monthYear).length }, (_, i) => (this.months.find(m => m.key === this.topSales[i].monthYear.split('-')[0])?.value ?? '') + ' ' + this.topSales[i].monthYear.split('-')[1]), 
         datasets: [
           {
-            label: 'Arbetskostnad',
+            label: this.sharedService.getEnumByValue('detailCategory', 'labour').text,
             data: this.topSales.map((m: any) => Number(m.workSale)),
             fill: true,
             tension: 0.4,
@@ -375,7 +375,7 @@ loadLineChart(noOfPreviousMonths:string){
             pointBorderWidth: 2,
           },
           {
-            label: 'Reservdelar',
+            label: this.sharedService.getEnumByValue('detailCategory', 'part').text,
             data: this.topSales.map((m: any) => Number(m.partsSale)),
             fill: true,
             tension: 0.4,
@@ -389,7 +389,7 @@ loadLineChart(noOfPreviousMonths:string){
             pointBorderWidth: 2,
           },
           {
-            label: 'Others',
+            label: this.sharedService.getEnumByValue('detailCategory', 'other').text,
             data: this.topSales.map((m: any) => Number(m.otherSale)),
             fill: true,
             tension: 0.4,
@@ -447,8 +447,8 @@ loadLineChart(noOfPreviousMonths:string){
             },
             position: 'top' as const,
             margin: {
-              top: 0,
-              bottom: 50
+              top: 10,
+              bottom: 10
             },
             padding: 20
           },

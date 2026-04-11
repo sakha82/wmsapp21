@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee } from 'app/app.model';
+import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -42,6 +42,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { emailOrTelephoneRequiredValidator } from 'app/validators/validator';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
+import { PickListModule } from 'primeng/picklist';
 
 @Component({
   selector: 'app-order-crud',
@@ -72,7 +73,8 @@ import { DigitalServiceService } from 'app/services/digitalservice.service';
     TagModule,
     MultiSelectModule,
     TextareaModule,
-    TooltipModule
+    TooltipModule,
+    PickListModule
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
@@ -88,8 +90,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   showSpinner: boolean = false;
   showCustomerSpinner:boolean = false;
   duplicateCustomerName: boolean = false; 
-  services: IProduct[] = [];
-  selectedServices: any[] = [];
+  products: IProduct[] = [];
+  selectedProducts: IProduct[] = [];
 
   employees: IEmployee[] = [];
   dayBookings: IDailyCalendar[] = [];
@@ -104,7 +106,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   
   manufacturers: any[] = [];
   suppliers: ISupplier[] = [];
-  products: any[] = [];
+  //products: any[] = [];
   models: any[] = [];
 
   // startCustomerId: number | null = null;
@@ -169,8 +171,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       workOrderDate: null,
       vehiclePlate: [null, Validators.required],
       vehicleMileage: null,
-      vehicleManufacturer: null,
-      vehicleModel: null,
+      vehicleManufacturer: [null,Validators.required],
+      vehicleModel: [null,Validators.required],
       vehicleYear: null,
       paymentType: null,
       workOrderStatus: null,
@@ -215,11 +217,15 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           if (response.data) {
             this.logger.info('WorkOrder Loaded', response.data);
             return this.productService.getProductsByCategory('labour').pipe(
-              tap((response: any) => {
-                this.logger.info(response);
-                this.services = response;
-                this.logger.info('Services Loaded', this.services);
-
+              tap((response: IProduct[]) => {
+                this.products = response;
+                this.products.sort((a, b) => {  
+                  if (a.productName && b.productName) {
+                     return a.productName.localeCompare(b.productName, undefined, { sensitivity: 'base' });
+                  }
+                  return 0;
+                });
+                this.logger.info('workshop products Loaded', this.products);
               }),
               map(() => response)
             );
@@ -237,21 +243,24 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           this.woPurchases = response.data.woPurchases || [];
 
           this.logger.info('WO Purchases', this.woPurchases);
-
+          this.logger.info('WO Services', response.data.woServices);
+          
           response.data.woServices.forEach((s: any) => {
-            const matchingService = this.services.find(service => service.productName === s.serviceName);
-            if (matchingService) {
-              this.selectedServices.push(matchingService);
+            const matchingProduct = this.products.find(product => product.productId === s.productId);
+            if (matchingProduct) {
+              this.selectedProducts.push(matchingProduct);
             }
           });
           
-          // this.startCustomerId = response.data.customerId;
-          // this.startCustomerName = response.data.customerName;
-          // this.startCustomerTelephone = response.data.customerTelephone;
-          // this.startCustomerEmail = response.data.customerEmail;
+          // Remove selected products from source list
+          this.products = this.products.filter(product =>
+            !this.selectedProducts.some(selected => selected.productId === product.productId)
+          );
+          
+          // Calculate and patch serviceDuration
+          this.onSelectService(null);
           
           this.selectedCustomerName = response.data.customerName;
-
           this.isNewObject = response.isNewObject;
           this.workOrder.patchValue(response.data);
           this.logger.info('WORKORDERS-0', response.data);
@@ -269,6 +278,37 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       
       
   }
+  onModelSelect(event: any): void {
+    this.logger.info('Selected Model:', event.value);
+    this.loadLabourTimings();  
+  }
+
+ loadLabourTimings()
+ {
+    const make = this.workOrder.get('vehicleManufacturer')?.value;
+    const model = this.workOrder.get('vehicleModel')?.value;
+    const year = this.workOrder.get('vehicleYear')?.value;
+    
+    this.workOrderService.getServiceHours(make,model,year).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response: IProduct[]) => {
+       this.products = response;
+        this.logger.info('After Service hours retrieved successfully', this.products);
+      },
+      error: (error: any) => {
+        this.logger.error('Error retrieving service hours', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to retrieve service hours',
+          life: 3000
+        });
+      }
+    });
+
+ }
+
 
   loadCustomerTags() {
     this.workshopService
@@ -435,26 +475,29 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       });
   }
 
-  filterProducts(event: any): void {
-    this.productService.getProductsByprefix(event.query.toUpperCase())
-      .pipe(
-        finalize(() => {
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (products: IProduct[]) => {
-          this.products = products.map(product => product.productName);
-        },
-        error: (err) => {
-          this.logger.error('filterProducts error', err);
-        }
-      });
-  }
+  // filterProducts(event: any): void {
+  //   this.productService.getProductsByprefix(event.query.toUpperCase())
+  //     .pipe(
+  //       finalize(() => {
+  //       }),
+  //       takeUntil(this.destroy$)
+  //     )
+  //     .subscribe({
+  //       next: (products: IProduct[]) => {
+  //         this.products = products.map(product => product.productName);
+  //       },
+  //       error: (err) => {
+  //         this.logger.error('filterProducts error', err);
+  //       }
+  //     });
+  // }
 
   filterModels(event: any): void {
     this.models = this.sharedService.getVehicleModels(this.workOrder.get('vehicleManufacturer')?.value, event.query.toUpperCase());
   }
+
+  
+
   onSelectCalendarDate() {
     //this.logger.info(selectedDate.toISOString().split('T')[0]);
     this.getBookings(this.workOrder.get('bookingDate')?.value);
@@ -462,9 +505,11 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
   onSelectService(event: any) {
     let hoursSum = 0;
-    this.selectedServices.forEach(element => {
+    this.selectedProducts.forEach(element => {
       hoursSum += element.quantity;
     });
+    // Round to 1 decimal place
+    hoursSum = Math.round(hoursSum * 10) / 10;
     this.workOrder.patchValue({ serviceDuration: hoursSum });
   }
   saveWOPurchase() {
@@ -492,8 +537,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       this.showSpinner = false;
       return;
     }
-    this.logger.info(this.selectedServices);
-    if(this.selectedServices.length === 0){ 
+    this.logger.info(this.selectedProducts);
+    if(this.selectedProducts.length === 0){ 
      this.workOrder.markAllAsTouched();
      this.showSpinner = false; 
      return;
@@ -513,11 +558,14 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     submittedWorkOrder.woServices = [];
     let i = 1; // Initialize the index to start from 1
-    this.selectedServices.forEach(s => {
+    this.selectedProducts.forEach(s => {
       submittedWorkOrder.woServices.push({
         index: i,
-        serviceName: s.productName,
-        serviceHours: s.quantity
+        productId: s.productId,
+        productName: s.productName,
+        productDescription: s.productDescription,
+        category: s.category,
+        quantity: s.quantity
       });
       i++;
     });

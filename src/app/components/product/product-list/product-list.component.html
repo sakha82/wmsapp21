@@ -1,8 +1,8 @@
-<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+<!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
     <div class="bg-white rounded-lg p-8 shadow-lg">
     <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
     </div>
-</div>
+</div> -->
 
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
@@ -10,7 +10,7 @@
             <div class="flex gap-4 mb-6">
                 <div class="flex gap-3 ">
                     <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large"
-                        icon="pi pi-plus" (onClick)="productCrud(0)"></p-button>
+                        icon="pi pi-plus" (onClick)="getProduct(0)"></p-button>
 
                     <p-select [options]="this.sharedService.getEnums('detailCategory')" formControlName="category"
                         optionLabel="text" optionValue="value" [showClear]="true"
@@ -27,7 +27,7 @@
 
                     <div class="flex items-center">
                         <p-checkbox [(ngModel)]="isInventoryChecked" [binary]="true"
-                            [ngModelOptions]="{standalone: true}" (onChange)="onChangeCurrentWorkshop($event)">
+                            [ngModelOptions]="{standalone: true}" (onChange)="onChangeInventoryChecked($event)">
                         </p-checkbox>
                         <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('stockProducts')}}</label>
                     </div>
@@ -42,10 +42,31 @@
                 </div>
             </div>
             <hr class="border-CustomBorder" />
+            <!-- Legend and Filter together -->
+            <div class="flex gap-8 mt-4 mb-4 justify-between items-center">
+                <div class="flex gap-8">
+                    <div class="flex items-center gap-2">
+                        <span class="text-icon base-icon">B</span>
+                        <span class="text-sm text-gray-700">{{this.sharedService.T('baseProducts')}}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-icon workshop-icon">V</span>
+                        <span class="text-sm text-gray-700">{{this.sharedService.T('workshopProducts')}}</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                    <p-checkbox [(ngModel)]="includeBaseProducts" [binary]="true"
+                        [ngModelOptions]="{standalone: true}" (onChange)="onChangeIncludeBaseProducts($event)">
+                    </p-checkbox>
+                    <label class="text-sm text-gray-700">{{this.sharedService.T('includeBaseProducts')}}</label>
+                </div>
+            </div>
+
         </div>
 
         <div class="mb-10">
             <p-table 
+            #dt
             [value]="products" 
             [showGridlines]="false" 
             [globalFilterFields]="['productName']"
@@ -55,15 +76,23 @@
             [rowsPerPageOptions]="[10, 20,30]"  
             [showCurrentPageReport]="true"
             currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
-            [sortOrder]="-1" 
-            sortField="productId" 
+            [sortOrder]="1" 
+            sortField="productName" 
             data-testid="product-table">
+                <ng-template #caption>
+                    <div class="flex">
+                        <p-iconfield iconPosition="left">
+                            <p-inputicon>
+                                <i class="pi pi-search"></i>
+                            </p-inputicon>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('product') }}" />
+                        </p-iconfield>
+                    </div>
+                </ng-template>
 
                 <ng-template #header>
                     <tr>
-                        <th pSortableColumn="productId">
-                            {{ this.sharedService.T('id') }}
-                            <p-sortIcon field="productId" />
+                        <th>
                         </th>
                         <th>{{ this.sharedService.T('category') }}</th>
                         <th pSortableColumn="productName">
@@ -81,20 +110,6 @@
 
                         </th>
                     </tr>
-                    <tr>
-                    <th></th>
-                    <th></th>
-                    <th>
-                         <p-columnFilter type="text" field="productName" placeholder="{{this.sharedService.T('search') }} {{this.sharedService.T('product') }}" ariaLabel="Filter Name" filterOn="input"></p-columnFilter>
-                    </th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>   
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                  </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-product>
@@ -104,25 +119,31 @@
                     }" style="transition: background-color 0.8s ease;" class="p-selectable-row">
 
                         <td class="rounded-l-lg">
-                            <div class="flex items-center gap-2 cursor-pointer"
-                                (click)="redirectToProductDetail(product.productId)">
-                                <span class="id-text">{{ product.productId }}</span>
-                                <i class="pi pi-external-link icon-primary"></i>
-                            </div>
+                          <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
+                          <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
+
                         </td>
 
                         <td>{{ this.sharedService.getEnumByValue('detailCategory',product.category).text }}</td>
-                        <td>{{ product.productName }}</td>
+                        <td>
+                            <div class="flex items-center gap-2 cursor-pointer"
+                                (click)="redirectToProductDetail(product.productId)">
+                                <span class="id-text">{{ product.productName }}</span>
+                                <i class="pi pi-external-link icon-primary"></i>
+                            </div>
+
+                        </td>
                         <td>{{ product.productDescription }}</td>
                         <td>{{ product.quantity }}</td>
-                        <td>{{ product.unit }}</td>
+                        <td>{{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</td>
                         <td>{{ product.unitPrice }}</td>
                         <td>{{ product.vatPercentage }}</td>
                         <td>{{ product.inHouseQuantity - product.invoiceQuantity}}</td>
                         <td>
-                            <div class="flex gap-2 justify-center">
+                            
+                            <div *ngIf="!product.isBaseProduct" class="flex gap-2 justify-center">
                                 <p-button size="small" icon="pi pi-pencil" severity="secondary"
-                                    [disabled]="product.isActive === 0" (onClick)="productCrud(product.productId)">
+                                    [disabled]="product.isActive === 0" (onClick)="getProduct(product.productId)">
                                 </p-button>
 
                                 <p-button size="small" severity="danger" icon="pi pi-trash" [disabled]="loadingDelete"
@@ -137,7 +158,7 @@
         </div>
     </form>
 
-    <p-dialog [modal]="true" [(visible)]="showInventoryDialog" styleClass="rounded-lg shadow-lg"
+    <!-- <p-dialog [modal]="true" [(visible)]="showInventoryDialog" styleClass="rounded-lg shadow-lg"
         [style]="{ width: '600px' }" (onHide)="onCloseInventoryDialog()">
         <ng-template #header>
             <div class="flex justify-between items-center">
@@ -211,85 +232,82 @@
                 </div>
             </form>
         </div>
-    </p-dialog>
+    </p-dialog> -->
 
     <p-dialog
-        header="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} #{{product.get('productId')?.value}}"
+        header="{{ isNewObject ? this.sharedService.T('newProduct') : this.sharedService.T('updateProduct') }} #{{product.get('productId')?.value}}"
         [(visible)]="showProductDialog" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false"
-        styleClass="w-[95vw]">
+        styleClass="w-[90vw] max-w-2xl">
 
         <form [formGroup]="product">
-            <div class="px-2 text-xs mb-3">
-                @if(successProductLabel != '') {
-                <p-message severity="success"> {{this.successProductLabel}} </p-message>
-                }
-                @else if (failProductLabel != '') {
-                <p-message severity="error"> {{this.failProductLabel}} </p-message>
-                }
-            </div>
+            <div class="space-y-4 bg-white rounded-xl shadow-none pb-8">
 
-            <div class="flex gap-2 mb-2 text-sm font-semibold px-4">
-                <div class="w-[12%]">{{ this.sharedService.T('category') }} <span class="text-red-500">*</span></div>
-                <div class="w-[15%]">{{ this.sharedService.T('produktService') }} <span class="text-red-500">*</span>
-                </div>
-                <div class="w-[15%]">Fritext</div>
-                <div class="w-[10%]">{{ this.sharedService.T('quantity') }}</div>
-                <div class="w-[10%]">{{ this.sharedService.T('unit') }}</div>
-                <div class="w-[12%]">{{ this.sharedService.T('pricewithoutvat') }} <span class="text-red-500">*</span>
-                </div>
-                <div class="w-[12%]">{{ this.sharedService.T('vat') }}</div>
-                <div class="w-[12%]">{{ this.sharedService.T('pricewithvat') }}</div>
-            </div>
-
-            <div class="flex gap-2 p-5  rounded-xl shadow-md border border-gray-100 mb-5">
-
-                <div class="w-[12%]">
+                <div class="w-full">
+                    <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('category') }} </label>
                     <p-select [options]="sharedService.getEnums('detailCategory')" formControlName="category"
-                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"></p-select>
+                        optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
                 </div>
 
-                <div class="w-[15%]">
-                    <input type="text" formControlName="productName" class="w-full p-inputtext bg-white"
-                        [ngClass]="{'border-red-500': getf('productName')?.invalid && getf('productName')?.touched}" />
+                <div class="w-full">
+                    <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('productService') }} </label>
+                    <input type="text" formControlName="productName" class="w-full"
+                    [invalid]="!product.get('productName')?.value"  pInputText />
                 </div>
 
-                <div class="w-[15%]">
-                    <input type="text" formControlName="productDescription" class="w-full p-inputtext bg-white" />
+                <div class="w-full">
+                    <label class="block text-sm font-semibold mb-2">{{this.sharedService.T('freeText')}}</label>
+                    <input type="text" formControlName="productDescription" class="w-full" pInputText />
                 </div>
 
-                <div class="w-[10%]">
-                    <input type="number" formControlName="quantity" min="0" class="w-full p-inputtext bg-white"
-                        (change)="onChangeProductQuantity($event)" />
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('quantity') }}</label>
+                        <p-inputnumber formControlName="quantity" inputId="minmax" mode="decimal"
+                                [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
+                                [locale]="this.sharedService.currentLocale"
+                                [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
+                                ></p-inputnumber>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('unit') }}</label>
+                        <p-select [options]="sharedService.getEnums('productUnit')" formControlName="unit"
+                            optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
+                    </div>
                 </div>
 
-                <div class="w-[10%]">
-                    <p-select [options]="sharedService.getEnums('productUnit')" formControlName="unit"
-                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"></p-select>
-                </div>
-
-                <div class="w-[12%]">
-                    <input type="number" formControlName="unitPrice" class="w-full p-inputtext bg-white"
-                        (input)="onChangeUnitPrice($event)" />
-                </div>
-
-                <div class="w-[12%]">
-                    <p-select [options]="sharedService.getEnums('vatPercentage')" formControlName="vat"
-                        optionLabel="text" optionValue="value" styleClass="w-full bg-white"></p-select>
-                </div>
-
-                <div class="w-[12%]">
-                    <input type="text" formControlName="priceIncVat" class="w-full p-inputtext bg-white" />
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('pricewithoutvat') }} </label>
+                        <p-inputnumber formControlName="unitPrice" inputId="minmax" mode="decimal"
+                                placeholder="0,00" [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
+                                [locale]="this.sharedService.currentLocale" class="'input-error'"
+                                [inputStyle]="{'background-color': 'white', 'width': '100%', 'display': 'block'}"
+                                ></p-inputnumber>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('vat') }}</label>
+                        <p-select [options]="sharedService.getEnums('vatPercentage')" formControlName="vatPercentage"
+                            optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex justify-end items-center gap-3 mt-4">
-                <p-button type="submit" size="large" icon="pi pi-plus"
-                    label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }}"
-                    (click)="onFormSubmit()"></p-button>
-                <p-button size="large"  severity="secondary"
-                    label="{{ this.sharedService.T('cancel') }}" (onClick)="closeProductDialog()"></p-button>
-
+            <div class="flex gap-4 mt-12">
+                <p-button 
+                [raised]="true"
+                label="{{ isNewObject ? this.sharedService.T('createProduct') : this.sharedService.T('updateProduct') }}" 
+                size="large"
+                icon="pi pi-plus"
+                (click)="saveProduct()"></p-button>
+                <p-button 
+                severity="secondary"
+                label="{{ this.sharedService.T('cancel') }}" 
+                size="large" 
+                (click)="closeProductDialog()"></p-button>
             </div>
+
+
+
         </form>
     </p-dialog>
 

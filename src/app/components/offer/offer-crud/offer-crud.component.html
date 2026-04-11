@@ -1,8 +1,8 @@
-<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+<!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
     <div class="bg-white rounded-lg p-8 shadow-lg">
     <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
     </div>
-</div>
+</div> -->
 
 <!-- header start -->
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
@@ -21,7 +21,7 @@
                 <div class="md:col-span-6 mb-2">
                 <label class="block mb-2" for="customerId">{{ this.sharedService.T('customerName') }}</label>
                     <p-iconfield>
-                        <p-inputicon class=" icon-primary pi pi-users" />
+                        <p-inputicon class=" icon-primary pi pi-user" />
                         <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
                             [suggestions]="customers" (completeMethod)="filterCustomer($event)"
                             optionLabel="customerName" (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()"
@@ -214,12 +214,18 @@
                                     (onBlur)="onBlurProduct($event, detail)"
                                     [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
                                     [inputStyleClass]="detail.get('productName')?.value ? 'ng-invalid ng-dirty' : ''">
-                                    <ng-template let-product pTemplate="item">
-                                        <div class="w-full">
-                                            <p class="font-semibold text-sm text-gray-900">{{ product.productName }}</p>
-                                            <p class="text-xs text-gray-500">{{ product.productDescription }}</p>
+                                   <ng-template let-product pTemplate="item">
+                                    <div class="flex gap-3 w-full">
+                                        <div class="flex-shrink-0 pt-1">
+                                            <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
+                                            <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
                                         </div>
-                                    </ng-template>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="font-semibold text-sm truncate">{{ product.productName }}</div>
+                                            <div class="text-xs text-gray-500 truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
+                                       </div>
+                                    </div>
+                                </ng-template>
                                 </p-autoComplete>
                             </div>
                             <div class="w-[15%]">

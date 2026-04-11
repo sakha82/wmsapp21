@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {ISelect, IWorkOrder,IPageList } from 'app/app.model';
+import {ISelect, IWorkOrder,IPageList, IVehicleType, IProduct } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { SharedService} from 'app/services/shared.service';
 import { LogService } from './log.service';
@@ -59,6 +59,16 @@ export class WorkOrderService {
     queryParams.append("wmsId", this.sharedService.wmsId);
     queryParams.append("prefix", prefix);
     return this.http.get<string[]>(`${this.baseUrl}/vehicleplates?${queryParams}`);
+  }
+  
+  getServiceHours(make: string, model: string, year: number = 0) {
+    this.logger.info('Fetching service hours for vehicle type:', { make, model, year });
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("make", make ?? '');
+    queryParams.append("model", model ?? '');
+    queryParams.append("year", (year ?? 0).toString());
+    return this.http.get<IProduct[]>(`${this.baseUrl}/work-hours?${queryParams}`);
   }
 
   

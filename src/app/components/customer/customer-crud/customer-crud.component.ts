@@ -44,6 +44,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
   customerTags: ICustomerTag[] = [];
   countries: IEnum[] = [];
   isNewObject: boolean = true;
+  showFetchCompanySpinner: boolean = false;
   isLoading: boolean = false;
   private destroy$ = new Subject<void>();
   constructor(
@@ -163,12 +164,12 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
   }
   fetchCompanyInfo() {
     const companyId = this.customer.get('organizationNo')?.value;
-    this.isLoading = true;
+    this.showFetchCompanySpinner = true;
     this.sharedService
       .getCompanyInfo(companyId)
       .pipe(
         finalize(() => {
-          this.isLoading = false;
+          this.showFetchCompanySpinner = false;
         }),
         takeUntil(this.destroy$)
       )

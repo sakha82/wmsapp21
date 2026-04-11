@@ -1,0 +1,6274 @@
+[
+    {
+        "make": "VOLVO",
+        "model": "240",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "740",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "940",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "850",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "S40",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "V40",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "S60",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "V60",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "S80",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "V70",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "XC60",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "XC70",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "XC40",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "XC90",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "S90",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "V90",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "C30",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "C70",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "EX30",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "EX90",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "SAAB",
+        "model": "900",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SAAB",
+        "model": "9000",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SAAB",
+        "model": "9-3",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SAAB",
+        "model": "9-5",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SAAB",
+        "model": "9-4X",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "145",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "146",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "147",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "155",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "156",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "159",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "164",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "166",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "GT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "GTV",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "Spider",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "Brera",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "Giulietta",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "MiTo",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "Giulia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "Stelvio",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "Tonale",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ALFA ROMEO",
+        "model": "4C",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "DB7",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "DB9",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "DB11",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "Vantage",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "Vanquish",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "Virage",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "Rapide",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "DB12",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "Valkyrie",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ASTON MARTIN",
+        "model": "Cygnet",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A1",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A2",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A3",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A4",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A5",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A6",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A7",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "A8",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "Q2",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "Q3",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "Q5",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "Q7",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "Q8",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "TT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "R8",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "e-tron",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "Q4 e-tron",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "AUDI",
+        "model": "e-tron GT",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Continental GT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Continental Flying Spur",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Flying Spur",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Bentayga",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Mulsanne",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Arnage",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Brooklands",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BENTLEY",
+        "model": "Azure",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "1 Series",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "2 Series",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "3 Series",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "4 Series",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "5 Series",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "6 Series",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "7 Series",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "8 Series",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X1",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X2",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X3",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X4",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X5",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X6",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "X7",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "Z3",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "Z4",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "Z8",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "i3",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "i4",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "i5",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "i7",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "iX",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "iX3",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BUGATTI",
+        "model": "EB110",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BUGATTI",
+        "model": "Veyron",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BUGATTI",
+        "model": "Chiron",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BUGATTI",
+        "model": "Divo",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BUGATTI",
+        "model": "Centodieci",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BUGATTI",
+        "model": "Mistral",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CADILLAC",
+        "model": "BLS",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CADILLAC",
+        "model": "CTS",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CADILLAC",
+        "model": "ATS",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CADILLAC",
+        "model": "SRX",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CADILLAC",
+        "model": "XTS",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CADILLAC",
+        "model": "Escalade",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Spark",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Matiz",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Aveo",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Kalos",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Lacetti",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Nubira",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Cruze",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Epica",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Orlando",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Captiva",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Trax",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Camaro",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CHEVROLET",
+        "model": "Corvette",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "300C",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "PT Cruiser",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "Sebring",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "Crossfire",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "Voyager",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "Grand Voyager",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "CHRYSLER",
+        "model": "Ypsilon (rebadge in EU)",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "AX",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "Saxo",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "ZX",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "Xantia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "XM",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "Xsara",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C1",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C2",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C3",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C3 Aircross",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C4",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C4 Cactus",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C4 X",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C5",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C5 X",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C6",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C8",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "Berlingo",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C-Crosser",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C-Elysee",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CUPRA",
+        "model": "Ateca",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CUPRA",
+        "model": "Leon",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CUPRA",
+        "model": "Formentor",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CUPRA",
+        "model": "Born",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Logan",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Sandero",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Duster",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Lodgy",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Dokker",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Jogger",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DACIA",
+        "model": "Spring",
+        "category": "el",
+        "segment": "mini",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "Charade",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "Sirion",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "Cuore",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "YRV",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "Materia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "Trevis",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DAIHATSU",
+        "model": "Terios",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DS AUTOMOBILES",
+        "model": "DS3",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DS AUTOMOBILES",
+        "model": "DS4",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DS AUTOMOBILES",
+        "model": "DS5",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DS AUTOMOBILES",
+        "model": "DS7 Crossback",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "DS AUTOMOBILES",
+        "model": "DS9",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FERRARI",
+        "model": "348",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "355",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "360",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "F430",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "458 Italia",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "488",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "F8 Tributo",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "296 GTB",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "SF90 Stradale",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "Roma",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "Portofino",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "812 Superfast",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "812 GTS",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FERRARI",
+        "model": "LaFerrari",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "570S",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "600LT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "650S",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "675LT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "720S",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "765LT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "Artura",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "Elva",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "GT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "P1",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "Senna",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "Speedtail",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "A-Class",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "AMG GT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "B-Class",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "C-Class",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "CLA",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "CLS",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "E-Class",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQA",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQB",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQC",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQE SUV",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQS",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "EQS SUV",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "G-Class",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "GLA",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "GLB",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "GLC",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "GLE",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "GLS",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "R-Class",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "S-Class",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "SL",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "SLC",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "SLK",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "SLS AMG",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "Vaneo",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 1
+    },
+    {
+        "make": "MG",
+        "model": "F",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "HS",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "Marvel R",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "MG3",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "MG4",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "MG5",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "RV8",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "TF",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "ZR",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "ZS",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MG",
+        "model": "ZT",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Clubman",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Convertible",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Countryman",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Coupe",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Hatch",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Paceman",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MINI",
+        "model": "Roadster",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "ASX",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Carisma",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Colt",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Eclipse Cross",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Galant",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "i-MiEV",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Lancer",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Outlander",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Pajero",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Space Star",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "EC6",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "EL7",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "ES6",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "ES8",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "ET5",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "ET7",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "350Z",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "370Z",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Almera",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "GT-R",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Juke",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Leaf",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Micra",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Murano",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Note",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Pathfinder",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Primera",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Pulsar",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Qashqai",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Terrano II",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "X-Trail",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Adam",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Ampera",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Antara",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Astra",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Calibra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Combo Life",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Corsa",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Crossland",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Frontera",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Grandland",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Insignia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Karl",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Meriva",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Mokka",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Omega",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Signum",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Tigra",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Vectra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Zafira",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ORA",
+        "model": "Funky Cat (03)",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "106",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "107",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "108",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "2008",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "205 (early 90s)",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "206",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "207",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "208",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "3008",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "306",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "307",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "308",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "4007",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "4008",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "405",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "406",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "407",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "5008",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "508",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "605",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "607",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "Partner Tepee",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "RCZ",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "POLESTAR",
+        "model": "1",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "POLESTAR",
+        "model": "2",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "911",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "Boxster",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "Cayenne",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "Cayman",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "Macan",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "Panamera",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "PORSCHE",
+        "model": "Taycan",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "RENAULT",
+        "model": "Arkana",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Austral",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Captur",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Clio",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Espace",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Fluence",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Kadjar",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Koleos",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Laguna",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Megane",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Modus",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Safrane",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Scenic",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Talisman",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Twingo",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Twizy",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "RENAULT",
+        "model": "Vel Satis",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Zoe",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "ROLLS-ROYCE",
+        "model": "Cullinan",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ROLLS-ROYCE",
+        "model": "Dawn",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ROLLS-ROYCE",
+        "model": "Ghost",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ROLLS-ROYCE",
+        "model": "Phantom",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ROLLS-ROYCE",
+        "model": "Silver Seraph",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ROLLS-ROYCE",
+        "model": "Wraith",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "ROVER",
+        "model": "100",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "200",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "25",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "400",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "45",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "600",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "75",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "CityRover",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "ROVER",
+        "model": "Streetwise",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Alhambra",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Altea",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Arona",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Ateca",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Cordoba",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Exeo",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Ibiza",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Leon",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Mii",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Tarraco",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Toledo",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Enyaq",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Fabia",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Favorit (early 90s)",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Felicia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Kamiq",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Karoq",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Kodiaq",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Octavia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Rapid",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Roomster",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Superb",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Yeti",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "AIWAYS",
+        "model": "U5",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "AIWAYS",
+        "model": "U6",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "BYD",
+        "model": "Atto 3",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "BYD",
+        "model": "Dolphin",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "BYD",
+        "model": "Han",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "BYD",
+        "model": "Seal",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "BYD",
+        "model": "Tang",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "500",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "500L",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "500X",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Barchetta",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Brava",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Bravo",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Coupe",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Croma",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Freemont",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Grande Punto",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Idea",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Multipla",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Panda",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Punto",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Sedici",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Seicento",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Stilo",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Tempra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Tipo",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Ulysse",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Uno",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "B-MAX",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "C-MAX",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Cougar",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "EcoSport",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Edge",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Escort",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Fiesta",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Focus",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Fusion",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Galaxy",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Ka",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Kuga",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Mondeo",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Mustang",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "FORD",
+        "model": "Probe",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Puma",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "S-MAX",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Sierra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "GENESIS",
+        "model": "Electrified G80",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "GENESIS",
+        "model": "G70",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "GENESIS",
+        "model": "G80",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "GENESIS",
+        "model": "GV60",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "GENESIS",
+        "model": "GV70",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "GENESIS",
+        "model": "GV80",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "HONDA",
+        "model": "Accord",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "Civic",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "CR-V",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "e",
+        "category": "el",
+        "segment": "mini",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "FR-V",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "HR-V",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "Insight",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "Jazz",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "Legend",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "NSX",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "HONDA",
+        "model": "Prelude",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "HONDA",
+        "model": "S2000",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Accent",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Bayon",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Coupe",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Elantra",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Getz",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "I10",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "I20",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "I30",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "I40",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Ioniq",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Ioniq 5",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Ioniq 6",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Kona",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Nexo",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Santa Fe",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Sonata",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Terracan",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Tucson",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Veloster",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "INFINITI",
+        "model": "EX",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "FX",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "G",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "M",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "Q30",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "Q50",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "Q70",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "QX30",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "QX50",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "INFINITI",
+        "model": "QX70",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "E-Pace",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "F-Pace",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "F-Type",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "I-Pace",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "S-Type",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "X-Type",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "XE",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "XF",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "XJ",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JAGUAR",
+        "model": "XK",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "JEEP",
+        "model": "Cherokee",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "JEEP",
+        "model": "Commander",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "JEEP",
+        "model": "Compass",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "JEEP",
+        "model": "Grand Cherokee",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "JEEP",
+        "model": "Renegade",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "JEEP",
+        "model": "Wrangler",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Carens",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Ceed",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "EV6",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "EV9",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Niro",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Optima",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Picanto",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "ProCeed",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Rio",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Sorento",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Soul",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Sportage",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Stinger",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Stonic",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "XCeed",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "110",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "111",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "112",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "Granta",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "Kalina",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "Niva",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "Priora",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "Samara",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "Vesta",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LADA",
+        "model": "XRAY",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Aventador",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Diablo",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Gallardo",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Huracan",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Murcielago",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Sian",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAMBORGHINI",
+        "model": "Urus",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LANCIA",
+        "model": "Dedra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Delta",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Flavia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Kappa",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Lybra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Musa",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Phedra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Thema",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Thesis",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Y",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Ypsilon",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LANCIA",
+        "model": "Zeta",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Defender",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Discovery",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Discovery Sport",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Freelander",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Range Rover",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Range Rover Evoque",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Range Rover Sport",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LAND ROVER",
+        "model": "Range Rover Velar",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "CT",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "ES",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "GS",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "IS",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "LC",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "LS",
+        "category": "sedan",
+        "segment": "luxury",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "NX",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "RC",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "RX",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "UX",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LOTUS",
+        "model": "Eletre",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "LOTUS",
+        "model": "Elise",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LOTUS",
+        "model": "Emira",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LOTUS",
+        "model": "Evora",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LOTUS",
+        "model": "Exige",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LYNK & CO",
+        "model": "01",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "MASERATI",
+        "model": "3200 GT",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "Coupe",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "Ghibli",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "GranCabrio",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "GranTurismo",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "Grecale",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "Levante",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "MC20",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "Quattroporte",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MASERATI",
+        "model": "Spyder",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MAZDA",
+        "model": "2",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "3",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "5",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "6",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "CX-3",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "CX-30",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "CX-5",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "CX-60",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "CX-7",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "MX-30",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "MX-5",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "RX-7",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MAZDA",
+        "model": "RX-8",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MCLAREN",
+        "model": "12C",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MCLAREN",
+        "model": "540C",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "SMART",
+        "model": "City-Coupe (Fortwo)",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SMART",
+        "model": "Forfour",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SMART",
+        "model": "Fortwo",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SMART",
+        "model": "Roadster",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Actyon",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Korando",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Kyron",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Musso",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Rexton",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Rodius",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Tivoli",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SSANGYONG",
+        "model": "Torres",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "BRZ",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Crosstrek",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Forester",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Impreza",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Justy",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Legacy",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Levorg",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Outback",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "SVX",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Tribeca",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "XV",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Alto",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Baleno",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Celerio",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Grand Vitara",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Ignis",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Jimny",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Kizashi",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Liana",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Splash",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Swift",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "SX4",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "SX4 S-Cross",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Vitara",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TESLA",
+        "model": "Model 3",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "TESLA",
+        "model": "Model S",
+        "category": "el",
+        "segment": "luxury",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "TESLA",
+        "model": "Model X",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "TESLA",
+        "model": "Model Y",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "TESLA",
+        "model": "Roadster (2008)",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Auris",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Avensis",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Aygo",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "C-HR",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Camry",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Celica",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Corolla",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "GR86",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "TOYOTA",
+        "model": "GT86",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Highlander",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "iQ",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Land Cruiser",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "MR2",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Prius",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "ProAce (MPV)",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "RAV4",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Supra",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Urban Cruiser",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Verso",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Verso-S",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Yaris",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Adam",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Ampera",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Astra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Calibra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Corsa",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Crossland",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Grandland",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Insignia",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Meriva",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Mokka",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Omega",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Signum",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Tigra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Vectra",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Viva",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VAUXHALL",
+        "model": "Zafira",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Arteon",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Beetle",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Bora",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Caddy",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Corrado",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Eos",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Fox",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Golf",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "ID.3",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "ID.4",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "ID.5",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "ID.7",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Jetta",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Lupo",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "New Beetle",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Passat",
+        "category": "sedan",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Phaeton",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Polo",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Scirocco",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Sharan",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "T-Cross",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "T-Roc",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Tiguan",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Touareg",
+        "category": "suv",
+        "segment": "full_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Touran",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Transporter",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "up!",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Vento",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "WEY",
+        "model": "Coffee 01",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "WEY",
+        "model": "Coffee 02",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "XPENG",
+        "model": "G9",
+        "category": "el",
+        "segment": "full_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "XPENG",
+        "model": "P7",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "Ford",
+        "model": "Transit",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Crafter",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "IVECO",
+        "model": "Daily (VI)",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "960",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "S70",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "V50",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "C40",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLVO",
+        "model": "EC40",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "AUDI",
+        "model": "Q6 e-tron",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "2 Active Tourer",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "2 Gran Tourer",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BMW",
+        "model": "XM",
+        "category": "suv",
+        "segment": "luxury",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "BYD",
+        "model": "Seal U",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C3 Picasso",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C4 Picasso",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "Grand C4 Picasso",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "C5 Aircross",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "Jumpy",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "CITROEN",
+        "model": "SpaceTourer",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "CUPRA",
+        "model": "Tavascan",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "FIAT",
+        "model": "Doblo",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Mustang Mach-E",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Transit Connect",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Transit Custom",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Tourneo Connect",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Tourneo Custom",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "FORD",
+        "model": "Explorer",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "ZR-V",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HONDA",
+        "model": "e:Ny1",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "ix20",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "ix35",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "HYUNDAI",
+        "model": "Inster",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "EV3",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "KIA",
+        "model": "Venga",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "LEXUS",
+        "model": "LBX",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 1
+    },
+    {
+        "make": "LEXUS",
+        "model": "RZ",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "LYNK & CO",
+        "model": "02",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "CLC",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "Citan",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "T-Class",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 1
+    },
+    {
+        "make": "MERCEDES-BENZ",
+        "model": "V-Class",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 1
+    },
+    {
+        "make": "MG",
+        "model": "Cyberster",
+        "category": "premium",
+        "segment": "luxury",
+        "fuelType": "petrol",
+        "isPremium": 1
+    },
+    {
+        "make": "MG",
+        "model": "ZS EV",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Grandis",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Space Runner",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "MITSUBISHI",
+        "model": "Space Wagon",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "NIO",
+        "model": "EL6",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "Ariya",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "NISSAN",
+        "model": "e-NV200",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Ampera-e",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Cascada",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Combo",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "OPEL",
+        "model": "Zafira Tourer",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "408",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "ProAce City",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "Rifter",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "PEUGEOT",
+        "model": "Traveller",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "POLESTAR",
+        "model": "3",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "POLESTAR",
+        "model": "4",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 1
+    },
+    {
+        "make": "RENAULT",
+        "model": "Kangoo",
+        "category": "transporter",
+        "segment": "compact",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Megane E-Tech",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "RENAULT",
+        "model": "Scenic E-Tech",
+        "category": "el",
+        "segment": "compact",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "SEAT",
+        "model": "Mii Electric",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Citigo",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SKODA",
+        "model": "Scala",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "SUBARU",
+        "model": "Solterra",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Across",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "SUZUKI",
+        "model": "Swace",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Aygo X",
+        "category": "small",
+        "segment": "mini",
+        "fuelType": "petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "bZ4X",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Corolla Cross",
+        "category": "suv",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Prius+",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "ProAce City",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "ProAce Verso",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "TOYOTA",
+        "model": "Yaris Cross",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "hybrid",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Amarok",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Caravelle",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "CC",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Golf Plus",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Golf Sportsvan",
+        "category": "small",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "ID.Buzz",
+        "category": "el",
+        "segment": "mid_size",
+        "fuelType": "electric",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Multivan",
+        "category": "transporter",
+        "segment": "full_size",
+        "fuelType": "diesel",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Passat CC",
+        "category": "sedan",
+        "segment": "mid_size",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    },
+    {
+        "make": "VOLKSWAGEN",
+        "model": "Taigo",
+        "category": "suv",
+        "segment": "compact",
+        "fuelType": "diesel_petrol",
+        "isPremium": 0
+    }
+]
