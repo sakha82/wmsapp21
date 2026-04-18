@@ -504,7 +504,7 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.logger.error(err);
-          this.messageService.add({ severity: 'error', detail: 'Update failed' });
+          this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), detail: this.sharedService.T('errormessage') });
         }
       });
   }

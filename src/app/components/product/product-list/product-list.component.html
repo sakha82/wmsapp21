@@ -7,8 +7,8 @@
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
         <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
-            <div class="flex gap-4 mb-6">
-                <div class="flex gap-3 ">
+            <div class="flex gap-4 mb-6 justify-between items-center">
+                <div class="flex gap-3">
                     <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large"
                         icon="pi pi-plus" (onClick)="getProduct(0)"></p-button>
 
@@ -18,19 +18,12 @@
                         (onChange)="onChangeCategory($event)" (onClear)="onClearCategory()">
                     </p-select>
 
-                    <div class="flex items-center">
-                        <p-checkbox [(ngModel)]="hideDeletedProducts" [binary]="true"
-                            [ngModelOptions]="{standalone: true}" (onChange)="HideDeletedProducts($event)">
-                        </p-checkbox>
-                        <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('hideDeletedProducts')}}</label>
-                    </div>
-
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                         <p-checkbox [(ngModel)]="isInventoryChecked" [binary]="true"
                             [ngModelOptions]="{standalone: true}" (onChange)="onChangeInventoryChecked($event)">
                         </p-checkbox>
                         <label class="ml-2 whitespace-nowrap">{{this.sharedService.T('stockProducts')}}</label>
-                    </div>
+                    </div> -->
                     <div class="flex items-center">
                         <p-checkbox [(ngModel)]="isSelingProductChecked" [binary]="true"
                             [ngModelOptions]="{standalone: true}" (onChange)="onChangeSellingProduct($event)">
@@ -39,6 +32,12 @@
                             class="ml-2 whitespace-nowrap">{{this.sharedService.T('productsWithSalesHistory')}}</label>
                     </div>
 
+                </div>
+                <div class="flex items-center gap-2 whitespace-nowrap pr-12">
+                    <p-checkbox [(ngModel)]="hideDeletedProducts" [binary]="true"
+                        [ngModelOptions]="{standalone: true}" (onChange)="HideDeletedProducts($event)">
+                    </p-checkbox>
+                    <label class="text-sm text-gray-700">{{this.sharedService.T('hideDeletedProducts')}}</label>
                 </div>
             </div>
             <hr class="border-CustomBorder" />
@@ -80,13 +79,14 @@
             sortField="productName" 
             data-testid="product-table">
                 <ng-template #caption>
-                    <div class="flex">
+                    <div class="flex items-center justify-between gap-3 w-full">
                         <p-iconfield iconPosition="left">
                             <p-inputicon>
                                 <i class="pi pi-search"></i>
                             </p-inputicon>
                             <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('product') }}" />
                         </p-iconfield>
+                        <span class="text-right">{{ this.sharedService.T('rollingOneYearNote') }}</span>
                     </div>
                 </ng-template>
 
@@ -105,7 +105,8 @@
                         <th>{{ this.sharedService.T('unit') }}</th>
                         <th>{{ this.sharedService.T('pricewithoutvat') }}</th>
                         <th>{{ this.sharedService.T('vat')}}%</th>
-                        <th>{{ this.sharedService.T('remainingQuantity') }}</th>
+                        <th>{{ '*' + this.sharedService.T('itemsSold') }}</th>
+                        <th>{{ '*' + this.sharedService.T('totalRevenue') }}</th>
                         <th class="table-header-cell rounded-r-xl">{{ this.sharedService.T('actions') }}
 
                         </th>
@@ -138,7 +139,8 @@
                         <td>{{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</td>
                         <td>{{ product.unitPrice }}</td>
                         <td>{{ product.vatPercentage }}</td>
-                        <td>{{ product.inHouseQuantity - product.invoiceQuantity}}</td>
+                        <td>{{ product.invoiceQuantity }}</td>
+                        <td>{{ product.invoiceSum }}</td>
                         <td>
                             
                             <div *ngIf="!product.isBaseProduct" class="flex gap-2 justify-center">
@@ -248,10 +250,12 @@
                         optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
                 </div>
 
+                
                 <div class="w-full">
                     <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('productService') }} </label>
-                    <input type="text" formControlName="productName" class="w-full"
-                    [invalid]="!product.get('productName')?.value"  pInputText />
+                    <input type="text" formControlName="productName" class="w-full" 
+                        [disabled]="!isNewObject" [readonly]="!isNewObject"
+                        [invalid]="!product.get('productName')?.value"  pInputText />
                 </div>
 
                 <div class="w-full">

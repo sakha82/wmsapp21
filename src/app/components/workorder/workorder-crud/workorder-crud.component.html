@@ -18,6 +18,7 @@
 
 <form [formGroup]="workOrder">
   <p-toast />
+  <p-confirmDialog></p-confirmDialog>
 <!-- <p class="mt-1 font-semibold text-lg">Grundinformation</p> -->
   <div class="mt-5 mb-10 p-8 gap-3 rounded-lg shadow-lg bg-white">
     <div class="grid grid-cols-12 gap-5">
@@ -47,7 +48,7 @@
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
         <p-autoComplete formControlName="vehicleModel" [suggestions]="models" (completeMethod)="filterModels($event)"
-          forceSelection="true" [showClear]="true" (onSelect)="onModelSelect($event)" class="w-full"
+          forceSelection="true" [showClear]="true" class="w-full"
           [invalid]="!this.workOrder.get('vehicleModel')?.value"></p-autoComplete>
       </div>
 
@@ -56,7 +57,7 @@
         <!-- Vehicle Year -->
         <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }}</label>
         <p-inputnumber formControlName="vehicleYear" placeholder="2015" mode="decimal" [min]="1960" [max]="2040"
-          [useGrouping]="false" (onBlur)="loadLabourTimings()"></p-inputnumber>
+          [useGrouping]="false" ></p-inputnumber>
       </div>
 
       <!-- Vehicle Mileage -->
@@ -256,60 +257,95 @@
       </div>
 
       <div class="col-span-12">
-        <!-- Headers outside picklist -->
-        <div class="grid grid-cols-2 gap-4 mb-2 mt-2">
-          <div class="block mb-2">{{ this.sharedService.T('addServices') }}</div>
-          <div class="flex items-center justify-between">
-            <div class="block mb-2">{{ this.sharedService.T('addedServices') }}</div>
-            <span class="font-bold pr-22">
-              <i class="pi pi-clock" style="font-size: 0.8rem; margin-right: 0.5rem;"></i>
-              {{ this.workOrder.get('serviceDuration')?.value }} {{ this.sharedService.T('hours') }}
-            </span>
-          </div>
+        <!-- Service Actions Header -->
+        <div class="flex items-center gap-3 mb-4 mt-2">
+          <p-button label="{{ this.sharedService.T('add') }} {{ this.sharedService.T('services') }}" variant="outlined" icon="pi pi-plus" (onClick)="servicesPopover.toggle($event);resetServiceProduct()"  />
+          <span class="text-sm font-medium">{{ this.sharedService.T('addedServices') }}</span>
+          <span class="flex items-center gap-1 font-semibold text-sm">
+            <i class="pi pi-clock" style="font-size: 0.75rem;"></i>
+            {{ this.workOrder.get('serviceDuration')?.value || 0 }} {{ this.sharedService.T('hours') }}
+          </span>
         </div>
         
-        <p-picklist
-                [source]="products"
-                [target]="selectedProducts"
-                [dragdrop]="true"
-                [responsive]="true"
-                filterBy="productName"
-                sourceFilterPlaceholder="{{ this.sharedService.T('search') }}"
-                showTargetFilter="false"
-                showSourceControls="false"
-                breakpoint="1400px"
-                scrollHeight="20rem"
-                (onMoveToTarget)="onSelectService($event)"
-                (onMoveToSource)="onSelectService($event)"
-                (onMoveAllToTarget)="onSelectService($event)"
-                (onMoveAllToSource)="onSelectService($event)"
-            >
-                <ng-template let-product pTemplate="item">
-                    <div class="flex flex-wrap p-1 items-center gap-4 w-full">
-                        <div class="flex-shrink-0">
-                          <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
-                          <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
-                          <!-- <i *ngIf="!product.isBaseProduct" 
-                              class="pi pi-shopping-bag icon-primary" 
-                              style="color: #2196F3; font-size: 0.9rem;"></i>
-                              <span class="base-icon">V</span>
-                            <i *ngIf="product.isBaseProduct" 
-                              class="pi pi-box icon-primary" 
-                              style="color: #e74c3c; font-size: 0.9rem;"></i> -->
+        
+        <p-popover #servicesPopover>
+          <form [formGroup]="selectedProduct">
+            <!-- Labels Row -->
+            <div class="flex gap-2 mb-2 text-sm font-semibold">
+              <div class="w-[40%]">{{ this.sharedService.T('service') }}</div>
+              <div class="w-[32%]">{{ this.sharedService.T('freeText') }}</div>
+              <div class="w-[14%]">{{ this.sharedService.T('quantity') }}({{ this.sharedService.T('hours') }})</div>
+              <div class="flex-shrink-0"></div>
+            </div>
+            
+            <!-- Input Row -->
+            <div class="flex gap-2 items-end">
+              <div class="w-[40%]">
+                <p-autoComplete 
+                    class="white_bg_input" 
+                    #prodAutoComplete
+                    formControlName="productName"
+                    placeholder="Väjl en produkt" 
+                    [maxlength]="38" 
+                    [suggestions]="products"
+                    (completeMethod)="getProducts($event)" 
+                    (onSelect)="onSelectProduct($event)"
+                    optionLabel="productName" 
+                    [showClear]="false"
+                    [forceSelection]="false" 
+                    [showEmptyMessage]="false"
+                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
+                    >
+                    <ng-template let-product pTemplate="item">
+                        <div class="flex gap-3 w-full">
+                            <div class="flex-shrink-0 pt-1">
+                                <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
+                                <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-sm truncate">{{ product.productName }}</div>
+                                <div class="text-xs text-gray-500 truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
+                           </div>
                         </div>
-                      <div class="flex-1 flex flex-col">
-                            <span class="font-medium text-sm">{{ product.productName }}</span>
-                            <span class="text-surface-500 dark:text-surface-400 text-sm">
-                                {{ product.productDescription }}
-                            </span>
-                        </div>
-                        <span class="font-bold sm:ml-8">
-                            <i class="pi pi-clock" style="font-size: 0.8rem; margin-right: 0.5rem;"></i>
-                            {{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}
-                        </span>
-                    </div>
-                </ng-template>
-            </p-picklist>
+                    </ng-template>
+                </p-autoComplete>
+              </div>
+
+              <div class="w-[32%]">
+                <input formControlName="productDescription" placeholder="Extra information" type="text"
+                      style="width: 100%; background-color: white;" pInputText />
+              </div>
+
+              <div class="w-[14%]">
+                <p-inputnumber 
+                  formControlName="quantity" 
+                  [min]="0" 
+                  mode="decimal" 
+                  [useGrouping]="false" [locale]="this.sharedService.currentLocale"
+                  [minFractionDigits]="1" [maxFractionDigits]="2" placeholder="0.00" class="w-full"></p-inputnumber>
+              </div>
+
+              <div class="flex-shrink-0">
+                <p-button label="{{ this.sharedService.T('add') }}" icon="pi pi-plus" [disabled]="!selectedProduct.get('productName')?.value" (click)="saveProduct();servicesPopover.hide();"></p-button>
+              </div>
+            </div>
+          </form>
+        </p-popover>
+      </div>
+
+      <!-- Show Services Line -->
+      <div class="col-span-12">
+        <div class="flex flex-wrap gap-4 p-0 m-0 w-full">
+          <div *ngFor="let service of selectedProducts; let i = index"
+            class="flex items-center bg-white text-gray-800 px-4 py-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+            <div class="flex flex-col p-0 m-0">
+              <span class="text-sm text-gray-500">{{ service.productDescription }}</span>
+              <span class="font-semibold text-base">{{ service.productName }}</span>
+              <span class="text-sm text-gray-500">{{ service.quantity || 0 }} {{ this.sharedService.T('hours') }}</span>
+            </div>
+            <button pButton type="button" icon="pi pi-times" class="ml-2 p-button-rounded p-button-danger p-button-text" (click)="removeWOService(i)" [disabled]="showSpinner"></button>
+          </div>
+        </div>
       </div>
 
 

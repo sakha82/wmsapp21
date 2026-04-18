@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 import { WmsUser } from 'app/app.model';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { environment } from 'environments/environment';
 import { finalize, takeUntil, Subject } from "rxjs";
 import { ButtonModule } from 'primeng/button';
@@ -33,8 +33,7 @@ interface FaqItem {
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,
-    ToastModule,
-    MessageModule
+    ToastModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -143,6 +142,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    
+      
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Message Content' });
+
+    const authMessage = 'Error Occcc'; //sessionStorage.getItem('authErrorMessage');
+
+    if (authMessage) {
+      // Show PrimeNG toast/message
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Fel',
+        detail: 'EREERE'
+      });
+      
+      sessionStorage.removeItem('authErrorMessage');
+    }
+    
+    
     this.loginForm = this.formBuilder.group({
       "email": ['', [Validators.required, Validators.email]],
       "password": ['', [Validators.required, Validators.minLength(6)]]

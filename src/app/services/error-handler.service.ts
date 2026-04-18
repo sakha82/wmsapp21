@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { LogService } from './log.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorHandlerService {
   
-  constructor(private readonly logger: LogService) {}
+  constructor(private readonly logger: LogService, private readonly sharedService: SharedService) {}
 
   /**
    * Handle errors from subscriptions with dev/prod differentiation
@@ -22,7 +23,7 @@ export class ErrorHandlerService {
   handleError(
     error: any,
     methodName: string,
-    userMessage: string = 'Something went wrong. Please try again later.',
+    userMessage: string = this.sharedService.T('genericErrorContactSupport'),
     context?: any
   ): void {
     const logMessage = `[${methodName}] ${userMessage}`;
@@ -55,7 +56,7 @@ export class ErrorHandlerService {
    */
   getUserMessage(
     error: any,
-    defaultMessage: string = 'Something went wrong. Please try again later.'
+    defaultMessage: string = this.sharedService.T('genericErrorContactSupport'),
   ): string {
     if (environment.production) {
       return defaultMessage;
@@ -73,7 +74,7 @@ export class ErrorHandlerService {
   handleErrorWithMessage(
     error: any,
     methodName: string,
-    userMessage: string = 'Something went wrong. Please try again later.',
+    userMessage: string = this.sharedService.T('genericErrorContactSupport'),
     context?: any
   ): string {
     this.handleError(error, methodName, userMessage, context);

@@ -538,7 +538,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     if (this.offer.invalid) {
       this.offer.markAllAsTouched();
       this.errorOnCustomer = true;
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill required fields', life: 3000 });
       this.isLoading = false;
       return;
     }
@@ -560,7 +559,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
 
     if (invalidDetails.length > 0) {
       this.offer.markAllAsTouched();
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please check product rows — missing product or unit price', life: 3500 });
+      this.messageService.add({ severity: 'error', detail: 'Please check product rows — missing product or unit price', life: 3500 });
       this.isLoading = false;
       return;
     }

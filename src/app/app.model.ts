@@ -404,10 +404,16 @@ export interface IProduct {
   vat: number;
   isBaseProduct: boolean;
   priceIncVat: number;
+  invoiceQuantity:number;
+  invoiceSum:number;
   inHouseQuantity:number;
-  inventoryQuantity:number;
 }
-
+export interface IProductChart{
+ monthName:string;
+ totalQuantity:number;
+ totalPrice:number; 
+ 
+}
 export interface IInventory {
   wmsId: string;
   productId: number;

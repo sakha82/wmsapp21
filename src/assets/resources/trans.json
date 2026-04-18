@@ -996,8 +996,8 @@
     },
     {
         "tkey": "products",
-        "en": "Products",
-        "sv": "Produkter"
+        "en": "Products\/Services",
+        "sv": "Produkter\/Tjänster"
     },
     {
         "tkey": "productService",
@@ -1950,6 +1950,41 @@
         "sv": "Verkstadens timpris"
     },
     {
+        "tkey": "itemsSoldByMonth",
+        "en": "Items Sold per Month",
+        "sv": "Sålda artiklar per månad"
+    },
+    {
+        "tkey": "contactRequired",
+        "en": "Either telephone or email is required",
+        "sv": "Antingen telefon eller e-post krävs"
+    },
+    {
+        "tkey": "invalidEmail",
+        "en": "Invalid email address",
+        "sv": "Ogiltig e-postadress"
+    },
+    {
+        "tkey": "duplicateCustomerName",
+        "en": "Customer name already exists",
+        "sv": "Kundnamnet finns redan"
+    },
+    {
+        "tkey": "invalidDigitalWorkshopId",
+        "en": "Invalid Digital Workshop ID",
+        "sv": "Ogiltigt Digital Workshop-ID"
+    },
+    {
+        "tkey": "confirmCreateService",
+        "en": "Service does not exist. Create it in the product\/service list?",
+        "sv": "Tjänsten finns inte. Vill du skapa den i produkt-\/tjänstlistan?"
+    },
+    {
+        "tkey": "service",
+        "en": "Service",
+        "sv": "Tjänst"
+    },
+    {
         "tkey": "status",
         "en": "Status",
         "sv": "Status"
@@ -2043,6 +2078,21 @@
         "tkey": "regNumber",
         "en": "Reg. No.",
         "sv": "Reg.nr"
+    },
+    {
+        "tkey": "itemsSold",
+        "en": "Items Sold",
+        "sv": "Antal sålda"
+    },
+    {
+        "tkey": "totalRevenue",
+        "en": "Total Revenue",
+        "sv": "Total intäkt"
+    },
+    {
+        "tkey": "rollingOneYearNote",
+        "en": "* Calculated over a rolling 12 months",
+        "sv": "* Beräknat över rullande 12 månader"
     },
     {
         "tkey": "vehicleStoryL1",

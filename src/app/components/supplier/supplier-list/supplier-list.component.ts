@@ -134,20 +134,13 @@ export class SupplierListComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          this.logger.error('Error fetching supplier:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Could not fetch supplier data'
-          });
-        }
+          this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), detail: this.sharedService.T('errormessage') });        }
       });
   }
 
   onFormSubmit() {
     if (this.supplierForm.invalid) {
       this.supplierForm.markAllAsTouched();
-      this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Please fill required fields' });
       return;
     }
     const formValues = this.supplierForm.getRawValue();
@@ -166,7 +159,7 @@ export class SupplierListComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.logger.error('Error saving supplier:', err);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save supplier' });
+          this.messageService.add({ severity: 'error', summary: this.sharedService.T('error'), detail: this.sharedService.T('errormessage') });
         }
       });
   }

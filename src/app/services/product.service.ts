@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { IInventory, IInvoiceDetail, IPageList, IProductTemplate, ISelect, } from 'app/app.model';
+import { IInventory, IInvoiceDetail, IPageList, IProductChart, IProductTemplate, ISelect, } from 'app/app.model';
 import { IWorkshop, ICustomer, IProduct } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { FormGroup } from '@angular/forms';
@@ -37,7 +37,7 @@ export class ProductService {
     if (productId !== undefined && productId > 0)
       queryParams.append("productId", productId.toString());
     const url = `${this.baseUrl}/detail?${queryParams}`;
-    return this.http.get<IProduct>(url);
+    return this.http.get<any>(url);
   }
 
   getProductsByprefix(category:string,prefix: string, make: string, model: string, year: number) {
@@ -113,11 +113,20 @@ export class ProductService {
       .set('productTemplateId', productTemplateId.toString());
     return this.http.get<any>(this.baseUrl + '/template-detail', { params: params });
   }
+  getProductChart(productId: number) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("productId", productId.toString());
+    const url = `${this.baseUrl}/sale-chart?${queryParams.toString()}`;
+    return this.http.get<IProductChart[]>(url);
+  }
 
-  getProductSales(filters: FormGroup) {
-    const queryString = this.sharedService.buildQueryParams(filters);
-    const url = `${this.baseUrl}/list-sales?${queryString}`;
-    return this.http.get<IPageList<IInvoiceDetail>>(url);
+  getProductSaleHistory(productId: number) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("productId", productId.toString());
+    const url = `${this.baseUrl}/sale-history?${queryParams.toString()}`;
+    return this.http.get<IInvoiceDetail[]>(url);
   }
 setProductStatus(wmsId: string, productId: number, isActive: boolean) {
   return this.http.get(`${this.baseUrl}/set-product-status`, {

@@ -443,12 +443,6 @@ export class DigitalServiceListComponent implements OnDestroy {
       )
       .subscribe({
         next: () => {
-          console.log('=== PDF UPLOAD SUCCESS ===');
-          console.log('Digital Service ID:', this.selectedVehicleData.digitalServiceId);
-          console.log('File Name:', this.selectedVehicleData.pdfFileName);
-          console.log('Download URL (File Key):', this.selectedVehicleData.downloadUrl);
-          this.logger.info(`PDF uploaded successfully. File Key: ${this.selectedVehicleData.downloadUrl}`);
-          //update Status of digital service to have file attached
           this.updateDigitalServiceStatus(this.selectedVehicleData.digitalServiceId, 1);
           this.messageService.add({
             severity: 'success',
@@ -464,17 +458,14 @@ export class DigitalServiceListComponent implements OnDestroy {
               const blobUrl = URL.createObjectURL(blob);
               this.pdfBlobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
               this.selectedVehicleData.pdfExists = true;
-              this.logger.info(`Updated PDF displayed after upload`);
             },
             error: (err) => {
               console.error('Error fetching uploaded PDF:', err);
               this.selectedVehicleData.pdfExists = true;
-              this.logger.error('Failed to fetch uploaded PDF for display');
             }
           });
         },
         error: (error) => {
-          this.logger.error('PDF upload failed:', error);
           this.messageService.add({
             severity: 'error',
             summary: this.sharedService.T('error'),
