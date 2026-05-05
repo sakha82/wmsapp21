@@ -48,8 +48,7 @@
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
         <p-autoComplete formControlName="vehicleModel" [suggestions]="models" (completeMethod)="filterModels($event)"
-          forceSelection="true" [showClear]="true" class="w-full"
-          [invalid]="!this.workOrder.get('vehicleModel')?.value"></p-autoComplete>
+          forceSelection="true" [showClear]="true" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Gap Between First 3 and Last 2 -->

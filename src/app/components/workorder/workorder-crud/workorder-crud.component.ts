@@ -160,7 +160,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       vehiclePlate: [null, Validators.required],
       vehicleMileage: null,
       vehicleManufacturer: [null,Validators.required],
-      vehicleModel: [null,Validators.required],
+      vehicleModel: [null],
       vehicleYear: null,
       paymentType: null,
       workOrderStatus: null,

@@ -1,0 +1,428 @@
+productid,ProductCategory,ProductName
+7229,Avgasrening,Avgasreglering
+7086,Avgasrening,Partikelfilter (DPF)
+7087,Avgasrening,EGR-ventil
+7088,Avgasrening,Katalysator
+7089,Avgassystem,Avgasgrenrör
+7090,Avgassystem,Bakre ljuddämpare
+7091,Avgassystem,Packning för avgasgrenrör
+7092,Avgassystem,Wastegate-ställdon
+7230,Avgassystem,Avgasmonteringsdetaljer
+7231,Avgassystem,Avgasrör
+7232,Avgassystem,Avgassystem komplett
+7233,Avgassystem,Eolysvätska
+7234,Avgassystem,Ljuddämpare
+7235,Belysning,Ballast
+7236,Belysning,LED-konvertering
+7237,Belysning,Lamphållare
+7238,Belysning,Lampor
+7239,Belysning,Ljusinsats
+7240,Belysning,Lyktor
+7241,Belysning,Reflektor
+7242,Belysning,Strålkastarsensor
+7243,Belysning,Extraljus
+7165,Belysning,Bagagerumslampa
+7166,Belysning,Bakljus
+7167,Belysning,Blinkers
+7168,Belysning,Dimstrålkastare
+7169,Belysning,Glödlampa blinkers (fram)
+7170,Belysning,Innerbelysning (bak)
+7171,Belysning,Innerbelysning (fram)
+7172,Belysning,Kartläsarlampa
+7173,Belysning,Dörrlampa (fram)
+7174,Belysning,Motor strålkastarspolare
+7175,Belysning,Strålkastare
+7176,Belysning,Strålkastarglas
+7177,Belysning,Strålkastarjustering
+7178,Belysning,Xenonlampa
+7179,Belysning,Xenonstrålkastare
+7180,Bränslesystem,Bränslefilter
+7181,Bränslesystem,Bränslefilter (sats)
+7182,Bränslesystem,Bränslefördelningsrör
+7183,Bränslesystem,Bränslepump
+7184,Bränslesystem,Bränsletank
+7185,Bränslesystem,Högtryckspump
+7186,Bränslesystem,Insprutare
+7244,Bränslesystem,Luft-/bränslesystem
+7245,Bromsar,ABS-givare
+7246,Bromsar,ABS-ring
+7247,Bromsar,Bromsbackar
+7248,Bromsar,Bromsbackssats
+7249,Bromsar,Bromsjustering
+7250,Bromsar,Bromssköld
+7251,Bromsar,Bromstrumma
+7252,Bromsar,Handbromswire
+7253,Bromsar,Monteringssats
+7254,Bromsar,Slitagevarnare
+7255,Bromsar,Bromsrör
+7256,Bromsar,Bromsok
+7257,Bromsar,Bromsok med hållare
+7258,Bromsar,Bromsok rep.sats
+7259,Bromsar,Bromsregulator
+7260,Bromsar,Bromsslang
+7261,Bromsar,Glidbultsats
+7262,Bromsar,Hjulcylinder
+7263,Bromsar,Huvudbromscylinder
+7264,Bromsar,Luftningsskruv
+7000,Bromsar,Bromsbelägg bak
+7001,Bromsar,Bromsbelägg fram
+7002,Bromsar,Bromsljuskontakt
+7003,Bromsar,Bromsok bak
+7004,Bromsar,Bromsok fram
+7005,Bromsar,Bromsservo
+7006,Bromsar,Bromsskivor bak
+7007,Bromsar,Bromsskivor fram
+7008,Bromsar,Bromsslang bak
+7009,Bromsar,Bromsslang fram
+7010,Bromsar,Hjulsensor bak
+7011,Bromsar,Hjulsensor fram
+7012,Bromsar,Huvudcylinder
+7013,Bromsar,Huvudcylinder högerstyrd
+7014,Bromsar,Huvudcylinder vänsterstyrd
+7015,Bromsar,Modulator
+7016,Bromsar,Parkeringsbromsmanöverdon
+7017,Bromsar,Varnarkontakt för parkeringsbroms
+7018,Bromsar,Bromsar
+7019,Bromsar,Vätskebehållare
+7265,Drivlina,Hjulbult
+7266,Drivlina,Hjullagersats
+7267,Drivlina,Hjullagertapp
+7268,Drivlina,Hjulmutter
+7269,Drivlina,Hjulnav
+7270,Drivlina,Huvudcylinder koppling
+7271,Drivlina,Slavcylinder
+7272,Drivlina,Kopplingsgaffel
+7273,Drivlina,Kopplingssats
+7274,Drivlina,Kopplingssats med svänghjul
+7275,Drivlina,Kopplingsslang
+7276,Drivlina,Kopplingswire
+7277,Drivlina,Lamellcentrum
+7278,Drivlina,Styrhylsa koppling
+7279,Drivlina,Svänghjul
+7280,Drivlina,Svänghjulslager
+7281,Drivlina,Urtrampningslager
+7282,Drivlina,Dragkrok
+7283,Drivlina,Differential
+7284,Drivlina,Drivaxel
+7285,Drivlina,Drivaxeldamask
+7286,Drivlina,Drivknut
+7287,Drivlina,Fyrhjulsdriftsystem
+7288,Drivlina,Kardan
+7289,Drivlina,Stickaxel
+7290,Drivlina,Växellåda
+7291,Drivlina,Växellådsfäste
+7144,Drivlina,Drivaxel höger
+7145,Drivlina,Drivaxel vänster
+7146,Drivlina,Drivaxelknut inre höger
+7147,Drivlina,Drivaxelknut inre vänster
+7148,Drivlina,Drivaxelknut yttre höger
+7149,Drivlina,Drivaxelknut yttre vänster
+7150,Drivlina,Drivaxelns inre tätning
+7151,Drivlina,Gummidamask inre drivaxelknut
+7152,Drivlina,Gummidamask yttre drivaxelknut
+7153,Drivlina,Hastighetsmätardrev
+7154,Drivlina,Hydrauliskt manöversystem
+7155,Drivlina,Hydraulsystem
+7156,Drivlina,Lamell tryckplatta och lager
+7157,Drivlina,Manövercylinder
+7158,Drivlina,Manöversystem
+7159,Drivlina,Tätning ingående axel
+7160,Drivlina,Växellåda-Växellåda och kopplingshus
+7161,Drivlina,Växellänkage
+7162,Drivlina,Växelväljaraxel
+7163,Drivlina,Växelväljare
+7164,Drivlina,Växlingsarm
+7093,Elsystem,Avgasmottryckssensor
+7094,Elsystem,Batteri
+7095,Elsystem,Bränslenivåsensor
+7096,Elsystem,Bränsletrycksensor
+7097,Elsystem,Central styrenhet (CPU)
+7098,Elsystem,Cigarettändare
+7099,Elsystem,Fjädringsstyrdon
+7100,Elsystem,Generator
+7101,Elsystem,Givare luftflöde/luftmassa
+7102,Elsystem,Givare motorvarvtal
+7103,Elsystem,Glödningsrelä
+7104,Elsystem,Kamaxellägessensor
+7105,Elsystem,Lambdasensor bakre
+7106,Elsystem,Lambdasensor fram
+7107,Elsystem,Magnetventil/manöverdon centrallås bak
+7108,Elsystem,Magnetventil/manöverdon centrallås baklucka
+7109,Elsystem,Magnetventil/manöverdon centrallås fram
+7110,Elsystem,MAP-sensor
+7111,Elsystem,Oljetrycksgivare
+7112,Elsystem,Radio/kassettenhet
+7113,Elsystem,Relä-/säkringsdosa
+7114,Elsystem,Sensor omgivningstemperatur
+7115,Elsystem,Signalhorn
+7116,Elsystem,Solsensor
+7117,Elsystem,Spänningsregulator
+7118,Elsystem,Strömställare
+7119,Elsystem,Styrdon
+7120,Elsystem,Styrenhet
+7121,Elsystem,Takantenn
+7122,Elsystem,Temperatursensor
+7292,Elsystem,Elkabelsats
+7294,Elsystem,Sensorer
+7295,Elsystem,Kabelsats
+7296,Elsystem,Batteristyrning
+7297,Elsystem,EV-Laddkabel
+7298,Elsystem,Startbatteri
+7299,Elsystem,Glödstyrenhet
+7300,Elsystem,Tändfördelardetaljer
+7301,Elsystem,Tändkablar
+7302,Elsystem,Tändmodul
+7303,Elsystem,Tändningslås
+7304,Elsystem,Tändspole
+7305,Elsystem,Tändstift
+7306,Elsystem,Frihjulskoppling
+7307,Elsystem,Kolhållare
+7308,Elsystem,Laddningsregulator
+7309,Elsystem,Startmotor
+7310,Elsystem,Kabelstamsreparationssatser
+7311,Elsystem,Kontakter
+7312,Elsystem,Kontaktrulle airbag
+7313,Elsystem,Ljusomkopplare
+7314,Elsystem,Parkeringssensor
+7316,Elsystem,Relä
+7317,Elsystem,Strömställare Fönsterhiss
+7318,Elsystem,Ställmotor
+7319,Fjädring,Bultsats
+7320,Fjädring,Dammskydd
+7321,Fjädring,Fjäderben komplett
+7322,Fjädring,Fjäderbenslagring
+7323,Fjädring,Gasfjäder
+7324,Fjädring,Luftfjädring
+7325,Fjädring,Stötdämpare
+7326,Fjädring,Bakaxel
+7327,Fjädring,Bakaxelbrygga
+7328,Fjädring,Bussning
+7329,Fjädring,Framaxelbrygga
+7330,Fjädring,Hjälpstyrarm rep.sats
+7331,Fjädring,Länkarm
+7332,Fjädring,Länkstag
+7333,Fjädring,Pitmanarm
+7334,Fjädring,Rattstång
+7335,Fjädring,Servorör
+7336,Fjädring,Servoslang
+7337,Fjädring,Spindelled
+7338,Fjädring,Stabilisator
+7339,Fjädring,Stabilisatorstag
+7340,Fjädring,Styrservopump
+7341,Fjädring,Styrspindel
+7123,Fjädring,Axeltapp
+7124,Fjädring,Bärarm nedre
+7125,Fjädring,Bärstag
+7126,Fjädring,Fjäder
+7127,Fjädring,Fjäderben
+7128,Fjädring,Hjulnav -Bakaxel
+7129,Fjädring,Hjulnav -Framaxel
+7130,Fjädring,Hjälpram
+7131,Fjädring,Krängningshämmare yttre stag-Bakre
+7132,Fjädring,Krängningshämmare yttre stag-Främre
+7133,Fjädring,Krängningshämmare-Bakre fjädringssystem
+7134,Fjädring,Krängningshämmare-Främre fjädringssystem
+7135,Fjädring,Luftfjädringsbehållare
+7136,Fjädring,Nedre länkarm
+7137,Fjädring,Returfjäder pedal
+7138,Fjädring,Stötdämpare (par) luftfjädring
+7139,Fjädring,Stötdämpare (par) fjädringssystem
+7141,Fjädring,Stötdämpare luftfjädring
+7142,Fjädring,Stötdämpare fjädringssystem
+7143,Fjädring,Övre länkarm
+7342,Kaross/interiör,Bagagerumsgolv
+7343,Kaross/interiör,Baklucka
+7344,Kaross/interiör,Batterihållare
+7345,Kaross/interiör,Bränsletank hållarband
+7346,Kaross/interiör,Domkraftsfäste
+7347,Kaross/interiör,Dörr
+7348,Kaross/interiör,Dörr rep.plåt
+7349,Kaross/interiör,Front komplett
+7350,Kaross/interiör,Frontspoiler
+7351,Kaross/interiör,Fönsterhiss
+7352,Kaross/interiör,Gasdämpare
+7353,Kaross/interiör,Golvplåt
+7354,Kaross/interiör,Hjulhus
+7355,Kaross/interiör,Innerskärm
+7356,Kaross/interiör,Karosseri monteringssats
+7357,Kaross/interiör,Kylargrill
+7358,Kaross/interiör,Låssystem
+7359,Kaross/interiör,Motorhuv
+7360,Kaross/interiör,Motorhuv gångjärn
+7361,Kaross/interiör,Nummerplåtshållare
+7362,Kaross/interiör,Reservhjulsbalja
+7363,Kaross/interiör,Skiljevägg
+7364,Kaross/interiör,Skärm
+7365,Kaross/interiör,Stolpe
+7366,Kaross/interiör,Stötfångardelar
+7367,Kaross/interiör,Tankpåfyllningsrör
+7368,Kaross/interiör,Torpedvägg
+7369,Kaross/interiör,Tröskel
+7370,Kaross/interiör,Tröskel övrigt
+7371,Kaross/interiör,Tvärbalk
+7372,Kaross/interiör,Regnsensor
+7373,Kaross/interiör,Spolardelar
+7374,Kaross/interiör,Torkarbladsadapter
+7375,Kaross/interiör,Torkarbladsgummi
+7376,Kaross/interiör,Torkarmotor
+7377,Kaross/interiör,Rutor
+7378,Kaross/interiör,Spegel
+7379,Kaross/interiör,Spegelglas
+7380,Kaross/interiör,Spegelhus
+7187,Kaross/interiör,Bilbälte (bak mitt)
+7188,Kaross/interiör,Bilbälte (bak yttre)
+7189,Kaross/interiör,Sidoruta (bak)
+7190,Kaross/interiör,Bakruta
+7191,Kaross/interiör,Bilbälteslås (fram)
+7192,Kaross/interiör,Bilbälteslås (bak mitt)
+7193,Kaross/interiör,Bilbälteslås (bak yttre)
+7194,Kaross/interiör,Dörrspegel
+7195,Kaross/interiör,Dörruta (bak)
+7196,Kaross/interiör,Dörruta (fram)
+7197,Kaross/interiör,Bilbälte (fram)
+7198,Kaross/interiör,Fönsterhissmekanism (bak)
+7199,Kaross/interiör,Fönsterhissmekanism (fram)
+7200,Kaross/interiör,Fönsterhissmotor (bak)
+7201,Kaross/interiör,Instrumentpanel
+7202,Kaross/interiör,Krockkudde (förare)
+7203,Kaross/interiör,Krockkudde (passagerare)
+7204,Kaross/interiör,Låscylinder (handskfack)
+7205,Kaross/interiör,Låscylinder (baklucka)
+7206,Kaross/interiör,Låscylinder (framdörr)
+7207,Kaross/interiör,Solluckemotor
+7208,Kaross/interiör,Vajer motorhuv
+7209,Kaross/interiör,Spegelglas med fäste
+7210,Kaross/interiör,Spoiler
+7211,Kaross/interiör,Spolarbehållare
+7212,Kaross/interiör,Spolarmotor (fram)
+7213,Kaross/interiör,Spolarmunstycke
+7214,Kaross/interiör,Stötfångare (bak)
+7215,Kaross/interiör,Stötfångare (fram)
+7216,Kaross/interiör,Stötfångargrill
+7217,Kaross/interiör,Torkararm
+7218,Kaross/interiör,Torkararm (bak)
+7219,Kaross/interiör,Torkararm (fram)
+7220,Kaross/interiör,Torkarblad
+7221,Kaross/interiör,Torkarblad (bak)
+7222,Kaross/interiör,Torkarblad (fram)
+7223,Kaross/interiör,Torkarlänkage
+7224,Kaross/interiör,Torpedplåt
+7225,Kaross/interiör,Krockgardin
+7226,Kaross/interiör,Vindruta
+7227,Kaross/interiör,Vindrutetorkarmotor
+7075,Klimatanläggning,AC-ledning
+7076,Klimatanläggning,Expansionsventil fram
+7077,Klimatanläggning,Förångare fram
+7078,Klimatanläggning,Kompressor
+7079,Klimatanläggning,Kondensor
+7080,Klimatanläggning,Kupéfilter
+7081,Klimatanläggning,Turbokompressor
+7082,Klimatanläggning,Värmeelement
+7083,Klimatanläggning,Värmefläktmotor
+7084,Klimatanläggning,Värmepaket
+7085,Klimatanläggning,Vätskefiltertorkare
+7381,Klimatanläggning,Evaporator
+7382,Klimatanläggning,Expansionsventil
+7383,Klimatanläggning,Luftkvalitetssensor
+7384,Klimatanläggning,AC-slang
+7385,Klimatanläggning,Torkfilter
+7386,Klimatanläggning,Tryckvakt
+7387,Klimatanläggning,Värmeväxlare Batteristyrning
+7388,Kylsystem,Reglerventil
+7389,Kylsystem,Expansionskärl
+7390,Kylsystem,Kylarfläkt
+7391,Kylsystem,Kylvattenfläns
+7393,Kylsystem,Slangar och rör
+7394,Kylsystem,Fläktmotstånd
+7395,Kylsystem,Kupefläkt
+7064,Kylsystem,Avgasåterledningskylare
+7065,Kylsystem,Expansionstank
+7066,Kylsystem,Kylare
+7067,Kylsystem,Kylfläkt
+7068,Kylsystem,Kylvätska
+7069,Kylsystem,Kylvätsketemperatursensor
+7070,Kylsystem,Laddluftkylare
+7071,Kylsystem,Oljekylare
+7072,Kylsystem,Skyltbelysning
+7073,Kylsystem,Termostat
+7074,Kylsystem,Vattenpump
+7038,Motor,Balansaxel
+7039,Motor,Cylinderlock
+7040,Motor,Cylinderlockspackning
+7041,Motor,Drivremsspännare
+7042,Motor,Fönsterhissmotor fram
+7043,Motor,Glödstift
+7044,Motor,Hjälpaggregatdrivrem
+7045,Motor,Inloppsgrenrör
+7046,Motor,Kamaxelns tätning
+7047,Motor,Kamaxlar
+7048,Motor,Kamrem
+7049,Motor,Motor
+7050,Motor,Motor enbart
+7051,Motor,Motorfäste
+7052,Motor,Oljepump
+7053,Motor,Oljetryck
+7054,Motor,Oljetråg
+7055,Motor,Packning för inloppsgrenrör
+7056,Motor,Spjällhus
+7057,Motor,Startmotor med dragmagnet
+7058,Motor,Vakuumpump
+7059,Motor,Vakuumslang till inloppsrör
+7060,Motor,Vevaxelns tätning
+7061,Motor,Vevaxelns remskiva
+7062,Motor,Vevaxelns remskiva svängningsdämpare
+7063,Motor,Vevhusventilation
+7396,Motor,Motorvärmare
+7397,Motor,Motorvärmarelement
+7398,Motor,Frostplugg
+7399,Motor,Motorpackningar
+7400,Motor,O-ring
+7401,Motor,Oljeplugg
+7402,Motor,Oljepluggspackning
+7403,Motor,Packbox
+7404,Motor,Packning
+7405,Motor,Växellådspackning
+7406,Motor,Insug
+7407,Motor,Oljepåfyllningslock
+7408,Motor,Oljesticka
+7409,Motor,Slangar motorrum
+7410,Motor,Topplock
+7411,Motor,Ventilkåpa
+7412,Motor,Vevaxeldelar
+7413,Motor,Vevhus
+7414,Motor,Kamaxel
+7415,Motor,Kamdrivning
+7416,Motor,Remdrivning
+7417,Motor,Vevaxelremskiva
+7418,Motor,Vibrationsdämpare
+7419,Service,Bromsvätska
+7420,Service,Differentialolja
+7421,Service,Hydraulolja
+7422,Service,Kylarvätska
+7423,Service,Multifunktionsolja
+7424,Service,Spolarvätska
+7425,Service,Styrservoolja
+7426,Service,Transmissionsolja
+7427,Service,AWD Filter
+7428,Service,Hydraulfilter
+7429,Service,Oljeplugg/tätning
+7430,Service,Styrservofilter
+7431,Service,Vevhusfilter
+7432,Service,Växellådsfilter
+7020,Service,Däck
+7021,Service,Luftfilter
+7022,Service,Luftfilterhus
+7023,Service,Motorolja
+7024,Service,Oljefilter
+7025,Service,Styrled
+7026,Service,Styrstag
+7027,Service,Växellådsolja
+7228,Service,Oljepluggsats
+7028,Styrning,Gaspedal
+7029,Styrning,Pedalbussning
+7030,Styrning,Pedalställ
+7031,Styrning,Ratt
+7032,Styrning,Rattlås
+7033,Styrning,Spindelled nedre
+7036,Styrning,Styrväxel
+7037,Styrning,Styrväxeldamask

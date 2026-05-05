@@ -1,0 +1,65 @@
+Här är en bra inventering av nyckelord som redan finns på sidan (baserat på innehållet i startsidan):
+
+Kärnnyckelord (hög relevans)
+verkstadssystem
+AI
+powered by AI
+AI Assistant
+Digital Workshop
+digital servicebok
+arbetsorder
+schemaläggning
+fakturering
+kundregister
+personalliggare
+datamigration
+Kommersiella/pris-relaterade nyckelord
+399 kr/användare/månad
+pris
+prissystem
+inga dolda avgifter
+fast månadskostnad
+bindningstid
+kostnadsfritt
+kom igång idag
+Feature-nyckelord (produktfunktioner)
+skapa offerter
+arbetsorder
+fakturering med AI
+digital servicebok
+kundregister
+anställningsregister
+schemaläggning
+servicehistorik
+fakturor och kvitton
+automatisk kundkommunikation
+intelligenta order
+lönberäkningar
+Konverteringsnyckelord/CTA
+boka en demo
+personlig demo
+skapa konto
+logga in
+starta din första vecka helt kostnadsfritt
+Branded/sökintention
+Sveriges första verkstadssystem powered by AI
+Digital Workshop app
+Google Play
+App Store
+Förslag på nya nyckelord att lägga till (som inte syns tydligt nu)
+
+bilverkstadssystem
+verkstadsprogram
+affärssystem för verkstad
+bokningssystem för verkstad
+orderhantering för verkstad
+verkstadsapp för kunder
+digitalt verktyg för bilverkstad
+molnbaserat verkstadssystem
+verkstadssystem Sverige
+verkstadssystem för små verkstäder
+Om du vill kan jag i nästa steg ge dig:
+
+en deduplicerad “master-lista” i CSV-format
+en prioriterad keyword-gap-lista (hög/medel/låg potential)
+exakt var i sidan varje nytt keyword bör placeras (hero, H2, FAQ, prissektion, metadata).

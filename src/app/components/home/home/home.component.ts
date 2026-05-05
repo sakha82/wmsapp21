@@ -105,8 +105,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   faqItems: FaqItem[] = [
     {
-      question: 'Vad ingår i priset på 199 kr/månad?',
-      answer: `För 199 kr per användare och månad får du tillgång till alla funktioner i Digital Workshop – kundregister, offerthantering, arbetsorder, digital servicebok, schemaläggning, rapporter, statistik och vår AI Assistant.
+      question: 'Vad ingår i priset på 399 kr/månad?',
+      answer: `För 399 kr per användare och månad får du tillgång till alla funktioner i Digital Workshop – kundregister, offerthantering, arbetsorder, digital servicebok, schemaläggning, rapporter, statistik och vår AI Assistant.
                I abonnemanget ingår dessutom 5 digitala serviceposter utan extra kostnad varje månad, så att du enkelt kan komma igång och visa värdet för dina kunder.
                När du behöver registrera fler serviceposter kan du göra det flexibelt till en låg kostnad på endast 5 kr per extra digital servicepost.
                Detta ger dig full kontroll över dina kostnader samtidigt som du kan växa i din egen takt och endast betala för det du faktiskt använder.`,

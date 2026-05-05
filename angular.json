@@ -51,7 +51,17 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "robots.txt",
+                "input": "public",
+                "output": "/"
+              },
+              {
+                "glob": "sitemap.xml",
+                "input": "public",
+                "output": "/"
+              }
             ],
             "styles": [
               "src/styles.css",
@@ -83,7 +93,18 @@
                 "scripts": false,
                 "styles": true
               },
-              "assets": []  
+              "assets": [
+                {
+                  "glob": "robots.txt",
+                  "input": "public",
+                  "output": "/"
+                },
+                {
+                  "glob": "sitemap.xml",
+                  "input": "public",
+                  "output": "/"
+                }
+              ]
             },
             "development": {
               "optimization": false,

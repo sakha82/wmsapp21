@@ -353,12 +353,12 @@ export class WorkOrderListComponent implements OnInit, OnDestroy {
   deleteBooking(workOrderId: number, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Are you sure you want to this Booking?', //this.sharedService.T('workorder-list.confirm.message') + statusText,
+      message: this.sharedService.T('deleteBooking'), 
       header: '',
       closable: false,
       closeOnEscape: false,
       rejectButtonProps: {
-        label: this.sharedService.T('confirmCancel'),
+        label: this.sharedService.T('no'),
         severity: 'secondary',
         outlined: true,
       },
