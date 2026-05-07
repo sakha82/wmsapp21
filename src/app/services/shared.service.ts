@@ -350,22 +350,20 @@ get lang(): 'en' | 'sv' {
     .map(m => m.name)
     .filter(vehicle => vehicle.startsWith(query))
     .sort((a, b) => a.localeCompare(b))??[];
-
   }
-  getVehicleModels(manufactuererName:string,query:string)
-  {
-    let models:string[] = []
-    if(manufactuererName)
-    {
-      models = this.allManufacturers.find(v => v.name === manufactuererName)?.models.sort((a, b) => a.localeCompare(b))  ?? [];
-    }
-    else 
-    {
-      models = [...this.allManufacturers.flatMap(m => m.models)];
-    }  
-    //this.logger.info(models.filter(m => m.startsWith(query)).sort((a, b) => a.localeCompare(b)));
-    return models.filter(m => m.startsWith(query)).sort((a, b) => a.localeCompare(b)); 
-  }
+  // getVehicleModels(manufactuererName:string,query:string)
+  // {
+  //   let models:string[] = []
+  //   if(manufactuererName)
+  //   {
+  //     models = this.allManufacturers.find(v => v.name === manufactuererName)?.models.sort((a, b) => a.localeCompare(b))  ?? [];
+  //   }
+  //   else 
+  //   {
+  //     models = [...this.allManufacturers.flatMap(m => m.models)];
+  //   }  
+  //   return models.filter(m => m.startsWith(query)).sort((a, b) => a.localeCompare(b)); 
+  // }
 
   getVehicleType(make: string, model: string): IVehicleType | undefined {
     return this.allVehicleTypes.find(v => 
@@ -519,5 +517,21 @@ T(key: string): string {
         return this.http.get<any>(url);
     }
 
-}
+    getVehicleMakes()
+    {
+        const queryParams = new URLSearchParams();
+        const url = `${this.coreUrl}/vehicle-makes`;
+        return this.http.get<string[]>(url);
+    }
+
+    getVehicleModels(make:string)
+    {
+        const queryParams = new URLSearchParams();
+        queryParams.append("make", make);
+        const url = `${this.coreUrl}/vehicle-models?${queryParams}`;
+        return this.http.get<string[]>(url);
+    }
+
+
+  }
 

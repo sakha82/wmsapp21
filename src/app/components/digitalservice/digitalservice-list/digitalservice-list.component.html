@@ -233,8 +233,8 @@
               <div>
                 <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}<span class="text-red-500">*</span>
                 </label>
-                <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="manufacturers"
-                  (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="{{this.sharedService.T('enterSearchText')}}"
+                <p-autoComplete formControlName="vehicleManufacturer" 
+                  [suggestions]="selectedBrands" (onSelect)="onSelectVehicleManufacturer($event)" (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="{{this.sharedService.T('enterSearchText')}}"
                   forceSelection="true" class="w-full">
                 </p-autoComplete>
               </div>
@@ -244,7 +244,7 @@
               <div>
                 <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }} <span
                     class="text-red-500">*</span></label>
-                <p-autoComplete formControlName="vehicleModel" [suggestions]="models"
+                <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
                   (completeMethod)="filterModels($event)" [minLength]="1" placeholder="{{this.sharedService.T('selectModel')}}"
                   forceSelection="true" class="w-full">
                 </p-autoComplete>

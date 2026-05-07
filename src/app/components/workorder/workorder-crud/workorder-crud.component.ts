@@ -106,10 +106,12 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   oilTypes: string[] = ['5W30', '0W20', '5W40', '0W30', '10W30', '10W40'];
   isCreate: boolean = true;
   isNewObject: boolean = true;
-  manufacturers: any[] = [];
+  brands:any[] = [];
+  selectedBrands: any[] = [];
   suppliers: ISupplier[] = [];
   //products: any[] = [];
   models: any[] = [];
+  selectedModels: any[] = [];
   selectedCustomerName: any = null;
 
 
@@ -220,7 +222,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
                   }
                   return 0;
                 });
-                this.logger.info('workshop products Loaded', this.products);
+                this.sharedService.getVehicleMakes().subscribe((data: any) => {
+                  this.brands = data;
+                });
               }),
               map(() => response)
             );
@@ -394,8 +398,20 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.workOrder.get('vehiclePlate')?.setValue(sanitizedValue); // Update 
   }
   filterManufacturers(event: any): void {
-    this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
+    const query = event.query.toUpperCase();
+    this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
   }
+
+  onSelectVehicleManufacturer(event: any): void {
+     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
+                  this.models = data;
+                });
+  }
+  filterModels(event: any): void {
+    const query = event.query.toUpperCase();
+    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
+  }
+
   filterSuppliers(event: any): void {
     this.supplierService
       .getSuppliersByprefix(event.query.toUpperCase())
@@ -592,9 +608,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
   }
 
-  filterModels(event: any): void {
-    this.models = this.sharedService.getVehicleModels(this.workOrder.get('vehicleManufacturer')?.value, event.query.toUpperCase());
-  }
+  
   onSelectCalendarDate() {
     //this.logger.info(selectedDate.toISOString().split('T')[0]);
     this.getBookings(this.workOrder.get('bookingDate')?.value);

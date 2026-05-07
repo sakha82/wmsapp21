@@ -73,10 +73,13 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   invoice: FormGroup;
   details: any = new FormArray([])
 
-  manufacturers: any[] = [];
+  brands:any[] = [];
+  selectedBrands: any[] = [];
+ 
   templates: MenuItem[] = [];
   products: IProduct[] = [];
   models: any[] = [];
+  selectedModels: any[] = [];
 
   createInvoice: boolean = true;
   isNewObject: boolean = true;
@@ -181,6 +184,9 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
           this.loadInvoiceToEdit(response.data, 'g.editinvoice');
           this.updateDueDate();
           this.getTemplates();
+          this.sharedService.getVehicleMakes().subscribe((data: any) => {
+                  this.brands = data;
+                });
         },
         error: (err) => {
           this.errorHandler.handleError(err, 'ngOnInit', 'Failed to load invoice.');
@@ -276,11 +282,19 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   }
 
   filterManufacturers(event: any): void {
-    this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
+        const query = event.query.toUpperCase();
+        this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
+
+  }
+  onSelectVehicleManufacturer(event: any): void {
+     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
+                  this.models = data;
+                });
   }
 
   filterModels(event: any): void {
-    this.models = this.sharedService.getVehicleModels(this.invoice.get('vehicleManufacturer')?.value, event.query.toUpperCase());
+    const query = event.query.toUpperCase();
+    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
   }
 
   // detail selection

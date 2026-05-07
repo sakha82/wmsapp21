@@ -38,8 +38,8 @@
       <!-- Vehicle Manufacturer -->
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
-        <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="manufacturers"
-          (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="Ange söktext "
+        <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="selectedBrands"
+          (completeMethod)="filterManufacturers($event)" (onSelect)="onSelectVehicleManufacturer($event)" [minLength]="1" placeholder="Ange söktext "
           forceSelection="true" optionLabel="" [showClear]="true" class="w-full"
           [invalid]="!this.workOrder.get('vehicleManufacturer')?.value"></p-autoComplete>
       </div>
@@ -47,7 +47,7 @@
       <!-- Vehicle Model -->
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
-        <p-autoComplete formControlName="vehicleModel" [suggestions]="models" (completeMethod)="filterModels($event)"
+        <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels" (completeMethod)="filterModels($event)"
           forceSelection="true" [showClear]="true" class="w-full"></p-autoComplete>
       </div>
 

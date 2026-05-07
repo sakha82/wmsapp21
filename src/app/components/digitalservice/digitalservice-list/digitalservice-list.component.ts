@@ -66,12 +66,17 @@ export class DigitalServiceListComponent implements OnDestroy {
   showDigitalServiceDialog: boolean = false;
   digitalService: FormGroup;
   manufacturers: any[] = [];
-  models: any[] = [];
   isEmailSent: boolean | null = null;
   onlyThisWmsid:boolean = true;
   
   // PDF Upload Properties
   selectedVehicleData: any = null;
+  brands:any[] = [];
+  selectedBrands: any[] = [];
+  //products: any[] = [];
+  models: any[] = [];
+  selectedModels: any[] = [];
+
   uploadProgress: number = 0;
   pdfBlobUrl: SafeResourceUrl | null = null;
   constructor(private logger: LogService,
@@ -191,6 +196,11 @@ export class DigitalServiceListComponent implements OnDestroy {
       this.digitalService.get('nextServiceVehicleMileage')
         ?.setValue(v ? +v + 10000 : '');
     });
+    
+    this.sharedService.getVehicleMakes().subscribe((data: any) => {
+        this.brands = data;
+      });
+
     this.getDigitalServices(this.onlyThisWmsid);
 
   }
@@ -689,18 +699,28 @@ export class DigitalServiceListComponent implements OnDestroy {
         }
       });
   }
-  filterManufacturers(event: any): void {
-    this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
+    filterManufacturers(event: any): void {
+    const query = event.query.toUpperCase();
+    this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
   }
+
+  onSelectVehicleManufacturer(event: any): void {
+     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
+                  this.models = data;
+                });
+  }
+  filterModels(event: any): void {
+    const query = event.query.toUpperCase();
+    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
+  }
+
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/[^A-Z0-9]/gi, ''); // Remove invalid characters
     input.value = sanitizedValue.toUpperCase(); // Convert to uppercase
     this.digitalService.get('vehiclePlate')?.setValue(sanitizedValue); // Update 
   }
-  filterModels(event: any): void {
-    this.models = this.sharedService.getVehicleModels(this.digitalService.get('vehicleManufacturer')?.value, event.query.toUpperCase());
-  }
+
   onServiceTypeChange(event: SelectChangeEvent): void {
     const selectedType = event.value;
     if(selectedType === 'repairService') {

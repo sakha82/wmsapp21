@@ -68,8 +68,11 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   offer: FormGroup;
   details: any = new FormArray([])
 
-  manufacturers: any[] = [];
-  models: any[] = []
+  brands:any[] = [];
+  selectedBrands: any[] = [];
+
+  models: any[] = [];
+  selectedModels: any[] = [];
   templates: MenuItem[] = [];
   products: IProduct[] = [];
 
@@ -161,6 +164,9 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
           this.isNewObject = response.isNewObject;
           this.loadOfferToEdit(response.data, 'editinvoice');
           this.getTemplates();
+           this.sharedService.getVehicleMakes().subscribe((data: any) => {
+                  this.brands = data;
+                });
         },
         error: (err) => {
           this.logger.error('ngOnInit getOffer error', err);
@@ -250,10 +256,18 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   }
 
   filterManufacturers(event: any): void {
-    this.manufacturers = this.sharedService.getVehicleManufacturers(event.query.toUpperCase());
+        const query = event.query.toUpperCase();
+        this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
+
+  }
+  onSelectVehicleManufacturer(event: any): void {
+     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
+                  this.models = data;
+                });
   }
   filterModels(event: any): void {
-    this.models = this.sharedService.getVehicleModels(this.offer.get('vehicleManufacturer')?.value, event.query.toUpperCase());
+    const query = event.query.toUpperCase();
+    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
   }
   // detail selection
     getProducts(detail:any, event: AutoCompleteCompleteEvent) {
