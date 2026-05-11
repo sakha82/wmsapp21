@@ -205,7 +205,8 @@ export interface IEmployee {
   email: string,
   skills: string,
   certifications: string,
-  isActive: boolean
+  isActive: boolean,
+  includeInCalendarHours: boolean
 }
 export interface ITimesheet {
   wmsId: string,
@@ -463,7 +464,7 @@ export interface IWorkOrder {
   serviceTypes: string,
   woPurchases: IWOPurchase[],
   woServices: IWOService[],
-  isActive: number,
+  isActive: number
   // workOrderStatusItems: MenuItem[],
 //deliveryDate: string,
   //deliveryTime: string,
