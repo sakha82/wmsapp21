@@ -173,7 +173,11 @@ export class BookingListComponent implements OnInit, OnDestroy {
   }
 
   calculateFreeHours(day: string): number {
-    const workshopCapacity = 8; // Assuming 8 working hours in a day
+// 1. Filter and count employees where includeInCalendarHours is true
+  const activeEmployeeCount = this.employees?.filter(emp => emp.includeInCalendarHours === true).length || 0;
+
+  // 2. Calculate dynamic capacity (8 hours per included employee)
+  const workshopCapacity = activeEmployeeCount * 8;
     const busyHours = this.serviceHoursCount[day] || 0;
     const freeHours = workshopCapacity - busyHours;
 
