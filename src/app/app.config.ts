@@ -28,6 +28,10 @@ export const appConfig: ApplicationConfig = {
       translation: sv,
       theme: {
         preset: MaterialPreset,
+           options: {
+            // Set to false, 'none', or a custom selector like '.my-app-dark'
+            darkModeSelector: 'none' 
+        }
       }
     }),
     

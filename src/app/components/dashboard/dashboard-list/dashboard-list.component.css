@@ -62,9 +62,9 @@ body .ui-button.rounded-button {
     }
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     .card {
         background: var(--p-surface-card, #1f2937);
     }
-}
+} */
 

@@ -4,3 +4,29 @@
 :host ::ng-deep .p-selectable-row:hover {
     background-color: transparent !important;
 } 
+
+
+/* new css  */
+/* Base styles for all dots */
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator button {
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator.p-carousel-indicator-active button {
+    opacity: 1 !important;
+}
+
+
+/* Dynamically map the dots to the variables injected via [ngStyle] */
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(1) button { background-color: var(--dot-color-0, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(2) button { background-color: var(--dot-color-1, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(3) button { background-color: var(--dot-color-2, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(4) button { background-color: var(--dot-color-3, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(5) button { background-color: var(--dot-color-4, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(6) button { background-color: var(--dot-color-5, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(7) button { background-color: var(--dot-color-6, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(8) button { background-color: var(--dot-color-7, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(9) button { background-color: var(--dot-color-8, #ccc) !important; }
+:host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(10) button { background-color: var(--dot-color-9, #ccc) !important; }
+
