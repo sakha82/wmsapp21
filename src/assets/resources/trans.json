@@ -5,6 +5,16 @@
         "sv": "Uppnått"
     },
     {
+        "tkey": "calendarColor",
+        "en": "Calendar Color",
+        "sv": "Kalender färg"
+    },
+    {
+        "tkey": "includeInCalendarHours",
+        "en": "Include In Calendar Hours",
+        "sv": "Inkludera i kalender timmar"
+    },
+    {
         "tkey": "action",
         "en": "Action",
         "sv": "Åtgärd"
