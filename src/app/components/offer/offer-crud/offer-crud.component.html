@@ -50,41 +50,44 @@
                     <label class="block mb-2" for="dueDate">{{ this.sharedService.T('validTo') }}</label>
                     <input type="text" formControlName="validTill" style="width: 100%;" pInputText />
                 </div>
-                <div class="col-span-3">
-                    <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
-                    <div class="relative">
+
+                <div class="crud-vehicle-fields col-span-12">
+                    <div class="crud-vehicle-field crud-vehicle-field--plate">
+                        <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
                         <p-iconfield>
                             <p-inputicon class=" icon-primary pi pi-car" />
                             <input pInputText type="text" formControlName="vehiclePlate" maxlength="10"
                                 placeholder="ABC123" (input)="onInputChange($event)"
-                                class="uppercase p-2 w-full pl-12 " />
+                                class="uppercase w-full p-2 pl-12" />
                         </p-iconfield>
                     </div>
-                </div>
-                <div class="md:col-span-3 mb-2">
-                    <label for="vehicleManufacturer" class="block mb-2">{{ this.sharedService.T('vehicleMake')
-                        }}</label>
-                    <p-autoComplete formControlName="vehicleManufacturer" placeholder="" [maxlength]="50"
-                        [suggestions]="selectedBrands" (onSelect)="onSelectVehicleManufacturer($event)" (completeMethod)="filterManufacturers($event)" [minLength]="1"
-                        placeholder="Ange söktext " class="w-full" forceSelection="true" optionLabel=""
-                        [showClear]="true">
-                    </p-autoComplete>
-                </div>
-                <div class="md:col-span-2 mb-2">
-                    <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
-                    </label>
-                    <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
-                        (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
-                        class="w-full"></p-autoComplete>
-                </div>
-                <div class="md:col-span-2 mb-2">
-                    <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
-                    <p-inputnumber formControlName="vehicleYear" inputId="minmax" mode="decimal" [min]="1960"
-                        [max]="2040" class="w-full" [useGrouping]="false" />
-                </div>
-                <div class="md:col-span-2 mb-2 ms-4">
-                    <label class="block mb-2" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
-                    <input type="number" formControlName="vehicleMileage" class="w-full" pInputText />
+                    <div class="crud-vehicle-field crud-vehicle-field--make">
+                        <label for="vehicleManufacturer" class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
+                        <p-autoComplete formControlName="vehicleManufacturer" placeholder="" [maxlength]="50"
+                            [suggestions]="selectedBrands" (onSelect)="onSelectVehicleManufacturer($event)" (completeMethod)="filterManufacturers($event)" [minLength]="1"
+                            placeholder="Ange söktext " class="w-full" forceSelection="true" optionLabel=""
+                            [showClear]="true">
+                        </p-autoComplete>
+                    </div>
+                    <div class="crud-vehicle-field crud-vehicle-field--model">
+                        <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
+                        </label>
+                        <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
+                            (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
+                            class="w-full"></p-autoComplete>
+                        <app-create-vehicle-model-popover
+                            [parentForm]="offer"
+                            (modelsUpdated)="onVehicleModelsUpdated($event)" />
+                    </div>
+                    <div class="crud-vehicle-field crud-vehicle-field--year">
+                        <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
+                        <p-inputnumber formControlName="vehicleYear" inputId="minmax" mode="decimal" [min]="1960"
+                            [max]="2040" class="w-full" [useGrouping]="false" />
+                    </div>
+                    <div class="crud-vehicle-field crud-vehicle-field--mileage">
+                        <label class="block mb-2" for="vehicleMileage">{{ this.sharedService.T('vehicleMileage') }}</label>
+                        <input type="number" formControlName="vehicleMileage" class="w-full" pInputText />
+                    </div>
                 </div>
                 <div class="md:col-span-3 mb-2">
                     <label class="block mb-2" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
@@ -171,34 +174,35 @@
                         [ngClass]="{'dragging-active': detail.isDragging}">
 
 
-                        <div class="flex gap-2 mb-2 text-sm font-semibold" [formGroup]="getFormGroup(detail)">
-                            <div class="w-[3%] flex items-center">
+                        <div class="flex gap-2 mb-2 text-sm font-semibold w-full min-w-0" [formGroup]="getFormGroup(detail)">
+                            <div class="w-[3%] shrink-0 flex items-center">
                                 <span class="material-symbols-outlined draggable-handle" cdkDragHandle>drag_indicator</span> 
                             </div>
                             @if(detail?.get('isTextRow').value)
                             {
-                        <div class="w-full flex items-center gap-4 relative">
-                            <textarea formControlName="textContent" rows="5" cols="135"  pTextarea></textarea>
-                                <div class="flex flex-col gap-1">
-                                    <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
-                                        {{this.sharedService.T('autoGenerateText')}}: </label>
-                                    <div *ngFor="let category of this.sharedService.getEnums('invoicePromptContext')"
-                                        class="flex">
-                                        <p-checkbox [inputId]="category.key" name="group" [value]="category"
-                                            [(ngModel)]="selectedContext" [ngModelOptions]="{standalone: true}"
-                                            (onChange)="GenerateInvoiceDescription($event, category, detail.get('rowIndex')?.value)">
-                                        </p-checkbox>
-                                        <label [for]="category.key" class="mb-2 block"
-                                            style="font-size: 11px; white-space: nowrap;padding-left: 1px;"> {{ category.text }} </label>
-                                    </div>
+                        
+                        <div class="crud-detail-text-row">
+                            <div class="crud-detail-text-area">
+                                <textarea formControlName="textContent" rows="5" class="w-full" pTextarea [autoResize]="true"></textarea>
+                            </div>
+                            <div class="crud-detail-text-options">
+                                <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
+                                    {{this.sharedService.T('autoGenerateText')}}: </label>
+                                <div *ngFor="let category of this.sharedService.getEnums('invoicePromptContext')"
+                                    class="flex">
+                                    <p-checkbox [inputId]="category.key" name="group" [value]="category"
+                                        [(ngModel)]="selectedContext" [ngModelOptions]="{standalone: true}"
+                                        (onChange)="GenerateInvoiceDescription($event, category, detail.get('rowIndex')?.value)">
+                                    </p-checkbox>
+                                    <label [for]="category.key" class="mb-2 block"
+                                        style="font-size: 11px; white-space: nowrap;padding-left: 1px;"> {{ category.text }} </label>
                                 </div>
                             </div>
-                            <div class="w-[5%] justify-end flex">
-                                <div class="w-[5%] justify-end flex items-center">
-                                    <p-button icon="pi pi-times" severity="danger"  size="small" (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
-                                </div>                            
+                            <div class="crud-detail-text-delete">
+                                <p-button icon="pi pi-times" severity="danger" size="small"
+                                    (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
                             </div>
-
+                        </div>
                             }
                             @else{
                             <div class="w-[7%]">

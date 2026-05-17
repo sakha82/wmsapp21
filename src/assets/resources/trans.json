@@ -15,6 +15,21 @@
         "sv": "Inkludera i kalender timmar"
     },
     {
+        "tkey": "includedHoursInWorkshopCapacity",
+        "en": "Included hours in workshop capacity",
+        "sv": "Ingår i verkstadens timkapacitet"
+    },
+    {
+        "tkey": "includedHoursInWorkshopCapacityShort",
+        "en": "Incl. hours",
+        "sv": "Ingår tim."
+    },
+    {
+        "tkey": "onlyActiveEmployees",
+        "en": "Only active employees",
+        "sv": "Endast aktiva anställda"
+    },
+    {
         "tkey": "action",
         "en": "Action",
         "sv": "Åtgärd"
@@ -165,6 +180,11 @@
         "sv": "Avbryt"
     },
     {
+        "tkey": "save",
+        "en": "Save",
+        "sv": "Spara"
+    },
+    {
         "tkey": "cancelled",
         "en": "Cancelled",
         "sv": "Avbruten"
@@ -293,6 +313,21 @@
         "tkey": "createNewCustomer",
         "en": "Create New Customer",
         "sv": "Skapa ny kund"
+    },
+    {
+        "tkey": "createNewModel",
+        "en": "Create New Model",
+        "sv": "Skapa ny modell"
+    },
+    {
+        "tkey": "modelCreatedSuccessfully",
+        "en": "Model Created Successfully.",
+        "sv": "Modellen skapades."
+    },
+    {
+        "tkey": "createModelFailed",
+        "en": "Could not create the model. Please check the make and model and try again.",
+        "sv": "Modellen kunde inte skapas. Kontrollera märke och modell och försök igen."
     },
     {
         "tkey": "createOffer",
@@ -723,6 +758,26 @@
         "tkey": "requiredFields",
         "en": "Please fill in all required fields",
         "sv": "Vänligen fyll i alla obligatoriska fält"
+    },
+    {
+        "tkey": "servicesRequired",
+        "en": "Add at least one service before you can create a workorder.",
+        "sv": "Lägg till minst en tjänst innan du kan skapa en arbetsorder."
+    },
+    {
+        "tkey": "servicesRequiredHint",
+        "en": "At least one service is required to create a workorder.",
+        "sv": "Minst en tjänst krävs för att skapa en arbetsorder."
+    },
+    {
+        "tkey": "validationError",
+        "en": "Validation error",
+        "sv": "Valideringsfel"
+    },
+    {
+        "tkey": "missingFields",
+        "en": "Missing",
+        "sv": "Saknas"
     },
     {
         "tkey": "newDigitalServices",

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IEmployee, IPager } from 'app/app.model'
+import { IEmployee, IPager } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
-import { catchError, finalize, takeUntil, Subject } from 'rxjs';
+import { finalize, takeUntil, Subject } from 'rxjs';
 import { LogService } from 'app/services/log.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -14,16 +14,34 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TooltipModule } from 'primeng/tooltip';
 // import { GenericLoaderComponent } from '../shared/generic-loader/generic-loader.component';
+
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, ButtonModule, AutoCompleteModule, TableModule, PaginatorModule, SelectModule, InputTextModule],
-  templateUrl: './employee-list.component.html'
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ProgressSpinnerModule,
+    ButtonModule,
+    AutoCompleteModule,
+    TableModule,
+    PaginatorModule,
+    SelectModule,
+    InputTextModule,
+    CheckboxModule,
+    TooltipModule,
+  ],
+  templateUrl: './employee-list.component.html',
 })
-export class EmployeeListComponent implements OnDestroy {
+export class EmployeeListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   employees: IEmployee[] = [];
+  displayedEmployees: IEmployee[] = [];
+  onlyActiveEmployees = false;
   filters: FormGroup;
   pager: IPager = <IPager>{};
   isLoading: boolean = false;
@@ -49,7 +67,9 @@ export class EmployeeListComponent implements OnDestroy {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
+    this.route.queryParams.subscribe((params) => {
+      this.sharedService.updateFiltersFromQueryParams(this.filters, params);
+    });
 
     this.getEmployees();
     this.loadFilterOptions();
@@ -60,21 +80,49 @@ export class EmployeeListComponent implements OnDestroy {
     this.employeeService
       .getAllEmployees()
       .pipe(
-        finalize(() => { this.isLoading = false; }),
+        finalize(() => {
+          this.isLoading = false;
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (res) => {
-          this.employees = res;
+          this.employees = res ?? [];
+          this.applyEmployeeFilters();
         },
         error: (err) => {
           this.logger.error(err);
-        }
+        },
       });
   }
 
+  onOnlyActiveEmployeesChange(): void {
+    this.applyEmployeeFilters();
+  }
+
+  applyEmployeeFilters(): void {
+    let filtered = [...this.employees];
+
+    if (this.onlyActiveEmployees) {
+      filtered = filtered.filter((emp) => this.isActiveEmployee(emp));
+    }
+
+    this.displayedEmployees = filtered;
+  }
+
+  isActiveEmployee(emp: IEmployee): boolean {
+    const terminationDate = emp.terminationDate;
+    return terminationDate == null || terminationDate === '';
+  }
+
+  formatIncludeInCalendarHours(value: boolean | null | undefined): string {
+    return value
+      ? this.sharedService.T('yes')
+      : this.sharedService.T('no');
+  }
+
   deleteEmployee(employeeId: number) {
-    const selected = this.employees.find(e => e.employeeId === employeeId);
+    const selected = this.employees.find((e) => e.employeeId === employeeId);
     if (!selected) return;
 
     const toDeactivate: IEmployee = { ...selected, isActive: false } as IEmployee;
@@ -83,7 +131,9 @@ export class EmployeeListComponent implements OnDestroy {
     this.employeeService
       .upsertEmployee(toDeactivate)
       .pipe(
-        finalize(() => { this.isLoading = false; }),
+        finalize(() => {
+          this.isLoading = false;
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -92,7 +142,7 @@ export class EmployeeListComponent implements OnDestroy {
         },
         error: (err) => {
           this.logger.error(err);
-        }
+        },
       });
   }
 
@@ -108,30 +158,30 @@ export class EmployeeListComponent implements OnDestroy {
     this.employeeTypes = [
       { employeeTypeId: 1, employeeTypeName: 'Permanent' },
       { employeeTypeId: 2, employeeTypeName: 'Contract' },
-      { employeeTypeId: 3, employeeTypeName: 'Intern' }
+      { employeeTypeId: 3, employeeTypeName: 'Intern' },
     ];
     this.employeeTags = [
       { employeeTagId: 1, employeeTagName: 'Developer' },
       { employeeTagId: 2, employeeTagName: 'Designer' },
-      { employeeTagId: 3, employeeTagName: 'Manager' }
+      { employeeTagId: 3, employeeTagName: 'Manager' },
     ];
     this.employeeCities = [
       { employeeCityId: 1, employeeCityName: 'Lahore' },
       { employeeCityId: 2, employeeCityName: 'Karachi' },
-      { employeeCityId: 3, employeeCityName: 'Islamabad' }
+      { employeeCityId: 3, employeeCityName: 'Islamabad' },
     ];
   }
 
   keyupEmployeeName(target: any) {
     const name = target.value?.trim() || '';
     this.filters.patchValue({ employeeName: name });
-     this.sharedService.updateFiltersInNavigation(this.filters);
+    this.sharedService.updateFiltersInNavigation(this.filters);
     this.getEmployees();
   }
 
   onClearEmployeeName() {
     this.filters.patchValue({ employeeName: '' });
-     this.sharedService.updateFiltersInNavigation(this.filters);
+    this.sharedService.updateFiltersInNavigation(this.filters);
     this.getEmployees();
   }
 

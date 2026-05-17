@@ -11,16 +11,16 @@
                     </div>
                     <div class="flex flex-wrap items-center gap-6 lg:ml-auto">
                         @for (emp of employees; track emp.employeeId) {
-                        <div class="flex items-center gap-2">
+                        <div class="employee-filter-item flex items-center gap-2">
                             <p-checkbox [inputId]="'emp-' + emp.employeeId" [value]="emp"
                                 [(ngModel)]="selectedEmployees" [ngModelOptions]="{standalone: true}"
                                 (onChange)="onChangeEmployee()" [binary]="false">
                             </p-checkbox>
+                            <span [style.background-color]="emp.calendarColor"
+                                class="employee-color-swatch shrink-0"></span>
                             <label [for]="'emp-' + emp.employeeId"
-                                class="cursor-pointer text-sm font-medium text-slate-700">
-                               <span [style.background-color]="emp.calendarColor"
-                                    class="inline-block w-4 h-4 rounded"></span>  {{ emp.fullName }} 
-
+                                class="employee-filter-label cursor-pointer text-sm font-medium text-slate-700">
+                                {{ emp.fullName }}
                             </label>
                         </div>
                         }
@@ -141,39 +141,39 @@
             <p-table [value]="[1]">
                 <ng-template pTemplate="body">
                     <tr>
-                        <th>Regnr</th>
+                        <th>{{ this.sharedService.T('vehiclePlate') }}</th>
                         <td>{{ selectedBooking.vehiclePlate }}</td>
                     </tr>
                     <tr>
-                        <th>Verkstadstjanster</th>
+                        <th>{{ this.sharedService.T('services') }}</th>
                         <td>{{ selectedBooking.serviceTypes }}</td>
                     </tr>
                     <tr>
-                        <th>Berkand tid (timmar)</th>
+                        <th>{{ this.sharedService.T('estimatedHours') }}</th>
                         <td>{{ selectedBooking.estimatedHours }}</td>
                     </tr>
                     <tr>
-                        <th>Antal (km)</th>
+                        <th>{{ this.sharedService.T('vehicleMileage') }}</th>
                         <td>{{ selectedBooking.vehicleMileage }}</td>
                     </tr>
                     <tr>
-                        <th>Customer Name</th>
+                        <th>{{ this.sharedService.T('customerName') }}</th>
                         <td>{{ selectedCustomerName }}</td>
                     </tr>
                     <tr>
-                        <th>Payment Type</th>
+                        <th>{{ this.sharedService.T('paymentType') }}</th>
                         <td>{{ selectedPaymentTypeText }}</td>
                     </tr>
                     <tr>
-                        <th>Offer</th>
+                        <th>{{ this.sharedService.T('offer') }}</th>
                         <td>{{ selectedBooking.offerId }}</td>
                     </tr>
                     <tr>
-                        <th>Mechanic Name</th>
+                        <th>{{ this.sharedService.T('employeeName') }}</th>
                         <td>{{ selectedEmployeeName }}</td>
                     </tr>
                     <tr>
-                        <th>Description</th>
+                        <th>{{ this.sharedService.T('description') }}</th>
                         <td>{{ selectedBooking.description }}</td>
                     </tr>
                 </ng-template>
@@ -181,10 +181,10 @@
         </div>
         <!-- Buttons -->
         <div class="flex justify-end gap-3 mt-10">
-            <p-button [disabled]="" label="Save">
+            <p-button [disabled]="" label="{{ this.sharedService.T('save') }}">
             </p-button>
 
-            <p-button severity="secondary" label="Cancel" (click)="onCancel()">
+            <p-button severity="secondary" label="{{ this.sharedService.T('cancel') }}" (click)="onCancel()">
             </p-button>
         </div>
 

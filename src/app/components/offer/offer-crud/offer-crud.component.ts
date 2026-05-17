@@ -31,6 +31,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
 
 @Component({
   selector: 'app-create-offer',
@@ -56,7 +57,8 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     TooltipModule,
     MessageModule,
     DialogModule,
-    SplitButtonModule
+    SplitButtonModule,
+    CreateVehicleModelPopoverComponent
   ], templateUrl: './offer-crud.component.html',
   styleUrl: './offer-crud.component.css',
   providers: [MessageService, ConfirmationService]
@@ -269,6 +271,12 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     const query = event.query.toUpperCase();
     this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
   }
+
+  onVehicleModelsUpdated(models: string[]): void {
+    this.models = models;
+    this.selectedModels = [...models];
+  }
+
   // detail selection
     getProducts(detail:any, event: AutoCompleteCompleteEvent) {
       

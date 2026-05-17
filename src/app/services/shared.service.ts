@@ -372,6 +372,24 @@ get lang(): 'en' | 'sv' {
     );
   }
 
+  registerVehicleModel(vehicleType: IVehicleType): string[] {
+    const exists = this.allVehicleTypes.some(
+      (v) =>
+        v.make.toLowerCase() === vehicleType.make.toLowerCase() &&
+        v.model.toLowerCase() === vehicleType.model.toLowerCase()
+    );
+    if (!exists) {
+      this.allVehicleTypes.push(vehicleType);
+      this.allManufacturers = this.transformModelsToVehicles(this.allVehicleTypes);
+    }
+    return (
+      this.allManufacturers
+        .find((v) => v.name.toLowerCase() === vehicleType.make.toLowerCase())
+        ?.models.slice()
+        .sort((a, b) => a.localeCompare(b)) ?? []
+    );
+  }
+
 loadResources(): Observable<void> {
   this.logger.info('Start loading resource files');
 

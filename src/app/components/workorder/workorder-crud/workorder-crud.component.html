@@ -30,7 +30,7 @@
           <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
             (input)="onInputChange($event)"
             class="uppercase p-2 w-full pl-12 "
-            [invalid]="!this.workOrder.get('vehiclePlate')?.value"  />
+            [invalid]="isFieldInvalid('vehiclePlate')" />
             </p-iconfield>
         </div>
       </div>
@@ -41,7 +41,7 @@
         <p-autoComplete formControlName="vehicleManufacturer" [suggestions]="selectedBrands"
           (completeMethod)="filterManufacturers($event)" (onSelect)="onSelectVehicleManufacturer($event)" [minLength]="1" placeholder="Ange söktext "
           forceSelection="true" optionLabel="" [showClear]="true" class="w-full"
-          [invalid]="!this.workOrder.get('vehicleManufacturer')?.value"></p-autoComplete>
+          [invalid]="isFieldInvalid('vehicleManufacturer')"></p-autoComplete>
       </div>
 
       <!-- Vehicle Model -->
@@ -49,6 +49,9 @@
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
         <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels" (completeMethod)="filterModels($event)"
           forceSelection="true" [showClear]="true" class="w-full"></p-autoComplete>
+        <app-create-vehicle-model-popover
+          [parentForm]="workOrder"
+          (modelsUpdated)="onVehicleModelsUpdated($event)" />
       </div>
 
       <!-- Gap Between First 3 and Last 2 -->
@@ -77,7 +80,7 @@
             [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
             (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true"
             [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full"
-            [invalid]="!this.workOrder.get('customerId')?.value || this.workOrder.get('customerId')?.value === 0">
+            [invalid]="isFieldInvalid('customerId')">
             <ng-template let-customer #item>
               <div class="flex items-center gap-2">
                 <div>{{ customer.customerName }}</div>
@@ -241,7 +244,8 @@
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('mechanic') }}</label>
         <p-select [options]="employees" formControlName="employeeId" optionLabel="fullName" optionValue="employeeId"
-          [showClear]="true" class="w-full"></p-select>
+          [showClear]="true" class="w-full"
+          [invalid]="isFieldInvalid('employeeId')"></p-select>
       </div>
       <div class="col-span-2">
         <label class="block mb-2">{{this.sharedService.T('oilType')}}</label>
@@ -258,15 +262,20 @@
       <div class="col-span-12">
         <!-- Service Actions Header -->
         <div class="flex items-center gap-3 mb-4 mt-2">
-          <p-button label="{{ this.sharedService.T('add') }} {{ this.sharedService.T('services') }}" variant="outlined" icon="pi pi-plus" (onClick)="servicesPopover.toggle($event);resetServiceProduct()"  />
-          <span class="text-sm font-medium">{{ this.sharedService.T('addedServices') }}</span>
+          <p-button label="{{ this.sharedService.T('add') }} {{ this.sharedService.T('services') }}" variant="outlined"
+            icon="pi pi-plus" (onClick)="servicesPopover.toggle($event);resetServiceProduct()"
+            [pTooltip]="sharedService.T('servicesRequiredHint')" tooltipPosition="top" />
+          <span class="text-sm font-medium">{{ this.sharedService.T('addedServices') }} *</span>
           <span class="flex items-center gap-1 font-semibold text-sm">
             <i class="pi pi-clock" style="font-size: 0.75rem;"></i>
             {{ this.workOrder.get('serviceDuration')?.value || 0 }} {{ this.sharedService.T('hours') }}
           </span>
         </div>
-        
-        
+   
+        <p-message *ngIf="showServicesError()" severity="warn" variant="simple" class="mb-3">
+          {{ sharedService.T('servicesRequired') }}
+        </p-message>
+
         <p-popover #servicesPopover>
           <form [formGroup]="selectedProduct">
             <!-- Labels Row -->
@@ -280,21 +289,19 @@
             <!-- Input Row -->
             <div class="flex gap-2 items-end">
               <div class="w-[40%]">
-                <p-autoComplete 
-                    class="white_bg_input" 
+                <p-autoComplete
                     #prodAutoComplete
                     formControlName="productName"
-                    placeholder="Väjl en produkt" 
-                    [maxlength]="38" 
+                    placeholder="Väjl en produkt"
+                    [maxlength]="38"
                     [suggestions]="products"
-                    (completeMethod)="getProducts($event)" 
+                    (completeMethod)="getProducts($event)"
                     (onSelect)="onSelectProduct($event)"
-                    optionLabel="productName" 
+                    optionLabel="productName"
                     [showClear]="false"
-                    [forceSelection]="false" 
+                    [forceSelection]="false"
                     [showEmptyMessage]="false"
-                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
-                    >
+                    class="w-full">
                     <ng-template let-product pTemplate="item">
                         <div class="flex gap-3 w-full">
                             <div class="flex-shrink-0 pt-1">
@@ -312,7 +319,7 @@
 
               <div class="w-[32%]">
                 <input formControlName="productDescription" placeholder="Extra information" type="text"
-                      style="width: 100%; background-color: white;" pInputText />
+                  class="w-full" pInputText />
               </div>
 
               <div class="w-[14%]">

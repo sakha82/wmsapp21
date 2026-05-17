@@ -41,8 +41,16 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { emailOrTelephoneRequiredValidator } from 'app/validators/validator';
+import {
+  collectWorkOrderValidationFieldLabels,
+  isWorkOrderFieldInvalid,
+  isWorkOrderServicesMissing,
+  isWorkOrderFormValid,
+  WorkOrderRequiredField,
+} from 'app/validators/workorder-validation';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { PickListModule } from 'primeng/picklist';
+import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
 
 @Component({
   selector: 'app-order-crud',
@@ -74,7 +82,8 @@ import { PickListModule } from 'primeng/picklist';
     MultiSelectModule,
     TextareaModule,
     TooltipModule,
-    PickListModule
+    PickListModule,
+    CreateVehicleModelPopoverComponent
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
@@ -113,6 +122,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   models: any[] = [];
   selectedModels: any[] = [];
   selectedCustomerName: any = null;
+  formSubmitted = false;
 
 
   /*** */
@@ -169,7 +179,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       description: null,
       bookingDate: null,
       bookingTime: null,
-      employeeId: null,
+      employeeId:  [null,Validators.required],
       offerId: null,
     });
 
@@ -412,6 +422,11 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
   }
 
+  onVehicleModelsUpdated(models: string[]): void {
+    this.models = models;
+    this.selectedModels = [...models];
+  }
+
   filterSuppliers(event: any): void {
     this.supplierService
       .getSuppliersByprefix(event.query.toUpperCase())
@@ -574,6 +589,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       // Product has valid ID, add it to the list
       this.selectedProducts.push(this.selectedProduct.value);
       this.sumServiceDuration();
+      this.resetServiceProduct();
     }
   }
   removeWOService(index: number) {
@@ -631,19 +647,59 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       order.woPurchaseId = index + 1; // Reassign index starting from 1
     });
   }
+  isFieldInvalid(controlName: WorkOrderRequiredField): boolean {
+    return isWorkOrderFieldInvalid(this.workOrder, controlName, this.formSubmitted);
+  }
+
+  showServicesError(): boolean {
+    return isWorkOrderServicesMissing(this.selectedProducts, this.formSubmitted);
+  }
+
+  private showWorkOrderValidationMessages(): void {
+    const missingLabels = collectWorkOrderValidationFieldLabels(
+      this.workOrder,
+      this.selectedProducts,
+      (key) => this.sharedService.T(key)
+    );
+
+    if (missingLabels.length === 0) {
+      return;
+    }
+
+    if (this.selectedProducts.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: this.sharedService.T('validationError'),
+        detail: this.sharedService.T('servicesRequired'),
+        life: 6000,
+      });
+    }
+
+    const formMissing = missingLabels.filter(
+      (label) => label !== this.sharedService.T('service')
+    );
+    if (formMissing.length > 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: this.sharedService.T('requiredFields'),
+        detail: `${this.sharedService.T('missingFields')}: ${formMissing.join(', ')}`,
+        life: 6000,
+      });
+    }
+  }
+
   saveWorkOrder() {
-    this.showSpinner = true;
-    if (this.workOrder.invalid) {
-      this.workOrder.markAllAsTouched();
+    this.formSubmitted = true;
+    this.workOrder.markAllAsTouched();
+
+    if (!isWorkOrderFormValid(this.workOrder, this.selectedProducts)) {
+      this.showWorkOrderValidationMessages();
       this.showSpinner = false;
       return;
     }
+
+    this.showSpinner = true;
     this.logger.info(this.selectedProducts);
-    if(this.selectedProducts.length === 0){ 
-     this.workOrder.markAllAsTouched();
-     this.showSpinner = false; 
-     return;
-    }
 
     var submittedWorkOrder: IWorkOrder = this.workOrder.value;
     submittedWorkOrder.woPurchases = [];
