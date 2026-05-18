@@ -1,12 +1,12 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { catchError, EMPTY, Observable, throwError } from 'rxjs';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LogService } from 'app/services/log.service';
-import { Router } from '@angular/router';
+import { AuthSessionService } from 'app/services/auth-session.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private logger: LogService,private ngZone: NgZone) {}
+  constructor(private logger: LogService, private authSession: AuthSessionService) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
   { 
   const accessToken = sessionStorage.getItem('accessToken');
@@ -39,30 +39,8 @@ export class TokenInterceptor implements HttpInterceptor {
       if (serverMessage.toLowerCase().includes('double session')) {
         userMessage = 'Du har loggats ut eftersom ditt konto användes för inloggning på en annan plats. Logga in igen.';
       }
-      sessionStorage.clear();
-      sessionStorage.setItem('authErrorMessage', userMessage);
-      this.logger.warn('Auth error, navigating to login', { status,serverMessage});
-
-      // Redirect to home/login (adjust route if needed)
-      this.ngZone.run(() => {
-            this.router.navigate(['']).then(
-              (success) => {
-                this.logger.info('Router navigation to home/login success:', success);
-                if (!success) {
-                  // Hard fallback if router refuses to navigate
-                  window.location.href = '/';
-                }
-              },
-              (navErr) => {
-                this.logger.error('Router navigation error, using hard reload', navErr);
-                window.location.href = '/';
-              }
-            );
-          });
-
-
-
-
+      this.logger.warn('Auth error, navigating to login', { status, serverMessage });
+      this.authSession.forceLogout(userMessage);
       return EMPTY;
     }
 

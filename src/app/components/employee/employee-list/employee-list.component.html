@@ -1,9 +1,23 @@
 <section class="px-5 py-10 bg-white">
   <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
-    <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
-      <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-        <p-button [raised]="true" label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('employee') }}" size="large"
-          icon="pi pi-plus" (click)="redirectToEmployeeCrudComponent()"></p-button>
+    <div class="flex items-center gap-4 flex-wrap justify-between mb-6">
+      <p-button
+        [raised]="true"
+        label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('employee') }}"
+        size="large"
+        icon="pi pi-plus"
+        (click)="redirectToEmployeeCrudComponent()" />
+
+      <div class="flex items-center gap-2">
+        <p-checkbox
+          inputId="onlyActiveEmployees"
+          [(ngModel)]="onlyActiveEmployees"
+          [binary]="true"
+          [ngModelOptions]="{ standalone: true }"
+          (onChange)="onOnlyActiveEmployeesChange()" />
+        <label for="onlyActiveEmployees" class="cursor-pointer text-sm font-medium text-slate-700 whitespace-nowrap">
+          {{ this.sharedService.T('onlyActiveEmployees') }}
+        </label>
       </div>
     </div>
 
@@ -11,56 +25,77 @@
   </div>
 
   <div class="mb-10">
-    <p-table 
-      [value]="employees" 
-      [showGridlines]="false" 
+    <p-table
+      [value]="displayedEmployees"
+      [showGridlines]="false"
       [rows]="10"
       [first]="0"
       [paginator]="true"
-      [rowsPerPageOptions]="[10, 20,30]"  
+      [rowsPerPageOptions]="[10, 20, 30]"
       [showCurrentPageReport]="true"
       currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
-      [sortOrder]="-1" 
-      sortField="employeeId" 
-      >
+      [sortOrder]="-1"
+      sortField="employeeId">
       <ng-template pTemplate="header">
         <tr class="table-header-row">
           <th class="rounded-l-xl" pSortableColumn="employeeId">
-            {{this.sharedService.T('id')}}
-            <p-sortIcon field="employeeId"/></th>
-          <th>{{this.sharedService.T('employeeName')}}</th>
-          <th>{{this.sharedService.T('personalNumber')}}</th>
-          <th>{{this.sharedService.T('jobTitle')}}</th>
-          <th>{{this.sharedService.T('hireDate')}}</th>
-          <th>{{this.sharedService.T('terminationDate')}}</th>
-          <th>{{this.sharedService.T('telephone')}}</th>
-          <th>{{this.sharedService.T('email')}}</th>
-          <th>{{this.sharedService.T('actions')}}</th>
+            {{ this.sharedService.T('id') }}
+            <p-sortIcon field="employeeId" />
+          </th>
+          <th>{{ this.sharedService.T('employeeName') }}</th>
+          <th>{{ this.sharedService.T('personalNumber') }}</th>
+          <th>{{ this.sharedService.T('jobTitle') }}</th>
+          <th>{{ this.sharedService.T('hireDate') }}</th>
+          <th>{{ this.sharedService.T('terminationDate') }}</th>
+          <th class="whitespace-nowrap">
+            <span
+              [pTooltip]="sharedService.T('includedHoursInWorkshopCapacity')"
+              tooltipPosition="top">
+              {{ sharedService.T('includedHoursInWorkshopCapacityShort') }}
+            </span>
+          </th>
+          <th>{{ this.sharedService.T('telephone') }}</th>
+          <th>{{ this.sharedService.T('email') }}</th>
+          <th>{{ this.sharedService.T('actions') }}</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-emp>
         <tr>
-          <td>{{emp.employeeId}}</td>
-          <td>{{emp.fullName}}</td>
-          <td>{{emp.personNumber}}</td>
-          <td>{{emp.jobTitle}}</td>
-          <td>{{emp.hireDate}}</td>
-          <td>{{emp.terminationDate}}</td>
-          <td>{{emp.telephone}}</td>
-          <td>{{emp.email}}</td>
+          <td>{{ emp.employeeId }}</td>
           <td>
-            <p-button size="small" icon="pi pi-pencil" severity="secondary"
-                                     (onClick)="editEmployee(emp.employeeId)">
-            </p-button>
+            <div class="flex items-center gap-2">
+              <span
+                class="inline-block w-4 h-4 rounded shrink-0"
+                [style.background-color]="emp.calendarColor || '#cccccc'"></span>
+              <span>{{ emp.fullName }}</span>
+            </div>
+          </td>
+          <td>{{ emp.personNumber }}</td>
+          <td>{{ emp.jobTitle }}</td>
+          <td>{{ emp.hireDate }}</td>
+          <td>{{ emp.terminationDate }}</td>
+          <td>{{ formatIncludeInCalendarHours(emp.includeInCalendarHours) }}</td>
+          <td>{{ emp.telephone }}</td>
+          <td>{{ emp.email }}</td>
+          <td>
+            <p-button
+              size="small"
+              icon="pi pi-pencil"
+              severity="secondary"
+              (onClick)="editEmployee(emp.employeeId)" />
           </td>
         </tr>
       </ng-template>
     </p-table>
-    
   </div>
 </section>
- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
+
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+  <div class="bg-white rounded-lg p-8 shadow-lg">
+    <p-progress-spinner
+      strokeWidth="8"
+      fill="transparent"
+      animationDuration=".5s"
+      [style]="{ width: '50px', height: '50px' }" />
+  </div>
 </div>

@@ -1,0 +1,45 @@
+<div class="mt-3">
+  <p-button
+    [label]="sharedService.T('createNewModel')"
+    variant="outlined"
+    icon="pi pi-plus"
+    class="w-full"
+    (onClick)="openPopover($event)" />
+
+  <p-popover #modelPopover>
+    <form [formGroup]="newModelForm" class="flex flex-col gap-4 w-[25rem]">
+      <div>
+        <label class="block mb-2">{{ sharedService.T('vehicleMake') }}</label>
+        <input
+          type="text"
+          formControlName="make"
+          pInputText
+          readonly
+          class="w-full"
+          [invalid]="newModelForm.get('make')?.touched && newModelForm.get('make')?.invalid" />
+      </div>
+
+      <div>
+        <label class="block mb-2">{{ sharedService.T('vehicleModel') }}</label>
+        <input
+          type="text"
+          formControlName="model"
+          pInputText
+          class="w-full"
+          [invalid]="newModelForm.get('model')?.touched && newModelForm.get('model')?.invalid" />
+      </div>
+
+      <p-message *ngIf="createModelError" severity="error" variant="simple">
+        {{ createModelError }}
+      </p-message>
+
+      <div class="flex gap-2">
+        <p-button
+          [label]="sharedService.T('create')"
+          icon="{{ isCreatingModel ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}"
+          [disabled]="isCreatingModel"
+          (onClick)="createModel()" />
+      </div>
+    </form>
+  </p-popover>
+</div>

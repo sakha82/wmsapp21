@@ -11,6 +11,7 @@ import { definePreset } from '@primeng/themes';
 import Material from '@primeng/themes/material';
 import { LoggingInterceptor } from 'app/interceptor/logging.interceptor';
 import { TokenInterceptor } from 'app/interceptor/token.interceptor';
+import { WmsIdInterceptor } from 'app/interceptor/wms-id.interceptor';
 export const MaterialPreset = definePreset(Material, {});
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +29,10 @@ export const appConfig: ApplicationConfig = {
       translation: sv,
       theme: {
         preset: MaterialPreset,
+           options: {
+            // Set to false, 'none', or a custom selector like '.my-app-dark'
+            darkModeSelector: 'none' 
+        }
       }
     }),
     
@@ -38,6 +43,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: WmsIdInterceptor,
       multi: true
     },
     {

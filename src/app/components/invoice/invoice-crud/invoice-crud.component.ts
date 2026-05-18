@@ -34,6 +34,7 @@ import { AiService } from 'app/services/ai.service';
 import { CustomerService } from 'app/services/customer.service';
 import { TextareaModule } from 'primeng/textarea';
 import { WorkOrderService } from 'app/services/workorder.service';
+import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
 
 
 
@@ -61,7 +62,8 @@ import { WorkOrderService } from 'app/services/workorder.service';
     SplitButtonModule,
     TooltipModule,
     CheckboxModule,
-    TextareaModule 
+    TextareaModule,
+    CreateVehicleModelPopoverComponent
   ],
   templateUrl: './invoice-crud.component.html',
   styleUrl: './invoice-crud.component.css',
@@ -295,6 +297,11 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   filterModels(event: any): void {
     const query = event.query.toUpperCase();
     this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
+  }
+
+  onVehicleModelsUpdated(models: string[]): void {
+    this.models = models;
+    this.selectedModels = [...models];
   }
 
   // detail selection

@@ -1,187 +1,194 @@
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
         <div *ngIf="weekCalendar.length > 0">
-        <div class="mb-6 mt-2 shadow-sm bg-white rounded-md p-5">
-            <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
-                <p-datepicker [(ngModel)]="selectedMonth" [ngModelOptions]="{standalone: true}" view="month"
-                    dateFormat="MM yy" dataType="string" showIcon iconDisplay="input" (onSelect)="onSelectMonth($event)"/>
-                <div class="">
-                    
-                </div>
-                <div class="flex flex-wrap items-center gap-6 lg:ml-auto">
-                    @for (emp of employees; track emp.employeeId) {
-                    <div class="flex items-center gap-2">
-                        <p-checkbox [inputId]="'emp-' + emp.employeeId" [value]="emp" [(ngModel)]="selectedEmployees"
-                         [ngModelOptions]="{standalone: true}"   (onChange)="onChangeEmployee()" [binary]="false">
-                        </p-checkbox>
-                        <label [for]="'emp-' + emp.employeeId"
-                            class="cursor-pointer text-sm font-medium text-slate-700">
-                            {{ emp.fullName }}
-                        </label>
+            <div class="mb-6 mt-2 shadow-sm bg-white rounded-md p-5">
+                <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
+                    <p-datepicker [(ngModel)]="selectedMonth" [ngModelOptions]="{standalone: true}" view="month"
+                        dateFormat="MM yy" dataType="string" showIcon iconDisplay="input"
+                        (onSelect)="onSelectMonth($event)" />
+                    <div class="">
+
                     </div>
-                    }
+                    <div class="flex flex-wrap items-center gap-6 lg:ml-auto">
+                        @for (emp of employees; track emp.employeeId) {
+                        <div class="employee-filter-item flex items-center gap-2">
+                            <p-checkbox [inputId]="'emp-' + emp.employeeId" [value]="emp"
+                                [(ngModel)]="selectedEmployees" [ngModelOptions]="{standalone: true}"
+                                (onChange)="onChangeEmployee()" [binary]="false">
+                            </p-checkbox>
+                            <span [style.background-color]="emp.calendarColor"
+                                class="employee-color-swatch shrink-0"></span>
+                            <label [for]="'emp-' + emp.employeeId"
+                                class="employee-filter-label cursor-pointer text-sm font-medium text-slate-700">
+                                {{ emp.fullName }}
+                            </label>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <hr class="border-CustomBorder">
+                <div class="mt-2 flex items-center justify-left gap-4 flex-wrap">
+                    <p-button label="{{ this.sharedService.T('previous') }}" icon="pi pi-angle-double-left"
+                        variant="outlined" severity="primary" (onClick)="onClickPreviousWeek()"></p-button>
+                    <p class="text-lg font-bold whitespace-nowrap">{{ this.sharedService.T('week') }} {{selectedWeek}}
+                    </p>
+                    <p-button label="{{ this.sharedService.T('next') }}" icon="pi pi-angle-double-right"
+                        variant="outlined" severity="primary" (onClick)="onClickNextWeek()"></p-button>
+                    <p class="text-lg font-bold whitespace-nowrap"> {{weekCalendar[0]['mondayDate']}} -
+                        {{weekCalendar[0]['sundayDate']}}</p>
                 </div>
             </div>
-            <hr class="border-CustomBorder">
-            <div class="mt-2 flex items-center justify-left gap-4 flex-wrap">
-                <p-button label="{{ this.sharedService.T('previous') }}" icon="pi pi-angle-double-left" variant="outlined" severity="primary" (onClick)="onClickPreviousWeek()"></p-button>
-                <p class="text-lg font-bold whitespace-nowrap">{{ this.sharedService.T('week') }} {{selectedWeek}}</p>                            
-                <p-button label="{{ this.sharedService.T('next') }}" icon="pi pi-angle-double-right" variant="outlined" severity="primary" (onClick)="onClickNextWeek()"></p-button>                     
-                <p class="text-lg font-bold whitespace-nowrap"> {{weekCalendar[0]['mondayDate']}} - {{weekCalendar[0]['sundayDate']}}</p>
-            </div>
-        </div>
-        <div>
-            <p-table [value]="weekCalendar" [showGridlines]="true" responsiveLayout="scroll">
-                <!-- Header -->
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th class="bg-white"></th>
-                        <th *ngFor="let day of days; let i = index"
-                            [ngClass]="selectedDay == i + 1 ? 'booking-current-day' : 'bg-white'"
-                            style="width: 240px; min-width: 240px; max-width: 240px; overflow: hidden;">
-                            <div class="flex justify-between gap-3 rounded-t-lg px-3">
-                                <p class="text-2xl my-auto"> {{ this.sharedService.T(day) }}</p> 
-                                <p-badge value="{{weekCalendar[0][day + 'Date']?.slice(-2)}}" badgeSize="xlarge"/>
-                            </div>
-                            <div>
-                                <p-button icon="pi pi-print" [text]="true" severity="secondary" size="small" 
-                                 pTooltip="Print" tooltipPosition="top" 
-                                 (onClick)="printBookings(weekCalendar[0][day + 'Date'])" class="p-0" />
-                            </div>
-                            <div style="padding: 0.375rem; display: flex; flex-direction: column; gap: 0.25rem;">
-                                <p-button label="{{ this.sharedService.T('bookings') }}" severity="primary" size="small" badge="{{ bookingsCount[day] || 0 }}" badgeSeverity="contrast" variant="text" 
-                                    [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.8125rem', 'font-weight': '500', 'gap': '0'}" />
-                                <p-button label="{{ this.sharedService.T('bookedHours') }}" severity="danger" size="small" badge="{{ serviceHoursCount[day] || 0  }}" badgeSeverity="danger" variant="text"  
-                                    [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" />
-                                <p-button label="{{ this.sharedService.T('availableHours') }}" severity="success" size="small" badge="{{ calculateFreeHours(day) }}" badgeSeverity="success" variant="text" 
-                                    [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" /> 
-                            </div>
-                        </th>
-                    </tr>
-                </ng-template>
-                <!-- body -->
-                <ng-template pTemplate="body" let-calendar>
-                    <tr style="background-color: white;">
-                         <td [class.time-span]="isTimeBookedAt(calendar.cTime)">
-                            <div><p class="w-fit text-3xl font-bold">{{ calendar.cTime }}</p></div>
-                         </td>
-                        <td *ngFor="let day of days; let i = index" class="relative" 
-                            style="width: 240px; min-width: 240px; max-width: 240px; overflow: hidden;"
-                            [ngClass]="selectedDay == i + 1 ? 'booking-current-day' : ''"
-                            (mouseenter)="hoveredSlot = { day, time: calendar.cTime }" 
-                            (mouseleave)="hoveredSlot = null">
-                            
-                            <!-- Button that appears on hover -->
-                            <p-button 
-                            *ngIf="hoveredSlot?.day === day && hoveredSlot?.time === calendar.cTime" 
-                            label="{{this.sharedService.T('add_booking_at_time')}} {{ calendar.cTime }}" 
-                            icon="pi pi-plus" 
-                            size="small"  
-                            variant="outlined" 
-                            [style]="{'width': 'fit-content'}"
-                            (onClick)="createBooking(calendar[day + 'Date'], calendar.cTime)">
-                            </p-button>
-                            
-                            <!-- Carousel for bookings -->
-                            <p-carousel 
-                            *ngIf="calendar[day + 'Bookings']?.length > 0" 
-                            [value]="calendar[day + 'Bookings']" 
-                            [numVisible]="1" 
-                            [numScroll]="1" 
-                            [circular]="false"
-                            containerStyle="width: 100%; height: 100%;">
-                            
-                            <ng-template let-booking #item>
-                                <div class="m-2 p-4 rounded-lg border-l-4 cursor-pointer" 
-                                style="background-color: var(--p-primary-50, #f0f9ff); border-left-color: var(--p-primary-500);"
-                                (click)="showBookingInfo(booking)">
+            <div>
+                <p-table [value]="weekCalendar" [showGridlines]="true" responsiveLayout="scroll">
+                    <!-- Header -->
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th class="bg-white"></th>
+                            <th *ngFor="let day of days; let i = index"
+                                [ngClass]="selectedDay == i + 1 ? 'booking-current-day' : 'bg-white'"
+                                style="width: 240px; min-width: 240px; max-width: 240px; overflow: hidden;">
+                                <div class="flex justify-between gap-3 rounded-t-lg px-3">
+                                    <p class="text-2xl my-auto"> {{ this.sharedService.T(day) }}</p>
+                                    <p-badge value="{{weekCalendar[0][day + 'Date']?.slice(-2)}}" badgeSize="xlarge" />
+                                </div>
                                 <div>
-                                    <p class="font-semibold text-xs" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ booking.vehiclePlate }}</p>
-                                    <p class="text-xs" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem;">{{ booking.vehicleManufacturer }} {{ booking.vehicleModel }} </p>
+                                    <p-button icon="pi pi-print" [text]="true" severity="secondary" size="small"
+                                        pTooltip="Print" tooltipPosition="top"
+                                        (onClick)="printBookings(weekCalendar[0][day + 'Date'])" class="p-0" />
                                 </div>
+                                <div style="padding: 0.375rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                                    <p-button label="{{ this.sharedService.T('bookings') }}" severity="primary"
+                                        size="small" badge="{{ bookingsCount[day] || 0 }}" badgeSeverity="contrast"
+                                        variant="text"
+                                        [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.8125rem', 'font-weight': '500', 'gap': '0'}" />
+                                    <p-button label="{{ this.sharedService.T('bookedHours') }}" severity="danger"
+                                        size="small" badge="{{ serviceHoursCount[day] || 0  }}" badgeSeverity="danger"
+                                        variant="text"
+                                        [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" />
+                                    <p-button label="{{ this.sharedService.T('availableHours') }}" severity="success"
+                                        size="small" badge="{{ calculateFreeHours(day) }}" badgeSeverity="success"
+                                        variant="text"
+                                        [style]="{'width': '100%', 'display': 'flex', 'justify-content': 'space-between', 'align-items': 'center', 'padding': '0.25rem 0', 'font-size': '0.75rem', 'gap': '0'}" />
                                 </div>
-                            </ng-template>
-                            </p-carousel>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <!-- body -->
+                    <ng-template pTemplate="body" let-calendar>
+                        <tr style="background-color: white;">
+                            <td [class.time-span]="isTimeBookedAt(calendar.cTime)">
+                                <div>
+                                    <p class="w-fit text-3xl font-bold">{{ calendar.cTime }}</p>
+                                </div>
+                            </td>
+                            <td *ngFor="let day of days; let i = index" class="relative"
+                                style="width: 240px; min-width: 240px; max-width: 240px; overflow: hidden;"
+                                [ngClass]="selectedDay == i + 1 ? 'booking-current-day' : ''"
+                                (mouseenter)="hoveredSlot = { day, time: calendar.cTime }"
+                                (mouseleave)="hoveredSlot = null">
+
+                                <!-- Button that appears on hover -->
+                                <p-button *ngIf="hoveredSlot?.day === day && hoveredSlot?.time === calendar.cTime"
+                                    label="{{this.sharedService.T('add_booking_at_time')}} {{ calendar.cTime }}"
+                                    icon="pi pi-plus" size="small" variant="outlined" [style]="{'width': 'fit-content'}"
+                                    (onClick)="createBooking(calendar[day + 'Date'], calendar.cTime)">
+                                </p-button>
+
+                                <!-- Carousel for bookings -->
+                             
+                                <p-carousel #rp *ngIf="calendar[day + 'Bookings']?.length > 0"
+                                    [value]="calendar[day + 'Bookings']" [numVisible]="1" [numScroll]="1"
+                                    [circular]="false" class="custom-indicator-carousel"
+                                    [ngStyle]="getCarouselStyles(calendar[day + 'Bookings'])"> <ng-template let-booking
+                                        #item>
+                                        <div class="m-2 p-4 rounded-lg border-l-4 cursor-pointer"
+                                            [style.background-color]="getBookingBackground(booking.employeeId)"
+                                            [style.border-left-color]="getBookingBackground(booking.employeeId)"
+                                            (click)="showBookingInfo(booking)">
+                                            <p class="font-semibold text-xs truncate">{{ booking.vehiclePlate }}</p>
+                                        </div>
+                                    </ng-template>
+                                </p-carousel>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
         </div>
     </form>
 
     <p-toast />
-  <p-confirmdialog />
-  <p-dialog [modal]="true" [(visible)]="isDialogVisible" styleClass="rounded-lg shadow-lg" [style]="{ width: '600px',height: '800px' }">
-    <ng-template #header>
-      <div class="flex justify-between w-full">
-        <div>
-            <h2 class="text-xl font-bold text-gray-800">{{ selectedBooking.vehiclePlate }}</h2>
-            <div class="booking-modal-sub">
-                {{selectedBooking.vehicleManufacturer + ' ' + selectedBooking.vehicleModel + ' ' +
-                selectedBooking.vehicleYear }}
+    <p-confirmdialog />
+    <p-dialog [modal]="true" [(visible)]="isDialogVisible" styleClass="rounded-lg shadow-lg"
+        [style]="{ width: '600px',height: '800px' }">
+        <ng-template #header>
+            <div class="flex justify-between w-full">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">{{ selectedBooking.vehiclePlate }}</h2>
+                    <div class="booking-modal-sub">
+                        {{selectedBooking.vehicleManufacturer + ' ' + selectedBooking.vehicleModel + ' ' +
+                        selectedBooking.vehicleYear }}
+                    </div>
+                </div>
+                <p-button class="text-end my-auto pe-3" aria-label="Print booking"
+                    (click)="printBooking($event, selectedBooking)">
+                    <i class="pi pi-print"></i>
+                </p-button>
             </div>
-        </div>
-        <p-button class="text-end my-auto pe-3" aria-label="Print booking"
-            (click)="printBooking($event, selectedBooking)">
-            <i class="pi pi-print"></i>
-        </p-button>
-      </div>
-    </ng-template>
+        </ng-template>
 
-    <div class="p-3 bg-white rounded-b-lg">
-        <p-table [value]="[1]">
-    <ng-template pTemplate="body">
-        <tr>
-            <th>Regnr</th>
-            <td>{{ selectedBooking.vehiclePlate }}</td>
-        </tr>
-        <tr>
-            <th>Verkstadstjanster</th>
-            <td>{{ selectedBooking.serviceTypes }}</td>
-        </tr>
-        <tr>
-            <th>Berkand tid (timmar)</th>
-            <td>{{ selectedBooking.estimatedHours }}</td>
-        </tr>
-        <tr>
-            <th>Antal (km)</th>
-            <td>{{ selectedBooking.vehicleMileage }}</td>
-        </tr>
-        <tr>
-            <th>Customer Name</th>
-            <td>{{ selectedCustomerName }}</td>
-        </tr>
-        <tr>
-            <th>Payment Type</th>
-            <td>{{ selectedPaymentTypeText }}</td>
-        </tr>
-        <tr>
-            <th>Offer</th>
-            <td>{{ selectedBooking.offerId }}</td>
-        </tr>
-        <tr>
-            <th>Mechanic Name</th>
-            <td>{{ selectedEmployeeName }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ selectedBooking.description }}</td>
-        </tr>
-    </ng-template>
-</p-table>
-    </div>
-    <!-- Buttons -->
+        <div class="p-3 bg-white rounded-b-lg">
+            <p-table [value]="[1]">
+                <ng-template pTemplate="body">
+                    <tr>
+                        <th>{{ this.sharedService.T('vehiclePlate') }}</th>
+                        <td>{{ selectedBooking.vehiclePlate }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('services') }}</th>
+                        <td>{{ selectedBooking.serviceTypes }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('estimatedHours') }}</th>
+                        <td>{{ selectedBooking.estimatedHours }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('vehicleMileage') }}</th>
+                        <td>{{ selectedBooking.vehicleMileage }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('customerName') }}</th>
+                        <td>{{ selectedCustomerName }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('paymentType') }}</th>
+                        <td>{{ selectedPaymentTypeText }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('offer') }}</th>
+                        <td>{{ selectedBooking.offerId }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('employeeName') }}</th>
+                        <td>{{ selectedEmployeeName }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ this.sharedService.T('description') }}</th>
+                        <td>{{ selectedBooking.description }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <!-- Buttons -->
         <div class="flex justify-end gap-3 mt-10">
-          <p-button [disabled]="" label="Save">
-          </p-button>
+            <p-button [disabled]="" label="{{ this.sharedService.T('save') }}">
+            </p-button>
 
-          <p-button severity="secondary" label="Cancel"
-            (click)="onCancel()">
-          </p-button>
+            <p-button severity="secondary" label="{{ this.sharedService.T('cancel') }}" (click)="onCancel()">
+            </p-button>
         </div>
 
-  </p-dialog>
+    </p-dialog>
 
     <!-- @if(isDialogVisible)
     {

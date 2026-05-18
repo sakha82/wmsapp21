@@ -64,6 +64,10 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
+.invoice-detail-row {
+  min-width: 0;
+}
+
 /* Fix for p-autocomplete display issue */
 .p-autocomplete {  display: grid !important; }
 
@@ -80,6 +84,96 @@
   cursor: grabbing; /* Grabbing icon when dragging */
 }
 
+/* Vehicle row: prevent field overlap below 1770px content width */
+.crud-vehicle-fields {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+}
 
+.crud-vehicle-field {
+  min-width: 0;
+}
 
-  
+.crud-vehicle-field--plate { grid-column: span 3; }
+.crud-vehicle-field--make { grid-column: span 3; }
+.crud-vehicle-field--model { grid-column: span 2; }
+.crud-vehicle-field--year { grid-column: span 2; }
+.crud-vehicle-field--mileage { grid-column: span 2; }
+
+@media (max-width: 1770px) {
+  .crud-vehicle-field--plate { grid-column: span 6; }
+  .crud-vehicle-field--make { grid-column: span 6; }
+  .crud-vehicle-field--model { grid-column: span 4; }
+  .crud-vehicle-field--year { grid-column: span 4; }
+  .crud-vehicle-field--mileage { grid-column: span 4; }
+}
+
+@media (max-width: 640px) {
+  .crud-vehicle-field--plate,
+  .crud-vehicle-field--make,
+  .crud-vehicle-field--model,
+  .crud-vehicle-field--year,
+  .crud-vehicle-field--mileage {
+    grid-column: span 12;
+  }
+}
+
+/* Text detail row: no overflow from fixed textarea cols */
+.crud-detail-text-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.crud-detail-text-area {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.crud-detail-text-area textarea,
+.crud-detail-text-area .p-textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.crud-detail-text-options {
+  flex: 0 0 auto;
+  width: 11rem;
+  max-width: 100%;
+}
+
+.crud-detail-text-delete {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.25rem;
+}
+
+/* Below 1400px: checkboxes + delete move under the textarea */
+@media (max-width: 1320px) {
+  .crud-detail-text-row {
+    flex-wrap: wrap;
+  }
+
+  .crud-detail-text-area {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .crud-detail-text-options {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 10rem;
+  }
+
+  .crud-detail-text-delete {
+    margin-left: auto;
+  }
+}

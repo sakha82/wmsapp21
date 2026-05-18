@@ -16,6 +16,8 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TextareaModule } from 'primeng/textarea';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ColorPickerModule } from 'primeng/colorpicker';
 
 @Component({
   selector: 'app-employee-crud',
@@ -31,7 +33,9 @@ import { TextareaModule } from 'primeng/textarea';
     ProgressSpinnerModule,
     ConfirmDialogModule,
     ToastModule,
-    TextareaModule
+    TextareaModule,
+    CheckboxModule,
+    ColorPickerModule 
   ],
   templateUrl: './employee-crud.component.html',
   styleUrls: ['./employee-crud.component.css'],
@@ -77,8 +81,10 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
       telephone: ['',[Validators.required]],
       email: ['', [Validators.email]],
       skills: [''],
+      calendarColor: [''],
       certifications: [''],
       isActive: [true],
+      includeInCalendarHours: [false],
       isUpdate: false
     });
   
