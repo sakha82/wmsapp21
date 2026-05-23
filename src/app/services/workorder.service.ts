@@ -46,7 +46,7 @@ export class WorkOrderService {
   upsertWorkOrder(workOrder:IWorkOrder){
     workOrder.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IWorkOrder>(`${this.baseUrl}`, workOrder, {headers});
+    return this.http.post<IWorkOrder>(`${this.baseUrl}/upsert-workorder`, workOrder, {headers});
   }
   
   updateWorkOrderStatus(workOrder:IWorkOrder){

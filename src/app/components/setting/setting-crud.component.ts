@@ -13,7 +13,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
 import { SaleService } from 'app/services/sale.service ';
 import { SplitterModule } from 'primeng/splitter';
-import { AiService } from 'app/services/ai.service';
+import { ExternalService } from 'app/services/external.service';
 import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ImageModule } from 'primeng/image';
@@ -149,7 +149,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private productService: ProductService,
     private saleService: SaleService,
-    private aiService: AiService,
+    private externalService: ExternalService,
   ) {
     this.workshop = this.fb.group({
       workshopName: [],
@@ -974,7 +974,7 @@ GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
   }));
   this.logger.info('index=' + index);
   const textareaControl = this.details.controls[index].get('textContent');
-  this.aiService
+  this.externalService
       .getInvoiceDescription({context: selectectContextValue,items:items})
       .pipe(
         finalize(() => { this.isLoading = false; }),

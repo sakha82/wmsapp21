@@ -11,6 +11,7 @@ import { SelectChangeEvent } from 'primeng/select';
 import { firstValueFrom, Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { LogService } from 'app/services/log.service';
+import { ExternalService } from 'app/services/external.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -55,6 +56,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private workshopService: WorkshopService,
     private customerService: CustomerService,
+    private externalService: ExternalService,
     private readonly route: ActivatedRoute,
     private readonly location: Location,
     private messageService: MessageService,
@@ -165,7 +167,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
   fetchCompanyInfo() {
     const companyId = this.customer.get('organizationNo')?.value;
     this.showFetchCompanySpinner = true;
-    this.sharedService
+    this.externalService
       .getCompanyInfo(companyId)
       .pipe(
         finalize(() => {

@@ -528,13 +528,6 @@ T(key: string): string {
     const url = `${this.baseUrl}/api/Core/next-id?${queryParams}`;
     return this.http.get<number>(url);
   }
-    getCompanyInfo(companyId:string)
-    {
-        const queryParams = new URLSearchParams();
-        queryParams.append("companyId", companyId);
-        const url = `${this.coreUrl}/company-info?${queryParams}`;
-        return this.http.get<any>(url);
-    }
 
     getVehicleMakes()
     {

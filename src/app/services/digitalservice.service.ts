@@ -47,7 +47,7 @@ export class DigitalServiceService {
   createDigitalService(digitalService: IDigitalService) {
     digitalService.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<{ state: boolean, overlaps: IDigitalService[] }>(`${this.baseUrl}/create`, digitalService, { headers });
+    return this.http.post<{ state: boolean, overlaps: IDigitalService[] }>(`${this.baseUrl}/create-digitalservice`, digitalService, { headers });
   }
 
   updateDigitalServiceStatus(digitalServiceId:number,fileAttached:number) {

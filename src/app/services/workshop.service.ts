@@ -28,7 +28,7 @@ export class WorkshopService {
     workshop.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
     this.logger.info('Updating workshop with data:', workshop);
-    return this.http.post<IWorkshop>(`${this.baseUrl}/update`, workshop, { headers });
+    return this.http.post<IWorkshop>(`${this.baseUrl}/update-workshop`, workshop, { headers });
   }
 
 updateInvoiceSettings(priceMode:number,defaultTemplate:string) {

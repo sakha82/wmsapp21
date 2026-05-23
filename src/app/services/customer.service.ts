@@ -24,7 +24,7 @@ export class CustomerService {
   {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
-      if (customerId !== undefined && customerId > 0) 
+    if (customerId !== undefined && customerId > 0) 
         queryParams.append("customerId", customerId.toString());
       const url = `${this.baseUrl}/detail?${queryParams}`;
       return this.http.get<ICustomer>(url);
@@ -65,12 +65,9 @@ return this.http.get<boolean>(`${this.baseUrl}/is-customer-exists?${queryParams}
 upsertCustomer(customer: ICustomer) {
     customer.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<ICustomer>(`${this.baseUrl}/upsert`, customer, {headers});
+    return this.http.post<ICustomer>(`${this.baseUrl}/upsert-customer`, customer, {headers});
   }
-  createCustomer(customerName: string|null) {
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<Number>(`${this.baseUrl}/create`, {wmsId:this.sharedService.wmsId,customerName:customerName}, {headers});
-  }
+  
   
 }
 

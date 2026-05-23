@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IVehicleType } from 'app/app.model';
-import { AiService } from 'app/services/ai.service';
+import { ExternalService } from 'app/services/external.service';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 import { MessageService } from 'primeng/api';
@@ -40,7 +40,7 @@ export class CreateVehicleModelPopoverComponent implements OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     public readonly sharedService: SharedService,
-    private readonly aiService: AiService,
+    private readonly externalService: ExternalService,
     private readonly messageService: MessageService,
     private readonly logger: LogService
   ) {
@@ -83,7 +83,7 @@ export class CreateVehicleModelPopoverComponent implements OnDestroy {
     };
 
     this.isCreatingModel = true;
-    this.aiService
+    this.externalService
       .createVehicleModel(vehicleType)
       .pipe(
         finalize(() => {
