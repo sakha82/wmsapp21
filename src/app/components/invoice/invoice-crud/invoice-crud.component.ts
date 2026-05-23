@@ -75,9 +75,9 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   invoice: FormGroup;
   details: any = new FormArray([])
 
-  brands:any[] = [];
+  brands: any[] = [];
   selectedBrands: any[] = [];
- 
+
   templates: MenuItem[] = [];
   products: IProduct[] = [];
   models: any[] = [];
@@ -95,12 +95,12 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   defaultCustomerName: string | null = null;
   customerType: string = '';
   unitOptions: IEnums[] = [];
- isLoading: boolean = false;
- selectedContext:IEnums[] | null = null;
- 
- selectedCustomerName: any = null;
-   customers: ICustomer[] = [];
-   private destroy$ = new Subject<void>();
+  isLoading: boolean = false;
+  selectedContext: IEnums[] | null = null;
+
+  selectedCustomerName: any = null;
+  customers: ICustomer[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
@@ -119,24 +119,44 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     private readonly workOrderService: WorkOrderService,
   ) {
     this.invoice = this.fb.group({
-      invoiceId: '',
-      customerId: [null, Validators.required],
-      invoiceDate: '', //new Date().toISOString().split('T')[0],
+      // invoiceId: '',
+      // customerId: [null, Validators.required],
+      invoiceId: [null, [Validators.min(1)]],
+      customerId: [null, [Validators.required, Validators.min(1)]],
+      // invoiceDate: '', //new Date().toISOString().split('T')[0],
+      invoiceDate: ['', Validators.required],
+      dueDate: ['', Validators.required],
       vehiclePlate: '',
       vehicleMileage: null,
       vehicleManufacturer: '',
       vehicleModel: '',
       vehicleYear: [null, [Validators.pattern(/^\d{4}$/)]],
-      creditDays: 0,
-      dueDate: '',
+      // creditDays: 0,
+        creditDays: [0, [Validators.min(0)]],
+
+      // dueDate: '',
       yourRef: '',
-      paymentType: this.sharedService.getDefaultEnum('paymentType').value,
+      // paymentType: this.sharedService.getDefaultEnum('paymentType').value,
+      paymentType: [
+        this.sharedService.getDefaultEnum('paymentType')?.value,
+        Validators.required
+      ],
       currency: 'kr',
       deliveryDate: '',
       deliveryTime: '',
-      price: 0.00,
-      vat: 0.00,
-      adjustment: 0.00,
+      // price: 0.00,
+      // vat: 0.00,
+      price: [0.00, [Validators.min(0)]],
+      vat: [0.00, [Validators.min(0)]],
+      // adjustment: 0.00,
+      adjustment: [
+        0.00,
+        [
+          Validators.min(-0.99),
+          Validators.max(0.99),
+          Validators.pattern(/^-?\d+(\.\d{1,2})?$/)
+        ]
+      ],
       priceIncVat: 0.00,
       isSent: false,
       isPaid: false
@@ -148,17 +168,19 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-   ngOnInit() {
+  ngOnInit() {
 
-   this.unitOptions = [{ country: '',
-  lang: '',
-  key: '',
-  value: '',
-  index: 0,
-  isdefault: false,
-  text: '-',
-  sverity: '' }, ...this.sharedService.getEnums('productUnit')];
-    
+    this.unitOptions = [{
+      country: '',
+      lang: '',
+      key: '',
+      value: '',
+      index: 0,
+      isdefault: false,
+      text: '-',
+      sverity: ''
+    }, ...this.sharedService.getEnums('productUnit')];
+
     const param: any = this.route.snapshot.params;
 
     if (param.invoiceId && (Number(param.invoiceId) > 0 && param.duplicate == 'false'))
@@ -166,7 +188,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
 
     this.logger.info(param.offerId, param.workOrderId, param.customerId, param.invoiceId, param.duplicate);
 
-   this.isLoading = true;
+    this.isLoading = true;
     this.invoiceService
       .getInvoice(param.offerId, param.workOrderId, param.customerId, param.invoiceId, param.duplicate)
       .pipe(
@@ -187,8 +209,8 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
           this.updateDueDate();
           this.getTemplates();
           this.sharedService.getVehicleMakes().subscribe((data: any) => {
-                  this.brands = data;
-                });
+            this.brands = data;
+          });
         },
         error: (err) => {
           this.errorHandler.handleError(err, 'ngOnInit', 'Failed to load invoice.');
@@ -284,14 +306,14 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   }
 
   filterManufacturers(event: any): void {
-        const query = event.query.toUpperCase();
-        this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
+    const query = event.query.toUpperCase();
+    this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
 
   }
   onSelectVehicleManufacturer(event: any): void {
-     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
-                  this.models = data;
-                });
+    this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
+      this.models = data;
+    });
   }
 
   filterModels(event: any): void {
@@ -305,15 +327,15 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   }
 
   // detail selection
-  getProducts(detail:any, event: AutoCompleteCompleteEvent) {
+  getProducts(detail: any, event: AutoCompleteCompleteEvent) {
     this.isSpinnerLoading = true;
     let category = detail.get('category').value;
     let query = event.query;
     const make = this.invoice.get('vehicleManufacturer')?.value;
     const model = this.invoice.get('vehicleModel')?.value;
     const year = this.invoice.get('vehicleYear')?.value;
-    
-    this.productService.getProductsByprefix(category,query,make,model,year)
+
+    this.productService.getProductsByprefix(category, query, make, model, year)
       .pipe(
         finalize(() => { this.isSpinnerLoading = false; }),
         takeUntil(this.destroy$)
@@ -335,44 +357,44 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   onSelectProduct(detail: any, e: any) {
     const item = e.value;
     this.logger.info('Selected product:', item);
-      if(e.value){
-        const {wmsId,productId,category,productName,productDescription,quantity,unit,unitPrice,vatPercentage,price,vat,priceIncVat} = e.value;
-        detail.patchValue({
-          category:category,
-          productId: productId,
-          product: productName,
-          description: productDescription,
-          quantity: quantity,
-          unit: unit,
-          unitPrice: (category == 'labour' && unit == 'hour' && !unitPrice) ? Number(sessionStorage.getItem('HourlyRate')) : unitPrice,
-          vatPercentage: vatPercentage
-        })
-        this.updateDetailRow(detail);
-        this.isSpinnerLoading = false;
-      }
-  } 
+    if (e.value) {
+      const { wmsId, productId, category, productName, productDescription, quantity, unit, unitPrice, vatPercentage, price, vat, priceIncVat } = e.value;
+      detail.patchValue({
+        category: category,
+        productId: productId,
+        product: productName,
+        description: productDescription,
+        quantity: quantity,
+        unit: unit,
+        unitPrice: (category == 'labour' && unit == 'hour' && !unitPrice) ? Number(sessionStorage.getItem('HourlyRate')) : unitPrice,
+        vatPercentage: vatPercentage
+      })
+      this.updateDetailRow(detail);
+      this.isSpinnerLoading = false;
+    }
+  }
   // invoice-detail  
   addDetailRow(isTextRow: boolean) {
     const detailRow = this.fb.group({
-        invoiceId: this.invoice.get('invoiceId')?.value,
-        rowIndex : this.details.controls.length,
-        category:this.sharedService.getDefaultEnum('detailCategory').value, //'part', 
-        productId: [null],
-        product: '',
-        isProductValid:true,
-        description: '',
-        quantity: 1,
-        unit: '',//this.sharedService.getDefaultEnum('productUnit').value,//this.defaultProductUnit,
-        unitPrice: null,
-        isUnitPriceValid:true,
-        vatPercentage: this.sharedService.getDefaultEnum('vatPercentage').value, //this.defaultVatPercentage,
-        discountPercentage: null,
-        price: 0.00,
-        vat:0.00,
-        priceIncVat: 0.00,
-        textContent: undefined,
-        isTextRow:isTextRow
-      });
+      invoiceId: this.invoice.get('invoiceId')?.value,
+      rowIndex: this.details.controls.length,
+      category: this.sharedService.getDefaultEnum('detailCategory').value, //'part', 
+      productId: [null],
+      product: '',
+      isProductValid: true,
+      description: '',
+      quantity: 1,
+      unit: '',//this.sharedService.getDefaultEnum('productUnit').value,//this.defaultProductUnit,
+      unitPrice: null,
+      isUnitPriceValid: true,
+      vatPercentage: this.sharedService.getDefaultEnum('vatPercentage').value, //this.defaultVatPercentage,
+      discountPercentage: null,
+      price: 0.00,
+      vat: 0.00,
+      priceIncVat: 0.00,
+      textContent: undefined,
+      isTextRow: isTextRow
+    });
     this.details.push(detailRow);
   }
 
@@ -498,15 +520,14 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
             var productRow: any = {};
             productRow.invoiceId = this.invoice.get('invoiceId')?.value;
             productRow.rowIndex = this.details.length;
-            if(element.isTextRow){
+            if (element.isTextRow) {
               productRow.textContent = element.textContent;
               productRow.isTextRow = true;
               productRow.category = '';
               productRow.isProductValid = true;
               productRow.isUnitPriceValid = true;
             }
-            else 
-            {
+            else {
               productRow.category = element.category;
               productRow.productId = element.productId;
               productRow.product = element.product;
@@ -538,15 +559,21 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
 
   onEnter(event: any): void {
     // const keyboardEvent = event as KeyboardEvent;
-    event.preventDefault(); 
+    event.preventDefault();
   }
-onBlurProduct(event: any, detail: AbstractControl): void {
-  const typedValue = event.target.value; // Get the typed value from the input
-  detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
-}
-onFormSubmit() {
+  onBlurProduct(event: any, detail: AbstractControl): void {
+    const typedValue = event.target.value; // Get the typed value from the input
+    detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
+  }
+  onFormSubmit() {
     this.errorOnCustomer = false;
     var invoice: IInvoice = this.invoice.value;
+    if (this.invoice.invalid || !invoice.customerId) {
+      this.invoice.markAllAsTouched();
+            this.messageService.add({ severity: 'error', summary: 'Fel', detail: 'Vänligen fyll alla obligatoriska fält korrekt.' });
+
+      return;
+    }
     invoice.details = [];
 
     for (const detail of this.details.controls) {
@@ -580,26 +607,26 @@ onFormSubmit() {
       )
       .subscribe((res: any) => {
         this.isLoading = false;
-        
+
         if (res) {
-          this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]); 
+          this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]);
         }
       });
   }
-    onCancelForm() {
+  onCancelForm() {
     this.location.back();
   }
 
   redirectToInvoiceDetailComponent() {
     this.router.navigate(['/details', this.invoice.get('invoiceId')]);
   }
-  GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
+  GenerateInvoiceDescription(event: any, selectedCategory: IEnums, index: number) {
     this.selectedContext = [selectedCategory];
     let selectectContextValue = '';
     if (this.selectedContext) {
-      selectectContextValue = this.selectedContext[0].value; 
+      selectectContextValue = this.selectedContext[0].value;
     }
-    const items: IInvoiceDetailPrompt[] = this.details.controls.map((item:any) => ({
+    const items: IInvoiceDetailPrompt[] = this.details.controls.map((item: any) => ({
       type: item.get('category')?.value,
       name: item.get('product')?.value,
       description: item.get('description')?.value,
@@ -610,7 +637,7 @@ onFormSubmit() {
     const textareaControl = this.details.controls[index].get('textContent');
     this.isLoading = true;
     this.aiService
-      .getInvoiceDescription({context: selectectContextValue,items:items})
+      .getInvoiceDescription({ context: selectectContextValue, items: items })
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -661,7 +688,7 @@ onFormSubmit() {
       });
   }
 
-    onSelect(event: any) {
+  onSelect(event: any) {
     this.invoice.patchValue({
       customerId: event.value.customerId,
       customerName: event.value.customerName,

@@ -335,3 +335,62 @@ Final revision done We only need following 2 properties to change for tables
 .base-icon {
   background-color: #e74c3c; /* red */
 }
+
+/* List pages: create button + filters action bar (offer, invoice, workorder, etc.) */
+.list-page-actionbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+.list-page-actionbar-left,
+.list-page-actionbar-mid,
+.list-page-actionbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.list-page-actionbar-right {
+  margin-left: auto;
+}
+
+@media (max-width: 1550px) {
+  .list-page-actionbar {
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+
+  .list-page-actionbar-left,
+  .list-page-actionbar-mid,
+  .list-page-actionbar-right {
+    flex-wrap: wrap;
+  }
+
+  .list-page-actionbar-right {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+}
+
+.p-tooltip .p-tooltip-text {
+  background:#ffffff !important; 
+  color:#000000 !important;
+}
+
+/* To update the matching directional arrow color */
+.p-tooltip-right .p-tooltip-arrow {
+  border-right-color: #ffffff !important;
+}
+.p-tooltip-left .p-tooltip-arrow {
+  border-left-color: #ffffff !important;
+}
+.p-tooltip-top .p-tooltip-arrow {
+  border-top-color: #ffffff !important;
+}
+.p-tooltip-bottom .p-tooltip-arrow {
+  border-bottom-color: #ffffff !important;
+}

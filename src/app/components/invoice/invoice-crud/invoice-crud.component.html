@@ -41,16 +41,22 @@
             <div class="col-span-2 mb-2">
                 <label class="mb-2 block" for="invoiceDate">{{ this.sharedService.T('invoiceDate') }}</label>
                 <p-date-picker formControlName="invoiceDate" dataType="string" dateFormat="yy-mm-dd"
+                 [invalid]="invoice.get('invoiceDate')?.invalid && invoice.get('invoiceDate')?.touched"
                     icon="pi pi-calendar" (onSelect)="onSelectInvoiceDate($event)" />
             </div>
             <div class="col-span-2 mb-2">
                 <label class="mb-2 block" for="creditDays">{{ this.sharedService.T('paymentTerms') }} (dagar) </label>
                 <input type="number" formControlName="creditDays" style="width: 100%;"
+                 [class.ng-invalid]="invoice.get('creditDays')?.invalid && invoice.get('creditDays')?.touched"
+                 [class.ng-dirty]="invoice.get('creditDays')?.invalid && invoice.get('creditDays')?.touched"
                     (keydown.enter)="$event.preventDefault()" (change)="onChangeCreditDays($event)" pInputText />
             </div>
             <div class="col-span-2 mb-2">
                 <label class="mb-2 block" for="dueDate">{{ this.sharedService.T('dueDate') }}</label>
-                <input type="text" formControlName="dueDate" style="width: 100%;" pInputText />
+                <input type="text" formControlName="dueDate" 
+                 [class.ng-invalid]="invoice.get('dueDate')?.invalid && invoice.get('dueDate')?.touched"
+                 [class.ng-dirty]="invoice.get('dueDate')?.invalid && invoice.get('dueDate')?.touched"
+                   style="width: 100%;" pInputText />
             </div>
 
             <div class="crud-vehicle-fields col-span-12">
@@ -94,6 +100,7 @@
             <div class="col-span-3 mb-2">
                 <label class="mb-2 block" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
                 <p-select [options]="this.sharedService.getEnums('paymentType')" formControlName="paymentType"
+                [invalid]="invoice.get('paymentType')?.invalid && invoice.get('paymentType')?.touched"
                     optionLabel="text" optionValue="value" editable=true styleClass="w-full" />
             </div>
             <div class="col-span-3 mb-3">
