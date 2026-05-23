@@ -5,31 +5,6 @@
         "sv": "Uppnått"
     },
     {
-        "tkey": "calendarColor",
-        "en": "Calendar Color",
-        "sv": "Kalender färg"
-    },
-    {
-        "tkey": "includeInCalendarHours",
-        "en": "Include In Calendar Hours",
-        "sv": "Inkludera i kalender timmar"
-    },
-    {
-        "tkey": "includedHoursInWorkshopCapacity",
-        "en": "Included hours in workshop capacity",
-        "sv": "Ingår i verkstadens timkapacitet"
-    },
-    {
-        "tkey": "includedHoursInWorkshopCapacityShort",
-        "en": "Incl. hours",
-        "sv": "Ingår tim."
-    },
-    {
-        "tkey": "onlyActiveEmployees",
-        "en": "Only active employees",
-        "sv": "Endast aktiva anställda"
-    },
-    {
         "tkey": "action",
         "en": "Action",
         "sv": "Åtgärd"
@@ -180,11 +155,6 @@
         "sv": "Avbryt"
     },
     {
-        "tkey": "save",
-        "en": "Save",
-        "sv": "Spara"
-    },
-    {
         "tkey": "cancelled",
         "en": "Cancelled",
         "sv": "Avbruten"
@@ -313,21 +283,6 @@
         "tkey": "createNewCustomer",
         "en": "Create New Customer",
         "sv": "Skapa ny kund"
-    },
-    {
-        "tkey": "createNewModel",
-        "en": "Create New Model",
-        "sv": "Skapa ny modell"
-    },
-    {
-        "tkey": "modelCreatedSuccessfully",
-        "en": "Model Created Successfully.",
-        "sv": "Modellen skapades."
-    },
-    {
-        "tkey": "createModelFailed",
-        "en": "Could not create the model. Please check the make and model and try again.",
-        "sv": "Modellen kunde inte skapas. Kontrollera märke och modell och försök igen."
     },
     {
         "tkey": "createOffer",
@@ -760,26 +715,6 @@
         "sv": "Vänligen fyll i alla obligatoriska fält"
     },
     {
-        "tkey": "servicesRequired",
-        "en": "Add at least one service before you can create a workorder.",
-        "sv": "Lägg till minst en tjänst innan du kan skapa en arbetsorder."
-    },
-    {
-        "tkey": "servicesRequiredHint",
-        "en": "At least one service is required to create a workorder.",
-        "sv": "Minst en tjänst krävs för att skapa en arbetsorder."
-    },
-    {
-        "tkey": "validationError",
-        "en": "Validation error",
-        "sv": "Valideringsfel"
-    },
-    {
-        "tkey": "missingFields",
-        "en": "Missing",
-        "sv": "Saknas"
-    },
-    {
         "tkey": "newDigitalServices",
         "en": "New Digital Services",
         "sv": "Nya Digital Services"
@@ -1062,7 +997,7 @@
     {
         "tkey": "products",
         "en": "Products\/Services",
-        "sv": "Produkter\/Tjänster"
+        "sv": "Produkter\/ Tjänster"
     },
     {
         "tkey": "productService",
@@ -2050,6 +1985,46 @@
         "sv": "Tjänst"
     },
     {
+        "tkey": "includedHoursInWorkshopCapacity",
+        "en": "Included hours in workshop capacity",
+        "sv": "Ingår i verkstadens timkapacitet"
+    },
+    {
+        "tkey": "includedHoursInWorkshopCapacityShort",
+        "en": "Incl. hours",
+        "sv": "Ingår tim."
+    },
+    {
+        "tkey": "onlyActiveEmployees",
+        "en": "Only active employees",
+        "sv": "Endast aktiva anställda"
+    },
+    {
+        "tkey": "save",
+        "en": "Save",
+        "sv": "Spara"
+    },
+    {
+        "tkey": "createNewModel",
+        "en": "Create New Model",
+        "sv": "Skapa ny modell"
+    },
+    {
+        "tkey": "modelCreatedSuccessfully",
+        "en": "Model Created Successfully.",
+        "sv": "Modellen skapades."
+    },
+    {
+        "tkey": "createModelFailed",
+        "en": "Could not create the model. Please check the make and model and try again",
+        "sv": "Modellen kunde inte skapas. Kontrollera märke och modell och försök igen"
+    },
+    {
+        "tkey": "servicesRequired",
+        "en": "Add at least one service before you can create a workorder.",
+        "sv": "Lägg till minst en tjänst innan du kan skapa en arbetsorder."
+    },
+    {
         "tkey": "status",
         "en": "Status",
         "sv": "Status"
@@ -2123,6 +2098,36 @@
         "tkey": "employeeName",
         "en": "Employee name",
         "sv": "Anställds namn"
+    },
+    {
+        "tkey": "deleteBooking",
+        "en": "Delete Booking",
+        "sv": "Ta bort bokning"
+    },
+    {
+        "tkey": "servicesRequiredHint",
+        "en": "At least one service is required to create a workorder.",
+        "sv": "Minst en tjänst krävs för att skapa en arbetsorder."
+    },
+    {
+        "tkey": "validationError",
+        "en": "Validation error",
+        "sv": "Valideringsfel"
+    },
+    {
+        "tkey": "missingFields",
+        "en": "Missing",
+        "sv": "Saknas"
+    },
+    {
+        "tkey": "calendarColor",
+        "en": "Calendar Color",
+        "sv": "Kalender färg"
+    },
+    {
+        "tkey": "includeInCalendarHours",
+        "en": "Include In Calendar Hours",
+        "sv": "Inkludera i kalender timmar"
     },
     {
         "tkey": "welcome",

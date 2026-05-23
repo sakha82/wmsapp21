@@ -13,7 +13,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
 import { SaleService } from 'app/services/sale.service ';
 import { SplitterModule } from 'primeng/splitter';
-import { AiService } from 'app/services/ai.service';
+import { AiService } from 'app/services/external.service';
 import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ImageModule } from 'primeng/image';

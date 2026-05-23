@@ -30,7 +30,7 @@ import { TableModule } from 'primeng/table';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
-import { AiService } from 'app/services/ai.service';
+import { ExternalService } from 'app/services/external.service';
 import { CustomerService } from 'app/services/customer.service';
 import { TextareaModule } from 'primeng/textarea';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -114,7 +114,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     private readonly location: Location,
     private workshopService: WorkshopService,
     private messageService: MessageService,
-    private aiService: AiService,
+    private externalService: ExternalService,
     private readonly customerService: CustomerService,
     private readonly workOrderService: WorkOrderService,
   ) {
@@ -609,7 +609,7 @@ onFormSubmit() {
     this.logger.info('GenerateInvoiceDescription', { index });
     const textareaControl = this.details.controls[index].get('textContent');
     this.isLoading = true;
-    this.aiService
+    this.externalService
       .getInvoiceDescription({context: selectectContextValue,items:items})
       .pipe(
         finalize(() => {
