@@ -5,8 +5,8 @@ import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class AiService {
-  private baseUrl: string = environment.BASE_URL + '/api/ai';
+export class ExternalService {
+  private baseUrl: string = environment.BASE_URL + '/api/external';
 
   constructor(private http: HttpClient) {}
 
@@ -17,6 +17,14 @@ export class AiService {
 
   createVehicleModel(vehicleType: IVehicleType): Observable<boolean> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<boolean>(`${this.baseUrl}/create-model`, vehicleType, { headers });
+    return this.http.post<boolean>(`${this.baseUrl}/create-vehicle-model`, vehicleType, { headers });
   }
+  getCompanyInfo(companyId:string)
+    {
+        const queryParams = new URLSearchParams();
+        queryParams.append("companyId", companyId);
+        const url = `${this.baseUrl}/company-info?${queryParams}`;
+        return this.http.get<any>(url);
+    }
+
 }

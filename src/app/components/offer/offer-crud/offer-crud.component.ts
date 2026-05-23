@@ -16,7 +16,7 @@ import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { AiService } from 'app/services/ai.service';
+import { ExternalService } from 'app/services/external.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -104,7 +104,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private workshopService: WorkshopService,
     private productService: ProductService,
-    private aiService: AiService,) {
+    private externalService: ExternalService,) {
 
     this.offer = this.fb.group({
       offerId: '',
@@ -517,7 +517,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     }));
     this.logger.info('index=' + index);
     const textareaControl = this.details.controls[index].get('textContent');
-    this.aiService
+    this.externalService
       .getInvoiceDescription({ context: selectectContextValue, items: items })
       .pipe(
         finalize(() => {
