@@ -46,12 +46,14 @@
 
       <!-- Vehicle Model -->
       <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <label class="block mb-0">{{ this.sharedService.T('vehicleModel') }}</label>
+          <app-create-vehicle-model-popover
+            [parentForm]="workOrder"
+            (modelsUpdated)="onVehicleModelsUpdated($event)" />
+        </div>
         <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels" (completeMethod)="filterModels($event)"
           forceSelection="true" [showClear]="true" class="w-full"></p-autoComplete>
-        <app-create-vehicle-model-popover
-          [parentForm]="workOrder"
-          (modelsUpdated)="onVehicleModelsUpdated($event)" />
       </div>
 
       <!-- Gap Between First 3 and Last 2 -->
@@ -71,8 +73,16 @@
       <!-- LINE 2: Customer Name to Service Duration -->
 
       <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('customerName') }}</label>
-        <div class="col-span-3">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <label class="block mb-0">{{ this.sharedService.T('customerName') }}</label>
+          <a
+            href="#"
+            class="crud-inline-action-link"
+            (click)="openCustomerDialog($event); $event.preventDefault()">
+            + {{ this.sharedService.T('createNewCustomer') }}
+          </a>
+        </div>
+        <div>
                     <p-iconfield>
                     <p-inputicon class=" icon-primary pi pi-user" />
 
@@ -89,11 +99,6 @@
           </p-autocomplete>
           </p-iconfield>
         </div>
-        <!-- 👇 Add Customer Order Button placed right below customer -->
-        <div class="flex items-center gap-4 mt-3">
-          <p-button (click)="openCustomerDialog($event)" 
-            label="{{ this.sharedService.T('createNewCustomer') }}" variant="outlined" icon="pi pi-plus" class="w-full">
-          </p-button>
 
           <p-popover #customerPopup>
             <ng-template pTemplate="content">
@@ -188,7 +193,6 @@
               </form>
             </ng-template>
           </p-popover>
-        </div>
       </div>
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('customerTelephone') }}</label>
@@ -208,20 +212,23 @@
       <div class="col-span-2">
         <label class="block mb-2">Status</label>
         <p-select [options]="sharedService.getEnums('workOrderStatus')" formControlName="workOrderStatus"
-          optionLabel="text" optionValue="value" class="w-full"></p-select>
+          optionLabel="text" optionValue="value" class="w-full"
+          [invalid]="isControlInvalid('workOrderStatus')"></p-select>
       </div>
 
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('paymentType') }}</label>
         <p-select [options]="sharedService.getEnums('paymentType')" formControlName="paymentType" optionLabel="text"
-          optionValue="value" editable="true" class="w-full"></p-select>
+          optionValue="value" editable="true" class="w-full"
+          [invalid]="isControlInvalid('paymentType')"></p-select>
       </div>
 
       <!-- LINE 3: Status, Payment Type, Mechanic -->
  <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('bookingDate') }}</label>
         <p-date-picker formControlName="bookingDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
-          (onSelect)="onSelectCalendarDate()" class="w-full">
+          (onSelect)="onSelectCalendarDate()" class="w-full"
+          [invalid]="isControlInvalid('workOrderDate') || isControlInvalid('bookingDate')">
         </p-date-picker>
       </div>
       <div class="col-span-2">

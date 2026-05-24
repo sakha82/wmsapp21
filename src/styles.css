@@ -221,7 +221,28 @@
 /* =========================
    PrimeNG CUSTOMIZATION
 ========================= */
-.icon-primary { color: var(--p-primary-600) !important;}
+.icon-primary { color: var(--p-primary-color) !important;}
+
+a.crud-inline-action-link,
+.crud-inline-action-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--p-primary-color) !important;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 1.25;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+a.crud-inline-action-link:hover,
+a.crud-inline-action-link:focus-visible,
+.crud-inline-action-link:hover,
+.crud-inline-action-link:focus-visible {
+  color: var(--p-primary-700, var(--p-primary-color)) !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 .header-primary { background-color: var(--p-primary-100) !important;}
 

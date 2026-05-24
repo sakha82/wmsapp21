@@ -20,6 +20,7 @@ import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/model-validators';
 @Component({
   selector: 'app-customer-crud',
   standalone: true,
@@ -47,6 +48,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
   isNewObject: boolean = true;
   showFetchCompanySpinner: boolean = false;
   isLoading: boolean = false;
+  formSubmitted = false;
   private destroy$ = new Subject<void>();
   constructor(
     private logger: LogService,
@@ -65,17 +67,17 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
 
     this.customer = this.fb.group({
       customerId: [0, Validators.required],
-      customerName: ['', Validators.required],
-      customerType: [],
+      customerName: ['', [Validators.required, Validators.maxLength(255)]],
+      customerType: [null, [Validators.required, Validators.min(1)]],
       customerTag: [],
       organizationNo: [],
       vatId: [],
-      invoiceCreditDays: [0],
+      invoiceCreditDays: [0, [Validators.min(0)]],
       careOf: [],
       customerAddress: [],
       customerPostNo: [],
       customerCity: [],
-      customerCountry: this.sharedService.getDefaultEnum('country').value,
+      customerCountry: [this.sharedService.getDefaultEnum('country').value, Validators.required],
       isCreditAllowed: [true],
       telephone: [],
       email: ['', [Validators.email]],
@@ -113,6 +115,10 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  isCustomerControlInvalid(fieldName: string): boolean {
+    return isFormControlInvalid(this.customer, fieldName, this.formSubmitted);
   }
 
   loadCustomerTags() {
@@ -253,6 +259,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
 
 async onFormSubmit() {
     this.isLoading = true;
+    this.formSubmitted = true;
     this.customer.markAllAsTouched();
 
     const customerNameControl = this.customer.get('customerName');
@@ -262,7 +269,11 @@ async onFormSubmit() {
 
     if (!customerNameControl?.value?.trim()) {
       customerNameControl?.setErrors({ required: true });
-      this.isLoading = false; 
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key)
+      );
+      this.isLoading = false;
       return;
     }
 
@@ -272,12 +283,12 @@ async onFormSubmit() {
     if (!emailValue && !telephoneValue) {
       emailControl?.setErrors({ required: true });
       telephoneControl?.setErrors({ required: true });
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Validation Error',
-        detail: 'Please provide either Telephone or Email.',
-        life: 4000,
-      });
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'contactRequired',
+        4000
+      );
       this.isLoading = false; 
       return;
     }
@@ -286,13 +297,13 @@ async onFormSubmit() {
 
     if (emailValue && !emailRegex.test(emailValue)) {
       emailControl?.setErrors({ email: true });
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Invalid Email Format',
-        detail: 'Please enter a valid email address (e.g. user@example.com).',
-        life: 4000,
-      });
-      this.isLoading = false; 
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'invalidEmail',
+        4000
+      );
+      this.isLoading = false;
       return;
     }
 
@@ -341,12 +352,12 @@ async onFormSubmit() {
 
     if (this.customer.invalid) {
       this.customer.markAllAsTouched();
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Validation Error',
-        detail: 'Please fill all required fields.',
-        life: 4000,
-      });
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'fillRequiredFieldsCorrectly',
+        4000
+      );
       this.isLoading = false; 
       return;
     }

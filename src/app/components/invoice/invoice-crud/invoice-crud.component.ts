@@ -9,6 +9,7 @@ import { InvoiceService } from 'app/services/invoice.service';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
+import { showValidationErrorToast } from 'app/validators/model-validators';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ProductService } from 'app/services/product.service';
 import { MenuItem, MessageService, SortEvent } from 'primeng/api';
@@ -247,7 +248,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   }
 
   updateDueDate() {
-    let invoiceCreditDays = Number(this.invoice.get('creditDays')?.value) ?? 0;
+    const invoiceCreditDays = Math.max(0, Number(this.invoice.get('creditDays')?.value) || 0);
     let newDate = new Date();
     if (this.invoice.get('invoiceDate')?.value !== '')
       newDate = new Date(this.invoice.get('invoiceDate')?.value);
@@ -282,13 +283,29 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
 
   // customer selection
   onChangeCustomer($event: any) {
-    this.invoice.patchValue({ customerId: $event.customerId, customerName: $event.customerName, creditDays: $event.invoiceCreditDays });
+    this.invoice.patchValue({
+      customerId: $event.customerId,
+      customerName: $event.customerName,
+      creditDays: Math.max(0, Number($event.invoiceCreditDays) || 0),
+    });
     this.updateDueDate();
     this.errorOnCustomer = false;
   }
 
-  onChangeCreditDays(e: any) {
-    this.invoice.patchValue({ creditDays: Number(e.target.value) });
+  onCreditDaysKeydown(event: KeyboardEvent): void {
+    if (event.key === '-' || event.key === 'e' || event.key === 'E' || event.key === '+') {
+      event.preventDefault();
+    }
+  }
+
+  onChangeCreditDaysFromEvent(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.onChangeCreditDays(value === '' ? 0 : Number(value));
+  }
+
+  onChangeCreditDays(value: number | null | undefined) {
+    const creditDays = Math.max(0, Number(value ?? 0));
+    this.invoice.patchValue({ creditDays });
     this.updateDueDate();
   }
 
@@ -570,7 +587,10 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     var invoice: IInvoice = this.invoice.value;
     if (this.invoice.invalid || !invoice.customerId) {
       this.invoice.markAllAsTouched();
-            this.messageService.add({ severity: 'error', summary: 'Fel', detail: 'Vänligen fyll alla obligatoriska fält korrekt.' });
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key)
+      );
 
       return;
     }
@@ -591,6 +611,11 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
 
     if (invalidDetails.length > 0) {
       this.invoice.markAllAsTouched();
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'checkProductRows'
+      );
       return;
     }
 

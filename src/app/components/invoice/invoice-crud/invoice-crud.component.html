@@ -38,20 +38,28 @@
                     </p-autocomplete>
                     </p-iconfield>
             </div>
-            <div class="col-span-2 mb-2">
+            <div class="col-span-2 mb-2 min-w-0">
                 <label class="mb-2 block" for="invoiceDate">{{ this.sharedService.T('invoiceDate') }}</label>
                 <p-date-picker formControlName="invoiceDate" dataType="string" dateFormat="yy-mm-dd"
                  [invalid]="invoice.get('invoiceDate')?.invalid && invoice.get('invoiceDate')?.touched"
                     icon="pi pi-calendar" (onSelect)="onSelectInvoiceDate($event)" />
             </div>
-            <div class="col-span-2 mb-2">
-                <label class="mb-2 block" for="creditDays">{{ this.sharedService.T('paymentTerms') }} (dagar) </label>
-                <input type="number" formControlName="creditDays" style="width: 100%;"
-                 [class.ng-invalid]="invoice.get('creditDays')?.invalid && invoice.get('creditDays')?.touched"
-                 [class.ng-dirty]="invoice.get('creditDays')?.invalid && invoice.get('creditDays')?.touched"
-                    (keydown.enter)="$event.preventDefault()" (change)="onChangeCreditDays($event)" pInputText />
+            <div class="col-span-2 mb-2 min-w-0">
+                <label class="mb-2 block" for="creditDays">{{ this.sharedService.T('paymentTermsDays') }}</label>
+                <input
+                    type="number"
+                    id="creditDays"
+                    formControlName="creditDays"
+                    min="0"
+                    style="width: 100%;"
+                    [class.ng-invalid]="invoice.get('creditDays')?.invalid && invoice.get('creditDays')?.touched"
+                    [class.ng-dirty]="invoice.get('creditDays')?.invalid && invoice.get('creditDays')?.touched"
+                    (keydown)="onCreditDaysKeydown($event)"
+                    (keydown.enter)="$event.preventDefault()"
+                    (change)="onChangeCreditDaysFromEvent($event)"
+                    pInputText />
             </div>
-            <div class="col-span-2 mb-2">
+            <div class="col-span-2 mb-2 min-w-0">
                 <label class="mb-2 block" for="dueDate">{{ this.sharedService.T('dueDate') }}</label>
                 <input type="text" formControlName="dueDate" 
                  [class.ng-invalid]="invoice.get('dueDate')?.invalid && invoice.get('dueDate')?.touched"
@@ -78,14 +86,15 @@
                     </p-autoComplete>
                 </div>
                 <div class="crud-vehicle-field crud-vehicle-field--model">
-                    <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
-                    </label>
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <label class="block mb-0" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}</label>
+                        <app-create-vehicle-model-popover
+                            [parentForm]="invoice"
+                            (modelsUpdated)="onVehicleModelsUpdated($event)" />
+                    </div>
                     <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
                         (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
                         class="w-full"></p-autoComplete>
-                    <app-create-vehicle-model-popover
-                        [parentForm]="invoice"
-                        (modelsUpdated)="onVehicleModelsUpdated($event)" />
                 </div>
                 <div class="crud-vehicle-field crud-vehicle-field--year">
                     <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>

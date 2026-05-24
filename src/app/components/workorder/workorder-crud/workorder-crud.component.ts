@@ -48,6 +48,7 @@ import {
   isWorkOrderFormValid,
   WorkOrderRequiredField,
 } from 'app/validators/workorder-validation';
+import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/model-validators';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { PickListModule } from 'primeng/picklist';
 import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
@@ -161,25 +162,25 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     this.workOrder = this.fb.group({
       workOrderId: null,
-      customerId: [null, Validators.required],
+      customerId: [null, [Validators.required, Validators.min(1)]],
       customerName: [null],
-      customerTelephone: '',                    // Use customerTelephone
-      customerEmail: ['', [Validators.email]],  // Use customerEmail
+      customerTelephone: '',
+      customerEmail: ['', [Validators.email]],
       serviceDuration: [null],
       oilType: '5W30',
       oilCapacity: null,
-      workOrderDate: null,
+      workOrderDate: ['', Validators.required],
       vehiclePlate: [null, Validators.required],
       vehicleMileage: null,
-      vehicleManufacturer: [null,Validators.required],
+      vehicleManufacturer: [null, Validators.required],
       vehicleModel: [null],
       vehicleYear: null,
-      paymentType: null,
-      workOrderStatus: null,
+      paymentType: [this.sharedService.getDefaultEnum('paymentType')?.value, Validators.required],
+      workOrderStatus: [this.sharedService.getDefaultEnum('workOrderStatus')?.value, Validators.required],
       description: null,
       bookingDate: null,
       bookingTime: null,
-      employeeId:  [null,Validators.required],
+      employeeId: [null, [Validators.required, Validators.min(1)]],
       offerId: null,
     });
 
@@ -626,8 +627,11 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
   
   onSelectCalendarDate() {
-    //this.logger.info(selectedDate.toISOString().split('T')[0]);
-    this.getBookings(this.workOrder.get('bookingDate')?.value);
+    const bookingDate = this.workOrder.get('bookingDate')?.value;
+    if (bookingDate) {
+      this.workOrder.patchValue({ workOrderDate: bookingDate });
+    }
+    this.getBookings(bookingDate);
   }
 
   saveWOPurchase() {
@@ -651,6 +655,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     return isWorkOrderFieldInvalid(this.workOrder, controlName, this.formSubmitted);
   }
 
+  isControlInvalid(controlName: string): boolean {
+    return isFormControlInvalid(this.workOrder, controlName, this.formSubmitted);
+  }
+
   showServicesError(): boolean {
     return isWorkOrderServicesMissing(this.selectedProducts, this.formSubmitted);
   }
@@ -667,29 +675,35 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     }
 
     if (this.selectedProducts.length === 0) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: this.sharedService.T('validationError'),
-        detail: this.sharedService.T('servicesRequired'),
-        life: 6000,
-      });
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'servicesRequired',
+        6000
+      );
     }
 
     const formMissing = missingLabels.filter(
       (label) => label !== this.sharedService.T('service')
     );
     if (formMissing.length > 0) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: this.sharedService.T('requiredFields'),
-        detail: `${this.sharedService.T('missingFields')}: ${formMissing.join(', ')}`,
-        life: 6000,
-      });
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'fillRequiredFieldsCorrectly',
+        6000
+      );
     }
   }
 
   saveWorkOrder() {
     this.formSubmitted = true;
+
+    const bookingDate = this.workOrder.get('bookingDate')?.value;
+    if (!this.workOrder.get('workOrderDate')?.value && bookingDate) {
+      this.workOrder.patchValue({ workOrderDate: bookingDate });
+    }
+
     this.workOrder.markAllAsTouched();
 
     if (!isWorkOrderFormValid(this.workOrder, this.selectedProducts)) {

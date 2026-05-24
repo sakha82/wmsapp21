@@ -247,7 +247,8 @@
                 <div class="w-full">
                     <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('category') }} </label>
                     <p-select [options]="sharedService.getEnums('detailCategory')" formControlName="category"
-                        optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
+                        optionLabel="text" optionValue="value" styleClass="w-full"
+                        [invalid]="product.get('category')?.invalid && product.get('category')?.touched"></p-select>
                 </div>
 
                 
@@ -255,7 +256,8 @@
                     <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('productService') }} </label>
                     <input type="text" formControlName="productName" class="w-full" 
                         [disabled]="!isNewObject" [readonly]="!isNewObject"
-                        [invalid]="!product.get('productName')?.value"  pInputText />
+                        [class.ng-invalid]="product.get('productName')?.invalid && product.get('productName')?.touched"
+                        [class.ng-dirty]="product.get('productName')?.touched" pInputText />
                 </div>
 
                 <div class="w-full">
@@ -269,6 +271,7 @@
                         <p-inputnumber formControlName="quantity" inputId="minmax" mode="decimal"
                                 [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
                                 [locale]="this.sharedService.currentLocale"
+                                [invalid]="product.get('quantity')?.invalid && product.get('quantity')?.touched"
                                 [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
                                 ></p-inputnumber>
                     </div>
@@ -285,13 +288,15 @@
                         <p-inputnumber formControlName="unitPrice" inputId="minmax" mode="decimal"
                                 placeholder="0,00" [minFractionDigits]="0" [maxFractionDigits]="2" [min]="0"
                                 [locale]="this.sharedService.currentLocale" class="'input-error'"
+                                [invalid]="product.get('unitPrice')?.invalid && product.get('unitPrice')?.touched"
                                 [inputStyle]="{'background-color': 'white', 'width': '100%', 'display': 'block'}"
                                 ></p-inputnumber>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('vat') }}</label>
                         <p-select [options]="sharedService.getEnums('vatPercentage')" formControlName="vatPercentage"
-                            optionLabel="text" optionValue="value" styleClass="w-full"></p-select>
+                            optionLabel="text" optionValue="value" styleClass="w-full"
+                            [invalid]="product.get('vatPercentage')?.invalid && product.get('vatPercentage')?.touched"></p-select>
                     </div>
                 </div>
             </div>

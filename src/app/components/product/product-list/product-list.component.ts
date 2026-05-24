@@ -23,6 +23,7 @@ import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { vatPercentageValidator, showValidationErrorToast } from 'app/validators/model-validators';
 
 @Component({
   selector: 'app-product-list',
@@ -75,14 +76,14 @@ export class ProductListComponent implements OnDestroy {
     });
 
     this.product = this.fb.group({
-      productId: [0],
+      productId: [0, [Validators.min(0)]],
       category: [this.sharedService.getDefaultEnum('detailCategory').text, Validators.required],
-      productName: ['', Validators.required],
+      productName: ['', [Validators.required, Validators.maxLength(255)]],
       productDescription: [''],
-      quantity: [1, [Validators.required, Validators.min(1)]],
+      quantity: [1, [Validators.required, Validators.min(0)]],
       unit: [this.sharedService.getDefaultEnum('productUnit').value, Validators.required],
-      unitPrice: [0,Validators.required],
-      vatPercentage: [this.sharedService.getDefaultEnum('vatPercentage').value]
+      unitPrice: [0, [Validators.required, Validators.min(0)]],
+      vatPercentage: [this.sharedService.getDefaultEnum('vatPercentage').value, [Validators.required, vatPercentageValidator()]],
     });
 
     this.inventoryForm = this.fb.group({
@@ -196,6 +197,10 @@ export class ProductListComponent implements OnDestroy {
   async saveProduct() {
     this.product.markAllAsTouched();
     if (this.product.invalid) {
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key)
+      );
       return;
     }
 
