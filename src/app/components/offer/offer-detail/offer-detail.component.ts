@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -49,6 +49,8 @@ import { ErrorHandlerService } from 'app/services/error-handler.service';
   styleUrls: ['./offer-detail.component.css']
 })
 export class OfferDetailComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   @Output() invoiceEvent = new EventEmitter<string>();
   private destroy$ = new Subject<void>();
 
@@ -128,7 +130,9 @@ async getOffer(): Promise<void> {
                 next: (response: any) => {
                   if (response) {
                     var newBlob = new Blob([response], { type: "application/pdf" });
-                    this.pdfUrl = window.URL.createObjectURL(newBlob);
+                    if (isPlatformBrowser(this.platformId)) {
+                      this.pdfUrl = window.URL.createObjectURL(newBlob);
+                    }
                     this.logger.info('getPdf success', { offerId: this.offerId });
                   }
                 },
@@ -219,6 +223,9 @@ async getOffer(): Promise<void> {
     this.router.navigate(['sv/workorder/crud', { offerId: this.offerId }]);
   }
   generatePdf() {
+    if (!isPlatformBrowser(this.platformId) || !this.pdfUrl) {
+      return;
+    }
     window.open(this.pdfUrl);
   }
 

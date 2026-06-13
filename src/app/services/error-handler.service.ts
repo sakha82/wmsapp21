@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
 import { LogService } from './log.service';
 import { SharedService } from './shared.service';
@@ -7,14 +8,18 @@ import { SharedService } from './shared.service';
   providedIn: 'root'
 })
 export class ErrorHandlerService {
-  
-  constructor(private readonly logger: LogService, private readonly sharedService: SharedService) {}
+
+  constructor(
+    private readonly logger: LogService,
+    private readonly sharedService: SharedService,
+    @Inject(PLATFORM_ID) private readonly platformId: object
+  ) {}
 
   /**
    * Handle errors from subscriptions with dev/prod differentiation
    * In production: Shows user-friendly message, logs only the message
    * In development: Shows full error details, logs error object with context
-   * 
+   *
    * @param error - The error object from the subscription
    * @param methodName - The name of the method where the error occurred
    * @param userMessage - User-friendly message to display to user (default: generic message)
@@ -27,20 +32,21 @@ export class ErrorHandlerService {
     context?: any
   ): void {
     const logMessage = `[${methodName}] ${userMessage}`;
-    
+
     if (environment.production) {
-      // Production: Clean log without exposing technical details
       this.logger.error(logMessage);
     } else {
-      // Development: Full error details and context for debugging
-      const errorDetails = {
+      const errorDetails: Record<string, unknown> = {
         error,
         context,
         timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent
       };
+
+      if (isPlatformBrowser(this.platformId)) {
+        errorDetails['userAgent'] = navigator.userAgent;
+      }
+
       this.logger.error(logMessage, errorDetails);
-      // Also log to console in dev for immediate visibility
       console.error(`🔴 ${logMessage}`, error, context);
     }
   }
@@ -49,7 +55,7 @@ export class ErrorHandlerService {
    * Get user-friendly error message for UI display
    * In production: Returns generic, sanitized message
    * In development: Returns detailed error information for debugging
-   * 
+   *
    * @param error - The error object
    * @param defaultMessage - Default user-friendly message
    * @returns Appropriate message based on environment
@@ -60,11 +66,10 @@ export class ErrorHandlerService {
   ): string {
     if (environment.production) {
       return defaultMessage;
-    } else {
-      // Dev: Include technical details for debugging
-      const errorDetails = error?.message || error?.statusText || error?.error?.message || 'Unknown error';
-      return `${defaultMessage} - [${errorDetails}]`;
     }
+
+    const errorDetails = error?.message || error?.statusText || error?.error?.message || 'Unknown error';
+    return `${defaultMessage} - [${errorDetails}]`;
   }
 
   /**

@@ -42,7 +42,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/wmsapp21",
+            "outputPath": "dist/wmsapp21/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -94,6 +94,8 @@
                 "styles": true
               },
               "assets": [
+                "src/favicon.ico",
+                "src/assets",
                 {
                   "glob": "robots.txt",
                   "input": "public",
@@ -125,6 +127,65 @@
             }
           },
           "defaultConfiguration": "development"
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/wmsapp21/server",
+            "main": "src/server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
+              "optimization": true
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "wmsapp21:build:development",
+              "serverTarget": "wmsapp21:server:development"
+            },
+            "production": {
+              "browserTarget": "wmsapp21:build:production",
+              "serverTarget": "wmsapp21:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "wmsapp21:build:production",
+              "serverTarget": "wmsapp21:server:production"
+            },
+            "development": {
+              "browserTarget": "wmsapp21:build:development",
+              "serverTarget": "wmsapp21:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

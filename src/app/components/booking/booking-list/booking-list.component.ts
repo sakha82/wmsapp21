@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ViewChild, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IEmployee, IWorkOrder } from 'app/app.model';
@@ -57,6 +57,7 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrls: ['./booking-list.component.css']
 })
 export class BookingListComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
 
   @ViewChild('op') popover: any;
   days: string[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -447,7 +448,9 @@ export class BookingListComponent implements OnInit, OnDestroy {
           if (response) {
             this.logger.info('printBooking success', { bookingId: booking.workOrderId });
             var newBlob = new Blob([response], { type: "application/pdf" });
-            window.open(window.URL.createObjectURL(newBlob));
+            if (isPlatformBrowser(this.platformId)) {
+              window.open(window.URL.createObjectURL(newBlob));
+            }
           }
         },
         error: (err) => {
@@ -710,7 +713,9 @@ export class BookingListComponent implements OnInit, OnDestroy {
                   if (response) {
                     this.logger.info('printBookings PDF generated successfully');
                     var newBlob = new Blob([response], { type: "application/pdf" });
-                    window.open(window.URL.createObjectURL(newBlob));
+                    if (isPlatformBrowser(this.platformId)) {
+                      window.open(window.URL.createObjectURL(newBlob));
+                    }
                   }
                 },
                 error: (err) => {

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IVehicleType, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
 import { environment } from 'environments/environment';
@@ -33,34 +34,44 @@ export class SharedService {
   
   
 
-  constructor(private http: HttpClient
-              ,private logger: LogService,
-              private router: Router, private route: ActivatedRoute
-              ) {}
+  constructor(
+    private http: HttpClient,
+    private logger: LogService,
+    private router: Router,
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private readonly platformId: object
+  ) {}
+
+  private getSessionItem(key: string): string {
+    if (!isPlatformBrowser(this.platformId)) {
+      return '';
+    }
+    return sessionStorage.getItem(key) || '';
+  }
 
   get wmsId(): string {
-    const wmsId = sessionStorage.getItem('wmsId') || '';
+    const wmsId = this.getSessionItem('wmsId');
     if (!wmsId) this.logger.warn('Missing wmsId');
     return wmsId;
   }
   get workshopName(): string {
-    const workshopName = sessionStorage.getItem('workshopName') || '';
+    const workshopName = this.getSessionItem('workshopName');
     if (!workshopName) this.logger.warn('Missing workshopname');
     return workshopName;
   }
   get country(): string {
-    const country = sessionStorage.getItem('country') || '';
+    const country = this.getSessionItem('country');
     if (!country) this.logger.warn('Missing country');
     return country;
   }
   get currentLocale(): string {
-    const country = sessionStorage.getItem('country') || '';
+    const country = this.getSessionItem('country');
     if(country === 'se') return 'sv-SE';
     if(country === 'dk') return 'da-DK';
     return 'en-US'; // default to English if no country is set
   }
 get lang(): 'en' | 'sv' {
-  const lang = sessionStorage.getItem('lang') || '';
+  const lang = this.getSessionItem('lang');
   if (!lang) {
     this.logger.warn('Missing Language');
   }
@@ -150,6 +161,10 @@ get lang(): 'en' | 'sv' {
           if (match && match[1]) {
             filename = match[1];
           }
+        }
+
+        if (!isPlatformBrowser(this.platformId)) {
+          return;
         }
 
         const url = window.URL.createObjectURL(blob);
@@ -283,7 +298,7 @@ get lang(): 'en' | 'sv' {
   }
 
   logout(){
-      let userName = sessionStorage.getItem('userName') == null ? '':sessionStorage.getItem('userName');
+      let userName = this.getSessionItem('userName');
       const queryParams = new URLSearchParams();
       queryParams.append("userName", userName!);
 

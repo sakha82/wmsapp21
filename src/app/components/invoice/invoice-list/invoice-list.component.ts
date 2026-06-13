@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute,NavigationEnd, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { IPager, IInvoice, IInvoicePayment } from 'app/app.model';
@@ -37,7 +38,8 @@ import { PopoverModule } from 'primeng/popover';
   providers: [ConfirmationService,MessageService]
 })
 export class InvoiceListComponent implements OnInit, OnDestroy {
-   
+  private readonly platformId = inject(PLATFORM_ID);
+
   sortField = 'invoiceId';
   sortOrder = -1;
   totalRecords: number = 0;
@@ -442,7 +444,9 @@ sortColumn(e: any) {
         next: (response: any) => {
           if(response){
             var newBlob = new Blob([response], { type: "application/pdf" });
-            window.open(window.URL.createObjectURL(newBlob));
+            if (isPlatformBrowser(this.platformId)) {
+              window.open(window.URL.createObjectURL(newBlob));
+            }
             this.logger.info('generatePdf success', { invoiceId: selectedInvoice.invoiceId });
           }
         },
@@ -509,6 +513,10 @@ sortColumn(e: any) {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
+          if (!isPlatformBrowser(this.platformId)) {
+            this.isLoading = false;
+            return;
+          }
           const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');

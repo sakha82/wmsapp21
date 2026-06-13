@@ -22,7 +22,9 @@
         </div>
 
         <div class="col-span-8 bg-white p-5 rounded-xl shadow h-64">
-                <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+                @if (isBrowser) {
+                  <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+                }
         </div>
     </div>
 

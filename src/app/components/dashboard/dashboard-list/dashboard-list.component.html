@@ -150,13 +150,15 @@
     <div class="col-span-3">
       <!-- Chart Card -->
       <div class="card mt-0">
-        <p-chart
-          type="bar"
-          [data]="lineChartData"
-          [options]="lineChartOptions"
-          height="400px"
-          class="h-100">
-        </p-chart>
+        @if (isBrowser) {
+          <p-chart
+            type="bar"
+            [data]="lineChartData"
+            [options]="lineChartOptions"
+            height="400px"
+            class="h-100">
+          </p-chart>
+        }
       </div>
     </div>
   </div>

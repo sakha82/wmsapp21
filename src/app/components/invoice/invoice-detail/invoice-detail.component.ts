@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -45,6 +45,8 @@ import { WorkshopService } from 'app/services/workshop.service';
   styleUrl: './invoice-detail.component.css',
 })
 export class InvoiceDetailComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
 
   invoiceId: number = 0;
   disableEdit: boolean = false;
@@ -169,7 +171,9 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
                 next: (response: any) => {
                   if (response) {
                     var newBlob = new Blob([response], { type: "application/pdf" });
-                    this.pdfUrl = window.URL.createObjectURL(newBlob);
+                    if (isPlatformBrowser(this.platformId)) {
+                      this.pdfUrl = window.URL.createObjectURL(newBlob);
+                    }
                     this.logger.info('getPdf success', { invoiceId: this.invoiceId });
                   }
                 },
@@ -278,6 +282,9 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   }
 
   generatePdf() {
+    if (!isPlatformBrowser(this.platformId) || !this.pdfUrl) {
+      return;
+    }
     window.open(this.pdfUrl);
   }
   openEmailDialog() {

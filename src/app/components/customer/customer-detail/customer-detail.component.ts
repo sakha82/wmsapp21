@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { SharedService } from 'app/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from 'app/services/customer.service';
@@ -58,6 +58,7 @@ import { TabsModule } from 'primeng/tabs';
   templateUrl: './customer-detail.component.html',
 })
 export class CustomerDetailComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
 
   customer: ICustomer = <ICustomer>{};
   orders: IWorkOrder[] = [];
@@ -567,7 +568,9 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
           if (response) {
             this.logger.info('generatePdfOffer success', { offerId: selectedOffer.offerId });
             var newBlob = new Blob([response], { type: "application/pdf" });
-            window.open(window.URL.createObjectURL(newBlob));
+            if (isPlatformBrowser(this.platformId)) {
+              window.open(window.URL.createObjectURL(newBlob));
+            }
           }
         },
         error: (err) => {
@@ -591,7 +594,9 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
           if (response) {
             this.logger.info('generatePdfInvoice success', { invoiceId: selectedInvoice.invoiceId });
             var newBlob = new Blob([response], { type: "application/pdf" });
-            window.open(window.URL.createObjectURL(newBlob));
+            if (isPlatformBrowser(this.platformId)) {
+              window.open(window.URL.createObjectURL(newBlob));
+            }
           }
         },
         error: (err) => {

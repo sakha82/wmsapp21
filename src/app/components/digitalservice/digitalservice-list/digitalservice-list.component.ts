@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnDestroy, ChangeDetectorRef, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -48,6 +49,7 @@ import { TreeTableModule } from 'primeng/treetable';
 })
 
 export class DigitalServiceListComponent implements OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
   private destroy$ = new Subject<void>();
   digitalServices!: TreeNode[];
   filterMode: string = 'lenient';
@@ -496,6 +498,9 @@ export class DigitalServiceListComponent implements OnDestroy {
   }
 
   copyToClipboard(text: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     navigator.clipboard.writeText(text).then(() => {
       this.messageService.add({
         severity: 'success',

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -19,6 +19,8 @@ import { finalize, takeUntil, Subject } from 'rxjs';
   templateUrl: './digitalservice-view.component.html'
 })
 export class DigitalServiceViewComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   private destroy$ = new Subject<void>();
   pdfUrl: any;
 
@@ -36,6 +38,9 @@ export class DigitalServiceViewComponent implements OnInit, OnDestroy {
   }
 
   generatePdf() {
+    if (!isPlatformBrowser(this.platformId) || !this.pdfUrl) {
+      return;
+    }
     window.open(this.pdfUrl);
   }
 

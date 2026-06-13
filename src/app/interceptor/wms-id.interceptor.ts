@@ -13,6 +13,7 @@ const WMS_ID_KEYS = ['wmsId', 'wmsid'];
 
 /** API routes that must not require a workshop/tenant id. */
 const EXEMPT_URL_FRAGMENTS = [
+  'assets/',
   '/assets/',
   '/api/auth/login',
   '/api/auth/logout',

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Output, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -56,6 +56,8 @@ interface WorkshopService { name: string };
   templateUrl: './workorder-detail.component.html'
 })
 export class WorkOrderDetailComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   @Output() invoiceEvent = new EventEmitter<string>();
   private destroy$ = new Subject<void>();
 
@@ -121,7 +123,9 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response) {
             var newBlob = new Blob([response], { type: "application/pdf" });
-            this.pdfUrl = window.URL.createObjectURL(newBlob);
+            if (isPlatformBrowser(this.platformId)) {
+              this.pdfUrl = window.URL.createObjectURL(newBlob);
+            }
           }
         },
         error: (err) => {
@@ -209,6 +213,9 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
   }
 
   generatePdf() {
+    if (!isPlatformBrowser(this.platformId) || !this.pdfUrl) {
+      return;
+    }
     window.open(this.pdfUrl);
   }
 

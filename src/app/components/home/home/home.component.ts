@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, HostListener, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -42,6 +42,8 @@ interface FaqItem {
 
 
 export class HomeComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   private destroy$ = new Subject<void>();
   private baseUrl: string = environment.BASE_URL;
   loginForm!: FormGroup;
@@ -156,7 +158,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         detail: 'EREERE'
       });
       
-      sessionStorage.removeItem('authErrorMessage');
+      if (isPlatformBrowser(this.platformId)) {
+        sessionStorage.removeItem('authErrorMessage');
+      }
     }
     
     
@@ -205,7 +209,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   openTermsModal(event: Event) {
     event.preventDefault();
-    // Scroll to terms section or open a full-screen modal
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     const termsModal = document.getElementById('termsModal');
     if (termsModal) {
       (termsModal as any).style.display = 'block';
@@ -213,6 +219,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   closeTermsModal() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     const termsModal = document.getElementById('termsModal');
     if (termsModal) {
       (termsModal as any).style.display = 'none';
@@ -246,12 +255,14 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.logger.info(res);
           if (!res) return;
 
-          sessionStorage.setItem('userName', res.userName);
-          sessionStorage.setItem('accessToken', res.token);
-          sessionStorage.setItem('wmsId', res.wmsId);
-          sessionStorage.setItem('workshopName', res.displayName);
-          sessionStorage.setItem('country', res.country);
-          sessionStorage.setItem('lang', 'sv');
+          if (isPlatformBrowser(this.platformId)) {
+            sessionStorage.setItem('userName', res.userName);
+            sessionStorage.setItem('accessToken', res.token);
+            sessionStorage.setItem('wmsId', res.wmsId);
+            sessionStorage.setItem('workshopName', res.displayName);
+            sessionStorage.setItem('country', res.country);
+            sessionStorage.setItem('lang', 'sv');
+          }
           // ResourcesLoadedGuard will handle loading resources on /sv route
           this.router.navigate(['/sv/dashboard']);
         },
@@ -428,6 +439,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   @HostListener('window:scroll')
   onScroll(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     const elements = document.querySelectorAll('.fade-in');
     elements.forEach((el) => {
       const rect = el.getBoundingClientRect();

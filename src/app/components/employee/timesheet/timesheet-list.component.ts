@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { Form, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -63,6 +63,7 @@ import { TextareaModule } from 'primeng/textarea';
   providers: [ConfirmationService, MessageService]
 })
 export class TimesheetListComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
   private destroy$ = new Subject<void>();
   @ViewChild('checkoutPopup') checkoutPopup!: Popover;
   @ViewChild('deletePopup') deletePopup!: Popover;
@@ -596,18 +597,16 @@ this.timesheetService
   )
   .subscribe({
     next: (res: Blob) => {
-      // Create a Blob URL and trigger the download
+      if (!isPlatformBrowser(this.platformId)) {
+        return;
+      }
       const blob = new Blob([res], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
-
-      // Create a temporary anchor element
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'timesheet.pdf'; // Set the filename
+      a.download = 'timesheet.pdf';
       document.body.appendChild(a);
       a.click();
-
-      // Clean up
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     },

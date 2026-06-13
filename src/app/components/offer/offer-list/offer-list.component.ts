@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IPager, IOffer } from 'app/app.model';
@@ -35,6 +36,7 @@ import { MessageModule } from 'primeng/message';
   providers: [ConfirmationService, MessageService]
 })
 export class OfferListComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
   private destroy$ = new Subject<void>();
 
   sortField = 'offerId';
@@ -198,7 +200,9 @@ export class OfferListComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response) {
             var newBlob = new Blob([response], { type: "application/pdf" });
-            window.open(window.URL.createObjectURL(newBlob));
+            if (isPlatformBrowser(this.platformId)) {
+              window.open(window.URL.createObjectURL(newBlob));
+            }
           }
         },
         error: (err) => {

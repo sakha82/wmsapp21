@@ -4,22 +4,24 @@
     <section class="pb-5 w-full">
         <div class="grid grid-cols-12 gap-5 my-10 px-5">
             <div class="md:col-span-8 col-span-12">
-                <pdf-viewer
-                [src]="pdfUrl"
-                [rotation]="0"
-                [original-size]="false"
-                [show-all]="true"
-                [fit-to-page]="false"
-                [zoom]="1"
-                [zoom-scale]="'page-width'"
-                [stick-to-page]="false"
-                [render-text]="true"
-                [external-link-target]="'blank'"
-                [autoresize]="true"
-                [show-borders]="false"
-                style="width: 100%;"
-                class="xl:h-[400mm] lg:h-[297mm] md:h-[250mm] sm:h-[230mm] h-[155mm]"
-            ></pdf-viewer> 
+                @if (isBrowser) {
+                  <pdf-viewer
+                  [src]="pdfUrl"
+                  [rotation]="0"
+                  [original-size]="false"
+                  [show-all]="true"
+                  [fit-to-page]="false"
+                  [zoom]="1"
+                  [zoom-scale]="'page-width'"
+                  [stick-to-page]="false"
+                  [render-text]="true"
+                  [external-link-target]="'blank'"
+                  [autoresize]="true"
+                  [show-borders]="false"
+                  style="width: 100%;"
+                  class="xl:h-[400mm] lg:h-[297mm] md:h-[250mm] sm:h-[230mm] h-[155mm]"
+                  ></pdf-viewer>
+                }
             </div>
             <div class="md:col-span-4 col-span-12">
                 <div class="text-center text-Darkgray text-sm px-3 py-4 mb-4 bg-white shadow rounded-xl">

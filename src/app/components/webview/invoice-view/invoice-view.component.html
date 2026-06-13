@@ -15,22 +15,24 @@
          <div class="relative w-full max-w-[800px] bg-white shadow-lg rounded-lg p-4 border border-CustomBorder"> 
             <!-- PDF Viewer -->
             <div>
-                <pdf-viewer
-                    [src]="pdfUrl"
-                    [rotation]="0"
-                    [original-size]="false"
-                    [show-all]="true"
-                    [fit-to-page]="false"
-                    [zoom]="1"
-                    [zoom-scale]="'page-width'"
-                    [stick-to-page]="false"
-                    [render-text]="true"
-                    [external-link-target]="'blank'"
-                    [autoresize]="true"
-                    [show-borders]="false"
-                    style="width: 100%; height: 290mm;"
-                    class="rounded-lg"
-                ></pdf-viewer>
+                @if (isBrowser) {
+                  <pdf-viewer
+                      [src]="pdfUrl"
+                      [rotation]="0"
+                      [original-size]="false"
+                      [show-all]="true"
+                      [fit-to-page]="false"
+                      [zoom]="1"
+                      [zoom-scale]="'page-width'"
+                      [stick-to-page]="false"
+                      [render-text]="true"
+                      [external-link-target]="'blank'"
+                      [autoresize]="true"
+                      [show-borders]="false"
+                      style="width: 100%; height: 290mm;"
+                      class="rounded-lg"
+                  ></pdf-viewer>
+                }
             </div>
         </div>
     </div>

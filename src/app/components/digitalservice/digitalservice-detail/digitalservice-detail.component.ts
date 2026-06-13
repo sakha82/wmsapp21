@@ -1,5 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -39,6 +39,8 @@ import { finalize, takeUntil, Subject } from 'rxjs';
   templateUrl: './digitalservice-detail.component.html'
 })
 export class DigitalServiceDetailComponent implements OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   private destroy$ = new Subject<void>();
   vehiclePlate: string = '';
   userId: string = '';
@@ -88,7 +90,9 @@ export class DigitalServiceDetailComponent implements OnDestroy {
       .subscribe({
         next: (response: any) => {
           const newBlob = new Blob([response], { type: 'application/pdf' });
-          this.pdfUrl = window.URL.createObjectURL(newBlob);
+          if (isPlatformBrowser(this.platformId)) {
+            this.pdfUrl = window.URL.createObjectURL(newBlob);
+          }
         },
         error: (err) => {
           this.logger.error('Error loading PDF', err);
@@ -107,6 +111,9 @@ export class DigitalServiceDetailComponent implements OnDestroy {
   }
 
   generatePdf() {
+    if (!isPlatformBrowser(this.platformId) || !this.pdfUrl) {
+      return;
+    }
     window.open(this.pdfUrl);
   }
   openEmailDialog() {

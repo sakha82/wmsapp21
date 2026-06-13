@@ -9,7 +9,7 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(private logger: LogService, private authSession: AuthSessionService) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
   { 
-  const accessToken = sessionStorage.getItem('accessToken');
+  const accessToken = this.authSession.accessToken;
   if (accessToken) {
     request = request.clone({
       setHeaders: {

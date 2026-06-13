@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -22,6 +22,8 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './invoice-view.component.html'
 })
 export class InvoiceViewComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   private destroy$ = new Subject<void>();
   token: string = '';
   workshopName: string = '';
@@ -65,7 +67,9 @@ export class InvoiceViewComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           if (response) {
             const newBlob = new Blob([response], { type: 'application/pdf' });
-            this.pdfUrl = window.URL.createObjectURL(newBlob);
+            if (isPlatformBrowser(this.platformId)) {
+              this.pdfUrl = window.URL.createObjectURL(newBlob);
+            }
           }
         },
         error: (err) => {
@@ -75,6 +79,9 @@ export class InvoiceViewComponent implements OnInit, OnDestroy {
   }
 
   generatePdf() {
+    if (!isPlatformBrowser(this.platformId) || !this.pdfUrl) {
+      return;
+    }
     window.open(this.pdfUrl);
   }
 

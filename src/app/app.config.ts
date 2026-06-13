@@ -12,6 +12,7 @@ import Material from '@primeng/themes/material';
 import { LoggingInterceptor } from 'app/interceptor/logging.interceptor';
 import { TokenInterceptor } from 'app/interceptor/token.interceptor';
 import { WmsIdInterceptor } from 'app/interceptor/wms-id.interceptor';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 export const MaterialPreset = definePreset(Material, {});
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -57,6 +58,6 @@ export const appConfig: ApplicationConfig = {
     },
     
     // Standalone Module Imports (if needed for specific features)
-    importProvidersFrom(DragDropModule)
+    importProvidersFrom(DragDropModule), provideClientHydration(withEventReplay())
   ]
 };

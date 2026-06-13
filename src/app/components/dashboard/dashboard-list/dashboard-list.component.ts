@@ -28,9 +28,6 @@ import { TagModule } from 'primeng/tag';
 // RxJS
 import { catchError, forkJoin, Subject, finalize } from 'rxjs';
 
-// Register chart plugin
-Chart.register(ChartDataLabels);
-
 @Component({
   selector: 'app-dashboard-list',
   standalone: true,
@@ -87,6 +84,7 @@ progressPercentage:number = 0;
   lineChartData: any;
   lineChartOptions: any;
   platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   isLoading:boolean = false;
 percentage: number = 0;
 
@@ -116,6 +114,10 @@ percentage: number = 0;
    }
 
    ngOnInit() {
+   if (isPlatformBrowser(this.platformId)) {
+     Chart.register(ChartDataLabels);
+   }
+
    this.noOfPreviousMonthsForChart = [
             { value:'3',text:this.sharedService.T('previous3Months')},
             { value:'6',text:this.sharedService.T('previous6Months')},

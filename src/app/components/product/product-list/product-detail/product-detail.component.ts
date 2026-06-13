@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,6 +48,8 @@ import { ChartModule } from 'primeng/chart';
   styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
+  private readonly platformId = inject(PLATFORM_ID);
+  readonly isBrowser = isPlatformBrowser(this.platformId);
   private destroy$ = new Subject<void>();
   basicData: any;
   basicOptions: any;
@@ -69,7 +71,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
   }
