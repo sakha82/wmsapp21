@@ -84,32 +84,36 @@
                             <td *ngFor="let day of days; let i = index" class="relative booking-slot-cell"
                                 style="width: 240px; min-width: 240px; max-width: 240px; overflow: hidden;"
                                 [ngClass]="{
-                                    'booking-current-day': selectedDay == i + 1,
-                                    'booking-slot-locked': isSlotLocked(day, calendar)
+                                    'booking-current-day': selectedDay == i + 1
                                 }"
                                 (mouseenter)="hoveredSlot = { day, time: calendar.cTime }"
                                 (mouseleave)="hoveredSlot = null">
 
-                                <div *ngIf="isSlotLocked(day, calendar) && !hasSlotBookings(day, calendar)"
-                                    class="booking-locked-indicator" [attr.aria-label]="sharedService.T('slot_locked')">
-                                    <i class="pi pi-lock"></i>
-                                    <span class="text-xs font-medium">{{ sharedService.T('slot_locked') }}</span>
-                                </div>
-
-                                <div *ngIf="isSlotHovered(day, calendar.cTime)" class="booking-slot-actions">
-                                    <p-button *ngIf="canLockSlot(day, calendar)"
-                                        icon="pi pi-lock" size="small" variant="outlined" severity="secondary"
-                                        class="booking-slot-action-btn"
-                                        [pTooltip]="sharedService.T('lock_slot')" tooltipPosition="top"
-                                        [loading]="slotLockInProgress === slotKey(day, calendar)"
-                                        (onClick)="lockSlot(day, calendar, $event)" />
+                                <div *ngIf="!hasSlotBookings(day, calendar)" class="booking-slot-corner">
+                                    <div *ngIf="isSlotLocked(day, calendar)" class="booking-locked-indicator"
+                                        [pTooltip]="sharedService.T('slot_locked')"
+                                        tooltipPosition="left"
+                                        [attr.aria-label]="sharedService.T('slot_locked')">
+                                        <i class="pi pi-lock" aria-hidden="true"></i>
+                                        <span class="booking-locked-label">{{ sharedService.T('slot_locked') }}</span>
+                                    </div>
                                     <p-button *ngIf="canUnlockSlot(day, calendar)"
                                         icon="pi pi-lock-open" size="small" variant="outlined" severity="secondary"
-                                        class="booking-slot-action-btn"
-                                        [pTooltip]="sharedService.T('unlock_slot')" tooltipPosition="top"
+                                        class="booking-corner-btn"
+                                        [pTooltip]="sharedService.T('unlock_slot')" tooltipPosition="left"
                                         [loading]="slotLockInProgress === slotKey(day, calendar)"
                                         (onClick)="unlockSlot(day, calendar, $event)" />
-                                    <p-button *ngIf="!isSlotLocked(day, calendar)"
+                                    <p-button *ngIf="canLockSlot(day, calendar) && isSlotHovered(day, calendar.cTime)"
+                                        icon="pi pi-lock" size="small" variant="outlined" severity="secondary"
+                                        class="booking-corner-btn"
+                                        [pTooltip]="sharedService.T('lock_slot')" tooltipPosition="left"
+                                        [loading]="slotLockInProgress === slotKey(day, calendar)"
+                                        (onClick)="lockSlot(day, calendar, $event)" />
+                                </div>
+
+                                <div *ngIf="isSlotHovered(day, calendar.cTime) && !hasSlotBookings(day, calendar)"
+                                    class="booking-slot-actions">
+                                    <p-button
                                         label="{{this.sharedService.T('add_booking_at_time')}} {{ calendar.cTime }}"
                                         icon="pi pi-plus" size="small" variant="outlined"
                                         class="booking-slot-add-btn"

@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } 
 import { SharedService } from 'app/services/shared.service';
 import { ProductService } from 'app/services/product.service';
 import { LogService } from 'app/services/log.service';
+import { SeoMetaService } from 'app/services/seo-meta.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { IInventory, IProduct, IPager, IInvoiceDetail, IProductChart } from 'app/app.model';
 import { switchMap, catchError, finalize, takeUntil, Subject } from 'rxjs';
@@ -71,6 +72,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
+    private readonly seo: SeoMetaService,
   ) {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
   }
@@ -110,6 +112,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           next: (res: any) => {
             this.logger.info('Product loaded:', res);
             this.product = res.data;
+            if (this.product?.productName) {
+              this.seo.applyProductDetail(this.product.productName, this.productId);
+            }
           },
           error: (err) => {
             this.logger.error('Error loading product:', err);

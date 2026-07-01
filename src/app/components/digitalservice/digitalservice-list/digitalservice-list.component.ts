@@ -45,7 +45,8 @@ import { TreeTableModule } from 'primeng/treetable';
   standalone: true,
   imports: [CommonModule,TreeTableModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
   providers: [ConfirmationService, MessageService],
- templateUrl: './digitalservice-list.component.html'
+ templateUrl: './digitalservice-list.component.html',
+ styleUrl: './digitalservice-list.component.css'
 })
 
 export class DigitalServiceListComponent implements OnDestroy {
@@ -922,39 +923,31 @@ export class DigitalServiceListComponent implements OnDestroy {
             this.logger.info(`Loaded ${res.length} services for vehicle: ${vehiclePlate}, user: ${userId}`);
             this.logger.info(res);
 
-            // Create header row as first child
-            const headerRow = {
-              key: `${userId}_${vehiclePlate}_child_header`,
-              data: {
-                isHeader: true
-              },
-              leaf: true
-            };
-            
-            // Create data rows for each service record
-            const dataRows = res.map((item, index) => ({
-              key: `${userId}_${vehiclePlate}_child_${item.digitalServiceId}_${index}`,
-              data: {
-                creationDate: item.creationDate,
-                serviceType: item.serviceType,
-                serviceDate: item.serviceDate,
-                nextServiceDate: item.nextServiceDate,
-                digitalServiceId: item.digitalServiceId,
-                vehicleMileage: item.vehicleMileage,
-                fileAttached: item.fileAttached,
-                comments: item.comments,
-                workshopName: item.workshopName,
-                workshopAddress: item.workshopAddress,
-                workshopCity: item.workshopCity,
-                telephone: item.telephone,
-                email: item.email,
-                vehicle: `${node.data.vehicleManufacturer} ${node.data.vehicleModel} (${node.data.vehicleYear})`
-              },
-              leaf: true
+            const services = res.map((item) => ({
+              creationDate: item.creationDate,
+              serviceType: item.serviceType,
+              serviceDate: item.serviceDate,
+              nextServiceDate: item.nextServiceDate,
+              digitalServiceId: item.digitalServiceId,
+              vehicleMileage: item.vehicleMileage,
+              fileAttached: item.fileAttached,
+              comments: item.comments,
+              workshopName: item.workshopName,
+              workshopAddress: item.workshopAddress,
+              workshopCity: item.workshopCity,
+              telephone: item.telephone,
+              email: item.email,
+              vehicle: `${node.data.vehicleManufacturer} ${node.data.vehicleModel} (${node.data.vehicleYear})`
             }));
-            
-            // Combine header row with data rows
-            node.children = [headerRow, ...dataRows];
+
+            node.children = [{
+              key: `${userId}_${vehiclePlate}_child_detail`,
+              data: {
+                isDetailPanel: true,
+                services
+              },
+              leaf: true
+            }];
             
             // Create a new node object reference so PrimeNG detects the change
             const updatedNode = { ...node };

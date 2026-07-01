@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener, PLATFORM_ID, inject } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -12,6 +12,7 @@ import { finalize, takeUntil, Subject } from "rxjs";
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
+import { SeoMetaService } from 'app/services/seo-meta.service';
 
 interface Feature {
   icon: string;
@@ -30,6 +31,7 @@ interface FaqItem {
   standalone: true,
   imports: [
     CommonModule,
+    NgOptimizedImage,
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,
@@ -53,6 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isDialogVisible: boolean = false;
   isLoading: boolean = false; // Loader control variable
   imagesUrl = 'assets/images/';
+  logoPath = 'assets/images/logo.svg';
   
   
   mobileMenuOpen = false;
@@ -140,10 +143,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private router: Router,
     private messageService: MessageService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private readonly seo: SeoMetaService
   ) {}
 
   ngOnInit() {
+    this.seo.applyHome();
     
       
       this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Message Content' });

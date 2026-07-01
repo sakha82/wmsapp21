@@ -72,6 +72,7 @@
       <div class="mb-12">
         <p-treetable 
         #tt
+        class="ds-treetable"
         [value]="digitalServices" 
         [showGridlines]="false"
         [paginator]="true"
@@ -101,78 +102,83 @@
 
           <ng-template pTemplate="header" let-columns="columns">
             <tr>
-              <th style="width: 300px;">{{ parentCols[0]?.header }}</th>
-              <th style="width: 200px;">{{ parentCols[1]?.header }}</th>
-              <th style="width: 300px;">{{ parentCols[2]?.header }}</th>
+              <th class="ds-col-reg">{{ parentCols[0]?.header }}</th>
+              <th class="ds-col-user">{{ parentCols[1]?.header }}</th>
+              <th class="ds-col-vehicle">{{ parentCols[2]?.header }}</th>
             </tr>
           </ng-template>
           <!-- PARENT AND CHILD ROW TEMPLATES -->
           <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr [ttRow]="rowNode" [ttRow]="rowNode" [class.bg-blue-50]="rowData?.digitalServiceId" [class.bg-white]="!rowData?.digitalServiceId">
-              <ng-container *ngIf="rowData?.userId && !rowData?.digitalServiceId">
-              <ng-container *ngIf="rowData?.userId && !rowData?.digitalServiceId">
-                <td style="width: 300px;" class="pl-2 pr-4">
+            <tr [ttRow]="rowNode" [class.bg-white]="rowData?.userId && !rowData?.isDetailPanel">
+              <ng-container *ngIf="rowData?.userId && !rowData?.isDetailPanel">
+                <td class="ds-col-reg pl-2 pr-4">
                   <div class="flex items-center gap-2">
                     <p-treetable-toggler [rowNode]="rowNode"></p-treetable-toggler>
                     <strong>{{ rowData?.vehiclePlate }}</strong>
                   </div>
                 </td>
-                <td style="width: 200px;" class="pl-4 pr-4">
+                <td class="ds-col-user pl-4 pr-4">
                   <div class="flex items-center gap-1">
                     <span>{{ rowData?.userId }}</span>
                   </div>
                 </td>
-                <td style="width: 300px;" class="pl-6 pr-3">{{ rowData?.vehicleManufacturer }} {{ rowData?.vehicleModel }} ({{ rowData?.vehicleYear }})</td>
+                <td class="pl-6 pr-3">{{ rowData?.vehicleManufacturer }} {{ rowData?.vehicleModel }} ({{ rowData?.vehicleYear }})</td>
               </ng-container>
-              </ng-container>
-              
-              <!-- CHILD ROW HEADERS: Show column headers row -->
-              <ng-container *ngIf="rowData?.isHeader">
-                <td class="pl-2"></td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">{{ this.sharedService.T('createdDate') }}</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">{{ this.sharedService.T('serviceType') }}</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">{{ this.sharedService.T('serviceDate') }}</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">{{ this.sharedService.T('nextServiceDate') }}</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">{{ this.sharedService.T('workshop') }}</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">{{ this.sharedService.T('comments') }}</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);">PDF</td>
-                <td class="pl-2 font-bold text-sm text-white whitespace-nowrap" style="background-color: var(--p-primary-300);"></td>
-              </ng-container>
-              
-              <!-- CHILD ROW DATA: Show actual child data (all data rows) -->
-              <ng-container *ngIf="!rowData?.isHeader && rowData?.digitalServiceId">
-                <td class="pl-2"></td>
-                <td class="pl-2 font-medium whitespace-nowrap">{{ rowData?.creationDate }}</td>
-                <td class="pl-2 whitespace-nowrap">
-                  <strong *ngIf="rowData?.serviceType">{{ this.sharedService.getEnumByValue('digitalserviceType', rowData?.serviceType).text }}</strong>
-                  <span *ngIf="!rowData?.serviceType" class="text-gray-400">-</span>
-                </td>
-                <td class="pl-2 whitespace-nowrap">{{ rowData?.serviceDate }}</td>
-                <td class="pl-2 whitespace-nowrap">{{ rowData?.nextServiceDate }} </td>
-                <td class="pl-2" [pTooltip]="
-                            '<div class=\'tooltip-content\'>' +
-                              '<b>' + this.sharedService.T('workshop') + ':</b><br>' + rowData?.workshopName + '<br><br>' +
-                              '<b>' + this.sharedService.T('address') + ':</b><br>' + rowData?.workshopAddress + ', ' + rowData?.workshopCity + '<br><br>' +
-                              '<b>' + this.sharedService.T('telephone') + ':</b><br>' + rowData?.telephone + '<br><br>' +
-                              '<b>' + this.sharedService.T('email') + ':</b><br>' + rowData?.email +
-                            '</div>'" tooltipPosition="top" [tooltipOptions]="{ escape: false }" tooltipStyleClass="custom-tooltip">
-                                {{ rowData?.workshopName?.length > 18 ? (rowData?.workshopName | slice : 0 : 18) + '...' : rowData?.workshopName }}
-                </td>
-                <td class="pl-2">
-                  <div *ngIf="rowData?.comments">
-                  <p-button variant="text" [raised]="true" size="small"
-                      [pTooltip]="rowData?.comments" tooltipPosition="top" >
-                      <span class="material-symbols-outlined">comment</span>
-                  </p-button>
+
+              <ng-container *ngIf="rowData?.isDetailPanel">
+                <td [attr.colspan]="parentCols.length" class="ds-detail-cell">
+                  <div class="ds-detail-scroll">
+                    <table class="ds-detail-table">
+                      <thead>
+                        <tr>
+                          <th>{{ this.sharedService.T('createdDate') }}</th>
+                          <th>{{ this.sharedService.T('serviceType') }}</th>
+                          <th>{{ this.sharedService.T('serviceDate') }}</th>
+                          <th>{{ this.sharedService.T('nextServiceDate') }}</th>
+                          <th>{{ this.sharedService.T('workshop') }}</th>
+                          <th>{{ this.sharedService.T('comments') }}</th>
+                          <th>PDF</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let service of rowData.services" class="ds-detail-row">
+                          <td class="font-medium">{{ service.creationDate }}</td>
+                          <td>
+                            <strong *ngIf="service.serviceType">{{ this.sharedService.getEnumByValue('digitalserviceType', service.serviceType).text }}</strong>
+                            <span *ngIf="!service.serviceType" class="text-gray-400">-</span>
+                          </td>
+                          <td>{{ service.serviceDate }}</td>
+                          <td>{{ service.nextServiceDate }}</td>
+                          <td [pTooltip]="
+                                      '<div class=\'tooltip-content\'>' +
+                                        '<b>' + this.sharedService.T('workshop') + ':</b><br>' + service.workshopName + '<br><br>' +
+                                        '<b>' + this.sharedService.T('address') + ':</b><br>' + service.workshopAddress + ', ' + service.workshopCity + '<br><br>' +
+                                        '<b>' + this.sharedService.T('telephone') + ':</b><br>' + service.telephone + '<br><br>' +
+                                        '<b>' + this.sharedService.T('email') + ':</b><br>' + service.email +
+                                      '</div>'" tooltipPosition="top" [tooltipOptions]="{ escape: false }" tooltipStyleClass="custom-tooltip">
+                            {{ service.workshopName }}
+                          </td>
+                          <td>
+                            <div *ngIf="service.comments">
+                              <p-button variant="text" [raised]="true" size="small"
+                                  [pTooltip]="service.comments" tooltipPosition="top">
+                                  <span class="material-symbols-outlined">comment</span>
+                              </p-button>
+                            </div>
+                          </td>
+                          <td [innerHTML]="service.fileAttached == 1 ? '<span class=\'material-symbols-outlined icon-primary\'>check_small</span>' : '<span class=\'material-symbols-outlined icon-primary\'>close_small</span>'"></td>
+                          <td>
+                            <p-button variant="text" [raised]="true" size="small"
+                                [pTooltip]="service.comments" tooltipPosition="top" (onClick)="openAttachmentDialog(service)">
+                                <span class="material-symbols-outlined">attach_file_add</span>
+                            </p-button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-              </td>
-              <td class="pl-2" [innerHTML]="rowData?.fileAttached == 1 ? '<span class=\'material-symbols-outlined icon-primary\'>check_small</span>' : '<span class=\'material-symbols-outlined icon-primary\'>close_small</span>'"></td>
-              <td class="pl-2 whitespace-nowrap">
-                  <p-button variant="text" [raised]="true" size="small"
-                      [pTooltip]="rowData?.comments" tooltipPosition="top" (onClick)="openAttachmentDialog(rowData)" >
-                      <span class="material-symbols-outlined">attach_file_add</span>
-                  </p-button>
-              </td>
+                </td>
               </ng-container>
             </tr>
           </ng-template>

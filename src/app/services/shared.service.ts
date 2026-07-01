@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID, TransferState, makeStateKey } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IVehicleType, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
@@ -9,6 +9,10 @@ import { LogService } from './log.service';
 import { WmsUser } from 'app/app.model';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ResourceCacheService } from './resource-cache.service';
+
+const TRANSLATIONS_STATE_KEY = makeStateKey<ITranslate[]>('wms-translations');
+const ENUMS_STATE_KEY = makeStateKey<IEnums[]>('wms-enums');
 
 @Injectable({providedIn: 'root'})
 
@@ -39,6 +43,8 @@ export class SharedService {
     private logger: LogService,
     private router: Router,
     private route: ActivatedRoute,
+    private readonly transferState: TransferState,
+    private readonly resourceCache: ResourceCacheService,
     @Inject(PLATFORM_ID) private readonly platformId: object
   ) {}
 
@@ -408,52 +414,48 @@ get lang(): 'en' | 'sv' {
 loadResources(): Observable<void> {
   this.logger.info('Start loading resource files');
 
-  // Return immediately if resources are already loaded
   if (this.areResourcesLoaded()) {
     this.logger.info('Resources already loaded, returning cached data');
     return of(undefined);
   }
 
-  // Return the memoized promise to prevent parallel loading
+  if (isPlatformBrowser(this.platformId)) {
+    const transferredTranslations = this.transferState.get(TRANSLATIONS_STATE_KEY, null);
+    const transferredEnums = this.transferState.get(ENUMS_STATE_KEY, null);
+    if (transferredTranslations?.length && transferredEnums?.length) {
+      this.translations = transferredTranslations;
+      this.enums = transferredEnums;
+      this.transferState.remove(TRANSLATIONS_STATE_KEY);
+      this.transferState.remove(ENUMS_STATE_KEY);
+      this.resourcesLoadedSubject.next(true);
+      this.logger.info('Resources hydrated from TransferState');
+      return of(undefined);
+    }
+  }
+
   if (this.resourceLoadingPromise) {
     this.logger.info('Resource loading already in progress, waiting for completion');
     return from(this.resourceLoadingPromise);
   }
 
-  // Create the actual loading operation
   const translationsUrl = 'assets/resources/trans.json';
-  const enumsUrl =   'assets/resources/enums.json';
-  // const modelsUrl =  'assets/resources/models.json';  
-  // , Observable<IVehicleType[]>
+  const enumsUrl = 'assets/resources/enums.json';
+
   const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>] = [
-    this.http.get<ITranslate[]>(translationsUrl).pipe(
-      catchError(error => {
-        this.logger.error('Error loading translation.json:', error);
-        return of([] as ITranslate[]);
-      })
-    ),
-    this.http.get<IEnums[]>(enumsUrl).pipe(
-      catchError(error => {
-        this.logger.error('Error loading enums.json:', error);
-        return of([] as IEnums[]);
-      })
-    ),
-    // this.http.get<IVehicleType[]>(modelsUrl).pipe(
-    //   catchError(error => {
-    //     this.logger.error('Error loading models.json:', error);
-    //     return of([] as IVehicleType[]);
-    //   })
-    // )
+    this.fetchResourceFile<ITranslate[]>(translationsUrl),
+    this.fetchResourceFile<IEnums[]>(enumsUrl),
   ];
-  // , IVehicleType[]
-  // Create the observable that will be memoized
+
   const loadingObservable = forkJoin<[ITranslate[], IEnums[]]>(fileRequests).pipe(
     tap(([wmsTranslate, wmsEnums]) => {
-    // tap(([wmsTranslate, wmsEnums, wmsModels]) => {
       this.translations = wmsTranslate;
-      this.enums = wmsEnums;      
-      // this.allVehicleTypes = wmsModels;      
-      // this.allManufacturers = this.transformModelsToVehicles(wmsModels);
+      this.enums = wmsEnums;
+
+      if (!isPlatformBrowser(this.platformId)) {
+        this.transferState.set(TRANSLATIONS_STATE_KEY, wmsTranslate);
+        this.transferState.set(ENUMS_STATE_KEY, wmsEnums);
+      }
+
       this.logger.info('All resource files loaded successfully');
     }),
     map(() => undefined)
@@ -484,6 +486,23 @@ loadResources(): Observable<void> {
 
   return from(this.resourceLoadingPromise);
 }
+
+  private fetchResourceFile<T>(url: string): Observable<T> {
+    const cacheKey = this.resourceCache.cacheKeyForUrl(url);
+    const cached = this.resourceCache.get<T>(cacheKey);
+    if (cached !== null) {
+      return of(cached);
+    }
+
+    return this.http.get<T>(url).pipe(
+      tap((data) => this.resourceCache.set(cacheKey, data)),
+      catchError((error) => {
+        this.logger.error(`Error loading ${url}:`, error);
+        return of([] as T);
+      })
+    );
+  }
+
    areResourcesLoaded(): boolean {
     return this.resourcesLoadedSubject.value;
   }

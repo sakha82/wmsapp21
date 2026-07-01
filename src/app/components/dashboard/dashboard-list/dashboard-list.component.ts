@@ -8,8 +8,7 @@ import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
 import { DashboardService } from 'app/services/dashboard.service';
 import { InvoiceService } from 'app/services/invoice.service';
-import {TooltipItem, Chart } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import type { TooltipItem } from 'chart.js';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ButtonModule } from 'primeng/button';
@@ -92,6 +91,7 @@ percentage: number = 0;
   selectedStatMonths = '3';
   private destroy$ = new Subject<void>();
   private observers: MutationObserver[] = [];
+  private chartPluginsReady = false;
   
   constructor(private cd: ChangeDetectorRef,
               private readonly router: Router,
@@ -115,7 +115,7 @@ percentage: number = 0;
 
    ngOnInit() {
    if (isPlatformBrowser(this.platformId)) {
-     Chart.register(ChartDataLabels);
+     void this.ensureChartPlugins();
    }
 
    this.noOfPreviousMonthsForChart = [
@@ -335,12 +335,19 @@ loadLineChart(noOfPreviousMonths:string){
 }
 
   lineChart() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    if (!this.chartPluginsReady) {
+      void this.ensureChartPlugins().then(() => this.lineChart());
+      return;
+    }
+
     this.logger.info('Initializing chart with top sales data:');
     this.logger.info('Initializing chart with top sales data:', this.topSales);
 
-    if (isPlatformBrowser(this.platformId)) {
-      // Get PrimeNG Design Tokens from CSS Variables (v21 Styled Mode)
-      const documentStyle = getComputedStyle(document.documentElement);
+    const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color').trim();
       const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color').trim();
       const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color').trim();
@@ -534,7 +541,6 @@ loadLineChart(noOfPreviousMonths:string){
       };
   
       this.cd.markForCheck();
-    }
   }
     private listenForThemeChanges(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -572,6 +578,17 @@ loadLineChart(noOfPreviousMonths:string){
     });
     // Store observer to disconnect later
     this.observers.push(rootObserver);
+  }
+
+  private async ensureChartPlugins(): Promise<void> {
+    const { Chart } = await import('chart.js');
+    const ChartDataLabels = (await import('chartjs-plugin-datalabels')).default;
+    Chart.register(ChartDataLabels);
+    this.chartPluginsReady = true;
+    if (this.topSales?.length) {
+      this.lineChart();
+      this.cd.markForCheck();
+    }
   }
 
 

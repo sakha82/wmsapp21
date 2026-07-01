@@ -22,9 +22,15 @@
         </div>
 
         <div class="col-span-8 bg-white p-5 rounded-xl shadow h-64">
-                @if (isBrowser) {
-                  <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
-                }
+          @defer (when isBrowser) {
+            @if (isBrowser) {
+              <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+            }
+          } @placeholder {
+            <div class="h-full flex items-center justify-center bg-gray-50 rounded-lg">
+              <p-progress-spinner strokeWidth="6" [style]="{ width: '36px', height: '36px' }" />
+            </div>
+          }
         </div>
     </div>
 

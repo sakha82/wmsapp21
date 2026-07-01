@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { DragDropModule } from 'primeng/dragdrop';
@@ -12,52 +12,62 @@ import Material from '@primeng/themes/material';
 import { LoggingInterceptor } from 'app/interceptor/logging.interceptor';
 import { TokenInterceptor } from 'app/interceptor/token.interceptor';
 import { WmsIdInterceptor } from 'app/interceptor/wms-id.interceptor';
+import { CacheInterceptor } from 'app/interceptor/cache.interceptor';
+import { ApiErrorInterceptor } from 'app/interceptor/api-error.interceptor';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { SelectivePreloadStrategy } from 'app/strategies/selective-preload.strategy';
+
 export const MaterialPreset = definePreset(Material, {});
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Zone Change Detection
     provideZoneChangeDetection({ eventCoalescing: true }),
-    
-    // Routing
-    provideRouter(routes),
-    
-    // Animations - Use only provideAnimationsAsync (modern approach)
+
+    provideRouter(
+      routes,
+      withPreloading(SelectivePreloadStrategy)
+    ),
+
     provideAnimationsAsync(),
-    
-    // PrimeNG Configuration
-    providePrimeNG({ 
+
+    providePrimeNG({
       translation: sv,
       theme: {
         preset: MaterialPreset,
-           options: {
-            // Set to false, 'none', or a custom selector like '.my-app-dark'
-            darkModeSelector: 'none' 
-        }
-      }
+        options: {
+          darkModeSelector: 'none',
+        },
+      },
     }),
-    
-    // HTTP Client
+
     provideHttpClient(withInterceptorsFromDi()),
-    
-    // HTTP Interceptors
+
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CacheInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiErrorInterceptor,
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: WmsIdInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoggingInterceptor,
-      multi: true
+      multi: true,
     },
-    
-    // Standalone Module Imports (if needed for specific features)
-    importProvidersFrom(DragDropModule), provideClientHydration(withEventReplay())
-  ]
+
+    importProvidersFrom(DragDropModule),
+    provideClientHydration(withEventReplay()),
+  ],
 };

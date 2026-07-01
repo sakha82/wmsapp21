@@ -90,9 +90,14 @@
               ],
               "outputHashing": "all",
               "optimization": {
-                "scripts": false,
+                "scripts": true,
                 "styles": true
               },
+              "vendorChunk": true,
+              "namedChunks": false,
+              "sourceMap": false,
+              "extractLicenses": true,
+              "buildOptimizer": true,
               "assets": [
                 "src/favicon.ico",
                 "src/assets",
@@ -172,7 +177,9 @@
           "builder": "@angular-devkit/build-angular:prerender",
           "options": {
             "routes": [
-              "/"
+              "/",
+              "/privacy-policy",
+              "/opt-out"
             ]
           },
           "configurations": {
