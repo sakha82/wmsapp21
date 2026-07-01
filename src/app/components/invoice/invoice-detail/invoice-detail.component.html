@@ -19,11 +19,11 @@
       <div class="px-2 text-xs mb-3">
         @if(isEmailSent === true)
         {
-        <p-message severity="success">{{ this.sharedService.T('email.confirm.message.save') }} </p-message>
+        <p-message severity="success">{{ this.sharedService.T('emailSentSuccess') }} </p-message>
         }
 
         @if (isEmailSent === false) {
-        <p-message severity="error"> {{ this.sharedService.T('sent.confirm.message.error') }} support&#64;digitalworkshop.nu
+        <p-message severity="error"> {{ this.sharedService.T('genericErrorContactSupport') }} support&#64;digitalworkshop.nu
         </p-message>
         }
       </div>
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div class="flex gap-3 mt-4">
-        <p-button class="saveBtn" styleClass="px-4" label="{{ this.sharedService.T('btnsendInvoice') }}"
+        <p-button class="saveBtn" styleClass="px-4" label="{{ this.sharedService.T('sendInvoice') }}"
           (click)="sendEmail()" />
         <p-button class="cancelBtn" styleClass="!bg-darkSky !text-lightBlue px-4" label="{{ this.sharedService.T('cancel') }}"
           severity="secondary" (click)="closeEmailDialog()" />
