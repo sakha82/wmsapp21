@@ -1660,6 +1660,31 @@
         "sv": "Lägg till bokning kl."
     },
     {
+        "tkey": "lock_slot",
+        "en": "Block time slot",
+        "sv": "Blockera tid"
+    },
+    {
+        "tkey": "unlock_slot",
+        "en": "Unblock time slot",
+        "sv": "Avblockera tid"
+    },
+    {
+        "tkey": "slot_locked",
+        "en": "Blocked",
+        "sv": "Blockerad"
+    },
+    {
+        "tkey": "lock_slot_success",
+        "en": "Time slot blocked.",
+        "sv": "Tiden är blockerad."
+    },
+    {
+        "tkey": "unlock_slot_success",
+        "en": "Time slot unblocked.",
+        "sv": "Tiden är avblockerad."
+    },
+    {
         "tkey": "offerHistory",
         "en": "Offer History",
         "sv": "Offerthistorik"
@@ -2338,5 +2363,20 @@
         "tkey": "failedLoadVehicleHistory",
         "en": "Failed to load vehicle history.",
         "sv": "Det gick inte att ladda fordonets historik."
+    },
+    {
+        "tkey": "fillRequiredFieldsCorrectly",
+        "en": "Please fill in all mandatory fields correctly.",
+        "sv": "Vänligen fyll alla obligatoriska fält korrekt."
+    },
+    {
+        "tkey": "paymentTermsMinValue",
+        "en": "Payment terms must be 0 or greater.",
+        "sv": "Betalningsvillkor måste vara 0 eller högre."
+    },
+    {
+        "tkey": "checkProductRows",
+        "en": "Please check product rows — missing product or unit price.",
+        "sv": "Kontrollera produktraderna — produkt eller enhetspris saknas."
     }
 ]

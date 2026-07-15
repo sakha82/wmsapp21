@@ -20,10 +20,10 @@ export class ThemeService {
 
   // Option A: Use a built-in palette name (e.g., 'rose', 'indigo', 'emerald', 'violet', etc.)
   setPrimaryPalette(paletteName: string) {
-    // Remap semantic primary to the selected palette’s base tokens.
-    const css = `:root{${SHADES
-      .map(s => `--p-primary-${s}: var(--p-${paletteName}-${s});`)
-      .join('')}}`;
+    const shadeVars = SHADES
+      .map((s) => `--p-primary-${s}: var(--p-${paletteName}-${s});`)
+      .join('');
+    const css = `:root{${shadeVars}--p-primary-color:var(--p-${paletteName}-600);--p-primary-contrast-color:var(--p-${paletteName}-contrast-color,#ffffff);}`;
     this.styleEl.textContent = css;
   }
   // Toggle dark mode for the preset

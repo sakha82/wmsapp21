@@ -5,6 +5,7 @@
 </div> -->
 
 <!-- header start -->
+<p-toast></p-toast>
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
     <div class="">
         <p class="font-normal text-2xl">{{isNewObject ? this.sharedService.T('newOffer') :
@@ -26,7 +27,7 @@
                             [suggestions]="customers" (completeMethod)="filterCustomer($event)"
                             optionLabel="customerName" (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()"
                             [showClear]="true" class="w-full" [placeholder]="sharedService.T('chooseCustomer')"
-                            [invalid]="!this.offer.get('customerId')?.value || this.offer.get('customerId')?.value === 0">
+                            [invalid]="isOfferControlInvalid('customerId')">
                             <ng-template let-customer #item>
                                 <div class="flex items-center gap-2">
                                     <div>{{ customer.customerName }}</div>
@@ -39,16 +40,22 @@
                 <div class="md:col-span-2 mb-2">
                     <label class="block mb-2" for="offerDate">{{ this.sharedService.T('validFrom') }}</label>
                     <p-date-picker formControlName="validFrom" dataType="string" dateFormat="yy-mm-dd"
-                        icon="pi pi-calendar" (onSelect)="updateValidTillDate()" />
+                        icon="pi pi-calendar" (onSelect)="updateValidTillDate()"
+                        [invalid]="isOfferControlInvalid('validFrom')" />
                 </div>
                 <div class="md:col-span-2 mb-2">
                     <label class="block mb-2" for="validDays">{{ this.sharedService.T('offer validity(days)') }}</label>
-                    <input type="number" formControlName="validDays" style="width: 100%;"
+                    <input type="number" formControlName="validDays" min="0" style="width: 100%;"
+                        [class.ng-invalid]="isOfferControlInvalid('validDays')"
+                        [class.ng-dirty]="offer.get('validDays')?.touched"
+                        (keydown)="onValidDaysKeydown($event)"
                         (keydown.enter)="$event.preventDefault()" (change)="updateValidTillDate()" pInputText />
                 </div>
                 <div class="md:col-span-2 mb-2">
                     <label class="block mb-2" for="dueDate">{{ this.sharedService.T('validTo') }}</label>
-                    <input type="text" formControlName="validTill" style="width: 100%;" pInputText />
+                    <input type="text" formControlName="validTill" style="width: 100%;"
+                        [class.ng-invalid]="isOfferControlInvalid('validTill')"
+                        [class.ng-dirty]="offer.get('validTill')?.touched" pInputText />
                 </div>
 
                 <div class="crud-vehicle-fields col-span-12">
@@ -58,6 +65,8 @@
                             <p-inputicon class=" icon-primary pi pi-car" />
                             <input pInputText type="text" formControlName="vehiclePlate" maxlength="10"
                                 placeholder="ABC123" (input)="onInputChange($event)"
+                                [class.ng-invalid]="isOfferControlInvalid('vehiclePlate')"
+                                [class.ng-dirty]="offer.get('vehiclePlate')?.touched"
                                 class="uppercase w-full p-2 pl-12" />
                         </p-iconfield>
                     </div>
@@ -70,14 +79,15 @@
                         </p-autoComplete>
                     </div>
                     <div class="crud-vehicle-field crud-vehicle-field--model">
-                        <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}
-                        </label>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <label class="block mb-0" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}</label>
+                            <app-create-vehicle-model-popover
+                                [parentForm]="offer"
+                                (modelsUpdated)="onVehicleModelsUpdated($event)" />
+                        </div>
                         <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
                             (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
                             class="w-full"></p-autoComplete>
-                        <app-create-vehicle-model-popover
-                            [parentForm]="offer"
-                            (modelsUpdated)="onVehicleModelsUpdated($event)" />
                     </div>
                     <div class="crud-vehicle-field crud-vehicle-field--year">
                         <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>
@@ -92,7 +102,8 @@
                 <div class="md:col-span-3 mb-2">
                     <label class="block mb-2" for="paymentType">{{ this.sharedService.T('paymentType') }}</label>
                     <p-select [options]="this.sharedService.getEnums('paymentType')" formControlName="paymentType"
-                        optionLabel="text" optionValue="value" class="w-full" editable=true />
+                        optionLabel="text" optionValue="value" class="w-full" editable=true
+                        [invalid]="isOfferControlInvalid('paymentType')" />
                 </div>
                 <div class="md:col-span-3 mb-3">
                     <label class="block mb-2" for="yourRef">{{ this.sharedService.T('yourRef') }}</label>

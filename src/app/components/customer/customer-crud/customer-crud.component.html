@@ -29,7 +29,8 @@
               <label class="mb-2 block" for="customerType">{{ this.sharedService.T('customerType')}}</label>
 
               <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"
-                optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)" class="w-full"></p-select>
+                optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)" class="w-full"
+                [invalid]="isCustomerControlInvalid('customerType')"></p-select>
             </div>
             <div class="mb-6">
               <label class="mb-2 block" for="customerTag">{{ this.sharedService.T('customerTag') }}</label>
@@ -42,7 +43,9 @@
           <div class="mb-6">
             <label class="mb-2 block" for="customerName">{{ this.sharedService.T('customerName') }} 
             </label>
-            <input type="text" formControlName="customerName" [invalid]="!customer.get('customerName')?.value"
+            <input type="text" formControlName="customerName"
+              [class.ng-invalid]="isCustomerControlInvalid('customerName')"
+              [class.ng-dirty]="customer.get('customerName')?.touched"
               class="w-full" pInputText />
           </div>
 
@@ -86,9 +89,9 @@
             </label>
 
             <input type="text" formControlName="email"
-              class="w-full" [ngClass]="{
-      'border-red-500': customer.get('email')?.touched && customer.get('email')?.invalid
-    }" pInputText />
+              class="w-full"
+              [class.ng-invalid]="isCustomerControlInvalid('email')"
+              [class.ng-dirty]="customer.get('email')?.touched" pInputText />
           </div>
 
           <!-- digitalServiceId -->
@@ -134,7 +137,8 @@
           <div class="mb-6">
             <label class="mb-2 block" for="customerCountry">{{ this.sharedService.T('country') }}</label>
             <p-select [options]="this.sharedService.getEnums('country')" formControlName="customerCountry"
-              optionLabel="text" optionValue="value" class="w-full "></p-select>
+              optionLabel="text" optionValue="value" class="w-full"
+              [invalid]="isCustomerControlInvalid('customerCountry')"></p-select>
           </div>
         </div>
       </div>

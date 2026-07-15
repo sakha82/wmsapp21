@@ -50,3 +50,61 @@
 :host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(9) button { background-color: var(--dot-color-8, #ccc) !important; }
 :host ::ng-deep .custom-indicator-carousel .p-carousel-indicator:nth-child(10) button { background-color: var(--dot-color-9, #ccc) !important; }
 
+.booking-slot-cell {
+    min-height: 3.5rem;
+    vertical-align: top;
+}
+
+.booking-slot-locked {
+    background-color: #f1f5f9;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 6px,
+        rgba(148, 163, 184, 0.12) 6px,
+        rgba(148, 163, 184, 0.12) 12px
+    );
+}
+
+.booking-slot-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.25rem;
+    width: 100%;
+}
+
+:host ::ng-deep .booking-slot-actions .booking-slot-action-btn {
+    flex: 0 0 auto;
+}
+
+:host ::ng-deep .booking-slot-actions .booking-slot-action-btn .p-button {
+    width: 2.25rem;
+    min-width: 2.25rem;
+    padding: 0.35rem;
+}
+
+:host ::ng-deep .booking-slot-actions .booking-slot-add-btn {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+:host ::ng-deep .booking-slot-actions .booking-slot-add-btn .p-button {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: auto;
+    max-width: 100%;
+}
+
+.booking-locked-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    color: #64748b;
+}
+

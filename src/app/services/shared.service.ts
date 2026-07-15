@@ -408,9 +408,9 @@ loadResources(): Observable<void> {
   // Create the actual loading operation
   const translationsUrl = 'assets/resources/trans.json';
   const enumsUrl =   'assets/resources/enums.json';
-  const modelsUrl =  'assets/resources/models.json';  
-
-  const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>, Observable<IVehicleType[]>] = [
+  // const modelsUrl =  'assets/resources/models.json';  
+  // , Observable<IVehicleType[]>
+  const fileRequests: [Observable<ITranslate[]>, Observable<IEnums[]>] = [
     this.http.get<ITranslate[]>(translationsUrl).pipe(
       catchError(error => {
         this.logger.error('Error loading translation.json:', error);
@@ -423,21 +423,22 @@ loadResources(): Observable<void> {
         return of([] as IEnums[]);
       })
     ),
-    this.http.get<IVehicleType[]>(modelsUrl).pipe(
-      catchError(error => {
-        this.logger.error('Error loading models.json:', error);
-        return of([] as IVehicleType[]);
-      })
-    )
+    // this.http.get<IVehicleType[]>(modelsUrl).pipe(
+    //   catchError(error => {
+    //     this.logger.error('Error loading models.json:', error);
+    //     return of([] as IVehicleType[]);
+    //   })
+    // )
   ];
-
+  // , IVehicleType[]
   // Create the observable that will be memoized
-  const loadingObservable = forkJoin<[ITranslate[], IEnums[], IVehicleType[]]>(fileRequests).pipe(
-    tap(([wmsTranslate, wmsEnums, wmsModels]) => {
+  const loadingObservable = forkJoin<[ITranslate[], IEnums[]]>(fileRequests).pipe(
+    tap(([wmsTranslate, wmsEnums]) => {
+    // tap(([wmsTranslate, wmsEnums, wmsModels]) => {
       this.translations = wmsTranslate;
       this.enums = wmsEnums;      
-      this.allVehicleTypes = wmsModels;      
-      this.allManufacturers = this.transformModelsToVehicles(wmsModels);
+      // this.allVehicleTypes = wmsModels;      
+      // this.allManufacturers = this.transformModelsToVehicles(wmsModels);
       this.logger.info('All resource files loaded successfully');
     }),
     map(() => undefined)

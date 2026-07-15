@@ -32,6 +32,7 @@ import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
+import { adjustmentValidator, isFormControlInvalid, showValidationErrorToast } from 'app/validators/model-validators';
 
 @Component({
   selector: 'app-create-offer',
@@ -108,21 +109,21 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
 
     this.offer = this.fb.group({
       offerId: '',
-      customerId: [null, Validators.required],
-      offerDate: new Date().toISOString().split('T')[0],
-      vehiclePlate: [null, Validators.required], // made required to match workOrder behavior
+      customerId: [null, [Validators.required, Validators.min(1)]],
+      offerDate: [new Date().toISOString().split('T')[0], Validators.required],
+      vehiclePlate: [null, Validators.required],
       vehicleMileage: 0,
       vehicleManufacturer: '',
       vehicleModel: '',
       vehicleYear: [null, [Validators.pattern(/^\d{4}$/)]],
-      validDays: 10,
-      validFrom: new Date().toISOString().split('T')[0],
-      validTill: new Date(new Date().setDate(new Date().getDate() + 10)).toISOString().split('T')[0],
+      validDays: [10, [Validators.min(0)]],
+      validFrom: [new Date().toISOString().split('T')[0], Validators.required],
+      validTill: [new Date(new Date().setDate(new Date().getDate() + 10)).toISOString().split('T')[0], Validators.required],
       yourRef: '',
-      paymentType: this.sharedService.getDefaultEnum('paymentType').value,
-      price: 0.00,
-      vat: 0.00,
-      adjustment: 0.00,
+      paymentType: [this.sharedService.getDefaultEnum('paymentType').value, Validators.required],
+      price: [0.0, [Validators.min(0)]],
+      vat: [0.0, [Validators.min(0)]],
+      adjustment: [0.0, [adjustmentValidator()]],
       priceIncVat: 0.00,
       isSent: false,
       isAccepted: false,
@@ -243,13 +244,25 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   }
 
   updateValidTillDate() {
+    const days = Math.max(0, Number(this.offer.get('validDays')?.value) || 0);
+    if (days !== Number(this.offer.get('validDays')?.value)) {
+      this.offer.patchValue({ validDays: days });
+    }
     let newDate = new Date(this.offer.get('validFrom')?.value);
-    let days = Number(this.offer.get('validDays')?.value);
     newDate.setDate(newDate.getDate() + days);
     this.offer.patchValue({
       validTill: newDate.toISOString().split('T')[0]
     });
+  }
 
+  onValidDaysKeydown(event: KeyboardEvent): void {
+    if (event.key === '-' || event.key === 'e' || event.key === 'E' || event.key === '+') {
+      event.preventDefault();
+    }
+  }
+
+  isOfferControlInvalid(fieldName: string): boolean {
+    return isFormControlInvalid(this.offer, fieldName, this.submitted || this.errorOnCustomer);
   }
 
   onInputChange(event: Event): void {
@@ -555,11 +568,15 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   onFormSubmit() {
     this.isLoading = true;
     this.errorOnCustomer = false;
+    this.submitted = true;
 
-    // form-level validation: mark touched + notify
-    if (this.offer.invalid) {
+    if (this.offer.invalid || !this.offer.get('customerId')?.value) {
       this.offer.markAllAsTouched();
       this.errorOnCustomer = true;
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key)
+      );
       this.isLoading = false;
       return;
     }
@@ -581,7 +598,12 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
 
     if (invalidDetails.length > 0) {
       this.offer.markAllAsTouched();
-      this.messageService.add({ severity: 'error', detail: 'Please check product rows — missing product or unit price', life: 3500 });
+      showValidationErrorToast(
+        this.messageService,
+        (key) => this.sharedService.T(key),
+        'checkProductRows',
+        3500
+      );
       this.isLoading = false;
       return;
     }

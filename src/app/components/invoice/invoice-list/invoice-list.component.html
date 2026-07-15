@@ -9,9 +9,8 @@
   <form [formGroup]="filters">
     <!-- Filter Section -->
     <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
-      <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
-        <!-- Left Filters -->
-        <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+      <div class="list-page-actionbar mb-6">
+        <div class="list-page-actionbar-left">
           <!-- Create Invoice Button -->
           <p-button [raised]="true" label="{{ this.sharedService.T('createInvoice') }}" size="large" icon="pi pi-plus"
             (click)="redirectToInvoiceCrudComponent()"></p-button>
@@ -27,8 +26,7 @@
             placeholder="{{ this.sharedService.T('deliveryStatus') }}"></p-select>
         </div>
 
-        <!-- Right Filters -->
-        <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap lg:ml-auto">
+        <div class="list-page-actionbar-right">
           <!-- Year Filter -->
           <div class="flex items-center gap-3">
             <div class="text-xs font-semibold text-gray-500">{{ this.sharedService.T('year') }}:</div>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import './assets/fonts/fonts.css';
 /* =========================
    THEME
 ========================= */
@@ -221,7 +222,28 @@
 /* =========================
    PrimeNG CUSTOMIZATION
 ========================= */
-.icon-primary { color: var(--p-primary-600) !important;}
+.icon-primary { color: var(--p-primary-color) !important;}
+
+a.crud-inline-action-link,
+.crud-inline-action-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--p-primary-color) !important;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 1.25;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+a.crud-inline-action-link:hover,
+a.crud-inline-action-link:focus-visible,
+.crud-inline-action-link:hover,
+.crud-inline-action-link:focus-visible {
+  color: var(--p-primary-700, var(--p-primary-color)) !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 .header-primary { background-color: var(--p-primary-100) !important;}
 
@@ -334,4 +356,63 @@ Final revision done We only need following 2 properties to change for tables
 /* Base products */
 .base-icon {
   background-color: #e74c3c; /* red */
+}
+
+/* List pages: create button + filters action bar (offer, invoice, workorder, etc.) */
+.list-page-actionbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+.list-page-actionbar-left,
+.list-page-actionbar-mid,
+.list-page-actionbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.list-page-actionbar-right {
+  margin-left: auto;
+}
+
+@media (max-width: 1550px) {
+  .list-page-actionbar {
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+
+  .list-page-actionbar-left,
+  .list-page-actionbar-mid,
+  .list-page-actionbar-right {
+    flex-wrap: wrap;
+  }
+
+  .list-page-actionbar-right {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+}
+
+.p-tooltip .p-tooltip-text {
+  background:#ffffff !important; 
+  color:#000000 !important;
+}
+
+/* To update the matching directional arrow color */
+.p-tooltip-right .p-tooltip-arrow {
+  border-right-color: #ffffff !important;
+}
+.p-tooltip-left .p-tooltip-arrow {
+  border-left-color: #ffffff !important;
+}
+.p-tooltip-top .p-tooltip-arrow {
+  border-top-color: #ffffff !important;
+}
+.p-tooltip-bottom .p-tooltip-arrow {
+  border-bottom-color: #ffffff !important;
 }
