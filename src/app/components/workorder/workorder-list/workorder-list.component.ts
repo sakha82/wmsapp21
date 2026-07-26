@@ -12,7 +12,6 @@ import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { Popover } from 'primeng/popover';
 import { catchError, filter, of, finalize, takeUntil, Subject } from 'rxjs';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
@@ -27,6 +26,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 @Component({
   selector: 'app-order-list',
   standalone: true,
@@ -34,7 +34,6 @@ import { TagModule } from 'primeng/tag';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    ProgressSpinnerModule,
     IconFieldModule,
     InputIconModule,
     ButtonModule,
@@ -48,7 +47,8 @@ import { TagModule } from 'primeng/tag';
     PaginatorModule,
     TooltipModule,
     InputTextModule,
-    TagModule
+    TagModule,
+    GenericLoaderComponent
   ], providers: [ConfirmationService, MessageService],
   styleUrl: './workorder-list.component.css',
   templateUrl: './workorder-list.component.html'

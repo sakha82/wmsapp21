@@ -18,7 +18,6 @@ import { catchError, map, switchMap, tap, finalize, takeUntil } from 'rxjs/opera
 import { SelectChangeEvent } from 'primeng/select';
 import { CustomerService } from 'app/services/customer.service';
 import { Popover } from 'primeng/popover';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
@@ -52,6 +51,7 @@ import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/m
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { PickListModule } from 'primeng/picklist';
 import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 @Component({
   selector: 'app-order-crud',
@@ -61,7 +61,6 @@ import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/creat
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    ProgressSpinnerModule,
     IconFieldModule,
     InputIconModule,
     ButtonModule,
@@ -84,7 +83,8 @@ import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/creat
     TextareaModule,
     TooltipModule,
     PickListModule,
-    CreateVehicleModelPopoverComponent
+    CreateVehicleModelPopoverComponent,
+    GenericLoaderComponent
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],

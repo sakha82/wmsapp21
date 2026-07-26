@@ -11,7 +11,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, Observable, finalize, takeUntil, Subject } from 'rxjs';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
-import { SaleService } from 'app/services/sale.service ';
+import { SaleService } from 'app/services/sale.service';
 import { SplitterModule } from 'primeng/splitter';
 import { ExternalService } from 'app/services/external.service';
 import { TabsModule } from 'primeng/tabs';

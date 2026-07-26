@@ -1,9 +1,5 @@
         <!-- header start -->
-  <!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
-</div> -->
+  <app-generic-loader [visible]="isLoading" />
         <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
             <div class="">
                 <p class="font-normal text-2xl">{{ this.sharedService.T('workorder') }} #{{this.workOrder.workOrderId}} </p>
@@ -14,13 +10,12 @@
   <div class="grid grid-cols-12 min-h-screen gap-4">
     <div class="col-span-8">
       <!-- Uploaded Files Panel with vertical gap below -->
-      <p-panel [toggleable]="true" class="bg-white mb-6 shadow-lg rounded-lg border border-CustomBorder ">
+      <p-panel [toggleable]="true" class="bg-white mb-6 rounded border border-border">
         <ng-template #header>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <h3 class="text-lg font-semibold text-Darkgray">Uppladdade filer</h3>
-              <p-badge *ngIf="existingFiles && existingFiles.length > 0" [value]="existingFiles.length"
-                class="bg-customBlue text-white"></p-badge>
+              <h3 class="text-lg font-semibold text-gray-dark">Uppladdade filer</h3>
+              <p-badge *ngIf="existingFiles && existingFiles.length > 0" [value]="existingFiles.length"></p-badge>
             </div>
           </div>
         </ng-template>
@@ -29,19 +24,19 @@
           <!-- Files List -->
           <ng-container *ngIf="existingFiles && existingFiles.length > 0; else noFiles">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <p-card *ngFor="let file of existingFiles" class="shadow-sm border border-gray-200 rounded-lg p-4">
+              <p-card *ngFor="let file of existingFiles" class="border border-border p-4">
                 <div class="flex flex-col space-y-2">
                   <div class="flex items-center justify-between">
-                    <div class="truncate text-Darkgray font-medium" [pTooltip]="file.fileName">
+                    <div class="truncate text-gray-dark font-medium" [pTooltip]="file.fileName">
                       {{ file.fileName }}
                     </div>
                     <p-tag severity="success" value="Uppladdad"></p-tag>
                   </div>
                   <div class="flex space-x-2">
                     <p-button label="Ladda ner" icon="pi pi-download" size="small" (onClick)="downloadFile(file.key)"
-                      styleClass="p-button-sm p-button-outlined p-button-primary"></p-button>
+                      variant="outlined"></p-button>
                     <p-button icon="pi pi-trash" size="small" severity="danger" (onClick)="removeFile(file)"
-                      styleClass="p-button-sm p-button-text p-button-danger"></p-button>
+                      variant="text"></p-button>
                   </div>
                 </div>
               </p-card>
@@ -50,7 +45,7 @@
 
           <!-- Empty State -->
           <ng-template #noFiles>
-            <div class="text-center text-gray-500 py-8">
+            <div class="text-center text-gray-dark py-8">
               <i class="pi pi-folder-open text-4xl mb-2"></i>
               <p>{{ this.sharedService.T('noFilesUploaded') }}</p>
             </div>
@@ -59,7 +54,7 @@
       </p-panel>
 
       <!-- Work Order Details Panel with subtle separation from above -->
-      <p-panel [toggleable]="true" class="bg-white mb-6 shadow-lg rounded-lg border border-CustomBorder">
+      <p-panel [toggleable]="true" class="bg-white mb-6 rounded border border-border">
         <div class="p-4">
           <pdf-viewer [src]="pdfUrl" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="true"
             [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
@@ -69,12 +64,12 @@
       </p-panel>
     </div>
     <div class="col-span-4">
-        <p-toast />
+        <p-toast position="top-right" />
         <p-confirmdialog />
-        <div class="font-medium text-Darkgray p-5 bg-white shadow-md rounded-lg">
+        <div class="font-medium text-gray-dark p-5 bg-white rounded border border-border">
             <label class="w-full mb-4">
-            <input 
-                type="file" 
+            <input
+                type="file"
                 accept="image/*"
                 (change)="uploadFile($event)"
                 class="hidden"
@@ -82,7 +77,7 @@
             />
             </label>
             <label>
-            <p-button 
+            <p-button
                 label="Ladda upp fil"
                 icon="pi pi-upload"
                 size="large"
@@ -90,41 +85,42 @@
                 (onClick)="fileInput.click()"
             ></p-button>
             </label>
-            <p-button [disabled]="true" 
-            size="large" 
-            styleClass="w-full mb-4 bg-customBlue text-white" label="{{ this.sharedService.T('send') }} {{ this.sharedService.T('workorder') }}">
-            <span class="material-symbols-outlined">forward_to_inbox</span>
+            <p-button [disabled]="true"
+            size="large"
+            icon="pi pi-send"
+            styleClass="w-full mb-4" label="{{ this.sharedService.T('send') }} {{ this.sharedService.T('workorder') }}">
             </p-button>
-            <p-button size="large" 
-            styleClass="w-full mb-4 bg-lightBlue text-white"
-             label="{{ this.sharedService.T('edit') }} {{ this.sharedService.T('workorder') }}"(onClick)="redirectToWorkOrderCrudComponent()" >
-            <span class="material-symbols-outlined">edit</span> 
+            <p-button size="large"
+            severity="secondary" variant="outlined"
+            icon="pi pi-pencil"
+            styleClass="w-full mb-4"
+             label="{{ this.sharedService.T('edit') }} {{ this.sharedService.T('workorder') }}" (onClick)="redirectToWorkOrderCrudComponent()">
             </p-button>
             <div class="ms-10">
                 <div class="flex gap-2 my-3 cursor-pointer">
                     <div class="w-5">
-                      <span class="material-symbols-outlined">picture_as_pdf</span>         
+                      <i class="pi pi-file-pdf icon-primary"></i>
                     </div>
                     <span (click)="generatePdf()">{{ this.sharedService.T('pdf') }}</span>
                 </div>
                 <div class="flex gap-2 my-3 cursor-pointer">
                     <div class="w-5">
-                        <span class="material-symbols-outlined">content_copy</span> 
+                        <i class="pi pi-copy icon-primary"></i>
                     </div>
                     <span (click)="confirmDuplicate($event)">{{ this.sharedService.T('duplicate') }}</span>
                 </div>
-                @if(workOrder.workOrderStatus == 'completed') 
+                @if(workOrder.workOrderStatus == 'completed')
                 {
                   <div class="flex gap-2 my-3 cursor-pointer">
                       <div class="w-5">
-                        <span class="material-symbols-outlined">assignment_return</span>
+                        <i class="pi pi-file-export icon-primary"></i>
                       </div>
                       <span (click)="redirectToInvoiceCrudComponent('workOrder')"> {{ this.sharedService.T('createInvoice') }} </span>
                   </div>
                 }
                 <div class="flex gap-2 my-3 cursor-pointer">
                     <div class="w-5">
-                      <span class="material-symbols-outlined">person</span>
+                      <i class="pi pi-user icon-primary"></i>
                     </div>
                     <span (click)="redirectToCustomerDetailComponent()">{{ this.sharedService.T('viewCustomer') }}</span>
                 </div>

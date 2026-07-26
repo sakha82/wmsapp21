@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"declare function palette\\\\|function _default\\\\$3\\\\|ColorScale\" node_modules/@primeuix/styled/dist/index.d.mts)"
+    ]
+  }
+}

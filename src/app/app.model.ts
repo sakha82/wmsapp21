@@ -195,8 +195,8 @@ export interface ICustomer {
   totalOffers: number;
   totalAccepted: number;
   totalRejected: number;
-  customerTypeName: number;
-  customerTagName: number;
+  customerTypeName: string;
+  customerTagName: string;
   isEdit: boolean;
 }
 export interface IEmployee {

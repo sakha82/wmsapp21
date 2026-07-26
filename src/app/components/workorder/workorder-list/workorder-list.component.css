@@ -7,5 +7,5 @@
 }
 
 .row-inactive {
-    color: #666 !important;
+    color: var(--color-gray-dark) !important;
 }
