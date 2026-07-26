@@ -12,19 +12,19 @@ import { WorkshopService } from 'app/services/workshop.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, TableModule, ToastModule, TooltipModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ButtonModule, SelectModule, TableModule, ToastModule, TooltipModule, InputTextModule, GenericLoaderComponent],
   templateUrl: './customer-list.component.html'
 })
 

@@ -11,7 +11,6 @@ import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, concatMap, from, of, switchMap, tap, finalize, takeUntil, Subject } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
@@ -25,6 +24,7 @@ import { PanelModule } from 'primeng/panel';
 import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 
 interface WorkshopService { name: string };
@@ -42,14 +42,14 @@ interface WorkshopService { name: string };
     MessageModule,
     IconFieldModule,
     InputIconModule,
-    ProgressSpinnerModule,
     CardModule,
     TableModule,
     PdfViewerModule,
     PanelModule,
     BadgeModule,
     TagModule,
-    TooltipModule 
+    TooltipModule,
+    GenericLoaderComponent
   ],
   providers: [ConfirmationService, MessageService],
   styleUrl: './workorder-detail.component.css',

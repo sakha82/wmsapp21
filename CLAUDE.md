@@ -1,0 +1,101 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project overview
+
+WMS (Workshop Management System) — a multi-tenant SaaS Angular application for vehicle workshops (customers, offers, invoices, work orders, digital services, bookings, employees/timesheets, products, suppliers). Backend is a separate ASP.NET API (`environment.BASE_URL`), not part of this repo.
+
+Stack: Angular 21 (standalone components, no NgModules), PrimeNG 21, Tailwind CSS v4, RxJS 7.
+
+## Commands
+
+```bash
+npm start          # ng serve — dev server at http://localhost:4200
+npm run build       # ng build — production build to dist/wmsapp21
+npm run watch        # ng build --watch --configuration development
+npm test            # ng test — Vitest test runner
+```
+
+Run a single test file: `ng test -- src/app/path/to/file.spec.ts` (Vitest under the hood — most `.spec.ts` files are currently absent; schematics are configured with `skipTests: true` by default, see `angular.json`).
+
+Generate code with Angular CLI schematics, e.g. `ng generate component components/<feature>/<name> --standalone`.
+
+## Architecture
+
+### Path aliases
+`tsconfig.json` defines baseUrl `src` with aliases `app/*` and `environments/*`. Always import via these, e.g. `import { SharedService } from 'app/services/shared.service'`, not relative `../../services/...` (existing code is inconsistent about this — prefer the alias form for new code).
+
+### Routing (`src/app/app.routes.ts`)
+- Public routes at root: `/`, `/privacy-policy`, `/opt-out`, and `/webview/*` (customer-facing pages for offers/invoices/digital services/password reset accessed via emailed tokens, no auth).
+- Authenticated app lives under `/sv/*` wrapped in `LayoutComponent`, gated by `ResourcesLoadedGuard` (waits for translations/enums to load before activating — see below). `authGuard` also exists (checks `sessionStorage.accessToken`) but is not currently wired into routes; check `app.routes.ts` before assuming it's active on a given route.
+- Feature areas each have `*-list`, `*-detail`, `*-crud` component triads under `src/app/components/<feature>/`.
+
+### Bootstrap & HTTP pipeline (`src/app/app.config.ts`)
+Three HTTP interceptors run in this order via `HTTP_INTERCEPTORS` multi-provider: `TokenInterceptor` (attaches `Authorization: Bearer <accessToken>` from `sessionStorage`, and on 401/404 with a token present calls `AuthSessionService.forceLogout()`), `WmsIdInterceptor`, `LoggingInterceptor`. PrimeNG is configured with the Material preset, customized with a real `semantic.primary` palette generated via `palette('#4F39F6')` from `@primeng/themes` (as of 2026-07-15 — previously an unmodified `definePreset(Material, {})`), and Swedish (`sv`) locale from `primelocale`.
+
+### Session/tenant state
+No NgRx/state library — tenant and session context live directly in `sessionStorage` (`accessToken`, `wmsId`, `workshopName`, `country`, `lang`, `userName`) and are read via getters on `SharedService` (`wmsId`, `workshopName`, `country`, `lang`, `currentLocale`). Most API calls append `wmsId` as a query param manually via `URLSearchParams`.
+
+### `SharedService` (`src/app/services/shared.service.ts`)
+The central grab-bag service, injected almost everywhere. Key responsibilities:
+- `loadResources()` — fetches `assets/resources/trans.json` (translations) and `assets/resources/enums.json` (dropdown/enum values) once at startup, memoized via a cached `Promise`; exposes `resourcesLoaded$` / `areResourcesLoaded()` used by `ResourcesLoadedGuard`.
+- `T(key)` — translation lookup against the loaded `trans.json`, keyed by current `lang` (`'en' | 'sv'`). **All user-facing strings must go through `this.sharedService.T('key')`** — see `docs/translations.md` and `HARDCODED_STRINGS_REPORT.md` for the ongoing audit of strings that still need to move into this system. New code should not introduce hardcoded UI strings.
+- `getEnums(key)` / `getEnumByValue(key, value)` / `getDefaultEnum(key)` — country/lang-scoped enum lookups.
+- File upload/download, PDF generation, email sending, vehicle make/model lookups, and query-param helpers (`buildQueryParams`, `updateFiltersFromQueryParams`, `updateFiltersInNavigation`) for syncing filter `FormGroup`s with the URL — the list components follow this filter pattern consistently.
+
+### Logging & error handling
+- `LogService` wraps `console.*`, gated by `environment.logLevel` (`LOG_LEVEL.info/error/warn/debug/all`). Use this instead of raw `console.log` in app code.
+- `ErrorHandlerService.handleError(error, methodName, userMessage?, context?)` differentiates dev vs prod: prod logs a clean message only, dev logs full error + context and mirrors to `console.error`. Prefer this over ad hoc try/catch + console logging in components/services.
+
+### Component conventions
+All components are standalone (`standalone: true`, explicit `imports: [...]`), import only the specific PrimeNG modules they use (e.g. `TableModule`, `ButtonModule`, `SelectModule`), and use `templateUrl`/external `.html` files rather than inline templates. `*-list` components typically build a `FormGroup` of filters, sync it to query params via `SharedService`, and unsubscribe via a `destroy$: Subject<void>` + `takeUntil` pattern on router events.
+
+### Styling — strict separation (see `docs/COPILOT-GUIDELINES.md`)
+- **PrimeNG owns component styling** (buttons, cards, inputs, tables) via PrimeNG's own theming/semantic tokens. **Tailwind is layout-only** (flex/grid/spacing/sizing).
+- Never apply Tailwind color utility classes to PrimeNG components (e.g. `<p-button class="bg-blue-500">` is forbidden). Theming must stay token-driven to support runtime theme switching and white-label/multi-tenant color overrides — no hardcoded colors in component styles.
+- **`docs/DESIGN_GUIDELINES.md` is the source of truth for actual values** (color palette, typography scale, spacing/density, shape/radius, button hierarchy, table/form/toast conventions) that this law applies to. Established 2026-07-15. Consult it before making any visual decision — don't invent new spacing/radius/color values ad hoc.
+
+### Internationalization
+UI language is Swedish-first (`sv` is the default/primary locale; PrimeNG itself is configured with the `sv` locale in `app.config.ts`). Supported app languages are `'en' | 'sv'` per `SharedService.lang`. When adding user-facing text, add translation keys to the resource file(s) under `src/assets/resources/` rather than hardcoding strings in components.
+
+## Working relationship
+
+Claude acts as Senior Front-End Developer/Designer on this project. The user acts as Business Solution Architect: provides business requirements, owns/builds the ASP.NET API, and makes product/priority decisions. Claude owns front-end code quality, UI consistency (single color scheme, adherence to established design patterns), and day-to-day implementation.
+
+- **Git workflow**: work on the `Test` branch (not `main`). The user merges `Test` → `main` themselves. Do not push to `main` directly.
+- **Task handoff**: no persistent backlog file — the user describes tasks in chat at the start of each session. `docs/Tasks.md` exists but is not the primary task channel; treat it as historical notes unless the user says otherwise.
+- **Brand color / theming**: `#4F39F6` (purple) is *not yet confirmed* as final. The user will provide a proper style guide/brand color spec separately — don't treat the current purple as locked in, and don't invest in wiring runtime tenant-color theming (see Known issues below) until that spec arrives.
+- **Styling-law cleanup**: known violations of the PrimeNG-owns-color / Tailwind-is-layout-only rule (see Known issues) are fixed opportunistically — when a task takes you into one of the affected files anyway, clean it up as part of that work. No dedicated cleanup sprint unless the user asks for one.
+
+## Known issues / tech debt (found during initial review, 2026-07-15)
+
+- **Styling-law violations remaining**: hardcoded Tailwind color utility classes directly on PrimeNG components (e.g. `bg-red-500`, `text-blue-600`) instead of semantic tokens — the exact pattern `docs/COPILOT-GUIDELINES.md` forbids. `customer-list`/`customer-crud`/`customer-detail` and `workorder-list`/`workorder-crud`/`workorder-detail` are fixed (see module sections below) and are the reference examples. Remaining: `invoice-list`, `invoice-crud`, `offer-list`, `offer-crud`, `product-list`, `product-detail`, `employee-list`, `employee-crud`, `vehicle-list`, `digitalservice-list`, `booking-list`, `timesheet-list`, `dashboard-list`, `setting-crud`, `layout`, `home`, `privacypolicy`, and both `webview/password-*` pages. Fix per the "fixed opportunistically" policy above, using `docs/DESIGN_GUIDELINES.md` and the customer/workorder modules as the template.
+- **`GenericLoaderComponent` now exists** (`src/app/components/shared/generic-loader/generic-loader.component.ts`, selector `app-generic-loader`, `[visible]` input) — the first entry in a shared/reusable UI component layer, created 2026-07-15 while fixing the customer module. It replaces the ad hoc "fixed inset-0 ... p-progress-spinner" overlay markup that was copy-pasted (inconsistently — sometimes commented out and silently broken, e.g. previously in `customer-crud`, `workorder-detail`, `workorder-crud`) across most `*-crud`/`*-list` components. `employee-list.component.ts` already had a commented-out import anticipating this exact component. **Rollout so far**: customer's 3 components + workorder's 3 components. Other modules still use the inline overlay copy.
+- **`--color-border`, `--color-danger`, `--color-success` design tokens** in `src/styles.css`'s `@theme` block (auto-generates `border-border`/`bg-border`/`text-border`, `text-danger`, `text-success` etc. Tailwind utilities). Used to replace dead `border-CustomBorder`/`text-Darkgray`/`bg-bgColor` classes and raw `text-red-*`/`text-green-*` in the customer and workorder modules. Same dead classes still exist in ~16 other files (`invoice-crud`, `invoice-detail`, `offer-detail`, `offer-crud`, `digitalservice-list`, `digitalservice-detail`, `employee-list`, `timesheet-list`, `product-list`, `product-detail`, `booking-list`, `supplier-list`, `opt-out`, and the `webview/*-view` pages) — fix opportunistically using these tokens.
+- **Sharp-radius (§5) and table-hover (§9) rules from `docs/DESIGN_GUIDELINES.md` are now live globally** via plain CSS overrides in `src/styles.css` (`.p-button`, `.p-inputtext`, `.p-select`, `.p-dialog`, `.p-tag`, etc. → `border-radius: 4px`; `.p-datatable-tbody > tr:hover` → primary-100 tint). This was necessary infrastructure to make the customer module actually reflect the guidelines and now lightly affects every module's PrimeNG components' corner radius and table hover — not just customer's/workorder's. PrimeNG's design-token system in this version (`@primeuix/themes` 21.x) has **no radius token** (verified via its type definitions), so this had to be plain CSS, not a `definePreset` override.
+- **Dead-CSS bug (not yet fully fixed)**: `border-CustomBorder`, `text-Darkgray`, `bg-bgColor`, `text-CustomBlack`, `bg-customBlue`, `hover:bg-lightBlue`, `focus:ring-customBlue` are defined only in `opt-out.component.css`, which Angular scopes to `OptOutComponent` alone (emulated encapsulation, no `ViewEncapsulation.None`). Every other component using these classes gets **no styling at all** from them — dead/no-op classes. Fixed in the customer and workorder modules using the new tokens instead; ~16 other files listed above still reference the broken classes. Also found the *same class* of bug component-locally in `workorder-detail.component.css` (`.bg-customBlue`, `.p-button-primary` hardcoded to `#4F39F6`) — dead for the same reason (Angular's per-component CSS scoping means these rules never matched PrimeNG's internally-rendered DOM); removed rather than "fixed", since nothing valid depended on them.
+- **Icon-set mixing found and fixed in `workorder-detail`**: the sidebar action list (PDF/duplicate/create-invoice/view-customer/send/edit) used Google "Material Symbols" (`<span class="material-symbols-outlined">`) exclusively, while primeicons already has a direct equivalent for every one of those actions and is the app's dominant set elsewhere. Converted to primeicons per `docs/DESIGN_GUIDELINES.md` §7 ("never mix icon sets... primeicons is primary"). Other modules may have similar Material-Symbols usage not yet audited.
+- **Legacy PrimeNG v10-era utility classes found and fixed in `workorder-crud`**: native `<button pButton>` elements used class names like `p-button-rounded p-button-danger p-button-text`, which don't correspond to PrimeNG 21's actual generated class names (v21 uses `[rounded]`/`severity`/`[text]` **input properties** on the `pButton` directive, not CSS classes) — these were silently inert, rendering as plain default buttons. Fixed by switching to the input-property API. Same class of dead class-name usage also found (not yet fixed) in `product-list.component.ts`, `setting-crud.component.html`, and `digitalservice-detail.component.css` — fix opportunistically the same way.
+- **Two disconnected color-token systems**: `ThemeService.setPrimaryPalette()` (`src/app/services/theme.service.ts`) can swap PrimeNG's primary palette at runtime, but `src/styles.css` separately hardcodes `--color-primary: #4F39F6` as its own Tailwind CSS variable, used by marketing/landing classes (`.btn-primary`, `.hero-bg`, `.price-card`, `.cta-btn`, etc.). A runtime PrimeNG palette swap will not re-color those classes. Not a priority until the user's style guide lands and tenant color-override becomes an active requirement.
+- **Two audit docs are stale point-in-time snapshots, not a live backlog**: `HARDCODED_STRINGS_REPORT.md` (dated 2026-04-12) and `docs/primeng-components.md` (dated 2026-02-10). At least one flagged item (product-list validation strings) is already fixed in current code — don't treat unchecked items in these files as confirmed-outstanding without verifying against current source first.
+- **`ICustomer.customerTypeName`/`customerTagName` were mistyped as `number`** in `app.model.ts` (API actually returns strings; a sibling interface at line ~597 already typed them correctly as `string`). Fixed 2026-07-15 — surfaced by the compiler when binding to `p-tag`'s `[value]` (which is strictly typed `string`) in `customer-detail`.
+
+### Customer module — model implementation (2026-07-15)
+
+`customer-list`, `customer-crud`, and `customer-detail` were brought into compliance with `docs/DESIGN_GUIDELINES.md` and are the reference for fixing the rest of the app. Changes: real PrimeNG primary palette (see Bootstrap section above), sharp 4px radius + flat bordered cards (no `shadow-*`, replaced with `border border-border`) instead of `rounded-xl/lg/md shadow*`, `GenericLoaderComponent` wired into all three (fixed a real bug — `customer-crud` tracked `isLoading` in the component but the loading overlay markup was commented out in the template, so it never rendered), customer-type badge changed from a hand-styled `<p>` with hardcoded hex to `<p-tag severity="info">`, duplicated ~50-line inline PDF-download SVGs (hardcoded `fill="#0052CC"`, appeared twice) replaced with `pi pi-file-pdf` icons, ID-link cells unified to the `<span>{{id}}</span><i class="pi pi-external-link icon-primary">` pattern app-wide, payment-history mini-table's manual gray header/hover classes removed in favor of the new global table-hover rule, icon-only delete-payment button given the required `pTooltip` (§7 hard rule), and toasts given explicit `position="top-right"` (§13).
+
+**Found but deliberately not fixed** (out of scope for a styling pass — flag for a separate correctness/translation pass):
+- `customer-crud.component.html`'s page header reads "New/Edit **Invoice**" (`T('newInvoice')`/`T('editInvoice')`) on the **customer** form — looks like a copy-paste leftover from the invoice module.
+- `customer-crud.component.ts` has several hardcoded English strings in `messageService.add()` calls (not routed through `T()`) — e.g. `'Invalid Digital Workshop'`, `'Duplicate Customer'`, `'Error'` — and a computed `message` variable in `onFormSubmit()` that's built but never used (dead code).
+- `customer-detail.component.ts`'s `deleteBooking()` has a hardcoded Swedish tooltip string (`'Ta bort bokning'`) instead of `T()`.
+- In the payment-history dialog, the textarea for payment notes uses `formContolName="paymentNote"` — missing the `r` in `formControlName`, so it's silently **not bound** to the reactive form.
+- The payment-history table body renders 5 `<td>` for a 4-column header (an icon-only "N" button showing `payment.paymentNote` as a tooltip, immediately followed by a literal `{{ payment.paymentNote }}` text cell with no header) — looks like a leftover duplicate column.
+
+### Workorder module — model implementation (2026-07-16)
+
+`workorder-list`, `workorder-crud`, and `workorder-detail` brought into compliance with `docs/DESIGN_GUIDELINES.md`, following the customer module's pattern. Changes: sharp radius + flat bordered cards/panels (dropped `shadow-lg`/`shadow-md`/`rounded-xl/lg/md` throughout), `GenericLoaderComponent` wired into all three (`workorder-crud` uses its existing `showSpinner` flag rather than adding a new `isLoading` — same lifecycle, different name; `workorder-detail`'s and `workorder-list`'s loader overlays were dead/commented exactly like `customer-crud`'s was), toasts pinned `position="top-right"`, `--color-success` token added alongside the earlier `--color-danger`/`--color-border` (used for booking-slot free/booked indicators, previously raw `text-green-600`/`text-red-500`), the global `.base-icon` class's hardcoded `#e74c3c` swapped for `var(--color-danger)`, icon-set consistency fix (Material Symbols → primeicons, see Known issues above), legacy `p-button-*` class fix (see Known issues above), and dead/commented-out markup removed (a superseded duplicate `pTemplate="body"` block in `workorder-list`, an unused `bg-customBlue`/`.p-button-primary`-only `workorder-detail.component.css`, several stray commented divs in `workorder-crud`). Also **activated** `workorder-list`'s previously-commented `pTemplate="emptymessage"` template using the existing `noRecordsFound` translation key (§11) — it referenced a `noRecords` key that doesn't exist in `trans.json`, which would have rendered the literal string `*noRecords` on screen (`SharedService.T()`'s fallback for a missing key) had it been uncommented as-is.
+
+**Found but deliberately not fixed** (translation/correctness debt, out of scope for a styling pass):
+- Extensive hardcoded Swedish strings not routed through `T()` across all three components (e.g. "Uppladdade filer", "Ladda ner", "Väjl en produkt" — note the typo, should be "Välj"), plus the pre-existing hardcoded `'Ta bort bokning'` tooltip (same issue already noted for `customer-detail`, also present in `workorder-list`).
+- `workorder-detail.component.ts` imports `TableModule` but no `<p-table>` appears anywhere in its template — likely dead import.

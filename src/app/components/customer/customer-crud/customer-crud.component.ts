@@ -14,13 +14,13 @@ import { LogService } from 'app/services/log.service';
 import { ExternalService } from 'app/services/external.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/model-validators';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 @Component({
   selector: 'app-customer-crud',
   standalone: true,
@@ -32,8 +32,8 @@ import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/m
     SelectModule,
     ToastModule,
     InputTextModule,
-    ProgressSpinnerModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    GenericLoaderComponent
   ],
   templateUrl: './customer-crud.component.html',
   providers: [ConfirmationService, MessageService],
@@ -266,6 +266,16 @@ async onFormSubmit() {
     const emailControl = this.customer.get('email');
     const telephoneControl = this.customer.get('telephone');
     const digitalWorkShopid = this.customer.get('digitalServiceId');
+
+    // Clear stale "contact required" errors from a previous submit attempt.
+    // These are set manually below (not by an attached validator), so they don't
+    // get recomputed when the *other* field's value changes.
+    if (emailControl?.hasError('required')) {
+      emailControl.setErrors(null);
+    }
+    if (telephoneControl?.hasError('required')) {
+      telephoneControl.setErrors(null);
+    }
 
     if (!customerNameControl?.value?.trim()) {
       customerNameControl?.setErrors({ required: true });

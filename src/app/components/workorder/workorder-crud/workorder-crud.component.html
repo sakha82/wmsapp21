@@ -1,8 +1,4 @@
-<!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
-</div> -->
+<app-generic-loader [visible]="showSpinner" />
 <!-- header start -->
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
@@ -17,10 +13,9 @@
 <section class="px-5 pb-10">
 
 <form [formGroup]="workOrder">
-  <p-toast />
+  <p-toast position="top-right" />
   <p-confirmDialog></p-confirmDialog>
-<!-- <p class="mt-1 font-semibold text-lg">Grundinformation</p> -->
-  <div class="mt-5 mb-10 p-8 gap-3 rounded-lg shadow-lg bg-white">
+  <div class="mt-5 mb-10 p-8 gap-3 rounded border border-border bg-white">
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-3">
         <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
@@ -68,7 +63,7 @@
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('vehicleMileage') }}</label>
         <input type="number" pInputText formControlName="vehicleMileage"
-          class="w-full border border-gray-300 rounded-md p-2 focus:outline-none" />
+          class="w-full" />
       </div>
       <!-- LINE 2: Customer Name to Service Duration -->
 
@@ -163,13 +158,13 @@
                   </label>
 
                   <input type="text" formControlName="email"
-                    class="w-full border p-2 rounded"
+                    class="w-full"
                     pInputText />
                 </div>
 
                 <!-- digitalServiceId -->
                 <div class="mb-6">
-                  <label class="mb-2 text-Darkgray block" for="digitalserviceid">{{
+                  <label class="mb-2 text-gray-dark block" for="digitalserviceid">{{
                     this.sharedService.T('digitalWorkshopId') }}</label>
                   <input type="text" formControlName="digitalServiceId"
                     class="w-full" pInputText />
@@ -240,9 +235,9 @@
           <ng-template let-booking #item>
             <div>
               <span class="font-semibold">{{ booking.cTime }}</span>
-              <span *ngIf="booking.workOrders.length > 0" class="text-red-500"> ({{ booking.workOrders.length }}
+              <span *ngIf="booking.workOrders.length > 0" class="text-danger"> ({{ booking.workOrders.length }}
                 bokningar)</span>
-              <span *ngIf="booking.workOrders.length === 0" class="text-green-600"> {{ this.sharedService.T('free')
+              <span *ngIf="booking.workOrders.length === 0" class="text-success"> {{ this.sharedService.T('free')
                 }}</span>
             </div>
           </ng-template>
@@ -317,7 +312,7 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="font-semibold text-sm truncate">{{ product.productName }}</div>
-                                <div class="text-xs text-gray-500 truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
+                                <div class="text-xs text-gray-dark truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
                            </div>
                         </div>
                     </ng-template>
@@ -350,22 +345,18 @@
       <div class="col-span-12">
         <div class="flex flex-wrap gap-4 p-0 m-0 w-full">
           <div *ngFor="let service of selectedProducts; let i = index"
-            class="flex items-center bg-white text-gray-800 px-4 py-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+            class="flex items-center bg-white px-4 py-4 rounded border border-border">
             <div class="flex flex-col p-0 m-0">
-              <span class="text-sm text-gray-500">{{ service.productDescription }}</span>
+              <span class="text-sm text-gray-dark">{{ service.productDescription }}</span>
               <span class="font-semibold text-base">{{ service.productName }}</span>
-              <span class="text-sm text-gray-500">{{ service.quantity || 0 }} {{ this.sharedService.T('hours') }}</span>
+              <span class="text-sm text-gray-dark">{{ service.quantity || 0 }} {{ this.sharedService.T('hours') }}</span>
             </div>
-            <button pButton type="button" icon="pi pi-times" class="ml-2 p-button-rounded p-button-danger p-button-text" (click)="removeWOService(i)" [disabled]="showSpinner"></button>
+            <button pButton type="button" icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" class="ml-2" (click)="removeWOService(i)" [disabled]="showSpinner"></button>
           </div>
         </div>
       </div>
 
 
-      <!-- Booking Line -->
-     
-      <!-- <div class="col-span-7"></div> -->
-      
       <!-- Add Purchaseorder Line -->
       <div class="col-span-2 mt-4">
         <p-button label="{{ this.sharedService.T('add') }} {{ this.sharedService.T('purchaseorder') }}" variant="outlined" icon="pi pi-plus" (click)="op.toggle($event)" />
@@ -385,7 +376,7 @@
           <label class="block mb-2">{{ this.sharedService.T('personalNotes')
             }}</label>
           <textarea [(ngModel)]="newWOPurchase.purchaseNote" [ngModelOptions]="{ standalone: true }" rows="2"
-            class="w-full border border-gray-300 rounded-md p-2 focus:outline-none"></textarea>
+            class="w-full" pTextarea></textarea>
           <p-button label="{{ this.sharedService.T('add') }}" size="small" icon="pi pi-plus"
             (click)="saveWOPurchase()"></p-button>
         </div>
@@ -394,25 +385,23 @@
       <div class="col-span-11"></div>
       <!-- Show Purchaseorder Line -->
       <div class="col-span-12">
-      <!-- <div class="bg-white rounded-md p-5"> -->
       <div class="flex flex-wrap gap-4 p-0 m-0 w-full">
         <div *ngFor="let purchase of woPurchases; let i = index"
-          class="flex items-center bg-white text-gray-800 px-4 py-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200"
+          class="flex items-center bg-white px-4 py-4 rounded border border-border"
           pTooltip="{{ purchase.purchaseNote }}" tooltipPosition="top">
 
           <div class="flex flex-col p-0 m-0">
             <span class="font-semibold text-base">{{ purchase.supplierName }}</span>
-            <span class="text-sm text-gray-500">{{ purchase.purchaseReference }}</span>
+            <span class="text-sm text-gray-dark">{{ purchase.purchaseReference }}</span>
           </div>
-          <button pButton type="button" icon="pi pi-times" class="ml-2 p-button-rounded p-button-danger p-button-text"
+          <button pButton type="button" icon="pi pi-times" [rounded]="true" [text]="true" severity="danger" class="ml-2"
             (click)="removeWOPurchase(purchase)"></button>
         </div>
       </div>
-      <!-- </div>         -->
       </div>
       <div class="col-span-12">
         <label class="block mb-2">{{ this.sharedService.T('description') }}</label>
-        <textarea class="w-full shadow-sm" formControlName="description" rows="5" cols="30" pTextarea
+        <textarea class="w-full" formControlName="description" rows="5" cols="30" pTextarea
           [autoResize]="true">
         </textarea>
       </div>

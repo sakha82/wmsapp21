@@ -10,6 +10,9 @@
   --color-bg-light: #F7F9FB;
   --color-gray-dark: #555555;
   --color-gray-header: #222222;
+  --color-border: #DBE0E5;
+  --color-danger: #DC2626;
+  --color-success: #16A34A;
 }
 
 /* =========================
@@ -249,10 +252,33 @@ a.crud-inline-action-link:focus-visible,
 
 
 /* =========================
-Final revision done We only need following 2 properties to change for tables
+   TABLE ROW HOVER (docs/DESIGN_GUIDELINES.md §9 — plain rows, no zebra striping)
 ========================= */
-/* .p-datatable { border-spacing: 0px 2px; }
-.p-datatable .p-datatable-tbody > tr:hover,.p-selectable-row:hover {  background-color: var(--p-primary-100) !important; }  */
+.p-datatable .p-datatable-tbody > tr:hover,
+.p-selectable-row:hover {
+  background-color: var(--p-primary-100) !important;
+}
+
+/* =========================
+   SHAPE LANGUAGE (docs/DESIGN_GUIDELINES.md §5 — sharp/minimal rounding, 2-4px)
+========================= */
+.p-button,
+.p-inputtext,
+.p-select,
+.p-datepicker-input,
+.p-inputnumber-input,
+.p-autocomplete-input,
+.p-textarea,
+.p-tag,
+.p-card,
+.p-panel,
+.p-dialog,
+.p-toast-message,
+.p-select-overlay,
+.p-autocomplete-overlay,
+.p-datatable-table-container {
+  border-radius: 4px;
+}
 
 
 
@@ -355,7 +381,7 @@ Final revision done We only need following 2 properties to change for tables
 
 /* Base products */
 .base-icon {
-  background-color: #e74c3c; /* red */
+  background-color: var(--color-danger);
 }
 
 /* List pages: create button + filters action bar (offer, invoice, workorder, etc.) */

@@ -31,6 +31,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { TagModule } from 'primeng/tag';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TabsModule } from 'primeng/tabs';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 
 @Component({
   selector: 'app-customer-detail',
@@ -52,7 +53,8 @@ import { TabsModule } from 'primeng/tabs';
     TooltipModule,
     TagModule,
     ToggleButtonModule,
-    TabsModule
+    TabsModule,
+    GenericLoaderComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './customer-detail.component.html',
