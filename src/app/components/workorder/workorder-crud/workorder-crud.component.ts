@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType } from 'app/app.model';
+import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IWorkOrderIntentCandidate, IWorkOrderIntentResponse } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -20,6 +20,8 @@ import { CustomerService } from 'app/services/customer.service';
 import { Popover } from 'primeng/popover';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
@@ -50,8 +52,8 @@ import {
 import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/model-validators';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { PickListModule } from 'primeng/picklist';
-import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
+import { AiAssistInputComponent } from 'app/components/shared/ai-assist-input/ai-assist-input.component';
 
 @Component({
   selector: 'app-order-crud',
@@ -63,6 +65,8 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
     FormsModule,
     IconFieldModule,
     InputIconModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     ButtonModule,
     InputTextModule,
     AutoCompleteModule,
@@ -83,8 +87,8 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
     TextareaModule,
     TooltipModule,
     PickListModule,
-    CreateVehicleModelPopoverComponent,
-    GenericLoaderComponent
+    GenericLoaderComponent,
+    AiAssistInputComponent
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
@@ -99,8 +103,13 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   customers: ICustomer[] = [];
   showSpinner: boolean = false;
   showCustomerSpinner:boolean = false;
-  duplicateCustomerName: boolean = false; 
-  
+  duplicateCustomerName: boolean = false;
+  isVehicleLookupLoading: boolean = false;
+  isAiAssistLoading: boolean = false;
+  /** Form control names (plus 'services') the AI last populated, shown with an "AI-suggested" badge until edited or saved. */
+  aiSuggestedFields = new Set<string>();
+  aiCustomerCandidates: IWorkOrderIntentCandidate[] = [];
+
   products: IProduct[] = [];
   selectedProduct:FormGroup;
   selectedProducts: IProduct[] = [];
@@ -116,12 +125,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   oilTypes: string[] = ['5W30', '0W20', '5W40', '0W30', '10W30', '10W40'];
   isCreate: boolean = true;
   isNewObject: boolean = true;
-  brands:any[] = [];
-  selectedBrands: any[] = [];
   suppliers: ISupplier[] = [];
   //products: any[] = [];
-  models: any[] = [];
-  selectedModels: any[] = [];
   selectedCustomerName: any = null;
   formSubmitted = false;
 
@@ -182,6 +187,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       bookingTime: null,
       employeeId: [null, [Validators.required, Validators.min(1)]],
       offerId: null,
+      createdVia: [null],
+      createdByName: [null],
     });
 
     this.customer = this.fb.group({
@@ -232,9 +239,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
                      return a.productName.localeCompare(b.productName, undefined, { sensitivity: 'base' });
                   }
                   return 0;
-                });
-                this.sharedService.getVehicleMakes().subscribe((data: any) => {
-                  this.brands = data;
                 });
               }),
               map(() => response)
@@ -406,26 +410,124 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/[^A-Z0-9]/gi, ''); // Remove invalid characters
     input.value = sanitizedValue.toUpperCase(); // Convert to uppercase
-    this.workOrder.get('vehiclePlate')?.setValue(sanitizedValue); // Update 
-  }
-  filterManufacturers(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
+    this.workOrder.get('vehiclePlate')?.setValue(sanitizedValue); // Update
   }
 
-  onSelectVehicleManufacturer(event: any): void {
-     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
-                  this.models = data;
-                });
-  }
-  filterModels(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
+  lookupVehicle(): void {
+    const registrationNumber = this.workOrder.get('vehiclePlate')?.value;
+    if (!registrationNumber) {
+      return;
+    }
+    this.isVehicleLookupLoading = true;
+    this.sharedService.getVehicle(registrationNumber)
+      .pipe(
+        finalize(() => { this.isVehicleLookupLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (vehicle) => {
+          this.workOrder.patchValue({
+            vehicleManufacturer: vehicle.make,
+            vehicleModel: vehicle.model,
+            vehicleYear: vehicle.year ? Number(vehicle.year) : null,
+          });
+        },
+        error: (err) => {
+          this.logger.error('lookupVehicle error', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('vehicleLookupFailed'),
+            life: 3000
+          });
+        }
+      });
   }
 
-  onVehicleModelsUpdated(models: string[]): void {
-    this.models = models;
-    this.selectedModels = [...models];
+  /**
+   * Text-only AI-assist: parses a typed description into work order field
+   * suggestions and patches the (unsaved) form. Never saves anything itself —
+   * the user still has to review and click the normal Save button, same as
+   * every other field on this form.
+   */
+  onAiAssistSubmit(transcript: string): void {
+    this.isAiAssistLoading = true;
+    this.aiCustomerCandidates = [];
+    this.sharedService.parseWorkOrderIntent(transcript)
+      .pipe(
+        finalize(() => { this.isAiAssistLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (result) => this.applyAiIntentResult(result),
+        error: (err) => {
+          this.logger.error('parseWorkOrderIntent error', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('aiAssistFailed'),
+            life: 4000
+          });
+        }
+      });
+  }
+
+  private applyAiIntentResult(result: IWorkOrderIntentResponse): void {
+    const patch: Record<string, unknown> = {};
+
+    if (result.vehiclePlate) {
+      patch['vehiclePlate'] = result.vehiclePlate;
+    }
+    if (result.customerId && result.customerName) {
+      patch['customerId'] = result.customerId;
+      patch['customerName'] = result.customerName;
+      this.selectedCustomerName = result.customerName;
+    }
+    if (result.employeeId) {
+      patch['employeeId'] = result.employeeId;
+    }
+
+    this.workOrder.patchValue(patch);
+    (result.filledFields || []).forEach((field) => this.aiSuggestedFields.add(field));
+
+    if (result.vehiclePlate) {
+      this.lookupVehicle();
+    }
+    if (result.customerCandidates?.length) {
+      this.aiCustomerCandidates = result.customerCandidates;
+    }
+    if (result.serviceLines?.length) {
+      this.applyAiServiceLines(result.serviceLines);
+    }
+  }
+
+  private applyAiServiceLines(lines: NonNullable<IWorkOrderIntentResponse['serviceLines']>): void {
+    for (const line of lines) {
+      const match = line.productId
+        ? this.products.find((p) => p.productId === line.productId)
+        : this.products.find((p) => p.productName.toLowerCase() === line.productName.toLowerCase());
+      if (match) {
+        this.selectedProducts.push({ ...match, quantity: line.quantity || 1 });
+      }
+    }
+    if (lines.length) {
+      this.aiSuggestedFields.add('services');
+    }
+  }
+
+  resolveAiCustomerCandidate(candidate: IWorkOrderIntentCandidate): void {
+    this.workOrder.patchValue({ customerId: candidate.id, customerName: candidate.label });
+    this.selectedCustomerName = candidate.label;
+    this.aiCustomerCandidates = [];
+  }
+
+  isAiSuggested(field: string): boolean {
+    return this.aiSuggestedFields.has(field);
+  }
+
+  /** Called on manual edit of an AI-populated field so the "AI-suggested" badge only shows until the human touches it. */
+  clearAiSuggestion(field: string): void {
+    this.aiSuggestedFields.delete(field);
   }
 
   filterSuppliers(event: any): void {
@@ -713,6 +815,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     }
 
     this.showSpinner = true;
+    this.aiSuggestedFields.clear();
     this.logger.info(this.selectedProducts);
 
     var submittedWorkOrder: IWorkOrder = this.workOrder.value;

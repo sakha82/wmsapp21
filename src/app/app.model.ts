@@ -477,7 +477,11 @@ export interface IWorkOrder {
   serviceTypes: string,
   woPurchases: IWOPurchase[],
   woServices: IWOService[],
-  isActive: number
+  isActive: number,
+  /** How this work order was created. Absent/undefined for ordinary manually-created orders. */
+  createdVia?: 'app' | 'whatsapp-bot' | 'telegram-bot',
+  /** Name of the mechanic who created it via a bot channel, for the provenance badge. */
+  createdByName?: string
   // workOrderStatusItems: MenuItem[],
 //deliveryDate: string,
   //deliveryTime: string,
@@ -732,4 +736,60 @@ export interface IVehicleType{
   fuelType: string;
   isPremium: number;
   year: number;
-} 
+}
+
+export interface IVehicleDetails {
+  vehicleId: string;
+  vin: string;
+  make: string;
+  model: string;
+  year: string;
+  chassis: string;
+  vehicleType: string;
+  fuelType: string;
+  engineCode: string;
+  transmission: string;
+  effect: string;
+  horsepower: string;
+  driving: string;
+  color: string;
+  frontWheelDimension: string;
+  backWheelDimension: string;
+  oilCapacity: string;
+  oilSpecifications1: string;
+  oilClassification1: string;
+  oilSpecifications2: string;
+  oilClassification2: string;
+}
+
+///// AI-assist (work order text-to-form parsing)
+
+export interface IWorkOrderIntentRequest {
+  transcript: string;
+  wmsId: string;
+  employeeId?: number;
+}
+
+export interface IWorkOrderIntentCandidate {
+  id: number;
+  label: string;
+}
+
+export interface IWorkOrderIntentServiceLine {
+  productId?: number;
+  productName: string;
+  quantity?: number;
+}
+
+export interface IWorkOrderIntentResponse {
+  vehiclePlate?: string;
+  customerId?: number;
+  customerName?: string;
+  /** Populated instead of customerId when the text matched more than one customer. */
+  customerCandidates?: IWorkOrderIntentCandidate[];
+  employeeId?: number;
+  employeeName?: string;
+  serviceLines?: IWorkOrderIntentServiceLine[];
+  /** Form control names the AI populated, so the UI can mark them "AI-suggested" until reviewed. */
+  filledFields: string[];
+}

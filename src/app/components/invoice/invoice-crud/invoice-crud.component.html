@@ -70,31 +70,24 @@
             <div class="crud-vehicle-fields col-span-12">
                 <div class="crud-vehicle-field crud-vehicle-field--plate">
                     <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
-                    <p-iconfield>
-                        <p-inputicon class=" icon-primary pi pi-car" />
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="icon-primary pi pi-car"></i>
+                        </p-inputgroup-addon>
                         <input pInputText type="text" formControlName="vehiclePlate" maxlength="10"
                         placeholder="ABC123" (input)="onInputChange($event)"
-                        class="uppercase w-full p-2 pl-12" />
-                    </p-iconfield>
+                        class="uppercase w-full p-2" />
+                        <button pButton type="button" icon="pi pi-search" [loading]="isVehicleLookupLoading"
+                            (click)="lookupVehicle()" pTooltip="{{ this.sharedService.T('lookupVehicle') }}"></button>
+                    </p-inputgroup>
                 </div>
                 <div class="crud-vehicle-field crud-vehicle-field--make">
                     <label for="vehicleManufacturer" class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
-                    <p-autoComplete formControlName="vehicleManufacturer" placeholder="" [maxlength]="50"
-                        [suggestions]="selectedBrands" (onSelect)="onSelectVehicleManufacturer($event)" (completeMethod)="filterManufacturers($event)" [minLength]="1"
-                        placeholder="Ange söktext " class="w-full" forceSelection="true" optionLabel=""
-                        [showClear]="true">
-                    </p-autoComplete>
+                    <input pInputText type="text" formControlName="vehicleManufacturer" class="w-full" [maxlength]="50" />
                 </div>
                 <div class="crud-vehicle-field crud-vehicle-field--model">
-                    <div class="flex items-center justify-between gap-2 mb-2">
-                        <label class="block mb-0" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}</label>
-                        <app-create-vehicle-model-popover
-                            [parentForm]="invoice"
-                            (modelsUpdated)="onVehicleModelsUpdated($event)" />
-                    </div>
-                    <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
-                        (completeMethod)="filterModels($event)" forceSelection="true" [showClear]="true"
-                        class="w-full"></p-autoComplete>
+                    <label class="block mb-2" for="vehicleModel">{{ this.sharedService.T('vehicleModel') }}</label>
+                    <input pInputText type="text" formControlName="vehicleModel" class="w-full" />
                 </div>
                 <div class="crud-vehicle-field crud-vehicle-field--year">
                     <label class="block mb-2" for="vehicleYear">{{ this.sharedService.T('vehicleYear') }}</label>

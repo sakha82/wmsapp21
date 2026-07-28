@@ -1,8 +1,11 @@
         <!-- header start -->
   <app-generic-loader [visible]="isLoading" />
         <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-            <div class="">
+            <div class="flex items-center gap-3">
                 <p class="font-normal text-2xl">{{ this.sharedService.T('workorder') }} #{{this.workOrder.workOrderId}} </p>
+                <p-tag *ngIf="workOrder.createdVia" severity="info" icon="pi pi-whatsapp"
+                    [value]="workOrder.createdByName ? (sharedService.T('createdVia') + ': ' + workOrder.createdByName) : sharedService.T('createdViaBot')"
+                    [pTooltip]="sharedService.T('createdViaBotHint')"></p-tag>
             </div>
         </header>
         <!-- header end -->

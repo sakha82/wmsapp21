@@ -223,20 +223,21 @@
               <div class="relative">
                 <label class="block mb-2">{{ this.sharedService.T('vehiclePlate') }}<span
                     class="text-red-500">*</span></label>
-                <p-iconfield>
-                  <p-inputicon class=" icon-primary pi pi-car" />
-                  <input pInputText type="text" class="uppercase p-2 w-full pl-12 " formControlName="vehiclePlate"
+                <p-inputgroup>
+                  <p-inputgroup-addon>
+                    <i class="icon-primary pi pi-car"></i>
+                  </p-inputgroup-addon>
+                  <input pInputText type="text" class="uppercase p-2 w-full" formControlName="vehiclePlate"
                     maxlength="10" placeholder="ABC123" (input)="onInputChange($event)" />
-                </p-iconfield>
+                  <button pButton type="button" icon="pi pi-search" [loading]="isVehicleLookupLoading"
+                    (click)="lookupVehicle()" pTooltip="{{ this.sharedService.T('lookupVehicle') }}"></button>
+                </p-inputgroup>
               </div>
 
               <div>
                 <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}<span class="text-red-500">*</span>
                 </label>
-                <p-autoComplete formControlName="vehicleManufacturer" 
-                  [suggestions]="selectedBrands" (onSelect)="onSelectVehicleManufacturer($event)" (completeMethod)="filterManufacturers($event)" [minLength]="1" placeholder="{{this.sharedService.T('enterSearchText')}}"
-                  forceSelection="true" class="w-full">
-                </p-autoComplete>
+                <input pInputText type="text" formControlName="vehicleManufacturer" class="w-full" />
               </div>
             </div>
 
@@ -244,10 +245,7 @@
               <div>
                 <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }} <span
                     class="text-red-500">*</span></label>
-                <p-autoComplete formControlName="vehicleModel" [suggestions]="selectedModels"
-                  (completeMethod)="filterModels($event)" [minLength]="1" placeholder="{{this.sharedService.T('selectModel')}}"
-                  forceSelection="true" class="w-full">
-                </p-autoComplete>
+                <input pInputText type="text" formControlName="vehicleModel" class="w-full" />
               </div>
               <div>
                 <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }} <span

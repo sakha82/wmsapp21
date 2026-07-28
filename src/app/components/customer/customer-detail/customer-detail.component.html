@@ -22,7 +22,7 @@
         Tag: <span class="font-bold">{{ customer.customerTagName }}</span>
       </p>
       <p-button size="small" variant="outlined" icon="pi pi-pencil" [label]="this.sharedService.T('editCustomer')"
-        (onClick)="redirectToCustomerCrudComponent()"></p-button>
+        (onClick)="redirectToCustomerCrudComponent()" data-testid="edit-customer-button"></p-button>
 
 
     </div>

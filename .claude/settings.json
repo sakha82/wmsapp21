@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -n \"declare function palette\\\\|function _default\\\\$3\\\\|ColorScale\" node_modules/@primeuix/styled/dist/index.d.mts)"
+      "Bash(grep -n \"declare function palette\\\\|function _default\\\\$3\\\\|ColorScale\" node_modules/@primeuix/styled/dist/index.d.mts)",
+      "Bash(dotnet build*)",
+      "Bash(npx tsc*)",
+      "Bash(./node_modules/.bin/tsc*)",
+      "Bash(npx playwright test --list*)",
+      "Bash(npx playwright --version)",
+      "Bash(wsl -l -v)",
+      "Bash(xxd*)",
+      "Bash(export PGPASSWORD=password)"
     ]
   }
 }

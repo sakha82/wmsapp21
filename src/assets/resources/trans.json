@@ -1,5 +1,45 @@
 [
     {
+        "tkey": "aiAssistPlaceholder",
+        "en": "Describe the job, e.g. \"BMH565, oil change and brake pad check\"",
+        "sv": "Beskriv jobbet, t.ex. \"BMH565, oljebyte och kontroll av bromsbelägg\""
+    },
+    {
+        "tkey": "aiAssistSubmit",
+        "en": "Fill form",
+        "sv": "Fyll i formulär"
+    },
+    {
+        "tkey": "aiAssistFailed",
+        "en": "Could not process that description. Please try again or fill the form manually.",
+        "sv": "Kunde inte bearbeta beskrivningen. Försök igen eller fyll i formuläret manuellt."
+    },
+    {
+        "tkey": "aiSuggested",
+        "en": "AI-suggested",
+        "sv": "AI-förslag"
+    },
+    {
+        "tkey": "aiMultipleCustomerMatches",
+        "en": "Multiple matching customers, please pick one:",
+        "sv": "Flera matchande kunder, välj en:"
+    },
+    {
+        "tkey": "createdVia",
+        "en": "Created via",
+        "sv": "Skapad via"
+    },
+    {
+        "tkey": "createdViaBot",
+        "en": "Created via bot",
+        "sv": "Skapad via bot"
+    },
+    {
+        "tkey": "createdViaBotHint",
+        "en": "This work order was created from a mechanic's WhatsApp/Telegram message.",
+        "sv": "Denna arbetsorder skapades från ett meddelande från en mekaniker via WhatsApp/Telegram."
+    },
+    {
         "tkey": "achieved",
         "en": "Achieved",
         "sv": "Uppnått"
@@ -1368,6 +1408,16 @@
         "tkey": "vehicleMake",
         "en": "Make",
         "sv": "Märke"
+    },
+    {
+        "tkey": "lookupVehicle",
+        "en": "Look up vehicle",
+        "sv": "Slå upp fordon"
+    },
+    {
+        "tkey": "vehicleLookupFailed",
+        "en": "Could not find vehicle for this registration number.",
+        "sv": "Kunde inte hitta fordon för detta registreringsnummer."
     },
     {
         "tkey": "totalItemsSold",

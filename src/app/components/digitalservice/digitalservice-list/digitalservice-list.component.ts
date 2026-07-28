@@ -16,6 +16,8 @@ import { InvoiceService } from 'app/services/invoice.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -42,7 +44,7 @@ import { TreeTableModule } from 'primeng/treetable';
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule,TreeTableModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
+  imports: [CommonModule,TreeTableModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, InputGroupModule, InputGroupAddonModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
   providers: [ConfirmationService, MessageService],
  templateUrl: './digitalservice-list.component.html'
 })
@@ -68,14 +70,11 @@ export class DigitalServiceListComponent implements OnDestroy {
   manufacturers: any[] = [];
   isEmailSent: boolean | null = null;
   onlyThisWmsid:boolean = true;
+  isVehicleLookupLoading: boolean = false;
   
   // PDF Upload Properties
   selectedVehicleData: any = null;
-  brands:any[] = [];
-  selectedBrands: any[] = [];
   //products: any[] = [];
-  models: any[] = [];
-  selectedModels: any[] = [];
 
   uploadProgress: number = 0;
   pdfBlobUrl: SafeResourceUrl | null = null;
@@ -196,10 +195,6 @@ export class DigitalServiceListComponent implements OnDestroy {
       this.digitalService.get('nextServiceVehicleMileage')
         ?.setValue(v ? +v + 10000 : '');
     });
-    
-    this.sharedService.getVehicleMakes().subscribe((data: any) => {
-        this.brands = data;
-      });
 
     this.getDigitalServices(this.onlyThisWmsid);
 
@@ -699,26 +694,42 @@ export class DigitalServiceListComponent implements OnDestroy {
         }
       });
   }
-    filterManufacturers(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
-  }
-
-  onSelectVehicleManufacturer(event: any): void {
-     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
-                  this.models = data;
-                });
-  }
-  filterModels(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
-  }
-
   onInputChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const sanitizedValue = input.value.replace(/[^A-Z0-9]/gi, ''); // Remove invalid characters
     input.value = sanitizedValue.toUpperCase(); // Convert to uppercase
-    this.digitalService.get('vehiclePlate')?.setValue(sanitizedValue); // Update 
+    this.digitalService.get('vehiclePlate')?.setValue(sanitizedValue); // Update
+  }
+
+  lookupVehicle(): void {
+    const registrationNumber = this.digitalService.get('vehiclePlate')?.value;
+    if (!registrationNumber) {
+      return;
+    }
+    this.isVehicleLookupLoading = true;
+    this.sharedService.getVehicle(registrationNumber)
+      .pipe(
+        finalize(() => { this.isVehicleLookupLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (vehicle) => {
+          this.digitalService.patchValue({
+            vehicleManufacturer: vehicle.make,
+            vehicleModel: vehicle.model,
+            vehicleYear: vehicle.year ? Number(vehicle.year) : null,
+          });
+        },
+        error: (err) => {
+          this.logger.error('lookupVehicle error', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('vehicleLookupFailed'),
+            life: 3000
+          });
+        }
+      });
   }
 
   onServiceTypeChange(event: SelectChangeEvent): void {

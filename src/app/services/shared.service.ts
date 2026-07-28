@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IVehicleType, IWmsLog, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
+import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IVehicleDetails, IVehicleType, IWmsLog, IWorkOrderIntentRequest, IWorkOrderIntentResponse, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
 import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, tap, finalize } from 'rxjs';
@@ -120,6 +120,23 @@ get lang(): 'en' | 'sv' {
     queryParams.append("vehiclePlate", vehiclePlate);
     const url = `${this.coreUrl}/vehicle-info?${queryParams}`;
     return this.http.get<VehicleSearchResponse>(url);
+  }
+
+  getVehicle(registrationNumber?: string, vehicleId?: string)
+  {
+    const queryParams = new URLSearchParams();
+    if (registrationNumber) queryParams.append("id", registrationNumber);
+    const url = `${this.coreUrl}/vehicle?${queryParams}`;
+    return this.http.get<IVehicleDetails>(url);
+  }
+
+  /** Parses a free-text description (e.g. "BMH565, oil change, assign to Amir") into work order field suggestions. Never saves anything — the caller patches a form and the user still has to click Save. */
+  parseWorkOrderIntent(transcript: string, employeeId?: number)
+  {
+    const request: IWorkOrderIntentRequest = { transcript, wmsId: this.wmsId, employeeId };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.coreUrl}/ai/parse-workorder-intent`;
+    return this.http.post<IWorkOrderIntentResponse>(url, request, { headers });
   }
 
 
@@ -528,22 +545,6 @@ T(key: string): string {
     const url = `${this.baseUrl}/api/Core/next-id?${queryParams}`;
     return this.http.get<number>(url);
   }
-
-    getVehicleMakes()
-    {
-        const queryParams = new URLSearchParams();
-        const url = `${this.coreUrl}/vehicle-makes`;
-        return this.http.get<string[]>(url);
-    }
-
-    getVehicleModels(make:string)
-    {
-        const queryParams = new URLSearchParams();
-        queryParams.append("make", make);
-        const url = `${this.coreUrl}/vehicle-models?${queryParams}`;
-        return this.http.get<string[]>(url);
-    }
-
 
   }
 

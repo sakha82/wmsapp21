@@ -1,0 +1,19 @@
+<div class="flex items-center gap-2 p-3 border border-border rounded bg-white">
+  <i class="pi pi-sparkles icon-primary"></i>
+  <input
+    pInputText
+    type="text"
+    class="flex-1"
+    [(ngModel)]="text"
+    [placeholder]="placeholder || sharedService.T('aiAssistPlaceholder')"
+    [disabled]="loading"
+    (keydown.enter)="submit()"
+  />
+  <button
+    pButton
+    type="button"
+    [label]="sharedService.T('aiAssistSubmit')"
+    [loading]="loading"
+    (click)="submit()"
+  ></button>
+</div>

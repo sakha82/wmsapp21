@@ -139,17 +139,19 @@
 
       <!-- Buttons -->
       <div class="flex gap-4 mt-8">
-        <p-button 
+        <p-button
           [raised]="true"
-          label="{{ isNewObject ? this.sharedService.T('createCustomer') : this.sharedService.T('updateCustomer') }}" 
+          label="{{ isNewObject ? this.sharedService.T('createCustomer') : this.sharedService.T('updateCustomer') }}"
           size="large"
           icon="pi pi-plus"
-          (click)="onFormSubmit()"></p-button>
-          <p-button 
+          (click)="onFormSubmit()"
+          data-testid="customer-submit-button"></p-button>
+          <p-button
           severity="secondary"
-          label="{{ this.sharedService.T('cancel') }}" 
-          size="large" 
-          (click)=" onCancelForm()"></p-button>
+          label="{{ this.sharedService.T('cancel') }}"
+          size="large"
+          (click)=" onCancelForm()"
+          data-testid="customer-cancel-button"></p-button>
       </div>
     </div>
   </form>

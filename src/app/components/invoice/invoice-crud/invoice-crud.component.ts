@@ -26,6 +26,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageModule } from 'primeng/message';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -35,7 +37,6 @@ import { ExternalService } from 'app/services/external.service';
 import { CustomerService } from 'app/services/customer.service';
 import { TextareaModule } from 'primeng/textarea';
 import { WorkOrderService } from 'app/services/workorder.service';
-import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
 
 
 
@@ -57,14 +58,15 @@ import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/creat
     MessageModule,
     IconFieldModule,
     InputIconModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     ProgressSpinnerModule,
     TableModule,
     DragDropModule,
     SplitButtonModule,
     TooltipModule,
     CheckboxModule,
-    TextareaModule,
-    CreateVehicleModelPopoverComponent
+    TextareaModule
   ],
   templateUrl: './invoice-crud.component.html',
   styleUrl: './invoice-crud.component.css',
@@ -76,18 +78,14 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   invoice: FormGroup;
   details: any = new FormArray([])
 
-  brands: any[] = [];
-  selectedBrands: any[] = [];
-
   templates: MenuItem[] = [];
   products: IProduct[] = [];
-  models: any[] = [];
-  selectedModels: any[] = [];
 
   createInvoice: boolean = true;
   isNewObject: boolean = true;
   errorOnCustomer: boolean = false;
   isSpinnerLoading: boolean = false;
+  isVehicleLookupLoading: boolean = false;
 
   // default 0 means incmoms
   priceMode: number = 0;
@@ -209,9 +207,6 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
           this.loadInvoiceToEdit(response.data, 'g.editinvoice');
           this.updateDueDate();
           this.getTemplates();
-          this.sharedService.getVehicleMakes().subscribe((data: any) => {
-            this.brands = data;
-          });
         },
         error: (err) => {
           this.errorHandler.handleError(err, 'ngOnInit', 'Failed to load invoice.');
@@ -322,25 +317,35 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     input.value = input.value.replace(/[^0-9a-zA-Z]/g, '').toUpperCase();
   }
 
-  filterManufacturers(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
-
-  }
-  onSelectVehicleManufacturer(event: any): void {
-    this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
-      this.models = data;
-    });
-  }
-
-  filterModels(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
-  }
-
-  onVehicleModelsUpdated(models: string[]): void {
-    this.models = models;
-    this.selectedModels = [...models];
+  lookupVehicle(): void {
+    const registrationNumber = this.invoice.get('vehiclePlate')?.value;
+    if (!registrationNumber) {
+      return;
+    }
+    this.isVehicleLookupLoading = true;
+    this.sharedService.getVehicle(registrationNumber)
+      .pipe(
+        finalize(() => { this.isVehicleLookupLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (vehicle) => {
+          this.invoice.patchValue({
+            vehicleManufacturer: vehicle.make,
+            vehicleModel: vehicle.model,
+            vehicleYear: vehicle.year ? Number(vehicle.year) : null,
+          });
+        },
+        error: (err) => {
+          this.logger.error('lookupVehicle error', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('vehicleLookupFailed'),
+            life: 3000
+          });
+        }
+      });
   }
 
   // detail selection

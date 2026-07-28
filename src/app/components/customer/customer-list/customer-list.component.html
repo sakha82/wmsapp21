@@ -10,7 +10,7 @@
             <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
               <!-- Create Customer Button -->
               <p-button [raised]="true" label="{{ this.sharedService.T('createCustomer') }}" size="large" icon="pi pi-plus"
-                (click)="redirectToCustomerCrudComponent()"></p-button>
+                (click)="redirectToCustomerCrudComponent()" data-testid="create-customer-button"></p-button>
 
               <!-- Filters -->
               <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"

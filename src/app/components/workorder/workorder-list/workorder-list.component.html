@@ -124,6 +124,9 @@
                                 (click)="redirectToOrderDetailComponent(order.workOrderId)">
                                 <span class="id-text">{{ order.workOrderId }}</span>
                                 <i class="pi pi-external-link icon-primary" ></i>
+                                <p-tag *ngIf="order.createdVia" severity="info" icon="pi pi-whatsapp"
+                                    [value]="order.createdByName ? (sharedService.T('createdVia') + ': ' + order.createdByName) : sharedService.T('createdViaBot')"
+                                    [pTooltip]="sharedService.T('createdViaBotHint')"></p-tag>
                             </div>
                         </td>
                         <td>{{ order.workOrderDate }}</td>

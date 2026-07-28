@@ -16,6 +16,8 @@ import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ExternalService } from 'app/services/external.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -31,7 +33,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { CreateVehicleModelPopoverComponent } from 'app/components/vehicle/create-vehicle-model-popover/create-vehicle-model-popover.component';
 import { adjustmentValidator, isFormControlInvalid, showValidationErrorToast } from 'app/validators/model-validators';
 
 @Component({
@@ -45,6 +46,8 @@ import { adjustmentValidator, isFormControlInvalid, showValidationErrorToast } f
     DragDropModule,
     IconFieldModule,
     InputIconModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     ButtonModule,
     InputTextModule,
     AutoCompleteModule,
@@ -58,8 +61,7 @@ import { adjustmentValidator, isFormControlInvalid, showValidationErrorToast } f
     TooltipModule,
     MessageModule,
     DialogModule,
-    SplitButtonModule,
-    CreateVehicleModelPopoverComponent
+    SplitButtonModule
   ], templateUrl: './offer-crud.component.html',
   styleUrl: './offer-crud.component.css',
   providers: [MessageService, ConfirmationService]
@@ -71,11 +73,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   offer: FormGroup;
   details: any = new FormArray([])
 
-  brands:any[] = [];
-  selectedBrands: any[] = [];
-
-  models: any[] = [];
-  selectedModels: any[] = [];
   templates: MenuItem[] = [];
   products: IProduct[] = [];
 
@@ -83,6 +80,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   createOffer: boolean = true;
   errorOnCustomer: boolean = false;
   isSpinnerLoading: boolean = false;
+  isVehicleLookupLoading: boolean = false;
   isLoading: boolean = true
   priceMode: number = 0;
   defaultCustomerId: number | null = null;
@@ -167,9 +165,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
           this.isNewObject = response.isNewObject;
           this.loadOfferToEdit(response.data, 'editinvoice');
           this.getTemplates();
-           this.sharedService.getVehicleMakes().subscribe((data: any) => {
-                  this.brands = data;
-                });
         },
         error: (err) => {
           this.logger.error('ngOnInit getOffer error', err);
@@ -270,24 +265,35 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     input.value = input.value.replace(/[^0-9a-zA-Z]/g, '').toUpperCase();
   }
 
-  filterManufacturers(event: any): void {
-        const query = event.query.toUpperCase();
-        this.selectedBrands = this.brands.filter((brand: any) => brand.toUpperCase().startsWith(query));
-
-  }
-  onSelectVehicleManufacturer(event: any): void {
-     this.sharedService.getVehicleModels(event.value).subscribe((data: any) => {
-                  this.models = data;
-                });
-  }
-  filterModels(event: any): void {
-    const query = event.query.toUpperCase();
-    this.selectedModels = this.models.filter((model: any) => model.toUpperCase().startsWith(query));
-  }
-
-  onVehicleModelsUpdated(models: string[]): void {
-    this.models = models;
-    this.selectedModels = [...models];
+  lookupVehicle(): void {
+    const registrationNumber = this.offer.get('vehiclePlate')?.value;
+    if (!registrationNumber) {
+      return;
+    }
+    this.isVehicleLookupLoading = true;
+    this.sharedService.getVehicle(registrationNumber)
+      .pipe(
+        finalize(() => { this.isVehicleLookupLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (vehicle) => {
+          this.offer.patchValue({
+            vehicleManufacturer: vehicle.make,
+            vehicleModel: vehicle.model,
+            vehicleYear: vehicle.year ? Number(vehicle.year) : null,
+          });
+        },
+        error: (err) => {
+          this.logger.error('lookupVehicle error', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('vehicleLookupFailed'),
+            life: 3000
+          });
+        }
+      });
   }
 
   // detail selection

@@ -9,10 +9,10 @@ export const LOG_LEVEL = {
 
 export const environment = {
     production: false,
-    // BASE_URL:'https://wmstestapi-addgaegmecamcyb4.westeurope-01.azurewebsites.net',
-     BASE_URL:'https://wmsapi-dhexdwcheaejf0gr.swedencentral-01.azurewebsites.net',
+    
+     //BASE_URL:'https://wmsapi-dhexdwcheaejf0gr.swedencentral-01.azurewebsites.net',
      //     BASE_URL:'https://wmsapi-dhexdwcheaejf0gr.swedencentral-01.azurewebsites.net',
-    //BASE_URL:'http://localhost:5000',
+    BASE_URL:'https://localhost:5000',
     logLevel: LOG_LEVEL.debug,
     Version:'2.13T'
   };
