@@ -60,12 +60,6 @@ export class OfferService {
     return this.http.put<IOffer>(`${this.baseUrl}/update-offer`, offer, {headers});
   }
 
-  saveOffer(offer: IOffer) {
-    return (!offer.offerId || offer.offerId <= 0)
-      ? this.createOffer(offer)
-      : this.updateOffer(offer);
-  }
-  
   markAsSent(offerId: number) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

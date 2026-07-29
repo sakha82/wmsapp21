@@ -75,12 +75,6 @@ export class InvoiceService {
     return this.http.put<IInvoice>(`${this.baseUrl}/update-invoice`, invoice, {headers});
   }
 
-  saveInvoice(invoice: IInvoice) {
-    return (!invoice.invoiceId || invoice.invoiceId <= 0)
-      ? this.createInvoice(invoice)
-      : this.updateInvoice(invoice);
-  }
-
   markAsSent(invoiceId: number) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

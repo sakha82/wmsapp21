@@ -232,13 +232,17 @@ export class ProductListComponent implements OnDestroy {
         }
       }
       const res: any = await firstValueFrom(
-        this.productService.saveProduct(product)
+        this.isNewObject
+          ? this.productService.createProduct(product)
+          : this.productService.updateProduct(product)
       );
       this.isLoading = false;
-      if (res === true || res?.success === true || res?.productId) {
-        this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });        this.getProducts();
-        this.closeProductDialog();
-      }
+      // Reaching here means the HTTP call succeeded — create-product returns the new
+      // ProductId (a number), update-product returns true; neither matches res?.success,
+      // so gating on that silently no-opped after a successful create.
+      this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
+      this.getProducts();
+      this.closeProductDialog();
 
     } catch (error) {
       this.isLoading = false;

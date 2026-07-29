@@ -20,8 +20,14 @@ export class TokenInterceptor implements HttpInterceptor {
   return next.handle(request).pipe(
   catchError((error: HttpErrorResponse) => {
     const status = error.status;
-    // Only handle auth-related errors here: 401/404 with an access token present
-    if ((status === 401 || status === 404) && accessToken) {
+    // Only handle actual auth failures here: 401 with an access token present.
+    // 404 is NOT an auth signal in this app — wms-api throws ResourceNotFoundException
+    // (a 404) for legitimately-missing records, including expected lookups like
+    // "does a customer with this id exist yet" during a create flow. Treating 404 as a
+    // session failure forced a logout mid-save whenever such a lookup 404'd, silently
+    // wiping the token before the next request (create-customer/update-customer) — see
+    // Initiative 3's E2E run, which was the first time this path was actually reachable.
+    if (status === 401 && accessToken) {
       // Try to read a message from the backend response
       let serverMessage = '';
 

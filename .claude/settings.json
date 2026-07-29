@@ -3,13 +3,22 @@
     "allow": [
       "Bash(grep -n \"declare function palette\\\\|function _default\\\\$3\\\\|ColorScale\" node_modules/@primeuix/styled/dist/index.d.mts)",
       "Bash(dotnet build*)",
+      "Bash(dotnet run*)",
       "Bash(npx tsc*)",
       "Bash(./node_modules/.bin/tsc*)",
       "Bash(npx playwright test --list*)",
       "Bash(npx playwright --version)",
       "Bash(wsl -l -v)",
       "Bash(xxd*)",
-      "Bash(export PGPASSWORD=password)"
+      "Bash(export PGPASSWORD=password)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push origin Test)",
+      "Bash(node*)",
+      "Bash(python*)",
+      "Bash(python3*)",
+      "Bash(curl -sk -X POST https://localhost:*)",
+      "Bash(curl -sk https://localhost:*)"
     ]
   }
 }

@@ -55,12 +55,6 @@ export class WorkOrderService {
     return this.http.put<IWorkOrder>(`${this.baseUrl}/update-workorder`, workOrder, {headers});
   }
 
-  saveWorkOrder(workOrder:IWorkOrder){
-    return (!workOrder.workOrderId || workOrder.workOrderId <= 0)
-      ? this.createWorkOrder(workOrder)
-      : this.updateWorkOrder(workOrder);
-  }
-  
   updateWorkOrderStatus(workOrder:IWorkOrder){
     workOrder.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({'Content-Type': 'application/json',});

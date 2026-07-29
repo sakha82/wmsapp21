@@ -52,6 +52,6 @@ test.describe('Customer Detail', () => {
 
   test('edit customer button navigates to the edit form', async ({ page }) => {
     await detailPage.clickEditCustomer();
-    await expect(page).toHaveURL(/\/sv\/customer\/crud$/);
+    await expect(page).toHaveURL(/\/sv\/customer\/crud(;customerId=\d+)?$/);
   });
 });

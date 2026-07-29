@@ -613,8 +613,10 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       return;
     }
-    this.offerService
-      .saveOffer(offer)
+    (this.isNewObject
+      ? this.offerService.createOffer(offer)
+      : this.offerService.updateOffer(offer)
+    )
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -623,9 +625,10 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (res: any) => {
-          if (res) {
-            this.router.navigate([`sv/offer/details/${offer.offerId}`]);
-          }
+          // create-offer returns the new OfferId (a number); update-offer returns true — use
+          // the real created id on create rather than the form's stale placeholder offerId.
+          const savedOfferId = this.isNewObject && typeof res === 'number' ? res : offer.offerId;
+          this.router.navigate([`sv/offer/details/${savedOfferId}`]);
         },
         error: (err) => {
           this.logger.error('onFormSubmit error', err);

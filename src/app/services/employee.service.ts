@@ -51,12 +51,6 @@ export class EmployeeService {
       return this.http.put<IEmployee>(`${this.baseUrl}/update-employee`, employee, {headers});
     }
 
-    saveEmployee(employee:IEmployee){
-      return (!employee.employeeId || employee.employeeId <= 0)
-        ? this.createEmployee(employee)
-        : this.updateEmployee(employee);
-    }
-
     deleteEmployee(employeeId:number){
       const url = `${this.baseUrl}/${this.sharedService.wmsId}/${employeeId}`;
       return this.http.delete<boolean>(url);

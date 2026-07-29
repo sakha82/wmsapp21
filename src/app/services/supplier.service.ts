@@ -55,10 +55,4 @@ export class SupplierService {
     return this.http.put<ISupplier>(`${this.baseUrl}/update-supplier`, supplier, { headers });
   }
 
-  saveSupplier(supplier: ISupplier) {
-    return (!supplier.supplierId || supplier.supplierId <= 0)
-      ? this.createSupplier(supplier)
-      : this.updateSupplier(supplier);
-  }
-
 }

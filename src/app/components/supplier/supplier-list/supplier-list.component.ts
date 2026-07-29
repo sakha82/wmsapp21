@@ -144,7 +144,10 @@ export class SupplierListComponent implements OnInit, OnDestroy {
       return;
     }
     const formValues = this.supplierForm.getRawValue();
-    this.supplierService.saveSupplier(formValues)
+    (this.isNewObject
+      ? this.supplierService.createSupplier(formValues)
+      : this.supplierService.updateSupplier(formValues)
+    )
       .pipe(
         finalize(() => { }),
         takeUntil(this.destroy$)
