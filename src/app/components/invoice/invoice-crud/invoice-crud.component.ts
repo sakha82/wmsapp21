@@ -626,8 +626,10 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.logger.info('Submitting invoice:', invoice);
-    this.invoiceService
-      .upsertInvoice(invoice)
+    (this.isNewObject
+      ? this.invoiceService.createInvoice(invoice)
+      : this.invoiceService.updateInvoice(invoice)
+    )
       .pipe(
         catchError((err) => {
           this.isLoading = false;
@@ -638,9 +640,11 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
       .subscribe((res: any) => {
         this.isLoading = false;
 
-        if (res) {
-          this.router.navigate([`sv/invoice/details/${res.data?.invoiceId || invoice.invoiceId}`]);
-        }
+        // create-invoice returns the new InvoiceId (a number); update-invoice returns true —
+        // neither has a `.data.invoiceId` shape, so use the real created id on create rather
+        // than the form's stale placeholder invoiceId.
+        const savedInvoiceId = this.isNewObject && typeof res === 'number' ? res : invoice.invoiceId;
+        this.router.navigate([`sv/invoice/details/${savedInvoiceId}`]);
       });
   }
   onCancelForm() {

@@ -129,7 +129,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.employeeService
-      .upsertEmployee(toDeactivate)
+      .updateEmployee(toDeactivate)
       .pipe(
         finalize(() => {
           this.isLoading = false;

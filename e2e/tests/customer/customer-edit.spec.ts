@@ -16,7 +16,7 @@ test.describe('Edit Customer', () => {
 
     const detailPage = new CustomerDetailPage(page);
     await detailPage.clickEditCustomer();
-    await expect(page).toHaveURL(/\/sv\/customer\/crud$/);
+    await expect(page).toHaveURL(/\/sv\/customer\/crud(;customerId=\d+)?$/);
 
     const updatedTelephone = '0709999999';
     await crudPage.telephoneInput.fill(updatedTelephone);
@@ -57,6 +57,6 @@ test.describe('Edit Customer', () => {
     await crudPage.submit();
 
     await expect(crudPage.fieldInvalid('customerName')).toBeVisible();
-    await expect(page).toHaveURL(/\/sv\/customer\/crud$/);
+    await expect(page).toHaveURL(/\/sv\/customer\/crud(;customerId=\d+)?$/);
   });
 });

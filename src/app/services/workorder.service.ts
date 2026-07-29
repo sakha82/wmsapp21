@@ -43,12 +43,18 @@ export class WorkOrderService {
     return this.http.get<IWorkOrder>(url);
   }
 
-  upsertWorkOrder(workOrder:IWorkOrder){
+  createWorkOrder(workOrder:IWorkOrder){
     workOrder.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IWorkOrder>(`${this.baseUrl}/upsert-workorder`, workOrder, {headers});
+    return this.http.post<IWorkOrder>(`${this.baseUrl}/create-workorder`, workOrder, {headers});
   }
-  
+
+  updateWorkOrder(workOrder:IWorkOrder){
+    workOrder.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.put<IWorkOrder>(`${this.baseUrl}/update-workorder`, workOrder, {headers});
+  }
+
   updateWorkOrderStatus(workOrder:IWorkOrder){
     workOrder.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({'Content-Type': 'application/json',});

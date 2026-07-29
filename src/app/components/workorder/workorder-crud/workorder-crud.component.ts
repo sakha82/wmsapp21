@@ -602,10 +602,13 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           category: 'labour'
         };
         
-        this.logger.info('Calling upsertProduct with productId:', productId, 'productName:', productName);
-        
-        // Chain to the upsertProduct call and pass newProduct along with the response
-        return this.productService.upsertProduct(newProduct).pipe(
+        this.logger.info('Calling createProduct for a new manual/labour line:', productId, 'productName:', productName);
+
+        // Always a brand-new ad-hoc labour line — never an edit of an existing product.
+        // Note: create-product ignores/reassigns ProductId server-side (see ProductController's
+        // doc comment), so this pre-fetched id is only used for the optimistic local push below,
+        // not what actually gets persisted.
+        return this.productService.createProduct(newProduct).pipe(
           map((response) => ({ response, newProduct }))
         );
       }),
@@ -613,9 +616,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (result: any) => {
         const { response, newProduct } = result;
-        
-        if (response === true) {
-          // Product was successfully created
+
+        {
+          // Reaching here means the HTTP call succeeded — createProduct returns the new
+          // ProductId (a number), not true/{success:true}.
           this.selectedProduct.patchValue({
             productId: newProduct.productId,
             productName: newProduct.productName,
@@ -642,14 +646,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           });
           
           this.logger.info('Manual product registered successfully', newProduct);
-        } else {
-          // Product creation failed
-          this.messageService.add({
-            severity: 'error',
-            summary: this.sharedService.T('error'),
-            detail: this.sharedService.T('errorMessage'),
-            life: 3000
-          });
         }
       },
       error: (error: any) => {
@@ -845,8 +841,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     });
 
     
-    this.workOrderService
-      .upsertWorkOrder(submittedWorkOrder)
+    (this.isNewObject
+      ? this.workOrderService.createWorkOrder(submittedWorkOrder)
+      : this.workOrderService.updateWorkOrder(submittedWorkOrder)
+    )
       .pipe(
         finalize(() => {
           this.showSpinner = false;
@@ -855,9 +853,12 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (res: any) => {
-          if (res) {
-            this.router.navigate(['sv/workorder/details', this.workOrder.get('workOrderId')?.value]);
-          }
+          // create-workorder returns the new WorkOrderId (a number); update-workorder returns
+          // true — use the real created id on create rather than the form's stale placeholder.
+          const savedWorkOrderId = this.isNewObject && typeof res === 'number'
+            ? res
+            : this.workOrder.get('workOrderId')?.value;
+          this.router.navigate(['sv/workorder/details', savedWorkOrderId]);
         },
         error: (err) => {
           this.logger.error('onFormSubmit error', err);
@@ -972,7 +973,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       return of(true);
     }),
 
-    // 3) If digitalWorkshopId is invalid, stop; otherwise call upsertCustomer
+    // 3) If digitalWorkshopId is invalid, stop; otherwise call saveCustomer
     switchMap((isValidId: boolean) => {
       if (!isValidId) {
         this.showCustomerSpinner = false;
@@ -985,7 +986,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         return EMPTY;
       }
 
-      return this.customerService.upsertCustomer(this.customer.value);
+      return this.customerService.saveCustomer(this.customer.value);
     }),
 
     finalize(() => {
@@ -993,13 +994,16 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     })
   ).subscribe({
     next: (res: any) => {
-      if (res === true) {
-          this.workOrder.patchValue({ 
-            customerId: this.customer.get('customerId')?.value,
+          // Reaching here means the HTTP call succeeded — createCustomer returns the new
+          // CustomerId (a number), updateCustomer returns true; gating on res === true
+          // silently treated a successful create as an error.
+          const newCustomerId = typeof res === 'number' ? res : this.customer.get('customerId')?.value;
+          this.workOrder.patchValue({
+            customerId: newCustomerId,
             customerName: this.customer.get('customerName')?.value,
             customerTelephone: this.customer.get('telephone')?.value,
             customerEmail: this.customer.get('email')?.value
-          });  
+          });
           this.selectedCustomerName = this.customer.get('customerName')?.value;
           this.messageService.add({
             severity: 'success',
@@ -1008,18 +1012,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
             life: 6000
           });
           this.customerPopup.hide();
-      } else {
-        // Backend returned something unexpected
-        this.messageService.add({
-          severity: 'error',
-          summary: this.sharedService.T('error'),
-          detail: this.sharedService.T('errorMessage'),
-          life: 6000,
-        });
-      }
     },
     error: (err) => {
-      this.logger.error('upsertCustomer pipeline error', err);
+      this.logger.error('saveCustomer pipeline error', err);
     }
   });
 }

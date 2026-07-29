@@ -321,7 +321,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
       .getOffer(offer.offerId, undefined, false)
       .pipe(
         finalize(() => {
-          // loading state managed by upsertOffer
+          // loading state managed by updateOffer
         }),
         takeUntil(this.destroy$)
       )
@@ -336,7 +336,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
           }
           this.logger.info('updated offer', res);
           this.offerService
-            .upsertOffer(res.data)
+            .updateOffer(res.data)
             .pipe(
               finalize(() => {
                 this.isLoading = false;
@@ -357,7 +357,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
                 }
               },
               error: (err) => {
-                this.logger.error('onOfferTypeChange upsertOffer error', err);
+                this.logger.error('onOfferTypeChange updateOffer error', err);
                 this.messageService.add({
                   severity: 'error',
                   summary: 'Error',

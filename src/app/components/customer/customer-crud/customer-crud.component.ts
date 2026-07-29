@@ -376,7 +376,10 @@ async onFormSubmit() {
     const customerId = this.customer.get('customerId')?.value;
 
     try {
-      const originalCustomerName = await this.getCustomerName(customerId);
+      // Only look up the original name for an existing customer — for a new one, customerId
+      // is just a not-yet-real placeholder (the "empty customer" template's next-id preview),
+      // so a lookup against it always 404s and the result wouldn't be used below anyway.
+      const originalCustomerName = this.isNewObject ? '' : await this.getCustomerName(customerId);
 
       if (
         (this.isNewObject === false &&
@@ -405,7 +408,10 @@ async onFormSubmit() {
 
       // API call
       const res: any = await firstValueFrom(
-        this.customerService.upsertCustomer(this.customer.value).pipe(
+        (this.isNewObject
+          ? this.customerService.createCustomer(this.customer.value)
+          : this.customerService.updateCustomer(this.customer.value)
+        ).pipe(
           finalize(() => {
             this.isLoading = false;
           }),
@@ -413,31 +419,24 @@ async onFormSubmit() {
         )
       );
       
-      this.logger.info('onFormSubmit success', { customerId: this.customer.get('customerId')?.value });
+      // Reaching here means the HTTP call succeeded — Angular's HttpClient throws on any
+      // non-2xx response, so there is no separate "did it work" check to make. create-customer
+      // returns the new CustomerId (a number); update-customer returns true — use the real id
+      // from the response on create rather than the form's stale placeholder id.
+      const savedCustomerId = this.isNewObject && typeof res === 'number'
+        ? res
+        : this.customer.get('customerId')?.value;
 
-      // Success / Update Message
-      if (res === true || res?.success === true) {
-        const message = this.isNewObject
-          ? `${customerName} has been successfully created!`
-          : `${customerName} has been successfully updated!`;
+      this.logger.info('onFormSubmit success', { customerId: savedCustomerId });
 
-        this.messageService.add({
-          severity: 'success',
-          summary: this.sharedService.T('success'),
-          icon: 'pi pi-check-circle',
-          life: 6000,
-        });
+      this.messageService.add({
+        severity: 'success',
+        summary: this.sharedService.T('success'),
+        icon: 'pi pi-check-circle',
+        life: 6000,
+      });
 
-        // Navigate immediately after confirming success
-        this.router.navigate(['sv/customer/details', this.customer.get('customerId')?.value]);
-      } else {
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Unexpected Response',
-          detail: 'Server did not confirm save operation.',
-          life: 6000,
-        });
-      }
+      this.router.navigate(['sv/customer/details', savedCustomerId]);
     } catch (error) {
       this.isLoading = false; 
       this.errorHandler.handleError(error, 'onFormSubmit', 'Failed to save customer. Please try again later.');

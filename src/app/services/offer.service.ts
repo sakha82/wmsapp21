@@ -46,13 +46,20 @@ export class OfferService {
 
 
 
-  upsertOffer(offer: IOffer) {
+  createOffer(offer: IOffer) {
     offer.wmsId = this.sharedService.wmsId;
     offer.details.forEach(dtl => {dtl.wmsId = this.sharedService.wmsId;dtl.offerId = offer.offerId;});
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IOffer>(`${this.baseUrl}/upsert-offer`, offer, {headers});
+    return this.http.post<IOffer>(`${this.baseUrl}/create-offer`, offer, {headers});
   }
-  
+
+  updateOffer(offer: IOffer) {
+    offer.wmsId = this.sharedService.wmsId;
+    offer.details.forEach(dtl => {dtl.wmsId = this.sharedService.wmsId;dtl.offerId = offer.offerId;});
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.put<IOffer>(`${this.baseUrl}/update-offer`, offer, {headers});
+  }
+
   markAsSent(offerId: number) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

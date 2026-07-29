@@ -62,10 +62,22 @@ isCustomerExists(customerName:string) {
 return this.http.get<boolean>(`${this.baseUrl}/is-customer-exists?${queryParams}`);
 }
 
-upsertCustomer(customer: ICustomer) {
+createCustomer(customer: ICustomer) {
     customer.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<ICustomer>(`${this.baseUrl}/upsert-customer`, customer, {headers});
+    return this.http.post<ICustomer>(`${this.baseUrl}/create-customer`, customer, {headers});
+  }
+
+  updateCustomer(customer: ICustomer) {
+    customer.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.put<ICustomer>(`${this.baseUrl}/update-customer`, customer, {headers});
+  }
+
+  saveCustomer(customer: ICustomer) {
+    return (!customer.customerId || customer.customerId <= 0)
+      ? this.createCustomer(customer)
+      : this.updateCustomer(customer);
   }
   
   

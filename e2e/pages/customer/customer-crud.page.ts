@@ -43,6 +43,7 @@ export class CustomerCrudPage extends BasePage {
     if (data.email !== undefined) await this.emailInput.fill(data.email);
     if (data.telephone !== undefined) await this.telephoneInput.fill(data.telephone);
     if (data.organizationNo !== undefined) await this.organizationNoInput.fill(data.organizationNo);
+    if (data.customerAddress !== undefined) await this.addressInput.fill(data.customerAddress);
   }
 
   async submit(): Promise<void> {
