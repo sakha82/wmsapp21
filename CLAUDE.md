@@ -75,9 +75,9 @@ Claude acts as Senior Front-End Developer/Designer on this project. The user act
 - Run tests after implementing changes (`npm test` — note most schematics are currently generated with `skipTests: true`, so this often means "no test to run yet," not "skip this step").
 - Fix any compile errors before reporting completion (`ng build`/`npx tsc` — see Common commands).
 
-The git-workflow rule below is a concrete instance of the "destructive operation" / "multiple valid choices" interrupt triggers above, not a separate policy: pushing to `main` is exactly the kind of shared-state, hard-to-reverse action that warrants stopping first.
+Pushing itself is autonomous — no confirmation needed, batch it with the related commits. The git-workflow rule below is a mechanical destination constraint on top of that, not a confirmation gate: always push to `Test`, never `main`, regardless of how routine the change is.
 
-- **Git workflow**: work on the `Test` branch (not `main`). The user merges `Test` → `main` themselves. Do not push to `main` directly.
+- **Git workflow**: work on the `Test` branch (not `main`). Push to `Test` autonomously; the user merges `Test` → `main` themselves. Never push to `main` directly — that's still a destructive operation and stays an interrupt trigger.
 - **Task handoff**: no persistent backlog file — the user describes tasks in chat at the start of each session.
 - **Brand color / theming**: `#4F39F6` (purple) is *not yet confirmed* as final. The user will provide a proper style guide/brand color spec separately — don't treat the current purple as locked in, and don't invest in wiring runtime tenant-color theming (see Known issues below) until that spec arrives.
 - **Styling-law cleanup**: known violations of the PrimeNG-owns-color / Tailwind-is-layout-only rule (see Known issues) are fixed opportunistically — when a task takes you into one of the affected files anyway, clean it up as part of that work. No dedicated cleanup sprint unless the user asks for one.
