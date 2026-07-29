@@ -8,7 +8,6 @@
   </div>
 </header>
 
-<p-toast></p-toast>
 <section class="p-6 pb-10">
   <form [formGroup]="employee">
     <div class="p-8 rounded-lg shadow-lg bg-white">
@@ -182,9 +181,9 @@
       <div class="flex gap-4 mt-8">
         <p-button [raised]="true"
           label="{{ isNewObject ? this.sharedService.T('createEmployee') : this.sharedService.T('updateEmployee') }}"
-          size="large" icon="pi pi-plus" (click)="onFormSubmit()"></p-button>
+          size="large" icon="pi pi-plus" data-testid="employee-submit-button" (click)="onFormSubmit()"></p-button>
         <p-button severity="secondary" label="{{ this.sharedService.T('cancel') }}" size="large"
-          (click)="onCancelForm()"></p-button>
+          data-testid="employee-cancel-button" (click)="onCancelForm()"></p-button>
       </div>
     </div>
   </form>

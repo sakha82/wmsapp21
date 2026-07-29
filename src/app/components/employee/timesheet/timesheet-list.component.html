@@ -6,12 +6,12 @@
 
                     <div *ngIf="employeeCount > 0" class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
                         <p-button [raised]="true" label="Tid in" size="large" icon="pi pi-plus" [style]="{'white-space': 'nowrap'}"
-                            (click)="showCheckInDialog()" />
+                            data-testid="checkin-button" (click)="showCheckInDialog()" />
 
                         <p-select [options]="employees" formControlName="employeeId" optionLabel="text"
                             optionValue="value" (onChange)="onChangeEmployee($event)" [checkmark]="true"
                             [showClear]="true" (onClear)="onClearEmployee()" placeholder="Anstalld"
-                            class="w-full"></p-select>
+                            data-testid="timesheet-employee-filter" class="w-full"></p-select>
 
                         <p-select [options]="this.sharedService.getEnums('timesheetStatus')" formControlName="isActive"
                             optionLabel="text" optionValue="value" (onChange)="onChangeStatus($event)"
@@ -86,8 +86,9 @@
                 <p-toast />
                 <p-confirmdialog />
 
-                <p-table 
-                [lazy]="true" 
+                <p-table
+                data-testid="timesheet-table"
+                [lazy]="true"
                 [value]="timesheets"  
                 [rows]="10"
                 [showGridlines]="false"
@@ -121,7 +122,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-timesheet>
-                        <tr data-href="#">
+                        <tr data-href="#" data-testid="timesheet-row">
                             <td class="rounded-l-lg">{{timesheet.timesheetId}}</td>
                             <td>
                                 @if(timesheet.isActive)
@@ -198,6 +199,7 @@
                                 @if( !timesheet.timeOut)
                                 {
                                 <p-button label="Tid ut" variant="text" [raised]="true" size="small"
+                                    data-testid="timesheet-checkout-open-button"
                                     (click)="openCheckout(timesheet.timesheetId,$event)">
                                     <span class="pi pi-sign-out"></span>
                                 </p-button>
@@ -212,6 +214,7 @@
                             </td>
                             <td class="whitespace-nowrap">
                                 <p-button variant="text" [raised]="true" size="small"
+                                    data-testid="timesheet-comments-open-button"
                                     (click)="openComments(timesheet, $event)">
                                     <span class="pi pi-comment"></span>
                                 </p-button>
@@ -219,7 +222,8 @@
                             <td class="whitespace-nowrap">
                                 @if(timesheet.isActive)
                                 {
-                                <p-button size="small" severity="danger" icon="pi pi-trash" 
+                                <p-button size="small" severity="danger" icon="pi pi-trash"
+                                    data-testid="timesheet-delete-open-button"
                                     (onClick)="openDelete(timesheet.timesheetId,$event)">
                                 </p-button>
                                 }
@@ -238,7 +242,7 @@
                         (input)="onCheckoutTimeInput($event)">
                 </div>
                 <div class="flex gap-3 mt-4">
-                    <p-button class="saveBtn" styleClass="px-4" label="Checkout" (click)="checkout($event)" />
+                    <p-button class="saveBtn" styleClass="px-4" label="Checkout" data-testid="timesheet-checkout-submit-button" (click)="checkout($event)" />
                 </div>
             </form>
         </ng-template>
@@ -255,7 +259,7 @@
                     </div>
                 </div>
                 <div class="flex gap-3 mt-4">
-                    <p-button class="saveBtn" label="Delete" (click)="delete($event)" />
+                    <p-button class="saveBtn" label="Delete" data-testid="timesheet-delete-submit-button" (click)="delete($event)" />
                 </div>
             </form>
         </ng-template>
@@ -265,14 +269,14 @@
             <div class="p-3" style="min-width: 250px;">
                 <div class="mb-3">
                     <label class="block mb-2">{{this.sharedService.T('comments')}}</label>
-                    <textarea [(ngModel)]="selectedComment" rows="4" cols="30"
+                    <textarea [(ngModel)]="selectedComment" rows="4" cols="30" data-testid="timesheet-comments-textarea"
                         style="width: 100%; background-color: white;" pTextarea>
                 </textarea>
 
                 </div>
                 <div class="flex justify-end gap-2">
                     <p-button label="Update" size="small" class="saveBtn" styleClass="px-4"
-                        (click)="updateComment($event)">
+                        data-testid="timesheet-comments-submit-button" (click)="updateComment($event)">
                     </p-button>
                 </div>
             </div>
@@ -357,9 +361,10 @@
             </div>
             <div class="flex mb-5 gap-3 mt-4">
                 <p-button [raised]="true" label="{{ this.sharedService.T('registerTime') }}" size="large"
-                    styleClass="border-0 px-5" icon="pi pi-plus" (click)="checkIn()">
+                    styleClass="border-0 px-5" icon="pi pi-plus" data-testid="timesheet-checkin-submit-button" (click)="checkIn()">
                 </p-button>
                 <p-button size="large" severity="secondary" styleClass="cancel-button"
+                    data-testid="timesheet-checkin-cancel-button"
                     label="{{ this.sharedService.T('cancel') }}" (click)="cancelCheckIn()">
                 </p-button>
             </div>

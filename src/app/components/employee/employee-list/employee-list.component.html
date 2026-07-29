@@ -6,6 +6,7 @@
         label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('employee') }}"
         size="large"
         icon="pi pi-plus"
+        data-testid="create-employee-button"
         (click)="redirectToEmployeeCrudComponent()" />
 
       <div class="flex items-center gap-2">
@@ -26,6 +27,7 @@
 
   <div class="mb-10">
     <p-table
+      data-testid="employee-table"
       [value]="displayedEmployees"
       [showGridlines]="false"
       [rows]="10"
@@ -60,7 +62,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-emp>
-        <tr>
+        <tr data-testid="employee-row">
           <td>{{ emp.employeeId }}</td>
           <td>
             <div class="flex items-center gap-2">
@@ -82,6 +84,7 @@
               size="small"
               icon="pi pi-pencil"
               severity="secondary"
+              data-testid="edit-employee-button"
               (onClick)="editEmployee(emp.employeeId)" />
           </td>
         </tr>

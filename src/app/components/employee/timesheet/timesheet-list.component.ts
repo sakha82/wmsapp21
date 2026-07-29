@@ -347,6 +347,7 @@ export class TimesheetListComponent implements OnInit, OnDestroy {
             });
             this.getTimesheets();
             this.resetTimesheetForm();
+            this.isDialogVisible = false;
           }
         },
         error: (err) => {
