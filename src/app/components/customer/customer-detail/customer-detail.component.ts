@@ -391,9 +391,9 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
           }
           this.logger.info('onOfferTypeChange - offer loaded', { offerId: offer.offerId });
           
-          // Nested Upsert call
+          // Nested update call
           this.offerService
-            .upsertOffer(res)
+            .updateOffer(res)
             .pipe(
               finalize(() => {
                 this.isLoading = false;
@@ -403,12 +403,12 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
             .subscribe({
               next: (res: any) => {
                 if (res) {
-                  this.logger.info('upsertOffer success', { offerId: offer.offerId });
+                  this.logger.info('updateOffer success', { offerId: offer.offerId });
                   this.getOffers(this.customer.customerId);
                 }
               },
               error: (err) => {
-                this.errorHandler.handleError(err, 'upsertOffer', 'Failed to update offer.');
+                this.errorHandler.handleError(err, 'updateOffer', 'Failed to update offer.');
               }
             });
         },

@@ -43,11 +43,22 @@ export class SupplierService {
     const url = `${this.baseUrl}/detail?${queryParams}`;
     return this.http.get<ISupplier>(url);
   }
-  upsertSupplier(supplier: ISupplier) {
+  createSupplier(supplier: ISupplier) {
     supplier.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<ISupplier>(`${this.baseUrl}/upsert-supplier`, supplier, { headers });
+    return this.http.post<ISupplier>(`${this.baseUrl}/create-supplier`, supplier, { headers });
+  }
 
+  updateSupplier(supplier: ISupplier) {
+    supplier.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.put<ISupplier>(`${this.baseUrl}/update-supplier`, supplier, { headers });
+  }
+
+  saveSupplier(supplier: ISupplier) {
+    return (!supplier.supplierId || supplier.supplierId <= 0)
+      ? this.createSupplier(supplier)
+      : this.updateSupplier(supplier);
   }
 
 }

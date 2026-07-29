@@ -51,11 +51,22 @@ export class ProductService {
     return this.http.get<IProduct[]>(`${this.baseUrl}/products-by-prefix?${queryParams}`);
   }
 
-  upsertProduct(product: IProduct) {
+  createProduct(product: IProduct) {
     product.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<IProduct>(`${this.baseUrl}/upsert-product`, product, { headers });
+    return this.http.post<IProduct>(`${this.baseUrl}/create-product`, product, { headers });
+  }
 
+  updateProduct(product: IProduct) {
+    product.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.put<IProduct>(`${this.baseUrl}/update-product`, product, { headers });
+  }
+
+  saveProduct(product: IProduct) {
+    return (!product.productId || product.productId <= 0)
+      ? this.createProduct(product)
+      : this.updateProduct(product);
   }
   upsertInventory(inventory: IInventory) {
     inventory.wmsId = this.sharedService.wmsId;
@@ -95,6 +106,39 @@ export class ProductService {
   getTemplates(wmsId: string) {
     const url = `${this.baseUrl}/template/list?wmsId=${wmsId}`;
     return this.http.get<any>(url);
+  }
+
+  getProductTemplates() {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    const url = `${this.baseUrl}/templates?${queryParams}`;
+    return this.http.get<IProductTemplate[]>(url);
+  }
+
+  createProductTemplate(productTemplate: IProductTemplate) {
+    productTemplate.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.post<IProductTemplate>(`${this.baseUrl}/create-template`, productTemplate, { headers });
+  }
+
+  updateProductTemplate(productTemplate: IProductTemplate) {
+    productTemplate.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.put<IProductTemplate>(`${this.baseUrl}/update-template`, productTemplate, { headers });
+  }
+
+  saveProductTemplate(productTemplate: IProductTemplate) {
+    return (!productTemplate.productTemplateId || productTemplate.productTemplateId <= 0)
+      ? this.createProductTemplate(productTemplate)
+      : this.updateProductTemplate(productTemplate);
+  }
+
+  deleteProductTemplate(productTemplateId: number) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("productTemplateId", productTemplateId.toString());
+    const url = `${this.baseUrl}/delete-template?${queryParams}`;
+    return this.http.delete(url);
   }
 
  

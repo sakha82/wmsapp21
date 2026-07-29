@@ -20,7 +20,7 @@ export class SharedService {
   coreUrl: string = environment.BASE_URL + "/api/Core";
   authUrl: string = environment.BASE_URL + "/api/auth";
   userUrl: string = environment.BASE_URL + "/api/User";
-  fileUrl: string = environment.BASE_URL + "/api/File";
+  fileUrl: string = environment.BASE_URL + "/api/Core";
   resourceFileVersion: number = 1;
   enums: IEnums[] = [];  
   jobs: any[] = [];  

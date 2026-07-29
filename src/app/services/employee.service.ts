@@ -35,12 +35,26 @@ export class EmployeeService {
       return this.http.get<IEmployee>(url);
     }
 
-    upsertEmployee(employee:IEmployee){
-      this.logger.debug('Service: Upserting employee with data:');
+    createEmployee(employee:IEmployee){
+      this.logger.debug('Service: Creating employee with data:');
       this.logger.debug(employee);
       employee.wmsId = this.sharedService.wmsId;
       const headers = new HttpHeaders({'Content-Type': 'application/json',});
-      return this.http.post<IEmployee>(`${this.baseUrl}/upsert-employee`, employee, {headers});
+      return this.http.post<IEmployee>(`${this.baseUrl}/create-employee`, employee, {headers});
+    }
+
+    updateEmployee(employee:IEmployee){
+      this.logger.debug('Service: Updating employee with data:');
+      this.logger.debug(employee);
+      employee.wmsId = this.sharedService.wmsId;
+      const headers = new HttpHeaders({'Content-Type': 'application/json',});
+      return this.http.put<IEmployee>(`${this.baseUrl}/update-employee`, employee, {headers});
+    }
+
+    saveEmployee(employee:IEmployee){
+      return (!employee.employeeId || employee.employeeId <= 0)
+        ? this.createEmployee(employee)
+        : this.updateEmployee(employee);
     }
 
     deleteEmployee(employeeId:number){

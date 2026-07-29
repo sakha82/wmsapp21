@@ -11,7 +11,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, Observable, finalize, takeUntil, Subject } from 'rxjs';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { ProductService } from 'app/services/product.service';
-import { SaleService } from 'app/services/sale.service';
 import { SplitterModule } from 'primeng/splitter';
 import { ExternalService } from 'app/services/external.service';
 import { TabsModule } from 'primeng/tabs';
@@ -148,7 +147,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private productService: ProductService,
-    private saleService: SaleService,
     private externalService: ExternalService,
   ) {
     this.workshop = this.fb.group({
@@ -391,7 +389,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       this.isLoading = true;
 
       this.workshopService
-        .upsertCustomerTag(this.newCustomerTag)
+        .saveCustomerTag(this.newCustomerTag)
         .pipe(
           finalize(() => { this.isLoading = false; }),
           takeUntil(this.destroy$)
@@ -526,7 +524,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       this.isLoading = true;
 
       this.workshopService
-        .upsertCustomerType(this.newCustomerType)
+        .saveCustomerType(this.newCustomerType)
         .pipe(
           finalize(() => { this.isLoading = false; }),
           takeUntil(this.destroy$)
@@ -615,7 +613,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
 
 
   loadProductTemplates() {
-    this.workshopService
+    this.productService
       .getProductTemplates()
       .pipe(
         finalize(() => {}),
@@ -648,8 +646,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
 
   saveProductTemplate(): void {
      this.logger.info('Saving Product Template:', this.newProductTemplate);
-     this.workshopService
-      .upsertProductTemplates(this.newProductTemplate)
+     this.productService
+      .saveProductTemplate(this.newProductTemplate)
       .pipe(
         finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
@@ -712,8 +710,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       }
     });
     selectedTemplate.details = detailsPayload;
-    this.workshopService
-      .upsertProductTemplates(selectedTemplate)
+    this.productService
+      .updateProductTemplate(selectedTemplate)
       .pipe(
         finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
@@ -742,7 +740,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     header: 'Confirm Deletion',
     accept: () => {
       this.isLoading = true;
-      this.workshopService.deleteProductTemplate(templateId)
+      this.productService.deleteProductTemplate(templateId)
         .pipe(
           finalize(() => { this.isLoading = false; }),
           takeUntil(this.destroy$)
@@ -1009,7 +1007,7 @@ GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
   // Sale Target Tab
   loadSaleTargets(saleYear:string) {
   this.isLoading = true;
-  this.saleService.getSaleTarget(saleYear)
+  this.workshopService.getSaleTarget(saleYear)
     .pipe(
       finalize(() => { this.isLoading = false; }),
       takeUntil(this.destroy$)
@@ -1041,7 +1039,7 @@ saveSaleTarget() {
     turnover: this.saleTarget.value.turnover
   };
 
-  this.saleService.upsertSale(payload)
+  this.workshopService.insertSale(payload)
     .pipe(
       finalize(() => { this.isLoading = false; }),
       takeUntil(this.destroy$)
@@ -1062,7 +1060,7 @@ deleteSaleTarget(sale: any) {
     header: 'Confirm Deletion',
     accept: () => {
       this.isLoading = true;
-      this.saleService.deleteSale(sale.wmsId, sale.saleYear, sale.saleMonth)
+      this.workshopService.deleteSale(sale.wmsId, sale.saleYear, sale.saleMonth)
         .pipe(
           finalize(() => { this.isLoading = false; }),
           takeUntil(this.destroy$)

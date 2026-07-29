@@ -241,7 +241,7 @@ export class WorkOrderListComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.selectedWorkOrder.workOrderStatus = statusValue;
         this.workOrderService
-          .upsertWorkOrder(this.selectedWorkOrder)
+          .updateWorkOrder(this.selectedWorkOrder)
           .pipe(
             catchError((err) => {
               console.log(err);

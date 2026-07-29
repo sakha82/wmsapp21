@@ -614,7 +614,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
       return;
     }
     this.offerService
-      .upsertOffer(offer)
+      .saveOffer(offer)
       .pipe(
         finalize(() => {
           this.isLoading = false;

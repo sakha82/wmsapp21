@@ -57,13 +57,28 @@ export class InvoiceService {
       return this.http.get<IInvoice>(url);
   }
   
-  upsertInvoice(invoice: IInvoice) {
+  createInvoice(invoice: IInvoice) {
     invoice.wmsId = this.sharedService.wmsId;
     invoice.details.forEach(dtl => {dtl.wmsId = this.sharedService.wmsId;dtl.invoiceId = invoice.invoiceId;});
     this.logger.info('print invoice');
     this.logger.info(invoice);
     const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IInvoice>(`${this.baseUrl}/upsert-invoice`, invoice, {headers});
+    return this.http.post<IInvoice>(`${this.baseUrl}/create-invoice`, invoice, {headers});
+  }
+
+  updateInvoice(invoice: IInvoice) {
+    invoice.wmsId = this.sharedService.wmsId;
+    invoice.details.forEach(dtl => {dtl.wmsId = this.sharedService.wmsId;dtl.invoiceId = invoice.invoiceId;});
+    this.logger.info('print invoice');
+    this.logger.info(invoice);
+    const headers = new HttpHeaders({'Content-Type': 'application/json',});
+    return this.http.put<IInvoice>(`${this.baseUrl}/update-invoice`, invoice, {headers});
+  }
+
+  saveInvoice(invoice: IInvoice) {
+    return (!invoice.invoiceId || invoice.invoiceId <= 0)
+      ? this.createInvoice(invoice)
+      : this.updateInvoice(invoice);
   }
 
   markAsSent(invoiceId: number) {

@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICustomerTag, ICustomerType, IProductTemplate, IWorkshop, IWorkShopService } from 'app/app.model';
+import { ICustomerTag, ICustomerType, IWorkshop, ISale } from 'app/app.model';
 import { IEnums, ISelect } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, tap } from 'rxjs';
@@ -12,7 +12,6 @@ import { IDetailTemplate } from 'app/app.model';
 export class WorkshopService {
 
   baseUrl: string = environment.BASE_URL + "/api/workshop";
-  baseUrl1: string = environment.BASE_URL + "/api/Product";
 
   constructor(private http: HttpClient, private logger: LogService, private sharedService: SharedService) { }
 
@@ -52,16 +51,40 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
     const url = `${this.baseUrl}/customer-types?${queryParams}`;
     return this.http.get<ICustomerType[]>(url);
   }
-  upsertCustomerTag(customerTag: ICustomerTag) {
+  createCustomerTag(customerTag: ICustomerTag) {
     customerTag.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<ICustomerTag>(`${this.baseUrl}/upsert-customer-tag`, customerTag, { headers });
+    return this.http.post<ICustomerTag>(`${this.baseUrl}/create-customer-tag`, customerTag, { headers });
   }
 
-  upsertCustomerType(customerType: ICustomerType) {
+  updateCustomerTag(customerTag: ICustomerTag) {
+    customerTag.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.put<ICustomerTag>(`${this.baseUrl}/update-customer-tag`, customerTag, { headers });
+  }
+
+  saveCustomerTag(customerTag: ICustomerTag) {
+    return (!customerTag.customerTagId || customerTag.customerTagId <= 0)
+      ? this.createCustomerTag(customerTag)
+      : this.updateCustomerTag(customerTag);
+  }
+
+  createCustomerType(customerType: ICustomerType) {
     customerType.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<ICustomerType>(`${this.baseUrl}/upsert-customer-type`, customerType, { headers });
+    return this.http.post<ICustomerType>(`${this.baseUrl}/create-customer-type`, customerType, { headers });
+  }
+
+  updateCustomerType(customerType: ICustomerType) {
+    customerType.wmsId = this.sharedService.wmsId;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
+    return this.http.put<ICustomerType>(`${this.baseUrl}/update-customer-type`, customerType, { headers });
+  }
+
+  saveCustomerType(customerType: ICustomerType) {
+    return (!customerType.customerTypeId || customerType.customerTypeId <= 0)
+      ? this.createCustomerType(customerType)
+      : this.updateCustomerType(customerType);
   }
   // getServices() {
   //   const queryParams = new URLSearchParams();
@@ -80,11 +103,6 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
     //     response; 
     //   })
     // );
-  }
-  upsertWorkshopService(service: IWorkShopService): Observable<IWorkShopService> {
-    service.wmsId = this.sharedService.wmsId;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<IWorkShopService>(`${this.baseUrl}/upsert-workshop-services`, service, { headers });
   }
   deleteWorkshopService(wmsId: string, workshopServiceId: number) {
     const queryParams = new URLSearchParams();
@@ -153,28 +171,29 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
   }
 
 
-  //ProductTemplates
-
-    getProductTemplates() {
+  // Sale targets
+  getSaleTarget(saleYear: string) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
-    const url = `${this.baseUrl1}/templates?${queryParams}`;
-    return this.http.get<IProductTemplate[]>(url);
+    queryParams.append("saleYear", saleYear);
+    const url = `${this.baseUrl}/workshop-sale-taget?${queryParams}`;
+    return this.http.get<ISale[]>(url);
   }
 
-
-    upsertProductTemplates(productTemplate: IProductTemplate) {
-    productTemplate.wmsId = this.sharedService.wmsId;
+  insertSale(sale: ISale) {
+    sale.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<IProductTemplate>(`${this.baseUrl1}/upsert-template`, productTemplate, { headers });
+    return this.http.post<ISale>(`${this.baseUrl}/insert-sale-target`, sale, { headers });
   }
 
-  deleteProductTemplate(productTemplateId: number) {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    queryParams.append("productTemplateId", productTemplateId.toString());
-    const url = `${this.baseUrl1}/delete-template?${queryParams}`;
-    return this.http.delete(url);
+  deleteSale(wmsId: string, saleYear: number, saleMonth: number) {
+    const params = new HttpParams()
+      .set('wmsId', wmsId)
+      .set('saleYear', saleYear.toString())
+      .set('saleMonth', saleMonth.toString());
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(`${this.baseUrl}/delete-sale-target`, {}, { headers, params });
   }
 
 }

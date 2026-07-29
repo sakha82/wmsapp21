@@ -627,7 +627,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.logger.info('Submitting invoice:', invoice);
     this.invoiceService
-      .upsertInvoice(invoice)
+      .saveInvoice(invoice)
       .pipe(
         catchError((err) => {
           this.isLoading = false;

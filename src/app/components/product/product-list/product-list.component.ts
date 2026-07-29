@@ -232,7 +232,7 @@ export class ProductListComponent implements OnDestroy {
         }
       }
       const res: any = await firstValueFrom(
-        this.productService.upsertProduct(product)
+        this.productService.saveProduct(product)
       );
       this.isLoading = false;
       if (res === true || res?.success === true || res?.productId) {

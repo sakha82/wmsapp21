@@ -405,7 +405,7 @@ async onFormSubmit() {
 
       // API call
       const res: any = await firstValueFrom(
-        this.customerService.upsertCustomer(this.customer.value).pipe(
+        this.customerService.saveCustomer(this.customer.value).pipe(
           finalize(() => {
             this.isLoading = false;
           }),

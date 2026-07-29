@@ -602,10 +602,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           category: 'labour'
         };
         
-        this.logger.info('Calling upsertProduct with productId:', productId, 'productName:', productName);
-        
-        // Chain to the upsertProduct call and pass newProduct along with the response
-        return this.productService.upsertProduct(newProduct).pipe(
+        this.logger.info('Calling saveProduct with productId:', productId, 'productName:', productName);
+
+        // Chain to the saveProduct call and pass newProduct along with the response
+        return this.productService.saveProduct(newProduct).pipe(
           map((response) => ({ response, newProduct }))
         );
       }),
@@ -846,7 +846,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     
     this.workOrderService
-      .upsertWorkOrder(submittedWorkOrder)
+      .saveWorkOrder(submittedWorkOrder)
       .pipe(
         finalize(() => {
           this.showSpinner = false;
@@ -972,7 +972,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       return of(true);
     }),
 
-    // 3) If digitalWorkshopId is invalid, stop; otherwise call upsertCustomer
+    // 3) If digitalWorkshopId is invalid, stop; otherwise call saveCustomer
     switchMap((isValidId: boolean) => {
       if (!isValidId) {
         this.showCustomerSpinner = false;
@@ -985,7 +985,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         return EMPTY;
       }
 
-      return this.customerService.upsertCustomer(this.customer.value);
+      return this.customerService.saveCustomer(this.customer.value);
     }),
 
     finalize(() => {
@@ -1019,7 +1019,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       }
     },
     error: (err) => {
-      this.logger.error('upsertCustomer pipeline error', err);
+      this.logger.error('saveCustomer pipeline error', err);
     }
   });
 }

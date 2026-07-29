@@ -194,7 +194,7 @@ export class EmployeeCrudComponent implements OnInit, OnDestroy {
     // Submit Employee Data
     const employee = this.employee.value;
     this.isLoading = true;
-    this.employeeService.upsertEmployee(employee)
+    this.employeeService.saveEmployee(employee)
       .pipe(
         finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
