@@ -5,6 +5,8 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators, Reactiv
 import { CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import { ICustomerTag, ICustomerType, IWorkshop, ISelect, IPager,IInvoiceDetailPrompt, IWorkShopService, IProductTemplate, IProduct, IEnums } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -55,7 +57,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
      CheckboxModule,
      PopoverModule,
      DatePickerModule,
-     RadioButtonModule 
+     RadioButtonModule,
+     GenericLoaderComponent
   ],
   templateUrl: './setting-crud.component.html',
   styleUrl: './setting-crud.component.css',
@@ -140,6 +143,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
   constructor(
     private logger: LogService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private cdr: ChangeDetectorRef,
     private router: Router,
     private readonly fb: FormBuilder,
@@ -303,7 +307,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
   }
   downloadFile(key: string) {
     this.logger.log('Downloading file with key:', key);
-    this.sharedService.downloadFile(key);
+    this.coreService.downloadFile(key);
   }
   onFileSelected(event: any) {
     const file = event.target.files[0];

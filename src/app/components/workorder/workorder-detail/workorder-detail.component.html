@@ -17,7 +17,7 @@
         <ng-template #header>
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <h3 class="text-lg font-semibold text-gray-dark">Uppladdade filer</h3>
+              <h3 class="text-lg font-semibold text-gray-dark">{{ this.sharedService.T('uploadedFiles') }}</h3>
               <p-badge *ngIf="existingFiles && existingFiles.length > 0" [value]="existingFiles.length"></p-badge>
             </div>
           </div>
@@ -33,10 +33,10 @@
                     <div class="truncate text-gray-dark font-medium" [pTooltip]="file.fileName">
                       {{ file.fileName }}
                     </div>
-                    <p-tag severity="success" value="Uppladdad"></p-tag>
+                    <p-tag severity="success" [value]="this.sharedService.T('uploaded')"></p-tag>
                   </div>
                   <div class="flex space-x-2">
-                    <p-button label="Ladda ner" icon="pi pi-download" size="small" (onClick)="downloadFile(file.key)"
+                    <p-button [label]="this.sharedService.T('download')" icon="pi pi-download" size="small" (onClick)="downloadFile(file.key)"
                       variant="outlined"></p-button>
                     <p-button icon="pi pi-trash" size="small" severity="danger" (onClick)="removeFile(file)"
                       variant="text"></p-button>
@@ -81,7 +81,7 @@
             </label>
             <label>
             <p-button
-                label="Ladda upp fil"
+                [label]="this.sharedService.T('uploadFile')"
                 icon="pi pi-upload"
                 size="large"
                 styleClass="w-full mb-4"

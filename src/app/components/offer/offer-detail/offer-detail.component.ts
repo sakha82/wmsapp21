@@ -6,11 +6,13 @@ import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { IOffer, IOfferHistory } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, firstValueFrom, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { TimelineModule } from 'primeng/timeline';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -39,6 +41,7 @@ import { ErrorHandlerService } from 'app/services/error-handler.service';
     TableModule,
     TimelineModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     PdfViewerModule,
     InputNumberModule,
     SelectModule,
@@ -68,6 +71,7 @@ export class OfferDetailComponent implements OnInit, OnDestroy {
   constructor(private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private router: Router,
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
@@ -119,7 +123,7 @@ async getOffer(): Promise<void> {
       .subscribe({
         next: (response: any) => {
           if (response) {
-            this.sharedService
+            this.coreService
               .printPdf('offer', this.offerId.toString(), response.defaultInvoiceTemplate)
               .pipe(
                 takeUntil(this.destroy$)
@@ -230,7 +234,7 @@ async getOffer(): Promise<void> {
     const emailTo = this.emailForm.get('emailTo')?.value;
     const message = this.emailForm.get('message')?.value;
     this.isLoading = true;
-    this.sharedService
+    this.coreService
       .sendEmail('offer', this.offerId, emailTo, message)
       .pipe(
         finalize(() => {

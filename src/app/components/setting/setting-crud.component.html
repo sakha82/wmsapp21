@@ -1,4 +1,5 @@
 <!-- <div class="container px-4 mx-auto"> -->
+<app-generic-loader [visible]="isLoading" />
 <section class="px-6 pb-10 pt-2">
 
   <div class="p-8 rounded-lg shadow-lg bg-white">
@@ -20,8 +21,8 @@
             <div class="grid grid-cols-2 gap-8">
               
               <!-- Left Section - Company Settings -->
-              <div class="p-6 border border-gray-200 rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('companySettings') }}</p>
+              <div class="p-6 border border-border rounded-lg">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('companySettings') }}</p>
                 
                 <!-- Company Name, Organization Number, VAT -->
                 <div class="grid grid-cols-2 gap-6">
@@ -57,14 +58,14 @@
               </div>
 
               <!-- Right Section - Logo Upload -->
-              <div class="p-6 border border-gray-200 rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('logo') }}</p>
+              <div class="p-6 border border-border rounded-lg">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('logo') }}</p>
                 
                 <!-- Logo Preview Box -->
                 <div class="flex justify-center items-center mb-6">
-                  <div class="border border-dashed border-gray-300 rounded-lg bg-white flex items-center justify-center overflow-hidden hover:border-blue-400 transition-colors duration-200 p-4">
+                  <div class="border border-dashed border-border rounded-lg bg-white flex items-center justify-center overflow-hidden hover:border-primary transition-colors duration-200 p-4">
                     <p-image *ngIf="imageUrl" [src]="imageUrl" [alt]="'Workshop Logo'" [preview]="true" styleClass="max-w-xs max-h-xs"></p-image>
-                    <span *ngIf="!imageUrl" class="text-gray-400 text-sm">{{ 'No logo' }}</span>
+                    <span *ngIf="!imageUrl" class="text-gray-dark text-sm">{{ 'No logo' }}</span>
                   </div>
                 </div>
                 
@@ -79,8 +80,8 @@
             <!-- language and appearance Sections -->
             <div class="grid grid-cols-2 gap-8 mt-8">
               <!-- Left Section - Language -->
-              <div class="p-6 border border-gray-200 rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('defaultLanguage') }}</p>
+              <div class="p-6 border border-border rounded-lg">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('defaultLanguage') }}</p>
                 <div class="mb-6">
                 <!-- Language Select -->
                 <div class="mb-6">
@@ -102,20 +103,20 @@
               </div>
             </div>
               <!-- Right Section - Appearance Settings -->
-              <div class="p-6 border border-gray-200 rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('defaultColorTheme') }}</p>
+              <div class="p-6 border border-border rounded-lg">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('defaultColorTheme') }}</p>
                 <!-- Color Theme Select -->
                 <div class="mb-6">
                   <p-select formControlName="defaultTheme" class="w-full" [options]="palettes" optionLabel="label" optionValue="value" [showClear]="false">
                     <ng-template pTemplate="item" let-opt>
                       <div class="flex items-center gap-2">
-                        <span class="inline-block w-4 h-4 rounded-full border-2 border-gray-300" [ngStyle]="{ 'background-color': opt.color }"></span>
+                        <span class="inline-block w-4 h-4 rounded-full border-2 border-border" [ngStyle]="{ 'background-color': opt.color }"></span>
                         <span class="text-sm">{{ opt.label }}</span>
                       </div>
                     </ng-template>
                     <ng-template pTemplate="selectedItem" let-opt>
                       <div class="flex items-center gap-2" *ngIf="opt">
-                        <span class="inline-block w-4 h-4 rounded-full border-2 border-gray-300" [ngStyle]="{ 'background-color': opt.color }"></span>
+                        <span class="inline-block w-4 h-4 rounded-full border-2 border-border" [ngStyle]="{ 'background-color': opt.color }"></span>
                         <span class="text-sm">{{ opt.label }}</span>
                       </div>
                     </ng-template>
@@ -126,8 +127,8 @@
 
             <!-- Address Section -->
             <div class="grid grid-cols-2 gap-8 mt-8">
-              <div class="p-6 border border-gray-200 rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('address') }}</p>
+              <div class="p-6 border border-border rounded-lg">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('address') }}</p>
                 <div class="mb-6">
                   <label class="mb-2 block text-sm font-medium" for="street">{{ this.sharedService.T('address') }}</label>
                   <input type="text" formControlName="workshopStreet" placeholder="" class="w-full" pInputText />
@@ -149,8 +150,8 @@
               </div>
 
               <!-- Contact Information -->
-              <div class="p-6 border border-gray-200 rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('contactInformation') }}</p>
+              <div class="p-6 border border-border rounded-lg">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('contactInformation') }}</p>
                 <div class="mb-6">
                   <label class="mb-2 block text-sm font-medium" for="email">{{ this.sharedService.T('email') }}</label>
                   <input type="email" formControlName="email" placeholder="" class="w-full" pInputText />
@@ -163,8 +164,8 @@
             </div>
 
             <!-- Payment Methods Section -->
-            <div class="p-6 border border-gray-200 rounded-lg mt-8">
-              <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('paymentInformation') }}</p>
+            <div class="p-6 border border-border rounded-lg mt-8">
+              <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('paymentInformation') }}</p>
               <div class="grid grid-cols-4 gap-6">
                 <div class="mb-6">
                   <label class="mb-2 block text-sm font-medium" for="bankgiro">Bankgiro</label>
@@ -198,8 +199,8 @@
         <p-tabpanel value="1">
           <div class="px-6 mt-4">
             <!-- Customer Tags Section -->
-            <div class="p-6 border border-gray-200 rounded-lg mb-8">
-              <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('customerTag') }}</p>
+            <div class="p-6 border border-border rounded-lg mb-8">
+              <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('customerTag') }}</p>
               
               <!-- Input and Actions -->
               <div class="mb-6">
@@ -219,7 +220,7 @@
                 <div class="flex items-center gap-2">
                   <input type="checkbox" [(ngModel)]="newCustomerTag.isDefault" id="isDefaultTag"
                     class="w-4 h-4 cursor-pointer" />
-                  <label for="isDefaultTag" class="text-sm font-medium text-gray-700 cursor-pointer">{{ this.sharedService.T('setAsDefault') }}</label>
+                  <label for="isDefaultTag" class="text-sm font-medium text-gray-header cursor-pointer">{{ this.sharedService.T('setAsDefault') }}</label>
                 </div>
               </div>
 
@@ -230,21 +231,21 @@
                   style="background-color: var(--p-primary-50);border: 1px solid var(--p-primary-200);color: var(--p-primary-800); border-radius: 0.5rem;">
 
                   
-                  <span class="font-medium text-sm text-gray-800">{{ tag.customerTagName }}</span>
-                  <span class="text-xs text-gray-600">{{ tag.isDefault ? '(Default)' : '' }}</span>
+                  <span class="font-medium text-sm text-gray-header">{{ tag.customerTagName }}</span>
+                  <span class="text-xs text-gray-dark">{{ tag.isDefault ? '(Default)' : '' }}</span>
                   <div class="flex items-center gap-1 ml-2">
                     <button pButton type="button" icon="pi pi-pencil"
-                      class="p-button-rounded p-button-text p-button-sm" (click)="editCustomerTag(i)"></button>
+                      [rounded]="true" [text]="true" size="small" (click)="editCustomerTag(i)"></button>
                     <button pButton type="button" icon="pi pi-times"
-                      class="p-button-rounded p-button-text p-button-sm p-button-danger" (click)="removeCustomerTag(i)"></button>
+                      [rounded]="true" [text]="true" size="small" severity="danger" (click)="removeCustomerTag(i)"></button>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Customer Types Section -->
-            <div class="p-6 border border-gray-200 rounded-lg">
-              <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('customerType') }}</p>
+            <div class="p-6 border border-border rounded-lg">
+              <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('customerType') }}</p>
               
               <!-- Input and Actions -->
               <div class="mb-6">
@@ -263,7 +264,7 @@
                 <div class="flex items-center gap-2">
                   <input type="checkbox" [(ngModel)]="newCustomerType.isDefault" id="isDefaultType"
                     class="w-4 h-4 cursor-pointer" />
-                  <label for="isDefaultType" class="text-sm font-medium text-gray-700 cursor-pointer">{{ this.sharedService.T('setAsDefault') }}</label>
+                  <label for="isDefaultType" class="text-sm font-medium text-gray-header cursor-pointer">{{ this.sharedService.T('setAsDefault') }}</label>
                 </div>
               </div> 
 
@@ -272,13 +273,13 @@
                 <div *ngFor="let type of customerTypes; let i = index" 
                  class="inline-flex items-center gap-2 px-3 py-2 rounded-lg"
                  style="background-color: var(--p-primary-50);border: 1px solid var(--p-primary-200);color: var(--p-primary-800); border-radius: 0.5rem;">
-                  <span class="font-medium text-sm text-gray-800">{{ type.customerTypeName }}</span>
-                  <span class="text-xs text-gray-600">{{ type.isDefault ? '(Default)' : '' }}</span>
+                  <span class="font-medium text-sm text-gray-header">{{ type.customerTypeName }}</span>
+                  <span class="text-xs text-gray-dark">{{ type.isDefault ? '(Default)' : '' }}</span>
                   <div class="flex items-center gap-1 ml-2">
                     <button pButton type="button" icon="pi pi-pencil"
-                      class="p-button-rounded p-button-text p-button-sm" (click)="editCustomerType(i)"></button>
+                      [rounded]="true" [text]="true" size="small" (click)="editCustomerType(i)"></button>
                     <button pButton type="button" icon="pi pi-times"
-                      class="p-button-rounded p-button-text p-button-sm p-button-danger" (click)="removeCustomerType(i)"></button>
+                      [rounded]="true" [text]="true" size="small" severity="danger" (click)="removeCustomerType(i)"></button>
                   </div>
                 </div>
               </div>
@@ -296,21 +297,21 @@
         <p-tabpanel value="2">
           
             <!-- SECTION 1: Price Mode -->
-            <div class="p-6 border border-gray-200 rounded-lg mb-8">
-              <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('priceMode') }}</p>
+            <div class="p-6 border border-border rounded-lg mb-8">
+              <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('priceMode') }}</p>
               <div class="flex items-center gap-4">
                 <p-selectButton [options]="this.sharedService.getEnums('priceMode')" 
                 [(ngModel)]="selectedPriceMode" 
                 [ngModelOptions]="{standalone: true}" 
                 optionLabel="text"
                 ></p-selectButton>
-                <p class="text-xs text-gray-500">{{ this.sharedService.T('priceModeText') }}</p>
+                <p class="text-xs text-gray-dark">{{ this.sharedService.T('priceModeText') }}</p>
               </div>
             </div>
 
             <!-- SECTION 2: Invoice Template Selection -->
-            <div class="p-6 border border-gray-200 rounded-lg mb-8 bg-gradient-to-br from-gray-50 to-gray-100">
-              <p class="text-2xl font-semibold mb-8 text-gray-800">{{ this.sharedService.T('invoiceTemplate') }}</p>
+            <div class="p-6 border border-border rounded-lg mb-8 bg-bg-light">
+              <p class="text-2xl font-semibold mb-8 text-gray-header">{{ this.sharedService.T('invoiceTemplate') }}</p>
               
               <!-- Template Cards Container -->
               <div class="flex items-stretch justify-center gap-12">
@@ -322,7 +323,7 @@
                        (mouseenter)="onTemplateCardHover(i, true)"
                        (mouseleave)="onTemplateCardHover(i, false)">
                     <!-- Template Thumbnail -->
-                    <div class="h-130 bg-white overflow-auto flex items-center justify-center border-b-2 border-gray-200 flex-shrink-0">
+                    <div class="h-130 bg-white overflow-auto flex items-center justify-center border-b-2 border-border flex-shrink-0">
                       <img [src]="'assets/images/pdf-img/' + template.value + '.jpg'" 
                            [alt]="template.name" 
                            class="w-auto h-full object-contain p-6"
@@ -334,8 +335,8 @@
                       <div class="flex items-start gap-4">
                         <p-radiobutton [inputId]="template.value" name="template" [value]="template" [(ngModel)]="selectedInvoiceTemplate" class="mt-1"></p-radiobutton>
                         <div class="flex-1">
-                          <label [for]="template.value" class="cursor-pointer font-bold text-lg text-gray-900 block">{{ template.name }}</label>
-                          <p class="text-sm text-gray-600 mt-2 leading-relaxed">Professional invoice template with complete layout and formatting</p>
+                          <label [for]="template.value" class="cursor-pointer font-bold text-lg text-gray-header block">{{ template.name }}</label>
+                          <p class="text-sm text-gray-dark mt-2 leading-relaxed">Professional invoice template with complete layout and formatting</p>
                         </div>
                       </div>
                     </div>
@@ -394,7 +395,7 @@
   <div class="flex flex-col mt-4 gap-1 overflow-auto">
     <span
       *ngFor="let template of ProductTemplates; let i = index"
-      class="cursor-pointer px-2 py-2 text-sm font-medium text-gray-800 truncate rounded"
+      class="cursor-pointer px-2 py-2 text-sm font-medium text-gray-header truncate rounded"
       (click)="showProductTemplate(i)"
       [ngClass]="{
     'font-semibold': selectedTemplateIndex === i
@@ -415,7 +416,7 @@
                     <!-- Header row: name left, buttons right -->
                     <div class="h-full px-6">
                     <div *ngIf="ProductTemplates && ProductTemplates.length > 0" class="flex items-center justify-between pt-4 mb-4">
-                      <span class="text-2xl font-semibold text-gray-800">
+                      <span class="text-2xl font-semibold text-gray-header">
                         {{ ProductTemplates[selectedTemplateIndex].productTemplateName }}
                       </span>
 
@@ -437,7 +438,7 @@
                         </p-button>
                       </div>
                     </div>
-              <hr class="mb-4 border-t border-gray-200" />
+              <hr class="mb-4 border-t border-border" />
                         <!-- Template Configuration Header -->
  
             <ng-template #tooltipContent>
@@ -450,8 +451,8 @@
                 <div class="w-[7%]  whitespace-nowrap flex">{{ this.sharedService.T('category') }}
                     <span class="my-auto">
                         <div class="my-auto w-10">
-                            <span class="material-symbols-outlined text-sm" [pTooltip]="tooltipContent"
-                                    tooltipPosition="top">help</span>
+                            <span class="pi pi-question-circle text-sm" [pTooltip]="tooltipContent"
+                                    tooltipPosition="top"></span>
                         </div>
                     </span>
                 </div>
@@ -471,8 +472,8 @@
                     </ng-template>
                     <span class="my-auto">
                         <div class="my-auto w-10">
-                            <span class="material-symbols-outlined text-sm" [pTooltip]="pricewithoutvattp"
-                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip">help</span>
+                            <span class="pi pi-question-circle text-sm" [pTooltip]="pricewithoutvattp"
+                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip"></span>
                         </div>
                     </span>
                     }
@@ -486,8 +487,8 @@
                     </ng-template>
                     <span class="my-auto">
                         <div class="my-auto w-10">
-                            <span class="material-symbols-outlined text-sm" [pTooltip]="pricewithvattp"
-                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip">help</span>
+                            <span class="pi pi-question-circle text-sm" [pTooltip]="pricewithvattp"
+                                    tooltipPosition="top" tooltipStyleClass="custom-tooltip"></span>
                         </div>
                     </span>
                     }
@@ -523,7 +524,7 @@
                     
                     <div class="flex gap-2 mb-2 text-sm font-semibold" [formGroup]="getFormGroup(detail)">
                         <div class="w-[3%] flex items-center">
-                            <span class="material-symbols-outlined draggable-handle" cdkDragHandle>drag_indicator</span>                             
+                            <span class="pi pi-bars draggable-handle" cdkDragHandle></span>                             
                         </div>
 
                         @if(detail.get('isTextRow')?.value)
@@ -531,7 +532,7 @@
 
                         <!-- Textarea and Select -->
                         <div class="w-full flex items-center gap-4 relative">
-                            <textarea formControlName="textContent" rows="5" cols="130" class="w-full bg-white border border-gray-300 rounded-md p-2" pTextarea></textarea>
+                            <textarea formControlName="textContent" rows="5" cols="130" class="w-full bg-white border border-border rounded-md p-2" pTextarea></textarea>
                             <div class="flex flex-col gap-1">
                                 <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
                                     {{this.sharedService.T('autoGenerateText')}}: </label>
@@ -575,8 +576,8 @@
                                 [inputStyleClass]="detail.get('productName')?.value ? 'ng-invalid ng-dirty' : ''">
                                 <ng-template let-product pTemplate="item">
                                     <div class="w-full">
-                                        <p class="font-semibold text-sm text-gray-900">{{ product.productName }}</p>
-                                        <p class="text-xs text-gray-500">{{ product.productDescription }}</p>
+                                        <p class="font-semibold text-sm text-gray-header">{{ product.productName }}</p>
+                                        <p class="text-xs text-gray-dark">{{ product.productDescription }}</p>
                                     </div>
                                 </ng-template>
                             </p-autoComplete>
@@ -666,14 +667,14 @@
           <div class="px-6 mt-4">
             <!-- Sales Form Section -->
             <form [formGroup]="saleTarget">
-              <div class="p-6 border border-gray-200 rounded-lg mb-8">
-                <p class="text-2xl font-semibold mb-6 text-gray-800">{{ this.sharedService.T('salesTarget') }}</p>
+              <div class="p-6 border border-border rounded-lg mb-8">
+                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('salesTarget') }}</p>
                 
                 <!-- Period, Turnover, and Action Buttons Row -->
                 <div class="flex items-end" style="gap: 2px; flex-wrap: wrap;">
                 <!-- Select Period -->
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-gray-700">
+                  <label class="mb-2 block text-sm font-medium text-gray-header">
                     {{ this.sharedService.T('month') }}
                   </label>
                   <p-datepicker formControlName="datePeriod" view="month" dateFormat="mm/yy" [showIcon]="true"
@@ -683,7 +684,7 @@
 
                 <!-- Turnover -->
                 <div>
-                  <label class="mb-2 block text-sm font-medium text-gray-700">
+                  <label class="mb-2 block text-sm font-medium text-gray-header">
                     {{ this.sharedService.T('turnover') }}
                   </label>
                   <input type="number" formControlName="turnover" pInputText placeholder="Turnover" />
@@ -712,7 +713,7 @@
             ></p-select>
             </div>
             <!-- Sales Table Section -->
-            <div class="mb-4 border border-gray-200 rounded-lg overflow-hidden">
+            <div class="mb-4 border border-border rounded-lg overflow-hidden">
               <p-table [lazy]="true" [value]="salesList" [showGridlines]="false" [rows]="10"
                 [sortOrder]="-1"
                 data-testid="sale-table" styleClass="w-full">

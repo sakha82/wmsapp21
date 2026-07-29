@@ -8,6 +8,7 @@ import { LogService } from 'app/services/log.service';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
@@ -33,7 +34,8 @@ import { finalize, takeUntil, Subject } from 'rxjs';
     TableModule,
     ProgressSpinnerModule,
     PdfViewerModule,
-    DialogModule
+    DialogModule,
+    GenericLoaderComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './digitalservice-detail.component.html'

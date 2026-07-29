@@ -1,13 +1,11 @@
-import { HttpClient, HttpHeaders,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import{ForgotPassword, IFileUploadRequest, IFileUploadResponse, ISignup, ITokenClaims, ITranslate, IVehicle, IVehicleDetails, IVehicleType, IWmsLog, IWorkOrderIntentRequest, IWorkOrderIntentResponse, IWorkshop, ResetPassword, VehicleSearch, VehicleSearchResponse} from 'app/app.model'
-import { IEmail, IEnum, IEnums,IPdf,ISelect, PdfObject } from 'app/app.model';
-import { environment } from 'environments/environment';
+import{ ITranslate, IVehicle, IVehicleType} from 'app/app.model'
+import { IEnums } from 'app/app.model';
 import { BehaviorSubject, catchError, forkJoin, from, map, Observable, of, tap, finalize } from 'rxjs';
 import { LogService } from './log.service';
-import { WmsUser } from 'app/app.model';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({providedIn: 'root'})
 
@@ -16,11 +14,6 @@ export class SharedService {
   private pageHeadingSubject = new BehaviorSubject<string>('');  
   pageHeading$ = this.pageHeadingSubject.asObservable();
   
-  baseUrl: string = environment.BASE_URL;
-  coreUrl: string = environment.BASE_URL + "/api/Core";
-  authUrl: string = environment.BASE_URL + "/api/auth";
-  userUrl: string = environment.BASE_URL + "/api/User";
-  fileUrl: string = environment.BASE_URL + "/api/Core";
   resourceFileVersion: number = 1;
   enums: IEnums[] = [];  
   jobs: any[] = [];  
@@ -87,227 +80,6 @@ get lang(): 'en' | 'sv' {
     return queryParams.toString();
   }
   
-  uploadFile(uploadRequest:IFileUploadRequest)
-  {
-    const formData = new FormData();
-    formData.append('wmsId', this.wmsId);
-    formData.append('type', uploadRequest.type);
-    formData.append('id', uploadRequest.id.toString());
-    formData.append('file', uploadRequest.file);
-
-    return this.http.post<IFileUploadResponse>(`${this.fileUrl}/upload-file`, formData);
-  }
-  
-  deleteFile(key: string) {
-    return this.http.delete<boolean>(
-      `${this.fileUrl}/delete-file?key=${encodeURIComponent(key)}`
-    );
-  }
-  
-  getVehicleList(vehiclePlate:string)
-  {
-     const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.wmsId);
-    queryParams.append("vehiclePlate", vehiclePlate);
-    const url = `${this.coreUrl}/vehicle-list?${queryParams}`;
-    return this.http.get<VehicleSearch>(url);
-  }
-  
-  getVehicleInfo(vehiclePlate:string)
-  {
-     const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.wmsId);
-    queryParams.append("vehiclePlate", vehiclePlate);
-    const url = `${this.coreUrl}/vehicle-info?${queryParams}`;
-    return this.http.get<VehicleSearchResponse>(url);
-  }
-
-  getVehicle(registrationNumber?: string, vehicleId?: string)
-  {
-    const queryParams = new URLSearchParams();
-    if (registrationNumber) queryParams.append("id", registrationNumber);
-    const url = `${this.coreUrl}/vehicle?${queryParams}`;
-    return this.http.get<IVehicleDetails>(url);
-  }
-
-  /** Parses a free-text description (e.g. "BMH565, oil change, assign to Amir") into work order field suggestions. Never saves anything — the caller patches a form and the user still has to click Save. */
-  parseWorkOrderIntent(transcript: string, employeeId?: number)
-  {
-    const request: IWorkOrderIntentRequest = { transcript, wmsId: this.wmsId, employeeId };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const url = `${this.coreUrl}/ai/parse-workorder-intent`;
-    return this.http.post<IWorkOrderIntentResponse>(url, request, { headers });
-  }
-
-
-  getPDFBlob(key: string): Observable<Blob> {
-    const params = new HttpParams().set('key', key);
-    return this.http.get(`${this.fileUrl}/download-file`, {
-      params,
-      responseType: 'blob'
-    });
-  }
-
-  downloadFile(key: string): void {
-    const params = new HttpParams().set('key', key);
-
-    this.http.get(`${this.fileUrl}/download-file`, {
-      params,
-      responseType: 'blob',  // ensures we receive binary data
-      observe: 'response'    // allows access to headers (e.g., file name)
-    }).subscribe({
-      next: (response) => {
-        const blob = new Blob([response.body!], { type: response.body?.type });
-
-        // Extract filename from Content-Disposition header if present
-        let filename = key; // default fallback
-        const contentDisposition = response.headers.get('Content-Disposition');
-        if (contentDisposition) {
-          const match = contentDisposition.match(/filename="?([^"]+)"?/);
-          if (match && match[1]) {
-            filename = match[1];
-          }
-        }
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: (error) => {
-        console.error('Error downloading file:', error);
-        // Show a user-friendly error if needed
-      }
-    });
-  }
-   isValidAppUser(userId:string)
-   {
-  
-      const queryParams = new URLSearchParams();
-      queryParams.append("userId", userId);
-      const url = `${this.userUrl}/is-valid-appuser?${queryParams}`;
-      return this.http.get<Boolean>(url);    
-   } 
-   listFiles(workOrderId:number)
-  {
-     const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.wmsId);
-    queryParams.append("type", 'workorder');
-    queryParams.append("id", workOrderId.toString());
-    return this.http.get<IFileUploadResponse[]>(`${this.fileUrl}/list-files?${queryParams}`);
-  }
-
- sendEmail(objectName:string,id:number,emailTo:string,customMessage:string)
-  {
-    const email:IEmail = ({
-    country: this.country,
-    lang: this.lang,
-    objectName:objectName,
-    wmsId: this.wmsId,
-    workshopName:this.workshopName,
-    id: id.toString(),
-    emailTo:emailTo,
-    subject:'',
-    customMessage: customMessage
-    });
-    this.logger.info('inside-shared-sendEmail', email);    
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IEmail>(`${this.coreUrl}/send-email`, email, {headers});
-  }
- 
-  printPdf(objectName:string,ids:string,templateName:string)
-  {
-    const pdf:IPdf = ({ country:this.country,
-                        lang:this.lang,
-                        wmsId: this.wmsId,
-                        objectName:objectName,
-                        ids:ids,
-                        templateName:templateName});
-    return this.http.post(`${this.coreUrl}/pdf`, pdf, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/pdf'
-    },
-    responseType: 'blob' as 'json' // Type assertion to satisfy Angular's HttpClient
-  });
-  }
-
-   getClaimsFromToken(token:string)
-   {
-    const queryParams = new URLSearchParams();
-    queryParams.append("token", token);
-      const url = `${this.authUrl}/token-claims?${queryParams}`;
-      return this.http.get<ITokenClaims>(url);
-   }
-
-   getOfferStatus(wmsId:string,offerId:number)
-   {
-      const queryParams = new URLSearchParams();
-      queryParams.append("wmsId", wmsId);
-      queryParams.append("offerId", offerId.toString());
-      const url = `${this.authUrl}/offer-status?${queryParams}`;
-       return this.http.get<{status: string,date:string }>(url);
-   }
-   updateCustomerOffer(wmsId:string,offerId:number,isAccepted?:boolean)
-   {
-     const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", wmsId);
-    queryParams.append("offerId", offerId.toString());
-    queryParams.append("isAccepted", isAccepted ? isAccepted.toString() : 'false');
-      const url = `${this.authUrl}/update-customer-offer?${queryParams}`;
-      return this.http.get<boolean>(url);
-   }
-
-  printPdfFromToken(token:string)
-  {
-        const queryParams = new URLSearchParams();
-        queryParams.append("token", token);
-
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post(`${this.authUrl}/pdf-from-token?${queryParams}`,null,{
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/pdf'
-    },
-    responseType: 'blob' as 'json' // Type assertion to satisfy Angular's HttpClient
-  });
- }
-
-  resetPassword(resetPassword:ResetPassword){
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<boolean>(`${this.userUrl}/resetpassword`, resetPassword, {headers});
-  }   
-  forgotPassword(forgotPassword:ForgotPassword){
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<boolean>(`${this.userUrl}/forgotpassword`, forgotPassword, {headers});
-  }   
-
-  login(login:WmsUser){
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<WmsUser>(`${this.authUrl}/login`, login, {headers});
-  }   
-
-  signup(signupData: any){
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<any>(`${this.coreUrl}/signup`, signupData, {headers});
-  }
-
-  bookDemo(demoData: any){
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<any>(`${this.baseUrl}/api/Demo/bookdemo`, demoData, {headers});
-  }
-
-  logout(){
-      let userName = sessionStorage.getItem('userName') == null ? '':sessionStorage.getItem('userName');
-      const queryParams = new URLSearchParams();
-      queryParams.append("userName", userName!);
-
-      const url = `${this.authUrl}/logout?${queryParams}`;
-      return this.http.get<Boolean>(url);
-  }   
-
   updateFiltersFromQueryParams(filters: FormGroup, params: any): void {
     Object.keys(params).forEach((key) => {
       if (params[key] && filters.contains(key)) {
@@ -538,13 +310,5 @@ T(key: string): string {
   }
   
  
-  getNextId(tableName:string) {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.wmsId);
-    queryParams.append("tName", tableName);
-    const url = `${this.baseUrl}/api/Core/next-id?${queryParams}`;
-    return this.http.get<number>(url);
-  }
-
   }
 

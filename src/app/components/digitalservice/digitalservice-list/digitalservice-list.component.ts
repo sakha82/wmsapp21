@@ -6,6 +6,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { IDigitalService, IWorkOrder, IPager, IInvoice, IEnums, IFileUploadRequest } from 'app/app.model';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
+import { UserService } from 'app/services/user.service';
 import { LogService } from 'app/services/log.service';
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, TreeNode,MessageService } from 'primeng/api';
@@ -14,6 +16,7 @@ import { Popover } from 'primeng/popover';
 import { catchError, EMPTY, filter, switchMap, take, finalize, takeUntil, Subject } from 'rxjs';
 import { InvoiceService } from 'app/services/invoice.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -44,7 +47,7 @@ import { TreeTableModule } from 'primeng/treetable';
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule,TreeTableModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, InputGroupModule, InputGroupAddonModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule],
+  imports: [CommonModule,TreeTableModule, ReactiveFormsModule, FormsModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, InputGroupModule, InputGroupAddonModule, ButtonModule, CheckboxModule, DatePickerModule, AutoCompleteModule, TableModule, SelectModule, PaginatorModule, ToastModule, TooltipModule, InputTextModule, ListboxModule, MessageModule, DialogModule, ConfirmDialogModule, FileUploadModule, ProgressBarModule, GenericLoaderComponent],
   providers: [ConfirmationService, MessageService],
  templateUrl: './digitalservice-list.component.html'
 })
@@ -80,6 +83,8 @@ export class DigitalServiceListComponent implements OnDestroy {
   pdfBlobUrl: SafeResourceUrl | null = null;
   constructor(private logger: LogService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
+    private readonly userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
@@ -361,7 +366,7 @@ export class DigitalServiceListComponent implements OnDestroy {
 
     // Fetch and display PDF if it exists
     if (this.selectedVehicleData.pdfExists) {
-      this.sharedService.getPDFBlob(fileKey).pipe(
+      this.coreService.getPDFBlob(fileKey).pipe(
         takeUntil(this.destroy$)
       ).subscribe({
         next: (blob) => {
@@ -438,7 +443,7 @@ export class DigitalServiceListComponent implements OnDestroy {
     console.log('Expected Download URL:', this.selectedVehicleData.downloadUrl);
     this.logger.info(`Starting PDF upload - Service ID: ${uploadRequest.id}, File: ${file.name}`);
 
-    this.sharedService.uploadFile(uploadRequest)
+    this.coreService.uploadFile(uploadRequest)
       .pipe(
         finalize(() => {
           this.uploadProgress = 0;
@@ -456,7 +461,7 @@ export class DigitalServiceListComponent implements OnDestroy {
           });
           
           // Fetch and display the newly uploaded PDF
-          this.sharedService.getPDFBlob(this.selectedVehicleData.downloadUrl).pipe(
+          this.coreService.getPDFBlob(this.selectedVehicleData.downloadUrl).pipe(
             takeUntil(this.destroy$)
           ).subscribe({
             next: (blob) => {
@@ -556,7 +561,7 @@ export class DigitalServiceListComponent implements OnDestroy {
   const userId = this.digitalService.get('userId')?.value;
   
   this.isLoading = true;
-  this.sharedService.isValidAppUser(userId).subscribe({
+  this.userService.isValidAppUser(userId).subscribe({
     next: (isValid: any) => {
       this.isLoading = false;
       if (isValid) {
@@ -707,7 +712,7 @@ export class DigitalServiceListComponent implements OnDestroy {
       return;
     }
     this.isVehicleLookupLoading = true;
-    this.sharedService.getVehicle(registrationNumber)
+    this.coreService.getVehicle(registrationNumber)
       .pipe(
         finalize(() => { this.isVehicleLookupLoading = false; }),
         takeUntil(this.destroy$)
@@ -795,8 +800,8 @@ export class DigitalServiceListComponent implements OnDestroy {
       closable: false,
 
       message: `
-        <p style="color: red;"> ${this.sharedService.T('irreversibleAction')}</p>
-        <div class="rounded-[14px] border border-slate-200/95 bg-white shadow-sm 
+        <p style="color: var(--color-danger);"> ${this.sharedService.T('irreversibleAction')}</p>
+        <div class="rounded-[14px] border border-border bg-white shadow-sm
                     max-h-[70vh] overflow-y-auto">
 
           <table class="w-full border-collapse">
@@ -821,11 +826,11 @@ export class DigitalServiceListComponent implements OnDestroy {
 
               <!-- WORK CARRIED OUT -->
               <tr>
-                <th class="w-[36%] px-4 py-3 text-left align-top text-[0.72rem] tracking-[0.12em] uppercase 
-                           text-slate-500 bg-slate-100/75 border-r border-slate-200/80">
+                <th class="w-[36%] px-4 py-3 text-left align-top text-[0.72rem] tracking-[0.12em] uppercase
+                           text-gray-dark bg-bg-light border-r border-border">
                   ${this.sharedService.T('workCarriedOut')}
                 </th>
-                <td class="px-4 py-3 text-[0.95rem] text-slate-900">
+                <td class="px-4 py-3 text-[0.95rem] text-gray-header">
                   ${workCarriedOutHtml}
                 </td>
               </tr>
@@ -897,8 +902,8 @@ export class DigitalServiceListComponent implements OnDestroy {
   private createRow(label: string, value: any): string {
     return `
       <tr>
-        <th class="w-[36%] px-4 py-3 text-left align-top text-[0.72rem] tracking-[0.12em] uppercase text-slate-500 bg-slate-100/75 border-r border-slate-200/80">${label}</th>
-        <td class="px-4 py-3 text-[0.95rem] text-slate-900 break-words">${value || '-'}</td>
+        <th class="w-[36%] px-4 py-3 text-left align-top text-[0.72rem] tracking-[0.12em] uppercase text-gray-dark bg-bg-light border-r border-border">${label}</th>
+        <td class="px-4 py-3 text-[0.95rem] text-gray-header break-words">${value || '-'}</td>
       </tr>
     `;
   }

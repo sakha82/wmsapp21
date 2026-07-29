@@ -15,13 +15,13 @@
           [binary]="true"
           [ngModelOptions]="{ standalone: true }"
           (onChange)="onOnlyActiveEmployeesChange()" />
-        <label for="onlyActiveEmployees" class="cursor-pointer text-sm font-medium text-slate-700 whitespace-nowrap">
+        <label for="onlyActiveEmployees" class="cursor-pointer text-sm font-medium text-gray-header whitespace-nowrap">
           {{ this.sharedService.T('onlyActiveEmployees') }}
         </label>
       </div>
     </div>
 
-    <hr class="border-CustomBorder" />
+    <hr class="border-border" />
   </div>
 
   <div class="mb-10">
@@ -90,12 +90,4 @@
   </div>
 </section>
 
-<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-  <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner
-      strokeWidth="8"
-      fill="transparent"
-      animationDuration=".5s"
-      [style]="{ width: '50px', height: '50px' }" />
-  </div>
-</div>
+<app-generic-loader [visible]="isLoading" />

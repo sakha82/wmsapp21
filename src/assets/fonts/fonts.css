@@ -4,23 +4,3 @@
   font-weight: 100 900;
   font-style: normal;
 }
-
-@font-face {
-  font-family: 'Material Symbols Outlined';
-  src: url('/assets/fonts/material/MaterialSymbolsOutlined.ttf') format('truetype');
-  font-weight: 100 700;
-  font-style: normal;
-}
-
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  white-space: nowrap;
-  direction: ltr;
-}

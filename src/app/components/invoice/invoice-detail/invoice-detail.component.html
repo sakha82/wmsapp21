@@ -1,9 +1,5 @@
 <!-- header start -->
-  <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
-</div>
+  <app-generic-loader [visible]="isLoading" />
 
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
@@ -51,17 +47,17 @@
       <div class="px-2 mb-3 mt-2 pb-4 bg-white shadow rounded-xl">
           <p-button size="large" styleClass="w-full mb-3 mt-2" label="{{ this.sharedService.T('sendInvoice') }}"
             (onClick)="openEmailDialog()">
-          <span class="material-symbols-outlined">forward_to_inbox</span>
+          <span class="pi pi-send"></span>
           </p-button>
           <p-button size="large" styleClass="w-full mb-3" disabled="{{disableEdit}}"
             label="{{ this.sharedService.T('editInvoice') }}" (onClick)="redirectToInvoiceCrudComponent()">
-            <span class="material-symbols-outlined">edit</span>
+            <span class="pi pi-pencil"></span>
           </p-button>
 
           <div class="ms-10">
             <div class="flex gap-2 my-3 cursor-pointer">
               <div class="w-5">
-                <span class="material-symbols-outlined">picture_as_pdf</span>   
+                <span class="pi pi-file-pdf"></span>   
               </div>
               <span (click)="generatePdf()">{{ this.sharedService.T('showPdf') }} </span>
             </div>
@@ -69,7 +65,7 @@
             {
             <div class="flex gap-2 my-3 cursor-pointer">
               <div class="w-5">
-                <span class="material-symbols-outlined">content_copy</span>              
+                <span class="pi pi-copy"></span>              
               </div>
               <span (click)="confirmDuplicate($event)">{{ this.sharedService.T('duplicate') }}</span>
             </div>
@@ -79,7 +75,7 @@
             {
             <div class="flex gap-2 my-3 cursor-pointer">
               <div class="w-5">
-                <span class="material-symbols-outlined">assignment_return</span>
+                <span class="pi pi-reply"></span>
               </div>
               <span (click)="confirmCredit($event)"> {{ this.sharedService.T('creditInvoice') }} </span>
             </div>
@@ -87,7 +83,7 @@
 
             <div class="flex gap-2 my-3 cursor-pointer">
               <div class="w-5">
-                <span class="material-symbols-outlined">person</span>
+                <span class="pi pi-user"></span>
               </div>
               <span (click)="redirectToCustomerDetailComponent()">{{ this.sharedService.T('viewCustomer') }}</span>
             </div>
@@ -110,7 +106,7 @@
     </div>
   </div>
 
-  <p-dialog [modal]="true" [(visible)]="showEmailDialog" class="custom-dialog" styleClass="!bg-bgColor"
+  <p-dialog [modal]="true" [(visible)]="showEmailDialog" class="custom-dialog" styleClass="!bg-bg-light"
     [style]="{ width: '20rem' }">
 
     <header class="text-2xl font-bold"> Invoice # {{this.invoiceId}}</header>
@@ -122,13 +118,13 @@
           <p class="text-sm font-semibold">{{ this.sharedService.T('email') }}</p>
           <div class="">
             <input type="email" formControlName="emailTo" pInputText placeholder="email"
-              class="w-full border p-2 border-CustomBorder rounded-md" />
+              class="w-full border p-2 border-border rounded-md" />
           </div>
         </div>
         <div class="">
           <label for="ny" class="ml-2 text-xs font-semibold">{{ this.sharedService.T('includeMessage') }}</label>
           <div class="">
-            <textarea class="border border-CustomBorder rounded-md" rows="3" formControlName="message" cols="30"
+            <textarea class="border border-border rounded-md" rows="3" formControlName="message" cols="30"
               pTextarea></textarea>
           </div>
         </div>

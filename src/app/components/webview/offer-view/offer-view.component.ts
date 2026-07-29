@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import {ITokenClaims} from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { AuthService } from 'app/services/auth.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { finalize, takeUntil, Subject } from 'rxjs';
@@ -35,6 +36,7 @@ export class OfferViewComponent implements OnInit, OnDestroy {
 
   constructor(private logger: LogService,
               private readonly sharedService:SharedService,
+              private readonly authService: AuthService,
               private router: Router,
               private readonly route: ActivatedRoute,
               private readonly offerService: OfferService,
@@ -51,7 +53,7 @@ export class OfferViewComponent implements OnInit, OnDestroy {
 }
 
   loadOffer() {
-    this.sharedService
+    this.authService
       .getClaimsFromToken(this.token)
       .pipe(
         finalize(() => {}),
@@ -75,7 +77,7 @@ export class OfferViewComponent implements OnInit, OnDestroy {
   }
 
   getOfferStatus() {
-    this.sharedService
+    this.authService
       .getOfferStatus(this.wmsId, Number(this.offerId))
       .pipe(
         finalize(() => {}),
@@ -100,7 +102,7 @@ export class OfferViewComponent implements OnInit, OnDestroy {
   }
 
   loadPdf() {
-    this.sharedService
+    this.authService
       .printPdfFromToken(this.token)
       .pipe(
         finalize(() => {}),
@@ -124,7 +126,7 @@ export class OfferViewComponent implements OnInit, OnDestroy {
   }
 
   updateStatus(accepted: boolean) {
-    this.sharedService
+    this.authService
       .updateCustomerOffer(this.wmsId, Number(this.offerId), accepted)
       .pipe(
         finalize(() => {}),

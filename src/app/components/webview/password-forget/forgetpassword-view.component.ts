@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedService } from 'app/services/shared.service';
+import { UserService } from 'app/services/user.service';
 import { LogService } from 'app/services/log.service';
 import { finalize, takeUntil, Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
@@ -40,6 +41,7 @@ export class ForgetPasswordViewComponent implements OnInit, OnDestroy {
       private readonly route: ActivatedRoute,
       private logger: LogService,
       private readonly sharedService: SharedService,
+      private readonly userService: UserService,
   ) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -59,7 +61,7 @@ export class ForgetPasswordViewComponent implements OnInit, OnDestroy {
     const email = this.forgotPasswordForm.get('email')?.value;
     this.logger.info('Sending reset link to:', email);
 
-    this.sharedService
+    this.userService
       .forgotPassword(this.forgotPasswordForm.value)
       .pipe(
         finalize(() => { this.isLoading = false; }),

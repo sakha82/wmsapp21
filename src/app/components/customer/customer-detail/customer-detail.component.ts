@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from 'app/services/customer.service';
 import { ICustomer, IOffer, IWorkOrder } from 'app/app.model';
@@ -92,6 +93,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
   constructor(private readonly logger: LogService,
               private readonly errorHandler: ErrorHandlerService,
               public readonly sharedService:SharedService,
+              private readonly coreService: CoreService,
               private router: Router,
                private readonly fb:FormBuilder,
               private readonly route: ActivatedRoute,
@@ -259,7 +261,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
   deleteBooking(workOrderId: number, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Are you sure you want to this Booking?',
+      message: this.sharedService.T('deleteBookingConfirm'),
       header: '',
       closable: false,
       closeOnEscape: false,
@@ -556,7 +558,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
 
   generatePdfOffer(selectedOffer: any) {
     this.isLoading = true;
-    this.sharedService
+    this.coreService
       .printPdf('offer', selectedOffer.offerId.toString(), 'basic')
       .pipe(
         finalize(() => {
@@ -580,7 +582,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
 
   generatePdfInvoice(selectedInvoice: any) {
     this.isLoading = true;
-    this.sharedService
+    this.coreService
       .printPdf('invoice', selectedInvoice.invoiceId.toString(), 'basic')
       .pipe(
         finalize(() => {

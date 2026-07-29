@@ -8,6 +8,7 @@ import { finalize, takeUntil, Subject } from 'rxjs';
 import { LogService } from 'app/services/log.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TableModule } from 'primeng/table';
@@ -26,6 +27,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ReactiveFormsModule,
     FormsModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     ButtonModule,
     AutoCompleteModule,
     TableModule,

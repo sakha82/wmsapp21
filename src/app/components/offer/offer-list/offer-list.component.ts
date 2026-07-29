@@ -4,12 +4,14 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IPager, IOffer } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectChangeEvent } from 'primeng/select';
 import { catchError, filter, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
@@ -29,7 +31,7 @@ import { MessageModule } from 'primeng/message';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, DatePickerModule, AutoCompleteModule, InputNumberModule, ToastModule, ConfirmDialogModule, TableModule, TooltipModule, InputTextModule, ToggleButtonModule, TagModule, MessageModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, GenericLoaderComponent, ButtonModule, SelectModule, DatePickerModule, AutoCompleteModule, InputNumberModule, ToastModule, ConfirmDialogModule, TableModule, TooltipModule, InputTextModule, ToggleButtonModule, TagModule, MessageModule],
   templateUrl: './offer-list.component.html',
   styleUrl: './offer-list.component.css',
   providers: [ConfirmationService, MessageService]
@@ -55,6 +57,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   constructor(private logger: LogService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private router: Router,
     private readonly route: ActivatedRoute,
     private readonly fb: FormBuilder,
@@ -189,7 +192,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
   }
 
   generatePdf(selectedOffer: any) {
-    this.sharedService
+    this.coreService
       .printPdf('offer', selectedOffer.offerId.toString(), 'basic')
       .pipe(
         takeUntil(this.destroy$)

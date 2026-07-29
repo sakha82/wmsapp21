@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ITokenClaims } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { AuthService } from 'app/services/auth.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { LogService } from 'app/services/log.service';
 import { finalize, takeUntil, Subject } from 'rxjs';
@@ -29,6 +30,7 @@ export class InvoiceViewComponent implements OnInit, OnDestroy {
 
   constructor(private logger: LogService,
               private readonly sharedService:SharedService,
+              private readonly authService: AuthService,
               private router: Router,
               private readonly route: ActivatedRoute,
               private readonly invoiceService: InvoiceService,
@@ -38,7 +40,7 @@ export class InvoiceViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParams['token'] || '';
-    this.sharedService
+    this.authService
       .getClaimsFromToken(this.token)
       .pipe(
         finalize(() => {}),
@@ -55,7 +57,7 @@ export class InvoiceViewComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.sharedService
+    this.authService
       .printPdfFromToken(this.token)
       .pipe(
         finalize(() => {}),

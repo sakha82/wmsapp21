@@ -7,6 +7,7 @@ import { ICustomerTag, ICustomerType, IEnum } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
+import { UserService } from 'app/services/user.service';
 import { SelectChangeEvent } from 'primeng/select';
 import { firstValueFrom, Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
@@ -54,6 +55,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
     private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
+    private readonly userService: UserService,
     private router: Router,
     private readonly fb: FormBuilder,
     private workshopService: WorkshopService,
@@ -323,8 +325,8 @@ async onFormSubmit() {
       digitalWorkShopid?.setErrors({ invalidFormat: true });
       this.messageService.add({
         severity: 'warn',
-        summary: 'Invalid Digital Workshop',
-        detail: 'Please enter a valid Digital Workshop (e.g. workshop@example.com).',
+        summary: this.sharedService.T('invalidDigitalWorkshopId'),
+        detail: this.sharedService.T('digitalWorkshopFormatHint'),
         life: 4000,
       });
       this.isLoading = false; 
@@ -333,15 +335,15 @@ async onFormSubmit() {
 
     if (digitalServiceIdValue) {
       try {
-        const isValidUser = await firstValueFrom(this.sharedService.isValidAppUser(digitalServiceIdValue).pipe(
+        const isValidUser = await firstValueFrom(this.userService.isValidAppUser(digitalServiceIdValue).pipe(
           takeUntil(this.destroy$)
         ));
         if (!isValidUser) {
           digitalWorkShopid?.setErrors({ invalidUser: true });
           this.messageService.add({
             severity: 'error',
-            summary: 'Invalid Digital Service ID',
-            detail: 'The Digital Service ID is not valid.',
+            summary: this.sharedService.T('invalidDigitalWorkshopId'),
+            detail: this.sharedService.T('digitalServiceUserNotValid'),
             life: 4000,
           });
           this.isLoading = false; 
@@ -351,8 +353,8 @@ async onFormSubmit() {
         this.errorHandler.handleError(error, 'onFormSubmit', 'Could not validate Digital Service ID. Please try again.');
         this.messageService.add({
           severity: 'error',
-          summary: 'Validation Error',
-          detail: 'Could not validate Digital Service ID. Please try again.',
+          summary: this.sharedService.T('validationError'),
+          detail: this.sharedService.T('validateDigitalServiceIdFailed'),
           life: 4000,
         });
         this.isLoading = false; 
@@ -391,8 +393,8 @@ async onFormSubmit() {
           this.customer.get('customerName')?.setErrors({ customerExists: true });
           this.messageService.add({
             severity: 'error',
-            summary: 'Duplicate Customer',
-            detail: 'This customer name already exists.',
+            summary: this.sharedService.T('duplicate'),
+            detail: this.sharedService.T('duplicateCustomerName'),
             life: 4000,
           });
           this.isLoading = false; 
@@ -442,8 +444,8 @@ async onFormSubmit() {
       this.errorHandler.handleError(error, 'onFormSubmit', 'Failed to save customer. Please try again later.');
       this.messageService.add({
         severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to save customer. Please try again later.',
+        summary: this.sharedService.T('error'),
+        detail: this.sharedService.T('genericErrorContactSupport'),
         life: 6000,
       });
     }

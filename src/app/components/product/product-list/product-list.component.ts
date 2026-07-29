@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -28,7 +29,7 @@ import { vatPercentageValidator, showValidationErrorToast } from 'app/validators
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, CheckboxModule, TableModule, DialogModule, ToastModule, InputTextModule,InputNumberModule,MessageModule,TooltipModule,DatePickerModule,ConfirmDialogModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, GenericLoaderComponent, ButtonModule, SelectModule, CheckboxModule, TableModule, DialogModule, ToastModule, InputTextModule,InputNumberModule,MessageModule,TooltipModule,DatePickerModule,ConfirmDialogModule],
   styleUrl: './product-list.component.css',
   templateUrl: './product-list.component.html',
   providers: [ConfirmationService, MessageService],
@@ -168,9 +169,15 @@ export class ProductListComponent implements OnDestroy {
       message: message,
       header: this.sharedService.T('confirmation'),
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: this.sharedService.T('yes'),
-      rejectLabel: this.sharedService.T('no'),
-      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonProps: {
+        label: this.sharedService.T('no'),
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+        label: this.sharedService.T('yes'),
+        severity: 'danger',
+      },
       accept: () => {
         this.isLoading = true;
 
