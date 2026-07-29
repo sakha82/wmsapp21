@@ -13,6 +13,7 @@
     "test:e2e:customer": "playwright test e2e/tests/customer",
     "test:e2e:employee": "playwright test e2e/tests/employee",
     "test:e2e:timesheet": "playwright test e2e/tests/timesheet",
+    "test:e2e:invoice": "playwright test e2e/tests/invoice",
     "test:e2e:report": "playwright show-report",
     "test:e2e:codegen": "playwright codegen http://localhost:4200"
   },

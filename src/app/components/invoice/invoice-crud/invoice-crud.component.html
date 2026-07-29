@@ -22,7 +22,7 @@
                     <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
                         [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
                         (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()" [showClear]="true" class="w-full"
-                        [placeholder]="sharedService.T('chooseCustomer')" 
+                        [placeholder]="sharedService.T('chooseCustomer')" data-testid="invoice-customer-autocomplete"
                         [invalid]="!this.invoice.get('customerId')?.value || this.invoice.get('customerId')?.value === 0">
                         
                         <ng-template let-customer #item>
@@ -201,7 +201,7 @@
                         
                         <div class="crud-detail-text-row">
                             <div class="crud-detail-text-area">
-                                <textarea formControlName="textContent" rows="5" class="w-full" pTextarea [autoResize]="true"></textarea>
+                                <textarea formControlName="textContent" rows="5" class="w-full" pTextarea [autoResize]="true" data-testid="invoice-detail-text-content"></textarea>
                             </div>
                             <div class="crud-detail-text-options">
                                 <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
@@ -218,6 +218,7 @@
                             </div>
                             <div class="crud-detail-text-delete">
                                 <p-button icon="pi pi-times" severity="danger" size="small"
+                                    data-testid="invoice-remove-detail-row-button"
                                     (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
                             </div>
                         </div>
@@ -315,7 +316,7 @@
                         }
 
                         <div class="w-[5%] justify-end flex">
-                                <p-button icon="pi pi-times" severity="danger"  size="small" (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
+                                <p-button icon="pi pi-times" severity="danger"  size="small" data-testid="invoice-remove-detail-row-button" (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
                         </div>
                         }
                     </div>
@@ -330,8 +331,10 @@
             <div class="md:col-span-8">
                 <div class="flex flex-wrap gap-3 mt-4">
                     <p-button label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus"
+                        data-testid="invoice-add-product-button"
                         (click)="addDetailRow(false)"></p-button>
                     <p-button label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus"
+                        data-testid="invoice-add-text-button"
                         (click)="addDetailRow(true)"></p-button>
                     <p-splitbutton label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
                 </div>
@@ -395,14 +398,16 @@
                 {
                 <p-button type="submit" icon="pi pi-plus" size="large"
                     label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('invoice') }}"
+                    data-testid="invoice-submit-button"
                     (click)="onFormSubmit()"></p-button>
                 }
                 @else {
                 <p-button type="submit" icon="pi pi-pencil" size="large"
                     label="{{ this.sharedService.T('update') }} {{ this.sharedService.T('invoice') }}"
+                    data-testid="invoice-submit-button"
                     (click)="onFormSubmit()"></p-button>
                 }
-                <p-button size="large" class="me-4"
+                <p-button size="large" class="me-4" data-testid="invoice-cancel-button"
                      severity="secondary" label="{{ this.sharedService.T('cancel') }}" (onClick)="onCancelForm()"></p-button>
             </div>
         </div>

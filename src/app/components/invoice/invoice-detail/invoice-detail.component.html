@@ -50,6 +50,7 @@
           <span class="pi pi-send"></span>
           </p-button>
           <p-button size="large" styleClass="w-full mb-3" disabled="{{disableEdit}}"
+            data-testid="edit-invoice-button"
             label="{{ this.sharedService.T('editInvoice') }}" (onClick)="redirectToInvoiceCrudComponent()">
             <span class="pi pi-pencil"></span>
           </p-button>
