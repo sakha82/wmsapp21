@@ -8,7 +8,7 @@
         <div class="flex items-center gap-4 flex-wrap lg:flex-nowrap mb-6">
           <div class="flex items-center gap-3 flex-wrap lg:flex-nowrap">
             <p-button [raised]="true" size="large" label="{{ this.sharedService.T('createDigitalservice') }}"
-              icon="pi pi-plus" (onClick)="openDigitalServiceDialog()">
+              icon="pi pi-plus" data-testid="create-digitalservice-button" (onClick)="openDigitalServiceDialog()">
             </p-button>
 
             <!-- <div class="ds-underline-wrap ds-filter-item flex items-center whitespace-nowrap shrink-0">
@@ -85,12 +85,13 @@
         sortField="data.userId" 
         [sortOrder]="1"
         (onPageChange)="onPageChange($event)"
-        (onNodeExpand)="onNodeExpand($event)">
+        (onNodeExpand)="onNodeExpand($event)"
+        data-testid="digitalservice-table">
         <ng-template #caption>
                 <div class="flex justify-start items-center">
                     <p-iconfield>
                         <p-inputicon class="pi pi-search" />
-                        <input type="text" pInputText placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('regNumber') }}" (input)="tt.filter($event.target.value, 'vehiclePlate', 'contains')" />
+                        <input type="text" pInputText data-testid="digitalservice-search-input" placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('regNumber') }}" (input)="tt.filter($event.target.value, 'vehiclePlate', 'contains')" />
                     </p-iconfield>
                 </div>
         </ng-template>
@@ -104,7 +105,8 @@
           </ng-template>
           <!-- PARENT AND CHILD ROW TEMPLATES -->
           <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr [ttRow]="rowNode" [ttRow]="rowNode" [class.bg-blue-50]="rowData?.digitalServiceId" [class.bg-white]="!rowData?.digitalServiceId">
+            <tr [ttRow]="rowNode" [ttRow]="rowNode" [class.bg-blue-50]="rowData?.digitalServiceId" [class.bg-white]="!rowData?.digitalServiceId"
+                [attr.data-testid]="rowData?.digitalServiceId ? 'digitalservice-data-row' : (rowData?.isHeader ? 'digitalservice-header-row' : 'digitalservice-parent-row')">
               <ng-container *ngIf="rowData?.userId && !rowData?.digitalServiceId">
               <ng-container *ngIf="rowData?.userId && !rowData?.digitalServiceId">
                 <td style="width: 300px;" class="pl-2 pr-4">
@@ -308,10 +310,10 @@
 
         <div class="flex items-center gap-3">
           <p-button [raised]="true" label="{{ this.sharedService.T('createDigitalservice') }}" size="large"
-            icon="pi pi-plus" (click)="validateDigitalService($event)">
+            icon="pi pi-plus" data-testid="digitalservice-submit-button" (click)="validateDigitalService($event)">
           </p-button>
           <p-button size="large" severity="secondary" label="{{ this.sharedService.T('cancel') }}"
-            (click)="closeDigitalServiceDialog()">
+            data-testid="digitalservice-cancel-button" (click)="closeDigitalServiceDialog()">
           </p-button>
         </div>
 

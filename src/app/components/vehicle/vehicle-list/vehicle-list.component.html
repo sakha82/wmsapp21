@@ -10,6 +10,7 @@
                 <p-iconfield>
                   <p-inputicon class="pi pi-search icon-primary" />
                   <p-autoComplete
+                    data-testid="vehicle-search-autocomplete"
                     [placeholder]="this.sharedService.T('searchVehicle')"
                     [suggestions]="vehiclePlates"
                     optionValue="vehiclePlate"
@@ -17,7 +18,7 @@
                     (onClear)="onClearVehicle()"
                     (keyup)="keyupVehicle($event.target)"
                     (onSelect)="onSelectVehicle($event)"
-                    [showClear]="true"  
+                    [showClear]="true"
                     [appendTo]="'body'">
 
                     <ng-template let-vehicle pTemplate="item">
@@ -45,7 +46,7 @@
                 }"
                 title="{{ vehicleColor | uppercase }}"
               ></div>
-              <span *ngIf="vehicleInformation">{{ ': ' + vehicleInformation }}</span>
+              <span *ngIf="vehicleInformation" data-testid="vehicle-information">{{ ': ' + vehicleInformation }}</span>
             </h2>
          </div>
           <!-- Text Information Section -->
@@ -70,7 +71,7 @@
               <tbody>
                 <ng-container *ngFor="let node of vehiclesData; let idx = index">
                   <!-- Parent row (Customer) -->
-                  <tr style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color); cursor: pointer;" 
+                  <tr data-testid="vehicle-customer-row" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color); cursor: pointer;"
                       (click)="toggleNode(idx)"
                       class="hover:opacity-80">
                     <td class="flex items-center gap-2">
@@ -227,7 +228,7 @@
                       <!-- Offers Section -->
                       <ng-container *ngIf="childNode.data['label'] === 'offers' && childNode.data['totalOfferCount'] > 0">
                         <!-- Category header row with icon, label, and summary in one line -->
-                        <tr style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;" 
+                        <tr data-testid="vehicle-offers-category-row" style="background-color: var(--p-surface-section); border-bottom: 2px solid var(--p-primary-300); cursor: pointer;"
                             (click)="toggleChildNode(idx, cidx)"
                             class="hover:opacity-80">
                           <td class="px-4 py-3 text-center">
