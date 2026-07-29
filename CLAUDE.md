@@ -77,7 +77,7 @@ Claude acts as Senior Front-End Developer/Designer on this project. The user act
 
 Pushing itself is autonomous — no confirmation needed, batch it with the related commits. The git-workflow rule below is a mechanical destination constraint on top of that, not a confirmation gate: always push to `Test`, never `main`, regardless of how routine the change is.
 
-- **Git workflow**: work on the `Test` branch (not `main`). Push to `Test` autonomously; the user merges `Test` → `main` themselves. Never push to `main` directly — that's still a destructive operation and stays an interrupt trigger.
+- **Git workflow (confirmed 2026-07-29, applies project-wide across all repos)**: `main` always points at the last tested release. All new work happens on `Test` — commit and push there autonomously. `main` only moves via a pull request from `Test`, reviewed and merged by the user themselves. Never push to `main` directly — that's a destructive operation and stays an interrupt trigger.
 - **Task handoff**: no persistent backlog file — the user describes tasks in chat at the start of each session.
 - **Brand color / theming**: `#4F39F6` (purple) is *not yet confirmed* as final. The user will provide a proper style guide/brand color spec separately — don't treat the current purple as locked in, and don't invest in wiring runtime tenant-color theming (see Known issues below) until that spec arrives.
 - **Styling-law cleanup**: known violations of the PrimeNG-owns-color / Tailwind-is-layout-only rule (see Known issues) are fixed opportunistically — when a task takes you into one of the affected files anyway, clean it up as part of that work. No dedicated cleanup sprint unless the user asks for one.
