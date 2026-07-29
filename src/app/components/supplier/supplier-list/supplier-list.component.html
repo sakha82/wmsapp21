@@ -8,6 +8,7 @@
                     <div>
                         <p-button size="large" styleClass="w-full mb-3"
                             label="{{this.sharedService.T('createSupplier')}}"
+                            data-testid="create-supplier-button"
                             (onClick)="supplierCrud(0)">
                             <i class="pi pi-plus mr-2"></i>
                         </p-button>
@@ -56,7 +57,7 @@
                 </ng-template>
 
                 <ng-template pTemplate="body" let-supplier>
-                    <tr>
+                    <tr data-testid="supplier-row">
                         <td class="id-column-cell rounded-l-lg">
                             <span class="id-text">{{ supplier.supplierId }}</span>
                         </td>
@@ -67,6 +68,7 @@
                         <td>{{ supplier.supplierExtraInfo }}</td>
                         <td class="rounded-r-lg">
                             <p-button size="small" icon="pi pi-pencil" severity="secondary"
+                                     data-testid="edit-supplier-button"
                                      (onClick)="supplierCrud(supplier.supplierId)">
                         </p-button>
                         </td>
@@ -108,16 +110,18 @@
             </div>
 
             <div class="flex gap-4 mt-8">
-                <p-button 
+                <p-button
                 [raised]="true"
-                label="{{ isNewObject ? this.sharedService.T('createSupplier') : this.sharedService.T('updateSupplier') }}" 
+                label="{{ isNewObject ? this.sharedService.T('createSupplier') : this.sharedService.T('updateSupplier') }}"
                 size="large"
                 icon="pi pi-plus"
+                data-testid="supplier-submit-button"
                 (click)="onFormSubmit()"></p-button>
-                <p-button 
+                <p-button
                 severity="secondary"
-                label="{{ this.sharedService.T('cancel') }}" 
-                size="large" 
+                label="{{ this.sharedService.T('cancel') }}"
+                size="large"
+                data-testid="supplier-cancel-button"
                 (click)="closeSupplierDialog()"></p-button>
             </div>
 

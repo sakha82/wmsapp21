@@ -1865,6 +1865,11 @@
         "sv": "Skapa Leverantör"
     },
     {
+        "tkey": "updateSupplier",
+        "en": "Update Supplier",
+        "sv": "Uppdatera leverantör"
+    },
+    {
         "tkey": "supplierName",
         "en": "Supplier Name",
         "sv": "Leverantörnamn"

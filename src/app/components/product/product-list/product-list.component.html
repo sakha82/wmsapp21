@@ -6,7 +6,7 @@
             <div class="flex gap-4 mb-6 justify-between items-center">
                 <div class="flex gap-3">
                     <p-button [raised]="true" label="{{this.sharedService.T('createProduct')}}" size="large"
-                        icon="pi pi-plus" (onClick)="getProduct(0)"></p-button>
+                        icon="pi pi-plus" data-testid="create-product-button" (onClick)="getProduct(0)"></p-button>
 
                     <p-select [options]="this.sharedService.getEnums('detailCategory')" formControlName="category"
                         optionLabel="text" optionValue="value" [showClear]="true"
@@ -31,6 +31,7 @@
                 </div>
                 <div class="flex items-center gap-2 whitespace-nowrap pr-12">
                     <p-checkbox [(ngModel)]="hideDeletedProducts" [binary]="true"
+                        data-testid="hide-deleted-products-checkbox"
                         [ngModelOptions]="{standalone: true}" (onChange)="HideDeletedProducts($event)">
                     </p-checkbox>
                     <label class="text-sm text-gray-header">{{this.sharedService.T('hideDeletedProducts')}}</label>
@@ -80,7 +81,7 @@
                             <p-inputicon>
                                 <i class="pi pi-search"></i>
                             </p-inputicon>
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('product') }}" />
+                            <input pInputText type="text" data-testid="product-search-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="{{ this.sharedService.T('search') }} {{ this.sharedService.T('product') }}" />
                         </p-iconfield>
                         <span class="text-right">{{ this.sharedService.T('rollingOneYearNote') }}</span>
                     </div>
@@ -110,7 +111,7 @@
                 </ng-template>
 
                 <ng-template pTemplate="body" let-product>
-                    <tr [ngClass]="{
+                    <tr data-testid="product-row" [ngClass]="{
                         'row-inactive': product.isActive === 0,
                         'bg-green-100': product.productId === latestProductId
                     }" style="transition: background-color 0.8s ease;" class="p-selectable-row">
@@ -141,10 +142,12 @@
                             
                             <div *ngIf="!product.isBaseProduct" class="flex gap-2 justify-center">
                                 <p-button size="small" icon="pi pi-pencil" severity="secondary"
+                                    data-testid="edit-product-button"
                                     [disabled]="product.isActive === 0" (onClick)="getProduct(product.productId)">
                                 </p-button>
 
                                 <p-button size="small" severity="danger" icon="pi pi-trash" [disabled]="loadingDelete"
+                                    data-testid="delete-product-button"
                                     (onClick)="deleteProduct(product)">
                                 </p-button>
                             </div>
@@ -250,8 +253,8 @@
                 
                 <div class="w-full">
                     <label class="block text-sm font-semibold mb-2">{{ this.sharedService.T('productService') }} </label>
-                    <input type="text" formControlName="productName" class="w-full" 
-                        [disabled]="!isNewObject" [readonly]="!isNewObject"
+                    <input type="text" formControlName="productName" class="w-full"
+                        [readonly]="!isNewObject"
                         [class.ng-invalid]="product.get('productName')?.invalid && product.get('productName')?.touched"
                         [class.ng-dirty]="product.get('productName')?.touched" pInputText />
                 </div>
@@ -298,16 +301,18 @@
             </div>
 
             <div class="flex gap-4 mt-12">
-                <p-button 
+                <p-button
                 [raised]="true"
-                label="{{ isNewObject ? this.sharedService.T('createProduct') : this.sharedService.T('updateProduct') }}" 
+                label="{{ isNewObject ? this.sharedService.T('createProduct') : this.sharedService.T('updateProduct') }}"
                 size="large"
                 icon="pi pi-plus"
+                data-testid="product-submit-button"
                 (click)="saveProduct()"></p-button>
-                <p-button 
+                <p-button
                 severity="secondary"
-                label="{{ this.sharedService.T('cancel') }}" 
-                size="large" 
+                label="{{ this.sharedService.T('cancel') }}"
+                size="large"
+                data-testid="product-cancel-button"
                 (click)="closeProductDialog()"></p-button>
             </div>
 

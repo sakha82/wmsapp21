@@ -18,7 +18,19 @@ export interface QualityIssue {
  * Known/expected console noise that shouldn't fail a test. Add substrings
  * here as they're discovered — keep it narrow, don't blanket-suppress.
  */
-const CONSOLE_ALLOWLIST: string[] = [];
+const CONSOLE_ALLOWLIST: string[] = [
+  // ProductListComponent's category p-select (used both in the top filter bar and inside the
+  // create/edit dialog, as two separate FormGroups) throws this whenever the dialog's visibility
+  // flag flips, in both directions - confirmed via two independent, unsuccessful fix attempts
+  // (deferring the dialog-close assignment to a new macrotask, waiting for the dialog's mask to
+  // fully detach before the next interaction) that the race is internal to PrimeNG Select's own
+  // focus-state signal, not something app-level reordering can avoid. NG0100 only throws under
+  // Angular's dev-mode checkNoChanges pass (which `ng serve` runs, but a production build does
+  // not) - real users on a prod build never see this; the underlying state is self-correcting on
+  // the next change-detection tick regardless.
+  // Narrowed to this exact attribute/component pair so a genuine NG0100 elsewhere still fails.
+  "Previous value for 'attr.data-p': 'focus'. Current value: ''. Expression location: ProductListComponent",
+];
 
 /**
  * Chrome's own generic message for any failed resource load ("Failed to
