@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
+import { AuthService } from 'app/services/auth.service';
 import { WmsUser } from 'app/app.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { environment } from 'environments/environment';
@@ -62,27 +64,27 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   features: Feature[] = [
     {
-      icon: 'group',
+      icon: 'users',
       title: 'Kundregister',
       description: 'Samla all kundinformation på ett ställe med kundspecifika inställningar. Tagga dina kunder, skapa smart segmentering och få full kontroll över din kundöversikt.'
     },
     {
-      icon: 'assignment_turned_in',
+      icon: 'check-square',
       title: 'Skapa Offerter',
       description: 'Skapa en offert på några minuter och skicka den smidigt via e-post eller WhatsApp med ett klick! När kunden godkänner kan du enkelt konvertera offerten till en arbetsorder eller faktura.'
     },
     {
-      icon: 'engineering',
+      icon: 'wrench',
       title: 'Arbetsorder',
       description: 'Skapa och följ upp arbetsorder på sekunder – smidigt, snabbt och anpassat för din verkstad! Effektivisera din arbetsdag med smarta funktioner som gör det enkelt att hantera jobb, resurser och uppföljning i realtid.'
     },
     {
-      icon: 'request_quote',
+      icon: 'receipt',
       title: 'Fakturering',
       description: 'Skapa professionella fakturor direkt från arbetsorder eller offerter. Integrering med ekonomisystem gör fakturering enkel och effektiv. Automatiska påminnelser hjälper dig att få betalt i tid.'
     },
     {
-      icon: 'calendar_today',
+      icon: 'calendar',
       title: 'Schemaläggning',
       description: 'Hantera bokningar och resurser smidigt i kalendern. Se direkt när bilar, verktyg och personal är tillgängliga och planera arbetsdagen utan stress.'
     },
@@ -92,12 +94,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       description: 'Ge dina kunder full transparens med en digital servicebok för varje fordon. All servicehistorik, utförda arbeten och bilder samlas på ett ställe och är lättåtkomlig för både dig och kunden.'
     },
     {
-      icon: 'person',
+      icon: 'user',
       title: 'Antsällningsregister',
       description: 'Samla all information om dina anställda på ett ställe. Hantera anställningsuppgifter, roller och kontaktinformation, och få en tydlig överblick över personalen för enklare administration och bättre kontroll.'
     },
     {
-      icon: 'person',
+      icon: 'user',
       title: 'Personalliggare',
       description: 'Håll koll på anställdas arbetstider enkelt och korrekt. Registrera när personal checkar in och ut, få överblick i realtid och säkerställ att allt följer regler och krav utan krångel.'
     }
@@ -138,7 +140,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private router: Router,
     private messageService: MessageService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private readonly coreService: CoreService,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -235,7 +239,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.invalidMessage = '';
 
-    this.sharedService
+    this.authService
       .login(this.loginForm.value as WmsUser)
       .pipe(
         finalize(() => { this.isLoading = false; }),
@@ -312,7 +316,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
 
     // Call signup API
-    this.sharedService
+    this.coreService
       .signup(signupData)
       .pipe(
         finalize(() => { this.isSigningUp = false; }),
@@ -400,7 +404,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       telephone: this.demoForm.get('phoneNumber')?.value,
       userEmail: this.demoForm.get('email')?.value,
     };
-    this.sharedService
+    this.coreService
       .signup(signupData)
       .pipe(
         finalize(() => { this.isDemoSubmitting = false; }),

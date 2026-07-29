@@ -14,11 +14,24 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git push origin Test)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
       "Bash(node*)",
       "Bash(python*)",
       "Bash(python3*)",
       "Bash(curl -sk -X POST https://localhost:*)",
-      "Bash(curl -sk https://localhost:*)"
+      "Bash(curl -sk https://localhost:*)",
+      "Bash(taskkill //F //IM dotnet.exe*)",
+      "Bash(taskkill //F //PID *)",
+      "Bash(psql -h localhost *)",
+      "Bash(mkdir -p *)",
+      "Bash(npx playwright test *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\n\" http://localhost:*)",
+      "Bash(curl -sk -o /dev/null -w \"%{http_code}\\n\" https://localhost:*)",
+      "Bash(curl -s -i -X POST http://127.0.0.1:8000/mcp/*)",
+      "Bash(rm -f logs/*)",
+      "Bash(rm -f /tmp/*)"
     ]
   }
 }

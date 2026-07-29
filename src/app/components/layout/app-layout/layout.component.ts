@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router,  RouterModule, RouterOutlet } from '@angular/router';
 import { SharedService } from 'app/services/shared.service';
+import { AuthService } from 'app/services/auth.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { IEnum, IWorkshop } from 'app/app.model';
@@ -70,6 +71,7 @@ palettes = [
    currentMenuLabel: string = '';
     constructor(
               public readonly sharedService:SharedService,
+              private readonly authService: AuthService,
               private readonly router:Router,
               private changeDetectorRef: ChangeDetectorRef,
               private logger: LogService,
@@ -130,39 +132,39 @@ palettes = [
                 items: [
                     {
                         label: this.sharedService.T('dashboard'),
-                        materialIcon: 'dashboard',
+                        materialIcon: 'gauge',
                         routerLink: '/sv/dashboard',
                         styleClass: this.selectedRoute.startsWith('/sv/dashboard') ? 'active-menu-item' : ''
                     },
                     {
                         label: this.sharedService.T('customers'),
-                        materialIcon: 'person',
+                        materialIcon: 'user',
                         routerLink:'/sv/customer',
                         styleClass: this.selectedRoute.startsWith('/sv/customer') ? 'active-menu-item' : ''
 
                     },
                     {
                         label: this.sharedService.T('bookings'),
-                        materialIcon: 'calendar_today',
+                        materialIcon: 'calendar',
                         routerLink: '/sv/booking',
                         styleClass: this.selectedRoute === '/sv/booking' ? 'active-menu-item' : ''
 
                     },
                                         {
                         label: this.sharedService.T('offers'),
-                        materialIcon: 'assignment_turned_in',
+                        materialIcon: 'check-square',
                         routerLink: '/sv/offer',
                         styleClass: this.selectedRoute === '/sv/offer' ? 'active-menu-item' : ''
                     },
                     {
                         label: this.sharedService.T('workorders'),
-                        materialIcon: 'handyman',
+                        materialIcon: 'wrench',
                         routerLink: '/sv/workorder',
                         styleClass: this.selectedRoute === '/sv/workorder' ? 'active-menu-item' : ''
                     },
                     {
                         label: this.sharedService.T('invoices'),
-                        materialIcon: 'request_quote', 
+                        materialIcon: 'receipt', 
                         routerLink: '/sv/invoice',
                         styleClass: this.selectedRoute === '/sv/invoice' ? 'active-menu-item' : ''
                     },
@@ -174,32 +176,32 @@ palettes = [
                     },
                     {
                         label: this.sharedService.T('products'),
-                        materialIcon: 'inventory_2',
+                        materialIcon: 'box',
                         routerLink: '/sv/product',
                         styleClass: this.selectedRoute === '/sv/product' ? 'active-menu-item' : ''
                     },
                     {
                         label: this.sharedService.T('suppliers'),
-                        materialIcon: 'storefront',
+                        materialIcon: 'shop',
                         routerLink: '/sv/supplier',
                         styleClass: this.selectedRoute.startsWith('/sv/supplier') ? 'active-menu-item' : ''
                     },
 
                    {
                         label: this.sharedService.T('employees'),
-                        materialIcon: 'id_card',
+                        materialIcon: 'id-card',
                         routerLink: '/sv/employee',
                         styleClass: this.selectedRoute.startsWith('/sv/employee') ? 'active-menu-item' : ''
                     },
       {
                         label: this.sharedService.T('attendanceRegister'),
-                        materialIcon: 'punch_clock',
+                        materialIcon: 'stopwatch',
                         routerLink: '/sv/employment',
                         styleClass: this.selectedRoute.startsWith('/sv/employment') ? 'active-menu-item' : ''
                     },
                     {
                        label: this.sharedService.T('settings'),
-                        materialIcon: 'settings',
+                        materialIcon: 'cog',
                         routerLink: '/sv/setting',
                         styleClass: this.selectedRoute.startsWith('/sv/settings') ? 'active-menu-item' : ''
                     }
@@ -224,7 +226,7 @@ palettes = [
   }
 
   onLogout() {
-    this.sharedService
+    this.authService
         .logout()
         .pipe(
           finalize(() => {}),

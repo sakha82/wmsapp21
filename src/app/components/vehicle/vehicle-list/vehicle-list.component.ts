@@ -6,10 +6,12 @@ import { finalize, takeUntil, Subject } from 'rxjs';
 import { ICustomer, VehicleSearch} from 'app/app.model';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TreeTableModule } from 'primeng/treetable';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ToastModule } from 'primeng/toast';
@@ -26,7 +28,7 @@ interface TreeNode {
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TreeTableModule, ProgressSpinnerModule, IconFieldModule, InputIconModule, ButtonModule, AutoCompleteModule, ToastModule, ConfirmDialogModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TreeTableModule, ProgressSpinnerModule, GenericLoaderComponent, IconFieldModule, InputIconModule, ButtonModule, AutoCompleteModule, ToastModule, ConfirmDialogModule, InputTextModule],
   templateUrl: './vehicle-list.component.html'
 })
 
@@ -63,6 +65,7 @@ export class VehicleListComponent implements OnDestroy {
     private readonly fb: FormBuilder,
     private readonly logger: LogService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private readonly route: ActivatedRoute) {
 
 
@@ -169,7 +172,7 @@ startTyping() {
 }
   keyupVehicle(event: any) {
     if (event?.value) {
-      this.sharedService
+      this.coreService
         .getVehicleList(event.value)
         .pipe(
           finalize(() => { this.isLoading = false; }),
@@ -225,7 +228,7 @@ startTyping() {
   }
   loadvehicle(vehiclePlate: string) {
     this.isLoading = true;
-    this.sharedService
+    this.coreService
       .getVehicleInfo(vehiclePlate)
       .pipe(
         finalize(() => { this.isLoading = false; }),

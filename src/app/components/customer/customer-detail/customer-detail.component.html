@@ -169,7 +169,7 @@
                     @if(order.workOrderStatus == 'booking')
                     {
                     <p-button severity="danger" size="small" styleClass="icon-only-button !border-0"
-                      pTooltip="Ta bort bokning" tooltipPosition="top"
+                      [pTooltip]="this.sharedService.T('deleteBooking')" tooltipPosition="top"
                       (onClick)="deleteBooking(order.workOrderId, $event)" icon="pi pi-trash"></p-button>
                     }
                   </td>
@@ -501,11 +501,6 @@
                         </td>
                       <td class="p-2">{{ payment.paymentDate }}</td>
                       <td class="p-2 text-center">{{ payment.paymentAmount }}</td>
-                      <td class="p-2 text-center">
-                        <p-button [pTooltip]="payment.paymentNote" tooltipPosition="top"
-                          tooltipStyleClass="custom-tooltip" label="N"></p-button>
-
-                      </td>
                       <td class="p-2 text-center">{{ payment.paymentNote }}</td>
                     </tr>
                   </ng-template>
@@ -537,7 +532,7 @@
               <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-dark mb-1">{{ this.sharedService.T('paymentNote')
                   }}</label>
-                <textarea [disabled]="addPaymentBtnDisabled" class="w-full" formContolName="paymentNote" rows="2"
+                <textarea [disabled]="addPaymentBtnDisabled" class="w-full" formControlName="paymentNote" rows="2"
                   ></textarea>
               </div>
 

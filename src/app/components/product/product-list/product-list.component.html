@@ -1,8 +1,4 @@
-<!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
-</div> -->
+<app-generic-loader [visible]="isLoading" />
 
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
@@ -37,27 +33,27 @@
                     <p-checkbox [(ngModel)]="hideDeletedProducts" [binary]="true"
                         [ngModelOptions]="{standalone: true}" (onChange)="HideDeletedProducts($event)">
                     </p-checkbox>
-                    <label class="text-sm text-gray-700">{{this.sharedService.T('hideDeletedProducts')}}</label>
+                    <label class="text-sm text-gray-header">{{this.sharedService.T('hideDeletedProducts')}}</label>
                 </div>
             </div>
-            <hr class="border-CustomBorder" />
+            <hr class="border-border" />
             <!-- Legend and Filter together -->
             <div class="flex gap-8 mt-4 mb-4 justify-between items-center">
                 <div class="flex gap-8">
                     <div class="flex items-center gap-2">
                         <span class="text-icon base-icon">B</span>
-                        <span class="text-sm text-gray-700">{{this.sharedService.T('baseProducts')}}</span>
+                        <span class="text-sm text-gray-header">{{this.sharedService.T('baseProducts')}}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-icon workshop-icon">V</span>
-                        <span class="text-sm text-gray-700">{{this.sharedService.T('workshopProducts')}}</span>
+                        <span class="text-sm text-gray-header">{{this.sharedService.T('workshopProducts')}}</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 whitespace-nowrap">
                     <p-checkbox [(ngModel)]="includeBaseProducts" [binary]="true"
                         [ngModelOptions]="{standalone: true}" (onChange)="onChangeIncludeBaseProducts($event)">
                     </p-checkbox>
-                    <label class="text-sm text-gray-700">{{this.sharedService.T('includeBaseProducts')}}</label>
+                    <label class="text-sm text-gray-header">{{this.sharedService.T('includeBaseProducts')}}</label>
                 </div>
             </div>
 
@@ -164,7 +160,7 @@
         [style]="{ width: '600px' }" (onHide)="onCloseInventoryDialog()">
         <ng-template #header>
             <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold text-gray-800">{{ this.sharedService.T('inventory') }}</h2>
+                <h2 class="text-xl font-bold text-gray-header">{{ this.sharedService.T('inventory') }}</h2>
             </div>
         </ng-template>
         <div class="p-3">
@@ -185,7 +181,7 @@
                     <p-table styleClass="text-sm" [tableStyle]="{ 'min-width': '100%' }" [value]="selectedProducts"
                         responsiveLayout="scroll">
                         <ng-template pTemplate="header">
-                            <tr class="bg-gray-100 text-gray-700">
+                            <tr class="bg-bg-light text-gray-header">
                                 <th class="p-2 text-left">{{ this.sharedService.T('action') }}</th>
                                 <th class="p-2 text-left">{{ this.sharedService.T('inventoryDate') }}</th>
                                 <th class="p-2 text-center">{{ this.sharedService.T('inventoryQuantity') }}</th>
@@ -193,7 +189,7 @@
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-inv>
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-bg-light">
                                 <td class="p-2">
                                     <p-button size="small" severity="danger" icon="pi pi-trash">
                                     </p-button>
@@ -213,7 +209,7 @@
                         <label class="block mb-2">{{
                             this.sharedService.T('inventoryDate') }}</label>
                         <p-datepicker formControlName="inventoryDate" dataType="string" class="w-full"
-                            styleClass="border border-gray-300 rounded-md" dateFormat="yy-mm-dd"></p-datepicker>
+                            styleClass="border border-border rounded-md" dateFormat="yy-mm-dd"></p-datepicker>
                     </div>
                     <div>
                         <label class="block mb-2">{{

@@ -7,6 +7,7 @@ import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SupplierService } from 'app/services/supplier.service';
@@ -150,6 +151,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private logger: LogService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private router: Router,
     private readonly fb: FormBuilder,
     private readonly workOrderService: WorkOrderService,
@@ -419,7 +421,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       return;
     }
     this.isVehicleLookupLoading = true;
-    this.sharedService.getVehicle(registrationNumber)
+    this.coreService.getVehicle(registrationNumber)
       .pipe(
         finalize(() => { this.isVehicleLookupLoading = false; }),
         takeUntil(this.destroy$)
@@ -453,7 +455,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   onAiAssistSubmit(transcript: string): void {
     this.isAiAssistLoading = true;
     this.aiCustomerCandidates = [];
-    this.sharedService.parseWorkOrderIntent(transcript)
+    this.coreService.parseWorkOrderIntent(transcript)
       .pipe(
         finalize(() => { this.isAiAssistLoading = false; }),
         takeUntil(this.destroy$)
@@ -589,7 +591,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
   registerManualProduct(productName: string, productDescription: string, autoAdd: boolean = false) {
     // First, get the next ProductId from the service (it's an Observable)
-    this.sharedService.getNextId('Product').pipe(
+    this.coreService.getNextId('Product').pipe(
       switchMap((productId: number) => {
         // Now that we have the productId, create the product object
         const newProduct: any = {

@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { IWorkOrder, IFileUploadRequest, IFileUploadResponse, IInvoice } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
@@ -19,7 +20,6 @@ import { MessageModule } from 'primeng/message';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { BadgeModule } from 'primeng/badge';
 import { TagModule } from 'primeng/tag';
@@ -43,7 +43,6 @@ interface WorkshopService { name: string };
     IconFieldModule,
     InputIconModule,
     CardModule,
-    TableModule,
     PdfViewerModule,
     PanelModule,
     BadgeModule,
@@ -89,6 +88,7 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private router: Router,
     private readonly fb: FormBuilder,
     private readonly workOrderService: WorkOrderService,
@@ -109,7 +109,7 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
       this.getOrder();
     }
 
-    this.sharedService
+    this.coreService
       .printPdf('workorder', this.workOrderId.toString(), 'basic')
       .pipe(
         finalize(() => {
@@ -133,7 +133,7 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
   }
 
   private getFiles(): void {
-    this.sharedService.listFiles(this.workOrderId)
+    this.coreService.listFiles(this.workOrderId)
       .pipe(
         finalize(() => {
           // file loading complete
@@ -197,7 +197,7 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
 
   downloadFile(key: string) {
     this.logger.log('Downloading file with key:', key);
-    this.sharedService.downloadFile(key);
+    this.coreService.downloadFile(key);
   }
 
   redirectToInvoiceCrudComponent(type: string) {
@@ -259,8 +259,8 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
             file: file
           };
           this.isLoading = true;
-          this.sharedService.uploadFile(uploadRequest).pipe(
-            switchMap(() => this.sharedService.listFiles(this.workOrderId)),
+          this.coreService.uploadFile(uploadRequest).pipe(
+            switchMap(() => this.coreService.listFiles(this.workOrderId)),
             finalize(() => {
               this.isLoading = false;
             }),
@@ -306,7 +306,7 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
       this.pdfUrl = null;
     }
     this.isLoading = true;
-    this.sharedService.deleteFile(file.key).pipe(
+    this.coreService.deleteFile(file.key).pipe(
       finalize(() => {
         this.isLoading = false;
       }),

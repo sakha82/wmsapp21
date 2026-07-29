@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedService } from 'app/services/shared.service';
+import { UserService } from 'app/services/user.service';
 import { LogService } from 'app/services/log.service';
 import { finalize, takeUntil, Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
@@ -37,6 +38,7 @@ export class ResetPasswordViewComponent implements OnInit, OnDestroy {
   constructor(
     private logger: LogService,
     private readonly sharedService: SharedService,
+    private readonly userService: UserService,
     private readonly formBuilder: FormBuilder,
     private router: Router,
     private readonly route: ActivatedRoute
@@ -80,7 +82,7 @@ export class ResetPasswordViewComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.successMessage = null;
 
-    this.sharedService
+    this.userService
       .resetPassword(this.passwordResetForm.value)
       .pipe(
         finalize(() => { this.isLoading = false; }),

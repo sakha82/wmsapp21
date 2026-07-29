@@ -7,6 +7,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { ICustomer, IEnums, IInvoice, IInvoiceDetailPrompt, IProduct, IProductTemplate } from 'app/app.model';
 import { InvoiceService } from 'app/services/invoice.service';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { showValidationErrorToast } from 'app/validators/model-validators';
@@ -29,6 +30,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { TableModule } from 'primeng/table';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
@@ -61,6 +63,7 @@ import { WorkOrderService } from 'app/services/workorder.service';
     InputGroupModule,
     InputGroupAddonModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     TableModule,
     DragDropModule,
     SplitButtonModule,
@@ -104,6 +107,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
   constructor(private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private router: Router,
     private cdr: ChangeDetectorRef,
     private readonly fb: FormBuilder,
@@ -323,7 +327,7 @@ export class InvoiceCrudComponent implements OnInit, OnDestroy {
       return;
     }
     this.isVehicleLookupLoading = true;
-    this.sharedService.getVehicle(registrationNumber)
+    this.coreService.getVehicle(registrationNumber)
       .pipe(
         finalize(() => { this.isVehicleLookupLoading = false; }),
         takeUntil(this.destroy$)

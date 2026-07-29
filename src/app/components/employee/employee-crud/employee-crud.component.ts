@@ -9,6 +9,7 @@ import { IEmployee } from 'app/app.model';
 import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -31,6 +32,7 @@ import { ColorPickerModule } from 'primeng/colorpicker';
     SelectModule,
     DatePickerModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     ConfirmDialogModule,
     ToastModule,
     TextareaModule,

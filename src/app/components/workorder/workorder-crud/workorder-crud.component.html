@@ -311,7 +311,7 @@
                 <p-autoComplete
                     #prodAutoComplete
                     formControlName="productName"
-                    placeholder="Väjl en produkt"
+                    placeholder="{{ this.sharedService.T('chooseProduct') }}"
                     [maxlength]="38"
                     [suggestions]="products"
                     (completeMethod)="getProducts($event)"
@@ -337,7 +337,7 @@
               </div>
 
               <div class="w-[32%]">
-                <input formControlName="productDescription" placeholder="Extra information" type="text"
+                <input formControlName="productDescription" placeholder="{{ this.sharedService.T('extraInformation') }}" type="text"
                   class="w-full" pInputText />
               </div>
 
@@ -382,7 +382,7 @@
           <label class="block mb-2">{{ this.sharedService.T('supplier') }}</label>
           <p-autoComplete [(ngModel)]="newWOPurchase.supplierName" [ngModelOptions]="{ standalone: true }"
             [suggestions]="suppliers" (completeMethod)="filterSuppliers($event)" [minLength]="1"
-            placeholder="Ange {{ this.sharedService.T('supplier') }} " [forceSelection]="true"
+            placeholder="{{ this.sharedService.T('enter') }} {{ this.sharedService.T('supplier') }} " [forceSelection]="true"
             optionLabel="supplierName" optionValue="supplierName" [showClear]="true" class="w-full"></p-autoComplete>
 
           <label class="block mb-2">{{ this.sharedService.T('supplierReferenceNo')

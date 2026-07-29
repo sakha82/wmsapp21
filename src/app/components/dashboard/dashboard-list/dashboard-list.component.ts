@@ -11,6 +11,7 @@ import { InvoiceService } from 'app/services/invoice.service';
 import {TooltipItem, Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
@@ -47,6 +48,7 @@ Chart.register(ChartDataLabels);
     ChartModule,
     ProgressSpinnerModule,
     ProgressBarModule,
+    GenericLoaderComponent,
     CardModule,
     InputNumberModule,
     DialogModule,

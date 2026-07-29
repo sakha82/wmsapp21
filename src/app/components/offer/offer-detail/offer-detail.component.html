@@ -1,8 +1,4 @@
-        <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
-</div>
+        <app-generic-loader [visible]="isLoading" />
 
         <!-- header start -->
         <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
@@ -48,21 +44,21 @@
         <p-confirmdialog />
         <div class="px-2 mb-3 mt-2 pb-4 bg-white shadow rounded-xl">
                 <p-button size="large" styleClass="w-full mb-3 mt-2" [disabled]="isSendButtonDisabled" label="{{ this.sharedService.T('send') }} {{ this.sharedService.T('offer') }}" (onClick)="showDialog()" >
-                    <span class="material-symbols-outlined">forward_to_inbox</span>
+                    <span class="pi pi-send"></span>
                 </p-button>
                 <p-button size="large" styleClass="w-full mb-3" [disabled]="isEditButtonDisabled" label="{{ this.sharedService.T('edit') }} {{ this.sharedService.T('offer') }}" (onClick)="redirectToOfferCrudComponent()" >
-                    <span class="material-symbols-outlined">edit</span>
+                    <span class="pi pi-pencil"></span>
                 </p-button>
                 <div class="ms-10">
                     <div class="flex gap-2 my-3 cursor-pointer">
                         <div class="w-5">
-                            <span class="material-symbols-outlined">picture_as_pdf</span>   
+                            <span class="pi pi-file-pdf"></span>   
                         </div>
                         <span (click)="generatePdf()">{{ this.sharedService.T('pdf') }}</span>
                     </div>
                     <div class="flex gap-2 my-3 cursor-pointer">
                         <div class="w-5">
-                            <span class="material-symbols-outlined">content_copy</span>
+                            <span class="pi pi-copy"></span>
                         </div>
                         <div>
                             <span (click)="confirmDuplicate($event)">{{ this.sharedService.T('duplicate') }}</span>
@@ -73,13 +69,13 @@
                         {
                         <div class="flex gap-2 my-3 cursor-pointer">
                         <div class="w-5">
-                            <span class="material-symbols-outlined">request_quote</span>
+                            <span class="pi pi-receipt"></span>
                         </div>
                         <span (click)="redirectToInvoiceCrudComponent('offer')"> {{ this.sharedService.T('create') }} {{ this.sharedService.T('invoice') }}</span>
                     </div>
                     <div class="flex gap-2 my-3 cursor-pointer">
                         <div class="w-5">
-                            <span class="material-symbols-outlined">handyman</span>
+                            <span class="pi pi-wrench"></span>
                         </div>
                         <span (click)="redirectToWorkOrderCrudComponent('offer')">{{ this.sharedService.T('createWorkorder') }} </span>
                     </div>
@@ -90,7 +86,7 @@
                         </ng-template>        
                     <div class="flex gap-2 my-3 cursor-pointer">
                         <div class="w-5">
-                            <span class="material-symbols-outlined">person</span>
+                            <span class="pi pi-user"></span>
                         </div>
                         <span (click)="redirectToCustomerDetailComponent()">{{ this.sharedService.T('viewCustomer') }}</span>
                     </div>
@@ -119,7 +115,7 @@
 [modal]="true"
 [(visible)]="showEmailDialog"
 class="custom-dialog"
-styleClass="!bg-bgColor"
+styleClass="!bg-bg-light"
 [style]="{ width: '20rem' }">
 
 <header class="text-2xl font-bold"> Offert # {{offerId}}</header>
@@ -130,13 +126,13 @@ styleClass="!bg-bgColor"
             <p class="text-1xl mb-4"> send by email</p>
             <p class="text-sm font-semibold">Email</p>
             <div class="">
-                <input type="email" formControlName="emailTo" pInputText placeholder="email" class="w-full border p-2 border-CustomBorder rounded-md"  />
+                <input type="email" formControlName="emailTo" pInputText placeholder="email" class="w-full border p-2 border-border rounded-md"  />
             </div>
         </div>
         <div class="">
             <label for="ny" class="ml-2 text-xs font-semibold">{{ this.sharedService.T('includeMessage') }}</label> 
             <div class="">
-                <textarea class="border border-CustomBorder rounded-md" rows="3" formControlName="message" cols="30"  pTextarea ></textarea> 
+                <textarea class="border border-border rounded-md" rows="3" formControlName="message" cols="30"  pTextarea ></textarea> 
             </div>
         </div>
     </div>

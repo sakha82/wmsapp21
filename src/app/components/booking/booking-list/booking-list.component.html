@@ -1,3 +1,4 @@
+<app-generic-loader [visible]="isLoading" />
 <section class="p-6 pb-10 bg-white">
     <form [formGroup]="filters">
         <div *ngIf="weekCalendar.length > 0">
@@ -19,14 +20,14 @@
                             <span [style.background-color]="emp.calendarColor"
                                 class="employee-color-swatch shrink-0"></span>
                             <label [for]="'emp-' + emp.employeeId"
-                                class="employee-filter-label cursor-pointer text-sm font-medium text-slate-700">
+                                class="employee-filter-label cursor-pointer text-sm font-medium text-gray-header">
                                 {{ emp.fullName }}
                             </label>
                         </div>
                         }
                     </div>
                 </div>
-                <hr class="border-CustomBorder">
+                <hr class="border-border">
                 <div class="mt-2 flex items-center justify-left gap-4 flex-wrap">
                     <p-button label="{{ this.sharedService.T('previous') }}" icon="pi pi-angle-double-left"
                         variant="outlined" severity="primary" (onClick)="onClickPreviousWeek()"></p-button>
@@ -147,7 +148,7 @@
         <ng-template #header>
             <div class="flex justify-between w-full">
                 <div>
-                    <h2 class="text-xl font-bold text-gray-800">{{ selectedBooking.vehiclePlate }}</h2>
+                    <h2 class="text-xl font-bold text-gray-header">{{ selectedBooking.vehiclePlate }}</h2>
                     <div class="booking-modal-sub">
                         {{selectedBooking.vehicleManufacturer + ' ' + selectedBooking.vehicleModel + ' ' +
                         selectedBooking.vehicleYear }}

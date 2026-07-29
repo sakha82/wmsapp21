@@ -4,6 +4,7 @@ import { ActivatedRoute,NavigationEnd, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { IPager, IInvoice, IInvoicePayment } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
@@ -13,6 +14,7 @@ import { catchError, filter, firstValueFrom, map, switchMap, Subject, finalize, 
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -31,7 +33,7 @@ import { PopoverModule } from 'primeng/popover';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, ButtonModule, SelectModule, DatePickerModule, AutoCompleteModule, InputNumberModule, ToastModule, ConfirmDialogModule, TableModule, TooltipModule, InputTextModule, MessageModule,ToggleButtonModule,DialogModule, PopoverModule],  
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, IconFieldModule, InputIconModule, ProgressSpinnerModule, GenericLoaderComponent, ButtonModule, SelectModule, DatePickerModule, AutoCompleteModule, InputNumberModule, ToastModule, ConfirmDialogModule, TableModule, TooltipModule, InputTextModule, MessageModule,ToggleButtonModule,DialogModule, PopoverModule],  
   templateUrl: './invoice-list.component.html',
   styleUrl: './invoice-list.component.css',
   providers: [ConfirmationService,MessageService]
@@ -68,6 +70,7 @@ export class InvoiceListComponent implements OnInit, OnDestroy {
   constructor(private logger: LogService,
               private readonly errorHandler: ErrorHandlerService,
               public readonly sharedService:SharedService,
+              private readonly coreService: CoreService,
               private router: Router,
               private readonly route: ActivatedRoute,
               private readonly fb:FormBuilder,
@@ -433,7 +436,7 @@ sortColumn(e: any) {
   }
  
   generatePdf(selectedInvoice:any){
-    this.sharedService
+    this.coreService
       .printPdf('invoice',selectedInvoice.invoiceId.toString(),'basic')
       .pipe(
         takeUntil(this.destroy$)

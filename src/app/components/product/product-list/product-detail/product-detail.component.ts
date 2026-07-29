@@ -10,6 +10,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { IInventory, IProduct, IPager, IInvoiceDetail, IProductChart } from 'app/app.model';
 import { switchMap, catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -39,9 +40,10 @@ import { ChartModule } from 'primeng/chart';
     ConfirmDialogModule,
     MessageModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     TabsModule,
     DatePickerModule,
-    ChartModule 
+    ChartModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './product-detail.component.html',
@@ -76,7 +78,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.productId) {
-
+       this.isLoading = true;
        this.getProduct();
        this.getSaleHistory();
        // get chart data 

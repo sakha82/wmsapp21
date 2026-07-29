@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { IInvoice, IInvoiceHistory } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { InvoiceService } from 'app/services/invoice.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
@@ -13,6 +14,7 @@ import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { finalize, takeUntil, catchError, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { TimelineModule } from 'primeng/timeline';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -37,6 +39,7 @@ import { WorkshopService } from 'app/services/workshop.service';
     TableModule,
     TimelineModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     PdfViewerModule,
     DialogModule
   ],
@@ -66,6 +69,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   constructor(private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     public readonly digitalServiceService: DigitalServiceService,
     private router: Router,
     private readonly fb: FormBuilder,
@@ -160,7 +164,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           if (response) {
-            this.sharedService
+            this.coreService
               .printPdf('invoice', this.invoiceId.toString(), response.defaultInvoiceTemplate)
               .pipe(
                 takeUntil(this.destroy$)
@@ -290,7 +294,7 @@ export class InvoiceDetailComponent implements OnInit, OnDestroy {
   sendEmail() {
     const emailTo = this.emailForm.get('emailTo')?.value;
     const message = this.emailForm.get('message')?.value;
-    this.sharedService
+    this.coreService
       .sendEmail('invoice', this.invoiceId, emailTo, message)
       .pipe(
         finalize(() => {

@@ -10,8 +10,6 @@ import { MessageModule } from 'primeng/message';
   standalone : true,
   imports: [MessageModule,CommonModule,FormsModule],
   templateUrl: 'opt-out.component.html',
-  styleUrls: ['opt-out.component.css'],
-  
 })
 export class OptOutComponent {
   username: string = ''; // Holds the username input

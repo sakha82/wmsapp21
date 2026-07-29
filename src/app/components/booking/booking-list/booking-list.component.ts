@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IEmployee, IWorkOrder } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { BookingService } from 'app/services/booking.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { LogService } from 'app/services/log.service';
@@ -50,7 +52,8 @@ import { TooltipModule } from 'primeng/tooltip';
     PanelModule,
     DialogModule,
     TableModule,
-    TooltipModule
+    TooltipModule,
+    GenericLoaderComponent
   ],
   templateUrl: './booking-list.component.html',
   providers: [ConfirmationService, MessageService, ConfirmDialogModule],
@@ -109,6 +112,7 @@ export class BookingListComponent implements OnInit, OnDestroy {
   constructor(private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private router: Router,
@@ -150,9 +154,6 @@ export class BookingListComponent implements OnInit, OnDestroy {
       this.getBookings();
     } catch (error) {
       this.logger.error('Error during initialization:', error);
-    } finally {
-      // Set loading to false once everything is done
-      this.isLoading = false;
     }
   }
 
@@ -437,7 +438,7 @@ export class BookingListComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    this.sharedService
+    this.coreService
       .printPdf('workorder', booking.workOrderId.toString(), 'basic')
       .pipe(
         takeUntil(this.destroy$)
@@ -700,7 +701,7 @@ export class BookingListComponent implements OnInit, OnDestroy {
             });
             workOrderIds = workOrderIds.substring(0, workOrderIds.length - 1);
             this.logger.info('printBookings - workOrder ids generated', { ids: workOrderIds });
-            this.sharedService
+            this.coreService
               .printPdf('workorder', workOrderIds, 'basic')
               .pipe(
                 takeUntil(this.destroy$)

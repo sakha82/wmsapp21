@@ -8,6 +8,7 @@ import { LogService } from 'app/services/log.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, debounceTime, distinctUntilChanged, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
@@ -38,6 +39,7 @@ import { TextareaModule } from 'primeng/textarea';
     IconFieldModule,
     InputIconModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     TableModule,
     PaginatorModule,
     DialogModule,
@@ -53,6 +55,7 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   filters: FormGroup;
   
   showSupplierDialog = false;
+  isLoading: boolean = false;
   isNewObject: boolean = true;
   latestSupplierId: number | null = null;
   sortField = 'supplierId';
@@ -91,9 +94,10 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   }
 
   getSuppliers(): void {
+    this.isLoading = true;
     this.supplierService.getAllSuppliers()
       .pipe(
-        finalize(() => { }),
+        finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -107,9 +111,10 @@ export class SupplierListComponent implements OnInit, OnDestroy {
   }
 
   supplierCrud(supplierId: number) {
+    this.isLoading = true;
     this.supplierService.getSupplier(supplierId)
       .pipe(
-        finalize(() => { }),
+        finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -144,12 +149,13 @@ export class SupplierListComponent implements OnInit, OnDestroy {
       return;
     }
     const formValues = this.supplierForm.getRawValue();
+    this.isLoading = true;
     (this.isNewObject
       ? this.supplierService.createSupplier(formValues)
       : this.supplierService.updateSupplier(formValues)
     )
       .pipe(
-        finalize(() => { }),
+        finalize(() => { this.isLoading = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({

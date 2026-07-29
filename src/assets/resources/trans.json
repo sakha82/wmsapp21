@@ -985,6 +985,36 @@
         "sv": "Inga filer har laddats upp. Använd Ladda upp fil för att ladda upp en fil"
     },
     {
+        "tkey": "uploadedFiles",
+        "en": "Uploaded Files",
+        "sv": "Uppladdade filer"
+    },
+    {
+        "tkey": "uploaded",
+        "en": "Uploaded",
+        "sv": "Uppladdad"
+    },
+    {
+        "tkey": "download",
+        "en": "Download",
+        "sv": "Ladda ner"
+    },
+    {
+        "tkey": "chooseProduct",
+        "en": "Choose a product",
+        "sv": "Välj en produkt"
+    },
+    {
+        "tkey": "extraInformation",
+        "en": "Extra information",
+        "sv": "Extra information"
+    },
+    {
+        "tkey": "enter",
+        "en": "Enter",
+        "sv": "Ange"
+    },
+    {
         "tkey": "personalNotes",
         "en": "Personal Notes",
         "sv": "Egna anteckningar"
@@ -2050,6 +2080,21 @@
         "sv": "Ogiltigt Digital Workshop-ID"
     },
     {
+        "tkey": "digitalWorkshopFormatHint",
+        "en": "Please enter a valid Digital Workshop (e.g. workshop@example.com).",
+        "sv": "Ange ett giltigt Digital Workshop-ID (t.ex. verkstad@exempel.com)."
+    },
+    {
+        "tkey": "digitalServiceUserNotValid",
+        "en": "The Digital Service ID is not valid.",
+        "sv": "Digital Service-ID är inte giltigt."
+    },
+    {
+        "tkey": "validateDigitalServiceIdFailed",
+        "en": "Could not validate Digital Service ID. Please try again.",
+        "sv": "Det gick inte att validera Digital Service-ID. Försök igen."
+    },
+    {
         "tkey": "confirmCreateService",
         "en": "Service does not exist. Create it in the product\/service list?",
         "sv": "Tjänsten finns inte. Vill du skapa den i produkt-\/tjänstlistan?"
@@ -2178,6 +2223,11 @@
         "tkey": "deleteBooking",
         "en": "Delete Booking",
         "sv": "Ta bort bokning"
+    },
+    {
+        "tkey": "deleteBookingConfirm",
+        "en": "Are you sure you want to delete this booking?",
+        "sv": "Är du säker på att du vill ta bort denna bokning?"
     },
     {
         "tkey": "servicesRequiredHint",

@@ -1,10 +1,6 @@
     <section class="p-6 pb-10">
       <div class="p-8 rounded-lg shadow-lg bg-white">
-        <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-          <div class="bg-white rounded-lg p-8 shadow-lg">
-            <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-          </div>
-        </div>
+        <app-generic-loader [visible]="isLoading" />
 
         <div>
           <!-- Vehicle Search Section -->
@@ -38,10 +34,10 @@
           </div>  
           
           <div class="mt-20">
-            <h2 class="text-2xl font-semibold mb-6 text-gray-800 flex items-center space-x-2 pl-6">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-header flex items-center space-x-2 pl-6">
               <span>{{ this.sharedService.T('vehicle') }}</span>
               <div
-                class="w-5 h-5 rounded border border-gray-300"
+                class="w-5 h-5 rounded border border-border"
                 [ngClass]="{
                   'bg-red-500': vehicleColor === 'red',
                   'bg-yellow-500': vehicleColor === 'yellow',
@@ -78,15 +74,15 @@
                       (click)="toggleNode(idx)"
                       class="hover:opacity-80">
                     <td class="flex items-center gap-2">
-                      <span class="material-symbols-outlined" 
+                      <span class="pi pi-chevron-down" 
                             style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease;"
                             [style.transform]="expandedNodes[idx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
-                        keyboard_arrow_down
+                        
                       </span>
                     </td>
                     <td *ngFor="let col of getRelevantColumns({}, 'customer')" class="px-4 py-3 font-semibold" style="color: var(--p-text-color);">
                       <ng-container *ngIf="col.field === 'label'; else otherCol">
-                        <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">group</span>
+                        <span class="pi pi-users" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;"></span>
                         <span class="font-bold" style="white-space: nowrap;">
                         {{ node.data[col.field] }}
                         </span>
@@ -123,12 +119,12 @@
                             <div class="grid grid-cols-12 gap-4 items-center">
                               <!-- Icon and Label - 4 span column -->
                               <div class="col-span-4 flex items-center gap-2">
-                                <span class="material-symbols-outlined" 
+                                <span class="pi pi-chevron-down" 
                                       style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
-                                  keyboard_arrow_down
+                                  
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">request_quote</span>
+                                <span class="pi pi-receipt" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;"></span>
                                 <span class="font-bold" style="white-space: nowrap;"> {{ this.sharedService.T(childNode.data['label']) }} </span>
                               </div>
                               <!-- Summary Information - 8 span column with 2-span sub-columns -->
@@ -155,7 +151,7 @@
                           
                           <!-- Invoice items -->
                           <ng-container *ngIf="childNode.children && childNode.children.length > 0">
-                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-blue-50">
+                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-[var(--p-primary-100)]">
                               <td class="px-4 py-3" style="padding-left: 60px;"></td>
                               <td *ngFor="let col of getRelevantColumns({}, 'invoice')" class="px-4 py-3 text-sm" style="color: var(--p-text-color);">
                                 <span *ngIf="itemNode.data[col.field] !== undefined && itemNode.data[col.field] !== null; else noData">
@@ -182,12 +178,12 @@
                             <div class="grid grid-cols-12 gap-4 items-center">
                               <!-- Icon and Label - 4 span column -->
                               <div class="col-span-4 flex items-center gap-2" >
-                                <span class="material-symbols-outlined" 
+                                <span class="pi pi-chevron-down" 
                                       style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
-                                  keyboard_arrow_down
+                                  
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">handyman</span>
+                                <span class="pi pi-wrench" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;"></span>
                                 <span class="font-bold" style="white-space: nowrap;"> {{ this.sharedService.T(childNode.data['label'])   }} </span>
                               </div>
 
@@ -213,7 +209,7 @@
                           
                           <!-- Work Order items -->
                           <ng-container *ngIf="childNode.children && childNode.children.length > 0">
-                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-green-50">
+                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-[var(--p-primary-100)]">
                               <td class="px-4 py-3" style="padding-left: 60px;"></td>
                               <td *ngFor="let col of getRelevantColumns({}, 'workorder')" class="px-4 py-3 text-sm" style="color: var(--p-text-color);">
                                 <span *ngIf="itemNode.data[col.field] !== undefined && itemNode.data[col.field] !== null; else noData2">
@@ -240,12 +236,12 @@
                             <div class="grid grid-cols-12 gap-4 items-center">
                               <!-- Icon and Label - 4 span column -->
                               <div class="col-span-4 flex items-center gap-2">
-                                <span class="material-symbols-outlined" 
+                                <span class="pi pi-chevron-down" 
                                       style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
-                                  keyboard_arrow_down
+                                  
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">assignment_turned_in</span>
+                                <span class="pi pi-check-square" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;"></span>
                                 <span class="font-bold" style="white-space: nowrap;">{{ childNode.data['label'] }}</span>
                               </div>
                               <!-- Summary Information - 8 span column with 4-span sub-columns -->
@@ -271,7 +267,7 @@
                           
                           <!-- Offer items -->
                           <ng-container *ngIf="childNode.children && childNode.children.length > 0">
-                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-yellow-50">
+                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-[var(--p-primary-100)]">
                               <td class="px-4 py-3" style="padding-left: 60px;"></td>
                               <td *ngFor="let col of getRelevantColumns({}, 'offer')" class="px-4 py-3 text-sm" style="color: var(--p-text-color);">
                                 <span *ngIf="itemNode.data[col.field] !== undefined && itemNode.data[col.field] !== null; else noData3">
@@ -298,12 +294,12 @@
                             <div class="grid grid-cols-12 gap-4 items-center">
                               <!-- Icon and Label - 4 span column -->
                               <div class="col-span-4 flex items-center gap-2" >
-                                <span class="material-symbols-outlined" 
+                                <span class="pi pi-chevron-down" 
                                       style="color: var(--p-primary-500); font-size: 20px; transition: transform 0.2s ease; flex-shrink: 0;"
                                       [style.transform]="expandedChildNodes[idx + '-' + cidx] ? 'rotate(0deg)' : 'rotate(-90deg)'">
-                                  keyboard_arrow_down
+                                  
                                 </span>
-                                <span class="material-symbols-outlined" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;">book</span>
+                                <span class="pi pi-book" style="color: var(--p-primary-500); font-size: 20px; flex-shrink: 0;"></span>
                                 <span class="font-bold" style="white-space: nowrap;">{{ this.sharedService.T(childNode.data['label']) }}</span>
                               </div>
                               <!-- Summary Information - 8 span column with 4-span sub-columns -->
@@ -328,7 +324,7 @@
                           
                           <!-- Digital Service items -->
                           <ng-container *ngIf="childNode.children && childNode.children.length > 0">
-                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-cyan-50">
+                            <tr *ngFor="let itemNode of childNode.children" style="background-color: var(--p-surface-card); border-bottom: 1px solid var(--p-content-border-color);" class="hover:bg-[var(--p-primary-100)]">
                               <td class="px-4 py-3" style="padding-left: 60px;"></td>
                               <td *ngFor="let col of getRelevantColumns({}, 'service')" class="px-4 py-3 text-sm" style="color: var(--p-text-color);">
                                 <span *ngIf="itemNode.data[col.field] !== undefined && itemNode.data[col.field] !== null; else noData4">
@@ -353,7 +349,7 @@
         </div>
 
         <div *ngIf="!isLoading && vehiclesData.length === 0" class="text-center py-10">
-          <p class="text-gray-500">{{ this.sharedService.T('noDataFound') }}</p>
+          <p class="text-gray-dark">{{ this.sharedService.T('noDataFound') }}</p>
         </div>
          </div>        
       

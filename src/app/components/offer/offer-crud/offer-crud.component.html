@@ -1,8 +1,4 @@
-<!-- <div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
-    <div class="bg-white rounded-lg p-8 shadow-lg">
-    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
-    </div>
-</div> -->
+<app-generic-loader [visible]="isLoading" />
 
 <!-- header start -->
 <p-toast></p-toast>
@@ -17,7 +13,7 @@
 
 <section class="px-5 pb-10">
     <form [formGroup]="offer" (keydown.enter)="onEnter($event)">
-        <div class="mt-5 mb-10 bg-White p-8 gap-3 rounded-lg shadow-lg bg-white">
+        <div class="mt-5 mb-10 p-8 gap-3 rounded-lg shadow-lg bg-white">
             <div class="grid grid-cols-12 gap-5">
                 <div class="md:col-span-6 mb-2">
                 <label class="block mb-2" for="customerId">{{ this.sharedService.T('customerName') }}</label>
@@ -116,8 +112,8 @@
                     <div class="w-[3%]  whitespace-nowrap"></div>
                     <div class="w-[7%]  whitespace-nowrap flex">{{ this.sharedService.T('category') }}
                         <span class="my-auto">
-                            <span class="material-symbols-outlined text-sm" [pTooltip]="tooltipContent"
-                                tooltipPosition="top">help</span>
+                            <span class="pi pi-question-circle text-sm" [pTooltip]="tooltipContent"
+                                tooltipPosition="top"></span>
                         </span>
                     </div>
                     <div class="w-[15%] whitespace-nowrap">{{ this.sharedService.T('productService') }}</div>
@@ -134,8 +130,8 @@
                             </div>
                         </ng-template>
                         <span class="my-auto">
-                            <span class="material-symbols-outlined text-sm" [pTooltip]="pricewithoutvattp"
-                                tooltipPosition="top" tooltipStyleClass="custom-tooltip">help</span>
+                            <span class="pi pi-question-circle text-sm" [pTooltip]="pricewithoutvattp"
+                                tooltipPosition="top" tooltipStyleClass="custom-tooltip"></span>
                         </span>
                         }
                         @if(priceMode == 0 )
@@ -147,8 +143,8 @@
                             </div>
                         </ng-template>
                         <span class="my-auto">
-                            <span class="material-symbols-outlined text-sm" [pTooltip]="pricewithvattp"
-                                tooltipPosition="top" tooltipStyleClass="custom-tooltip">help</span>
+                            <span class="pi pi-question-circle text-sm" [pTooltip]="pricewithvattp"
+                                tooltipPosition="top" tooltipStyleClass="custom-tooltip"></span>
                         </span>
                         }
 
@@ -180,7 +176,7 @@
 
                         <div class="flex gap-2 mb-2 text-sm font-semibold w-full min-w-0" [formGroup]="getFormGroup(detail)">
                             <div class="w-[3%] shrink-0 flex items-center">
-                                <span class="material-symbols-outlined draggable-handle" cdkDragHandle>drag_indicator</span> 
+                                <span class="pi pi-bars draggable-handle" cdkDragHandle></span> 
                             </div>
                             @if(detail?.get('isTextRow').value)
                             {
@@ -230,7 +226,7 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <div class="font-semibold text-sm truncate">{{ product.productName }}</div>
-                                            <div class="text-xs text-gray-500 truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
+                                            <div class="text-xs text-gray-dark truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
                                        </div>
                                     </div>
                                 </ng-template>
@@ -249,7 +245,7 @@
                             </div>
                             <div class="w-[10%]">
                                 <p-select [options]="this.unitOptions" formControlName="unit" optionLabel="text"
-                                    optionValue="value" styleClass="w-full bg-white" />
+                                    optionValue="value" styleClass="w-full" />
                             </div>
                             <div class="w-[10%]">
                                 <p-inputnumber formControlName="unitPrice" inputId="minmax" mode="decimal"
@@ -262,7 +258,7 @@
                             <div class="w-[10%]">
                                 <p-select [options]="this.sharedService.getEnums('vatPercentage')"
                                     formControlName="vatPercentage" optionLabel="text" optionValue="value"
-                                    styleClass="w-full bg-white" (onChange)="onChangeVat(detail)" />
+                                    styleClass="w-full" (onChange)="onChangeVat(detail)" />
                             </div>
                             <div class="whitespace-nowrap  w-[10%]">
                                 <input formControlName="discountPercentage" type="number" placeholder="0"
@@ -346,7 +342,7 @@
                                         readonly="true"></p-inputnumber>
                                 </td>
                             </tr>
-                            <tr class="border-y border-CustomBorder">
+                            <tr class="border-y border-border">
                                 <td class="px-2 font-bold text-sm whitespace-nowrap py-2">{{
                                     this.sharedService.T('totalDue') }}</td>
                                 <td class=" pe-0 2xl:pe-4 text-end xl:text-center font-bold text-sm">

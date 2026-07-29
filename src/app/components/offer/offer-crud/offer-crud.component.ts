@@ -6,6 +6,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { ICustomer, IEnums, IInvoiceDetailPrompt, IOffer, IProduct } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
 import { SharedService } from 'app/services/shared.service';
+import { CoreService } from 'app/services/core.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
@@ -14,6 +15,7 @@ import { MenuItem, MessageService,ConfirmationService } from 'primeng/api';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -43,6 +45,7 @@ import { adjustmentValidator, isFormControlInvalid, showValidationErrorToast } f
     ReactiveFormsModule,
     FormsModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     DragDropModule,
     IconFieldModule,
     InputIconModule,
@@ -94,6 +97,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   customers: ICustomer[] = [];
   constructor(private logger: LogService,
     public readonly sharedService: SharedService,
+    private readonly coreService: CoreService,
     private router: Router,
     private readonly fb: FormBuilder,
     private customerService: CustomerService,
@@ -271,7 +275,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
       return;
     }
     this.isVehicleLookupLoading = true;
-    this.sharedService.getVehicle(registrationNumber)
+    this.coreService.getVehicle(registrationNumber)
       .pipe(
         finalize(() => { this.isVehicleLookupLoading = false; }),
         takeUntil(this.destroy$)

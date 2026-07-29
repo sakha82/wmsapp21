@@ -10,6 +10,7 @@ import { TimesheetService } from 'app/services/timesheet.service';
 import { ITimesheet, IPager, ISelect, IEnums, IEmployee } from 'app/app.model'
 import { SelectChangeEvent } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { EmployeeService } from 'app/services/employee.service';
 import { Popover } from 'primeng/popover';
 import { ButtonModule } from 'primeng/button';
@@ -47,6 +48,7 @@ import { TextareaModule } from 'primeng/textarea';
     IconFieldModule,
     InputIconModule,
     ProgressSpinnerModule,
+    GenericLoaderComponent,
     TableModule,
     PaginatorModule,
     PopoverModule,

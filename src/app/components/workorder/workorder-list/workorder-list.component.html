@@ -165,7 +165,7 @@
                         <td class="rounded-r">
                             @if(order.workOrderStatus == 'booking' && order.isActive === 1) {
                             <p-button severity="danger" size="small" styleClass="icon-only-button !border-0"
-                                pTooltip="Ta bort bokning" tooltipPosition="top"
+                                [pTooltip]="this.sharedService.T('deleteBooking')" tooltipPosition="top"
                                 (onClick)="deleteBooking(order.workOrderId, $event)" icon="pi pi-trash">
                             </p-button>
                             }
