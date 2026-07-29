@@ -46,7 +46,7 @@
                 <p-button size="large" styleClass="w-full mb-3 mt-2" [disabled]="isSendButtonDisabled" label="{{ this.sharedService.T('send') }} {{ this.sharedService.T('offer') }}" (onClick)="showDialog()" >
                     <span class="pi pi-send"></span>
                 </p-button>
-                <p-button size="large" styleClass="w-full mb-3" [disabled]="isEditButtonDisabled" label="{{ this.sharedService.T('edit') }} {{ this.sharedService.T('offer') }}" (onClick)="redirectToOfferCrudComponent()" >
+                <p-button size="large" styleClass="w-full mb-3" data-testid="edit-offer-button" [disabled]="isEditButtonDisabled" label="{{ this.sharedService.T('edit') }} {{ this.sharedService.T('offer') }}" (onClick)="redirectToOfferCrudComponent()" >
                     <span class="pi pi-pencil"></span>
                 </p-button>
                 <div class="ms-10">
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div>
-                        @if(offer.isAccepted)
+                        @if(offer?.isAccepted)
                         {
                         <div class="flex gap-2 my-3 cursor-pointer">
                         <div class="w-5">

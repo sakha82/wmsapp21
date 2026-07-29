@@ -23,6 +23,7 @@
                             [suggestions]="customers" (completeMethod)="filterCustomer($event)"
                             optionLabel="customerName" (onSelect)="onSelect($event)" (onClear)="onUnselectCustomer()"
                             [showClear]="true" class="w-full" [placeholder]="sharedService.T('chooseCustomer')"
+                            data-testid="offer-customer-autocomplete"
                             [invalid]="isOfferControlInvalid('customerId')">
                             <ng-template let-customer #item>
                                 <div class="flex items-center gap-2">
@@ -183,7 +184,7 @@
                         
                         <div class="crud-detail-text-row">
                             <div class="crud-detail-text-area">
-                                <textarea formControlName="textContent" rows="5" class="w-full" pTextarea [autoResize]="true"></textarea>
+                                <textarea formControlName="textContent" rows="5" class="w-full" pTextarea [autoResize]="true" data-testid="offer-detail-text-content"></textarea>
                             </div>
                             <div class="crud-detail-text-options">
                                 <label class="mb-2 block" style="font-size: 11px; white-space: nowrap;">
@@ -200,6 +201,7 @@
                             </div>
                             <div class="crud-detail-text-delete">
                                 <p-button icon="pi pi-times" severity="danger" size="small"
+                                    data-testid="offer-remove-detail-row-button"
                                     (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
                             </div>
                         </div>
@@ -291,6 +293,7 @@
 
                             <div class="w-[5%] justify-end flex">
                                 <p-button icon="pi pi-times" severity="danger" size="small"
+                                    data-testid="offer-remove-detail-row-button"
                                     (onClick)="removeDetailRow(detail.get('rowIndex')?.value)" />
                             </div>
 
@@ -303,8 +306,10 @@
                 <div class="md:col-span-8">
                     <div class="flex flex-wrap gap-3 mt-4">
                         <p-button label="{{ this.sharedService.T('addProduct') }}" icon="pi pi-plus"
+                            data-testid="offer-add-product-button"
                             (click)="addDetailRow(false)"></p-button>
                         <p-button label="{{ this.sharedService.T('addText') }}" icon="pi pi-plus"
+                            data-testid="offer-add-text-button"
                             (click)="addDetailRow(true)"></p-button>
                         <p-splitbutton label="{{ this.sharedService.T('addTemplate') }}" [model]="templates" />
                     </div>
@@ -366,14 +371,16 @@
                     @if(createOffer)
                     {
                     <p-button type="submit" size="large" icon="pi pi-plus"
-                        label="{{ this.sharedService.T('createOffer') }}" (click)="onFormSubmit()"></p-button>
+                        label="{{ this.sharedService.T('createOffer') }}" data-testid="offer-submit-button"
+                        (click)="onFormSubmit()"></p-button>
                     }
                     @else {
                     <p-button type="submit" size="large" icon="pi pi-plus"
-                        label="{{ this.sharedService.T('updateOffer') }} " (click)="onFormSubmit()"></p-button>
+                        label="{{ this.sharedService.T('updateOffer') }} " data-testid="offer-submit-button"
+                        (click)="onFormSubmit()"></p-button>
                     }
                     <p-button size="large" severity="secondary" label="{{ this.sharedService.T('cancel') }}"
-                        (onClick)="onCancelForm()"></p-button>
+                        data-testid="offer-cancel-button" (onClick)="onCancelForm()"></p-button>
 
                 </div>
             </div>

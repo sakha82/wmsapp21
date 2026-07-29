@@ -5,7 +5,7 @@
         <div class="mb-6 mt-10 shadow-sm bg-white rounded-md p-5">
             <div class="list-page-actionbar mb-6">
                 <div class="list-page-actionbar-left">
-                    <p-button [raised]="true" label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('offer') }}" size="large" icon="pi pi-plus" (click)="redirectToOfferCrudComponent()" styleClass="!border-0" />
+                    <p-button [raised]="true" label="{{ this.sharedService.T('create') }} {{ this.sharedService.T('offer') }}" size="large" icon="pi pi-plus" data-testid="create-offer-button" (click)="redirectToOfferCrudComponent()" styleClass="!border-0" />
                     <p-select [options]="this.sharedService.getEnums('offerType')" formControlName="offerType" size="large" optionLabel="text" optionValue="value" (onChange)="onChangeType($event)" [checkmark]="true" [showClear]="true" placeholder="Status" (onClear)="onClearOfferType()"/> 
                     <p-select [options]="this.sharedService.getEnums('sentStatus')" formControlName="status" size="large" optionLabel="text" optionValue="value" (onChange)="onChangeStatus($event)" [checkmark]="true" [showClear]="true" placeholder="{{ this.sharedService.T('deliveryStatus') }}" /> 
                 </div> 
