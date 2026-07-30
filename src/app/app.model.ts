@@ -790,6 +790,8 @@ export interface IWorkOrderIntentResponse {
   employeeId?: number;
   employeeName?: string;
   serviceLines?: IWorkOrderIntentServiceLine[];
+  /** The described work rewritten as a short, professional Swedish work order description. */
+  professionalDescription?: string;
   /** Form control names the AI populated, so the UI can mark them "AI-suggested" until reviewed. */
   filledFields: string[];
 }

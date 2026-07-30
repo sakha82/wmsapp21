@@ -1,0 +1,13 @@
+<button
+  *ngIf="isSupported"
+  pButton
+  type="button"
+  [rounded]="true"
+  [text]="true"
+  [severity]="recording ? 'danger' : 'secondary'"
+  [icon]="recording ? 'pi pi-stop-circle' : 'pi pi-microphone'"
+  [loading]="transcribing"
+  [pTooltip]="recording ? sharedService.T('voiceInputStop') : sharedService.T('voiceInputStart')"
+  tooltipPosition="top"
+  (click)="toggle()"
+></button>

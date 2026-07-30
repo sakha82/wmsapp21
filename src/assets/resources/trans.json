@@ -25,6 +25,26 @@
         "sv": "Flera matchande kunder, välj en:"
     },
     {
+        "tkey": "voiceInputStart",
+        "en": "Speak",
+        "sv": "Tala"
+    },
+    {
+        "tkey": "voiceInputStop",
+        "en": "Stop recording",
+        "sv": "Stoppa inspelning"
+    },
+    {
+        "tkey": "micPermissionDenied",
+        "en": "Microphone access was denied. Please allow microphone access to use voice input.",
+        "sv": "Åtkomst till mikrofonen nekades. Tillåt mikrofonåtkomst för att använda röstinmatning."
+    },
+    {
+        "tkey": "voiceTranscriptionFailed",
+        "en": "Could not transcribe that recording. Please try again or type instead.",
+        "sv": "Kunde inte transkribera inspelningen. Försök igen eller skriv istället."
+    },
+    {
         "tkey": "createdVia",
         "en": "Created via",
         "sv": "Skapad via"

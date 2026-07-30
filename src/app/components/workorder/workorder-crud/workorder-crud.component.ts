@@ -55,6 +55,7 @@ import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { PickListModule } from 'primeng/picklist';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { AiAssistInputComponent } from 'app/components/shared/ai-assist-input/ai-assist-input.component';
+import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 
 @Component({
   selector: 'app-order-crud',
@@ -89,7 +90,8 @@ import { AiAssistInputComponent } from 'app/components/shared/ai-assist-input/ai
     TooltipModule,
     PickListModule,
     GenericLoaderComponent,
-    AiAssistInputComponent
+    AiAssistInputComponent,
+    VoiceInputButtonComponent
   ],
   templateUrl: './workorder-crud.component.html',
   styleUrls: ['./workorder-crud.component.css'],
@@ -488,9 +490,18 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     if (result.employeeId) {
       patch['employeeId'] = result.employeeId;
     }
+    if (result.professionalDescription) {
+      patch['description'] = result.professionalDescription;
+    }
 
     this.workOrder.patchValue(patch);
-    (result.filledFields || []).forEach((field) => this.aiSuggestedFields.add(field));
+    // filledFields from wms-ai names the response field it populated (e.g. "vehiclePlate",
+    // "employeeId"), which already matches this form's control names for most fields — except
+    // professionalDescription, which patches the "description" control, so map that one
+    // explicitly rather than relying on the two names to coincide.
+    (result.filledFields || []).forEach((field) =>
+      this.aiSuggestedFields.add(field === 'professionalDescription' ? 'description' : field)
+    );
 
     if (result.vehiclePlate) {
       this.lookupVehicle();
@@ -530,6 +541,14 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   /** Called on manual edit of an AI-populated field so the "AI-suggested" badge only shows until the human touches it. */
   clearAiSuggestion(field: string): void {
     this.aiSuggestedFields.delete(field);
+  }
+
+  /** Direct dictation into the description field - the user's own words, appended as-is, not routed through the AI-assist parse flow and not marked "AI-suggested" (it's not a model guess). */
+  onDescriptionTranscribed(transcript: string): void {
+    const current = this.workOrder.get('description')?.value || '';
+    const next = current ? `${current} ${transcript}` : transcript;
+    this.workOrder.patchValue({ description: next });
+    this.clearAiSuggestion('description');
   }
 
   filterSuppliers(event: any): void {

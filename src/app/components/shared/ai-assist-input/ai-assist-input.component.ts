@@ -4,21 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SharedService } from 'app/services/shared.service';
+import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 
 /**
- * Text-only AI-assist entry point: "describe what you want, AI suggests field
- * values." No microphone/speech capability — per product decision, voice
- * input only happens through the external WhatsApp/Telegram bot, never
- * inside the app itself.
+ * AI-assist entry point: "describe what you want, AI suggests field values" —
+ * typed or spoken. Recording/transcription is delegated to
+ * VoiceInputButtonComponent; a returned transcript fills the input and
+ * submits immediately, same as pressing Enter after typing.
  *
- * This component only captures and emits the typed text — it doesn't call
- * any API or know what "work order" or any other domain object is, so it can
- * be reused by future modules the same way.
+ * This component only captures and emits the resulting text — it doesn't
+ * call the parsing API or know what "work order" or any other domain object
+ * is, so it can be reused by future modules the same way.
  */
 @Component({
   selector: 'app-ai-assist-input',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule],
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, VoiceInputButtonComponent],
   templateUrl: './ai-assist-input.component.html',
 })
 export class AiAssistInputComponent {
@@ -36,5 +37,10 @@ export class AiAssistInputComponent {
       return;
     }
     this.submitText.emit(value);
+  }
+
+  onVoiceTranscribed(transcript: string): void {
+    this.text = transcript;
+    this.submit();
   }
 }

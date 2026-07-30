@@ -59,6 +59,13 @@ export class CoreService {
     return this.http.post<IWorkOrderIntentResponse>(url, request, { headers });
   }
 
+  /** Transcribes a recorded audio clip to text via the AI Layer. Used by the AI-assist input, the work order description field, and the reminders quick-capture row. */
+  transcribeAudio(audio: Blob) {
+    const formData = new FormData();
+    formData.append('audio', audio, 'recording.webm');
+    return this.http.post<{ text: string }>(`${this.coreUrl}/ai/speech-to-text`, formData);
+  }
+
   getPDFBlob(key: string): Observable<Blob> {
     const params = new HttpParams().set('key', key);
     return this.http.get(`${this.coreUrl}/download-file`, {

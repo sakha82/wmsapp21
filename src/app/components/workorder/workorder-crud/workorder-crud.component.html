@@ -417,10 +417,18 @@
       </div>
       </div>
       <div class="col-span-12">
-        <label class="block mb-2">{{ this.sharedService.T('description') }}</label>
-        <textarea class="w-full" formControlName="description" rows="5" cols="30" pTextarea
-          [autoResize]="true">
-        </textarea>
+        <div class="flex items-center gap-2 mb-2">
+          <label class="block mb-0">{{ this.sharedService.T('description') }}</label>
+          <p-tag *ngIf="isAiSuggested('description')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
+        </div>
+        <div class="relative">
+          <textarea class="w-full" formControlName="description" rows="5" cols="30" pTextarea
+            [autoResize]="true" (input)="clearAiSuggestion('description')">
+          </textarea>
+          <div class="absolute bottom-2 right-2">
+            <app-voice-input-button (transcribed)="onDescriptionTranscribed($event)"></app-voice-input-button>
+          </div>
+        </div>
       </div>
 
     </div>

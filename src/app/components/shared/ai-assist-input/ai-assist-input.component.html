@@ -9,6 +9,7 @@
     [disabled]="loading"
     (keydown.enter)="submit()"
   />
+  <app-voice-input-button (transcribed)="onVoiceTranscribed($event)"></app-voice-input-button>
   <button
     pButton
     type="button"
