@@ -1,392 +1,72 @@
 <app-generic-loader [visible]="isLoading" />
+<p-toast position="top-right" />
 
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
-    <p class="font-normal text-2xl">{{this.sharedService.T('dashboard')}} - {{ this.sharedService.workshopName}}</p>
+    <p class="font-normal text-2xl">{{ this.sharedService.T('dashboard') }} - {{ this.sharedService.workshopName }}</p>
   </div>
 </header>
-    <section class="p-6 pb-12">
-      <form [formGroup]="filters">
-      <div class="p-8 rounded-lg shadow-lg bg-white ">
-<!-- <section class="px-5 mb-10 pb-10"> -->
-    <div class="container mx-auto px-4 py-6"> 
-        <!-- Header with Create Buttons -->
-        <div class="flex justify-between items-center mb-6">
-        <div class="flex gap-3">
-          
-          <p-button label="{{this.sharedService.T('searchVehicle')}}" (click)="redirectToVehicleComponent()" icon="pi pi-search"></p-button>
-          <p-button label="{{this.sharedService.T('createWorkorder')}}" (click)="redirectToOrderCrudComponent()" icon="pi pi-plus"></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createCustomer')}}"  (click)="redirectToCustomerCrudComponent()"></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createOffer')}} "  (click)="redirectToOfferCrudComponent()" ></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createInvoice')}}"  (click)="redirectToInvoiceCrudComponent()" ></p-button>
-          <p-button icon="pi pi-plus" label="{{this.sharedService.T('createProduct')}}"  (click)="redirectToProductCrudComponent()" ></p-button>
-         </div>
-        </div>
-        <div class="grid grid-cols-4 gap-4 mb-6 mt-2">
-            <div *ngIf="outStandingOffers" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-border">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-dark text-sm">{{this.sharedService.T('unansweredOffers')}}</p>
-                        <h3 class="text-2xl font-bold mt-1">{{outStandingOffers.orderCount}}</h3>
-                        <p class="text-gray-dark text-xs mt-1">{{this.sharedService.T('totalSum')}} : {{outStandingOffers.priceIncVat}} {{this.sharedService.T('incVat')}} : {{outStandingOffers.vat}}</p>
-                    </div>
-                    <div class="h-12 w-12 rounded-full bg-customBlue flex items-center justify-center">
-                        <i class="fas fa-tasks text-white"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div *ngIf="outStandingInvoices" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-border">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-dark text-sm">{{this.sharedService.T('unpaidInvoices')}}</p>
-                        <h3 class="text-2xl font-bold mt-1">{{outStandingInvoices.orderCount}}</h3>
-                        <p class="text-gray-dark text-xs mt-1">{{this.sharedService.T('totalSum')}} : {{outStandingInvoices.priceIncVat}} {{this.sharedService.T('incVat')}} : {{outStandingInvoices.vat}}</p>
-                    </div>
-                    <div class="h-12 w-12 rounded-full bg-customBlue flex items-center justify-center">
-                        <i class="fas fa-money-bill-wave text-white"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div *ngIf="topManufacturers && topManufacturers.length > 0" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-border">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-dark text-sm">{{this.sharedService.T('topMake')}}</p>
-                        <h3 class="text-2xl font-bold mt-1">{{topManufacturers[0].vehicleManufacturer}}</h3>
-                        <p class="text-gray-dark text-xs mt-1">{{topManufacturers[0].orderCount}} {{this.sharedService.T('orders')}} {{this.sharedService.T('worth')}} {{topManufacturers[0].sale}} kr {{this.sharedService.T('inLast30Days')}}</p>
-                    </div>
-                    <div class="h-12 w-12 rounded-full bg-customBlue flex items-center justify-center">
-                        <i class="fas fa-truck text-white"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div *ngIf="topCustomers && topCustomers.length > 0" class="stat-card bg-white rounded-xl p-4 card-shadow border-t border-border">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-gray-dark text-sm">{{this.sharedService.T('topCustomer')}}</p>
-                        <h3 class="text-2xl font-bold mt-1">{{topCustomers[0].customerName}}</h3>
-                        <p class="text-gray-dark text-xs mt-1">{{topCustomers[0].orderCount}} {{this.sharedService.T('orders')}} {{this.sharedService.T('worth')}} {{topCustomers[0].sale}} kr {{this.sharedService.T('inLast30Days')}}</p>
-                    </div>
-                    <div class="h-12 w-12 rounded-full bg-customBlue flex items-center justify-center">
-                        <i class="fas fa-star text-white"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-<!-- Unified Revenue & Performance Section -->
-<div class="bg-white rounded-xl p-6 card-shadow mb-6 border-t border-border">
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-xl font-semibold">{{this.sharedService.T('salePerformance')}}</h1>
-    <div class="flex items-center gap-2">
-      <p-select [options]="noOfPreviousMonthsForChart" 
-      [(ngModel)]="selectedStatMonths" [ngModelOptions]="{standalone: true}" 
-      optionLabel="text"
-       optionValue="value" 
-       (onChange)="onPeriodChange($event)" 
-       [checkmark]="true"></p-select>
+<section class="p-6 pb-12">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Hero -->
+    <div class="text-center mb-8 mt-4">
+      <h1 class="text-2xl font-semibold mb-1">{{ greeting }}</h1>
+      <p class="text-gray-dark text-sm mb-6">{{ this.sharedService.T('aiWorkspaceSubtitle') }}</p>
+
+      <app-ai-assist-input [placeholder]="sharedService.T('aiWorkspacePlaceholder')" [loading]="isAiRouting"
+        (submitText)="onAiAssistSubmit($event)" />
+
+      <div class="flex flex-wrap justify-center gap-2 mt-3">
+        <p-button *ngFor="let prompt of examplePrompts" [text]="true" size="small" [label]="prompt"
+          styleClass="rounded border border-border" (onClick)="onAiAssistSubmit(prompt)"></p-button>
+      </div>
     </div>
-  </div>
- 
-  <!-- Main Content -->
-  <div class="grid grid-cols-4 gap-8">
-    <!-- Statistics Panel (Left) -->
-    <div class="col-span-1 border-r border-border pr-8">
-      <h3 class="text-lg font-semibold mb-6 text-center">{{ selectedMonth }}</h3>
 
-      <div class="space-y-6">
-        <div class="text-center">
-          <p class="text-gray-dark text-sm mb-2">{{this.sharedService.T('totalSales')}}</p>
-          <p class="text-2xl font-bold text-lightBlue">{{ currentMonthSale | number:'1.0-0' }} SEK</p>
-          <div class="flex items-center justify-center mt-2">
-            <!-- <span class="text-green-500 text-sm flex items-center">
-              <i class="fas fa-arrow-up mr-1"></i> 12.5%
-            </span> -->
-            <!-- <span class="text-gray-dark text-xs ml-1">vs last month</span> -->
-          </div>
+    <!-- Quick Actions -->
+    <div class="flex flex-wrap gap-3 justify-center mb-8">
+      <p-button label="{{ this.sharedService.T('searchVehicle') }}" (click)="redirectToVehicleComponent()" icon="pi pi-search" styleClass="rounded"></p-button>
+      <p-button label="{{ this.sharedService.T('createWorkorder') }}" (click)="redirectToOrderCrudComponent()" icon="pi pi-plus" styleClass="rounded"></p-button>
+      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createCustomer') }}" (click)="redirectToCustomerCrudComponent()" styleClass="rounded"></p-button>
+      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createOffer') }}" (click)="redirectToOfferCrudComponent()" styleClass="rounded"></p-button>
+      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createInvoice') }}" (click)="redirectToInvoiceCrudComponent()" styleClass="rounded"></p-button>
+      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createProduct') }}" (click)="redirectToProductCrudComponent()" styleClass="rounded"></p-button>
+    </div>
+
+    <!-- Today's Workshop -->
+    <div class="mb-8" *ngIf="todayWorkshopSummary">
+      <h2 class="text-lg font-semibold mb-3">{{ this.sharedService.T('todaysWorkshop') }}</h2>
+      <div class="grid grid-cols-4 gap-4">
+        <div class="rounded border border-border bg-white p-4">
+          <p class="text-gray-dark text-sm">{{ this.sharedService.T('arrivingToday') }}</p>
+          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.arrivingToday }}</h3>
         </div>
-
-        <div class="text-center">
-          <p class="text-gray-dark text-sm mb-2">{{this.sharedService.T('totalOrders')}}</p>
-          <p class="text-2xl font-bold text-lightBlue">{{ currentMonthOrders }}</p>
-          <div class="flex items-center justify-center mt-2">
-            <!-- <span class="text-green-500 text-sm flex items-center">
-              <i class="fas fa-arrow-up mr-1"></i> 8.2%
-            </span> -->
-            <!-- <span class="text-gray-dark text-xs ml-1">vs last month</span> -->
-          </div>
+        <div class="rounded border border-border bg-white p-4">
+          <p class="text-gray-dark text-sm">{{ this.sharedService.T('inWorkshop') }}</p>
+          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.inWorkshop }}</h3>
         </div>
-
-        <div class="text-center">
-          <p class="text-gray-dark text-sm mb-2">{{this.sharedService.T('avgOrderValue')}}</p>
-          <p class="text-2xl font-bold text-lightBlue">{{ getAverageperOrder() | number:'1.0-0' }} SEK</p>
-          <div class="flex items-center justify-center mt-2">
-            <!-- <span class="text-green-500 text-sm flex items-center">
-              <i class="fas fa-arrow-up mr-1"></i> 4.1%
-            </span> -->
-            <!-- <span class="text-gray-dark text-xs ml-1">vs last month</span> -->
-          </div>
+        <div class="rounded border border-border bg-white p-4">
+          <p class="text-gray-dark text-sm">{{ this.sharedService.T('readyForPickup') }}</p>
+          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.readyForPickup }}</h3>
         </div>
-
-        <div class="text-center pt-6 border-t border-border">
-          <p class="text-gray-dark text-sm mb-3">{{this.sharedService.T('monthlyTarget')}}</p>
-          <div class="w-full bg-bg-light rounded-full h-2.5 mb-2">
-            <!-- <div class="bg-lightBlue h-2.5 rounded-full" [style.width.%]="(currentMonthSale / currentMonthSaleTarget) * 100"></div> -->
-          <p-progressbar [value]="progressPercentage" />
-          </div>
-          <p class="text-xs text-gray-dark">{{ progressPercentage }}% {{this.sharedService.T('achieved')}}</p>
+        <div class="rounded border border-border bg-white p-4">
+          <p class="text-gray-dark text-sm">{{ this.sharedService.T('customersToContact') }}</p>
+          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.customersToContact }}</h3>
         </div>
       </div>
     </div>
 
-    <!-- Chart Area (Right) -->
-    <div class="col-span-3">
-      <!-- Chart Card -->
-      <div class="card mt-0">
-        <p-chart
-          type="bar"
-          [data]="lineChartData"
-          [options]="lineChartOptions"
-          height="400px"
-          class="h-100">
-        </p-chart>
-      </div>
-    </div>
-  </div>
-
-  <!-- Additional Metrics -->
-  <div class="grid grid-cols-4 gap-4 mt-8 pt-8 border-t border-border">
-    <div class="text-center">
-      <p class="text-gray-dark text-sm">{{this.sharedService.T('newCustomers')}}</p>
-      <p class="text-xl font-bold">{{ currentMonthCustomers }}</p>
-    </div>
-    <div class="text-center">
-      <p class="text-gray-dark text-sm">{{this.sharedService.T('newOffers')}}</p>
-      <p class="text-xl font-bold">{{ currentMonthOffers }}</p>
-    </div>
-    <div class="text-center">
-      <p class="text-gray-dark text-sm">{{this.sharedService.T('newWorkorders')}}</p>
-      <p class="text-xl font-bold">{{ currentMonthWorkOrders }}</p>
-    </div>
-    <div class="text-center">
-      <p class="text-gray-dark text-sm">{{this.sharedService.T('newDigitalServices')}}</p>
-      <p class="text-xl font-bold">{{ currentMonthDigitalServices }}</p>
-    </div>
-  </div>
-</div>
-
-
-
-        <!-- Tables Section -->
-        <div class="grid grid-cols-12 gap-6 mb-6 ">
-            <!-- Invoices Table -->
-            <div class="col-span-9 bg-white rounded-xl p-4 card-shadow border-t border-border">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">{{this.sharedService.T('unpaidInvoicesByCustomers')}}</h3>
-                </div>
-                <div class="">
-                <p-table 
-                [value]="unpaidInvoices" 
-                [showGridlines]="false" 
-                [rows]="5"
-                [first]="0"
-                [paginator]="true"
-                [rowsPerPageOptions]="[5,10, 15]"  
-                [showCurrentPageReport]="true"
-                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
-                [sortOrder]="-1" 
-                sortField="customerId" 
-                >
-        <ng-template #header>
-          <tr>
-            <th class="id-column-header rounded-l-xl" pSortableColumn="customerId">
-              <p-sortIcon field="customerId" />
-            </th>
-            <th>{{ this.sharedService.T('customerName') }}</th>
-            <th>{{ this.sharedService.T('unpaidInvoices' ) }}</th>
-            <th>{{ this.sharedService.T('totalAmountToPay' ) }}</th>
-          </tr>
-        </ng-template>
-
-        <ng-template #body let-invoice>
-          <tr class="p-selectable-row">
-            <!-- Invoice ID -->
-            <td class="id-column-cell rounded-l-lg">
-              <div class="flex items-center gap-2 cursor-pointer">
-                <span class="id-text">{{ invoice.customerId }}</span>
-                <i class="pi pi-external-link icon-primary" ></i>
-              </div>
-            </td>
-            <td title="{{ invoice.customerName }}">
-              {{invoice.customerName
-              }}
-            </td>
-            <td title="{{ invoice.invoiceCount }}">
-            {{ invoice.invoiceCount }}
-            </td>
-            <td>
-              <p-inputnumber [(ngModel)]="invoice.priceIncVat" [ngModelOptions]="{ standalone: true }" inputId="minmax"
-                mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
-                [locale]="this.sharedService.currentLocale"
-                [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
-                readonly="true" class="with-out-border"></p-inputnumber>
-                {{ this.sharedService.T('incVat') }}
-                <p-inputnumber [(ngModel)]="invoice.vat" [ngModelOptions]="{ standalone: true }" inputId="minmax"
-                mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
-                [locale]="this.sharedService.currentLocale"
-                [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
-                readonly="true" class="with-out-border"></p-inputnumber>
-            </td>
-
-        </tr>
-        </ng-template>
-      </p-table>
-       </div>
-       <div>
-        <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold">{{this.sharedService.T('unansweredOffers')}}</h3>
-                </div>
-                
-                <p-table 
-                [value]="waitingOffers" 
-                [showGridlines]="false" 
-                [rows]="5"
-                [first]="0"
-                [paginator]="true"
-                [rowsPerPageOptions]="[5,10, 15]"  
-                [showCurrentPageReport]="true"
-                currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords} "
-                [sortOrder]="-1" 
-                sortField="offerId" 
-                >
-        <ng-template #header>
-          <tr>
-            <th class="rounded-l-xl" pSortableColumn="offerId">
-              <p-sortIcon field="offerId" />
-            </th>
-            <th>{{ this.sharedService.T('customerName') }}</th>
-            <th>{{ this.sharedService.T('vehiclePlate') }}</th>
-            <th>{{ this.sharedService.T('amount') }}</th>
-            <th>{{ this.sharedService.T('offerDate') }}</th>
-            <th>{{ this.sharedService.T('validTo') }}</th>
-       </tr>
-        </ng-template>
-
-        <ng-template #body let-offer>
-          <tr class="p-selectable-row">
-            <!-- Invoice ID -->
-            <td class="id-column-cell rounded-l-lg">
-              <div class="flex items-center gap-2 cursor-pointer">
-                <span class="id-text">{{ offer.customerId }}</span>
-                <i class="pi pi-external-link icon-primary" ></i>
-              </div>
-            </td>
-            <td title="{{ offer.customerName }}">
-              {{offer.customerName
-              }}
-            </td>
-            <td title="{{ offer.vehiclePlate }}">
-            {{ offer.vehiclePlate }}
-            </td>
-            <td>
-                <p-inputnumber  
-                [(ngModel)]="offer.priceIncVat" [ngModelOptions]="{standalone: true}"
-                inputId="minmax" 
-                mode="currency"
-                currency="SEK"
-                [minFractionDigits]="0" 
-                [maxFractionDigits]="0" 
-                [locale]="this.sharedService.currentLocale" 
-                [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
-                readonly="true"
-                class="with-out-border"
-                ></p-inputnumber>
-             </td>
-            <td>{{ offer.offerDate }}</td>
-            <td>{{ offer.validTill }}</td>
-          </tr>
-        </ng-template>
-      </p-table>  
-            
-      </div>
-       
-            </div>
-            <!-- News -->
-               <div class="col-span-3 bg-white rounded-xl p-4 card-shadow border-t border-border">
-              <h3 class="text-lg font-semibold mb-4">Nyheter & Uppdateringar</h3>
-              <div class="space-y-1">
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Jun 10, 09:00</p>
-                          <p class="text-sm">Funktion för skapande av lönespecifikationer är planerad</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">May 15, 11:30</p>
-                          <p class="text-sm">Förbättringar i bokningsmodulen och webbplatsintegration pågår</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Apr 12, 08:45</p>
-                          <p class="text-sm">Automatisk hämtning av bilens märke och modell har införts</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Feb 25, 14:10</p>
-                          <p class="text-sm">Stora förbättringar i arbetsorder-modulen har implementerats</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Feb 05, 10:20</p>
-                          <p class="text-sm">Integration med Bolagsverket är nu slutförd</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Jan 18, 09:40</p>
-                          <p class="text-sm">Nya funktioner för kund- och fakturahantering tillagda</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Dec 12, 13:15</p>
-                          <p class="text-sm">Förbättrad prestanda och stabilitet i hela systemet</p>
-                      </div>
-                  </div>
-
-                  <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
-                      <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
-                      <div>
-                          <p class="text-xs text-gray-dark">Nov 20, 08:00</p>
-                          <p class="text-sm">Lansering av Digitalworkshop.nu har genomförts framgångsrikt</p>
-                      </div>
-                  </div>
-
-              </div>
-          </div>
+    <!-- AI Suggestions -->
+    <div class="mb-8" *ngIf="aiSuggestions.length">
+      <h2 class="text-lg font-semibold mb-3">{{ this.sharedService.T('aiSuggestions') }}</h2>
+      <div class="flex flex-col gap-2">
+        <div *ngFor="let suggestion of aiSuggestions" class="flex items-center gap-3 rounded border border-border bg-white p-3">
+          <i [class]="suggestion.icon + ' text-primary'"></i>
+          <span class="text-sm">{{ suggestion.text }}</span>
         </div>
+      </div>
     </div>
-    </div>
-    </form>
+
+  </div>
 </section>

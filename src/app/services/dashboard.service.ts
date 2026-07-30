@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { IMonthSummary, IOffer, IOutStandingBalance, IPageList, ISelect, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice} from 'app/app.model'
+import { IMonthSummary, IOffer, IOutStandingBalance, IPageList, ISelect, ITodayWorkshopSummary, ITopCustomer, ITopManufacturer, ITopSale, IUnpaidInvoice} from 'app/app.model'
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 import { FormGroup } from '@angular/forms';
@@ -106,6 +106,13 @@ export class DashboardService {
     queryParams.append("cyear", cyear);
     queryParams.append("cmonth", cmonth);
     return this.http.get<string>(`${this.baseUrl}/month-customers?${queryParams}`);
+  }
+
+  /** "Today's Workshop" at-a-glance counters for the dashboard's stat tiles. */
+  getTodayWorkshopSummary() {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    return this.http.get<ITodayWorkshopSummary>(`${this.baseUrl}/today-workshop?${queryParams}`);
   }
 
 }

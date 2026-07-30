@@ -60,6 +60,116 @@
         "sv": "Känd"
     },
     {
+        "tkey": "statistics",
+        "en": "Statistics",
+        "sv": "Statistik"
+    },
+    {
+        "tkey": "goodMorning",
+        "en": "Good morning",
+        "sv": "God morgon"
+    },
+    {
+        "tkey": "goodAfternoon",
+        "en": "Good afternoon",
+        "sv": "God eftermiddag"
+    },
+    {
+        "tkey": "goodEvening",
+        "en": "Good evening",
+        "sv": "God kväll"
+    },
+    {
+        "tkey": "aiWorkspaceSubtitle",
+        "en": "How can I help you today?",
+        "sv": "Hur kan jag hjälpa dig idag?"
+    },
+    {
+        "tkey": "aiWorkspacePlaceholder",
+        "en": "Try \"Book a service for ABC123\" or \"Show unpaid invoices\"",
+        "sv": "Prova \"Boka service för ABC123\" eller \"Visa obetalda fakturor\""
+    },
+    {
+        "tkey": "aiExamplePromptBooking",
+        "en": "Book a work order",
+        "sv": "Boka en arbetsorder"
+    },
+    {
+        "tkey": "aiExamplePromptVehicle",
+        "en": "Search for a vehicle",
+        "sv": "Sök efter ett fordon"
+    },
+    {
+        "tkey": "aiExamplePromptCustomer",
+        "en": "Find a customer",
+        "sv": "Hitta en kund"
+    },
+    {
+        "tkey": "aiExamplePromptInvoice",
+        "en": "Create an invoice",
+        "sv": "Skapa en faktura"
+    },
+    {
+        "tkey": "todaysWorkshop",
+        "en": "Today's Workshop",
+        "sv": "Dagens verkstad"
+    },
+    {
+        "tkey": "arrivingToday",
+        "en": "Arriving today",
+        "sv": "Anländer idag"
+    },
+    {
+        "tkey": "inWorkshop",
+        "en": "In workshop",
+        "sv": "I verkstaden"
+    },
+    {
+        "tkey": "readyForPickup",
+        "en": "Ready for pickup",
+        "sv": "Klar för avhämtning"
+    },
+    {
+        "tkey": "customersToContact",
+        "en": "Customers to contact",
+        "sv": "Kunder att kontakta"
+    },
+    {
+        "tkey": "aiSuggestions",
+        "en": "AI Suggestions",
+        "sv": "AI-förslag"
+    },
+    {
+        "tkey": "aiSuggestionMissingMechanic",
+        "en": "{count} of today's bookings have no mechanic assigned yet.",
+        "sv": "{count} av dagens bokningar saknar tilldelad mekaniker."
+    },
+    {
+        "tkey": "aiSuggestionOverdueInvoices",
+        "en": "{count} invoices are overdue.",
+        "sv": "{count} fakturor är förfallna."
+    },
+    {
+        "tkey": "aiRouteNotFoundTitle",
+        "en": "Not sure what you mean",
+        "sv": "Osäker på vad du menar"
+    },
+    {
+        "tkey": "aiRouteNotFound",
+        "en": "Try one of the example prompts or the quick action buttons below.",
+        "sv": "Prova ett av exempelförslagen eller snabbknapparna nedan."
+    },
+    {
+        "tkey": "aiRouteRemindersNotAvailableTitle",
+        "en": "Reminders coming soon",
+        "sv": "Påminnelser kommer snart"
+    },
+    {
+        "tkey": "aiRouteRemindersNotAvailable",
+        "en": "Reminders aren't available yet - this feature is still being built.",
+        "sv": "Påminnelser är inte tillgängliga än - funktionen håller fortfarande på att byggas."
+    },
+    {
         "tkey": "voiceInputStart",
         "en": "Speak",
         "sv": "Tala"

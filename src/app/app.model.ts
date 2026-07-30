@@ -535,6 +535,17 @@ export interface IWorkshop {
 }
 // Dashboard
 
+/** "Today's Workshop" at-a-glance counters for the AI-workspace dashboard's stat tiles. */
+export interface ITodayWorkshopSummary {
+  arrivingToday: number;
+  inWorkshop: number;
+  readyForPickup: number;
+  /** Customers with an unpaid/overdue invoice - a provisional definition, not a confirmed one. */
+  customersToContact: number;
+  /** Work orders booked in for today with no mechanic assigned yet - backs the "missing mechanic assignments" AI Suggestion. */
+  missingMechanicAssignments: number;
+}
+
 export interface ITopManufacturer {
   vehicleManufacturer:string;
   sale: string;

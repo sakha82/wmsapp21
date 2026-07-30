@@ -35,6 +35,7 @@ import { OptOutComponent } from './components/opt-out/opt-out.component';
 import { ProductDetailComponent } from './components/product/product-list/product-detail/product-detail.component';
 import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
+import { StatisticsListComponent } from './components/statistics/statistics-list/statistics-list.component';
 
 export const routes: Routes =  [
   { path: '', component:HomeComponent},
@@ -49,6 +50,7 @@ export const routes: Routes =  [
     canActivate: [ ResourcesLoadedGuard],
     children: [ 
               {path: 'dashboard',component:DashboardListComponent},
+              {path: 'statistics',component:StatisticsListComponent},
               {path: 'customer',component:CustomerListComponent},
               {path: 'customer/details/:customerId',component:CustomerDetailComponent},                
               {path: 'customer/crud',component:CustomerCrudComponent},
