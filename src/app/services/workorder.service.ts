@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {ISelect, IWorkOrder,IPageList, IVehicleType, IProduct } from 'app/app.model';
+import {ISelect, IWorkOrder,IPageList, IVehicleType, IProduct, IVehicleHistorySummary } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { SharedService} from 'app/services/shared.service';
 import { LogService } from './log.service';
@@ -67,6 +67,14 @@ export class WorkOrderService {
     return this.http.get<string[]>(`${this.baseUrl}/vehicleplates?${queryParams}`);
   }
   
+  /** First-visit vs. returning-vehicle summary for a plate, including every distinct customer it's ever been booked under. */
+  getVehicleHistory(vehiclePlate: string) {
+    const queryParams = new URLSearchParams();
+    queryParams.append("wmsId", this.sharedService.wmsId);
+    queryParams.append("vehiclePlate", vehiclePlate);
+    return this.http.get<IVehicleHistorySummary>(`${this.baseUrl}/vehicle-history?${queryParams}`);
+  }
+
   getServiceHours(make: string, model: string, year: number = 0) {
     this.logger.info('Fetching service hours for vehicle type:', { make, model, year });
     const queryParams = new URLSearchParams();

@@ -25,6 +25,41 @@
         "sv": "Flera matchande kunder, välj en:"
     },
     {
+        "tkey": "enterVehicleManually",
+        "en": "Enter vehicle manually",
+        "sv": "Ange fordon manuellt"
+    },
+    {
+        "tkey": "firstVisitBanner",
+        "en": "First visit for this vehicle.",
+        "sv": "Första besöket för det här fordonet."
+    },
+    {
+        "tkey": "returningVehicleBanner",
+        "en": "Returning vehicle.",
+        "sv": "Återkommande fordon."
+    },
+    {
+        "tkey": "lastVisit",
+        "en": "Last visit",
+        "sv": "Senaste besök"
+    },
+    {
+        "tkey": "previousServices",
+        "en": "Previous services",
+        "sv": "Tidigare tjänster"
+    },
+    {
+        "tkey": "vehicleHistoryMultipleCustomers",
+        "en": "This vehicle has been booked under more than one customer. Which one is this visit for?",
+        "sv": "Det här fordonet har bokats under flera kunder. Vilken kund gäller det här besöket?"
+    },
+    {
+        "tkey": "knownCustomer",
+        "en": "Known",
+        "sv": "Känd"
+    },
+    {
         "tkey": "voiceInputStart",
         "en": "Speak",
         "sv": "Tala"

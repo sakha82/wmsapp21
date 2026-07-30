@@ -43,9 +43,35 @@
             (input)="onInputChange($event); clearAiSuggestion('vehiclePlate')"
             class="uppercase p-2 w-full"
             [invalid]="isFieldInvalid('vehiclePlate')" />
-          <button pButton type="button" icon="pi pi-search" [loading]="isVehicleLookupLoading"
+          <button pButton type="button" icon="pi pi-search" [loading]="isVehicleLookupLoading || isVehicleHistoryLoading"
             (click)="lookupVehicle()" pTooltip="{{ this.sharedService.T('lookupVehicle') }}"></button>
         </p-inputgroup>
+        <a *ngIf="!showFullForm" href="#" class="crud-inline-action-link text-sm"
+          (click)="skipVehicleLookup(); $event.preventDefault()">
+          {{ this.sharedService.T('enterVehicleManually') }}
+        </a>
+      </div>
+
+      <ng-container *ngIf="showFullForm">
+      <div *ngIf="vehicleHistory" class="col-span-9 flex items-center gap-2 p-3 rounded border border-border bg-bg-light">
+        <ng-container *ngIf="vehicleHistory.isFirstVisit; else returningVehicle">
+          <i class="pi pi-star text-primary"></i>
+          <span class="text-sm">{{ sharedService.T('firstVisitBanner') }}</span>
+        </ng-container>
+        <ng-template #returningVehicle>
+          <i class="pi pi-history text-primary"></i>
+          <span class="text-sm">
+            {{ sharedService.T('returningVehicleBanner') }}
+            <span *ngIf="vehicleHistory.lastVisitDate">{{ sharedService.T('lastVisit') }}: {{ vehicleHistory.lastVisitDate }}.</span>
+            <span *ngIf="vehicleHistory.previousServicesSummary">{{ sharedService.T('previousServices') }}: {{ vehicleHistory.previousServicesSummary }}.</span>
+          </span>
+        </ng-template>
+      </div>
+
+      <div *ngIf="historyCustomerCandidates.length" class="col-span-9 flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white">
+        <span class="text-sm">{{ sharedService.T('vehicleHistoryMultipleCustomers') }}</span>
+        <p-button *ngFor="let candidate of historyCustomerCandidates" size="small" [text]="true"
+          [label]="candidate.customerName" (onClick)="resolveHistoryCustomer(candidate)"></p-button>
       </div>
 
       <!-- Vehicle Manufacturer -->
@@ -82,6 +108,7 @@
           <div class="flex items-center gap-2">
             <label class="block mb-0">{{ this.sharedService.T('customerName') }}</label>
             <p-tag *ngIf="isAiSuggested('customerId')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
+            <p-tag *ngIf="isKnownFact('customerId')" severity="secondary" [value]="sharedService.T('knownCustomer')"></p-tag>
           </div>
           <a
             href="#"
@@ -430,13 +457,14 @@
           </div>
         </div>
       </div>
+      </ng-container>
 
     </div>
-  
-    <div class="mt-4">
+
+    <div *ngIf="showFullForm" class="mt-4">
       <p-button [raised]="true"
         label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} {{ this.sharedService.T('workorder') }}"
-        icon="{{ showSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}" 
+        icon="{{ showSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}"
         [disabled]="showSpinner"
         size="large" (click)="saveWorkOrder()"></p-button>
         <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"

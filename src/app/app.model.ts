@@ -795,3 +795,22 @@ export interface IWorkOrderIntentResponse {
   /** Form control names the AI populated, so the UI can mark them "AI-suggested" until reviewed. */
   filledFields: string[];
 }
+
+///// Vehicle history (first-visit / returning-vehicle detection)
+
+/** A distinct customer this vehicle plate has been booked under. A plate is not a reliable 1:1 proxy for a customer - the same registration can legitimately reappear under more than one customer over time. */
+export interface IVehicleHistoryCustomer {
+  customerId: number;
+  customerName: string;
+  customerTelephone?: string;
+  customerEmail?: string;
+}
+
+export interface IVehicleHistorySummary {
+  isFirstVisit: boolean;
+  lastVisitDate?: string;
+  visitCount: number;
+  previousServicesSummary?: string;
+  /** Every distinct customer this plate has been booked under. Empty on a first visit; more than one entry means the caller must ask which customer this visit is for rather than guessing. */
+  distinctCustomers: IVehicleHistoryCustomer[];
+}

@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IWorkOrderIntentCandidate, IWorkOrderIntentResponse } from 'app/app.model';
+import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IWorkOrderIntentCandidate, IWorkOrderIntentResponse, IVehicleHistorySummary, IVehicleHistoryCustomer } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -113,6 +113,15 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   aiSuggestedFields = new Set<string>();
   aiCustomerCandidates: IWorkOrderIntentCandidate[] = [];
 
+  /** Form control names auto-filled from a deterministic vehicle-history DB fact (not an AI guess) - shown with a lighter "known" badge until edited. */
+  knownFields = new Set<string>();
+  isVehicleHistoryLoading: boolean = false;
+  vehicleHistory: IVehicleHistorySummary | null = null;
+  /** More than one distinct customer has this plate on file - the user must pick one, nothing is auto-filled until they do. */
+  historyCustomerCandidates: IVehicleHistoryCustomer[] = [];
+  /** True once a plate lookup has resolved (success or failure) or the record already had a plate on load - gates the progressive-disclosure reveal of the rest of the form for new work orders. */
+  hasResolvedVehicle: boolean = false;
+
   products: IProduct[] = [];
   selectedProduct:FormGroup;
   selectedProducts: IProduct[] = [];
@@ -147,6 +156,15 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   creditDays: number[] = [0, 7, 14, 21, 30];
   customerTypes: ICustomerType[] = [];
   customerTags: ICustomerTag[] = [];
+
+  /**
+   * Progressive disclosure: a brand-new work order only shows the plate + AI-assist input until the plate has
+   * been resolved (lookup attempted, or the record already arrived with a plate - duplicate/from-offer/from-
+   * customer/edit). Existing records (edit) always show the full form immediately.
+   */
+  get showFullForm(): boolean {
+    return !this.isNewObject || this.hasResolvedVehicle;
+  }
 
   constructor(
     private messageService: MessageService,
@@ -272,6 +290,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           
           this.selectedCustomerName = response.data.customerName;
           this.isNewObject = response.isNewObject;
+          this.hasResolvedVehicle = !!response.data.vehiclePlate;
           this.workOrder.patchValue(response.data);
           this.logger.info('WORKORDERS-0', response.data);
           this.logger.info('WORKORDERS', this.workOrder.value);
@@ -425,7 +444,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.isVehicleLookupLoading = true;
     this.coreService.getVehicle(registrationNumber)
       .pipe(
-        finalize(() => { this.isVehicleLookupLoading = false; }),
+        finalize(() => { this.isVehicleLookupLoading = false; this.hasResolvedVehicle = true; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
@@ -446,6 +465,63 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           });
         }
       });
+
+    this.fetchVehicleHistory(registrationNumber);
+  }
+
+  /** Lets the receptionist skip straight to the full form without a plate lookup (e.g. plate unreadable/unknown yet). */
+  skipVehicleLookup(): void {
+    this.hasResolvedVehicle = true;
+  }
+
+  /**
+   * First-visit vs. returning-vehicle lookup, run alongside (not instead of) the make/model/year scrape lookup.
+   * A plate is not a reliable 1:1 proxy for a customer, so more than one distinct customer on file means the
+   * receptionist is asked which one this visit is for rather than the form guessing.
+   */
+  private fetchVehicleHistory(vehiclePlate: string): void {
+    this.isVehicleHistoryLoading = true;
+    this.vehicleHistory = null;
+    this.historyCustomerCandidates = [];
+    this.workOrderService.getVehicleHistory(vehiclePlate)
+      .pipe(
+        finalize(() => { this.isVehicleHistoryLoading = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (history) => {
+          this.vehicleHistory = history;
+          if (history.distinctCustomers.length === 1) {
+            this.applyKnownCustomer(history.distinctCustomers[0]);
+          } else if (history.distinctCustomers.length > 1) {
+            this.historyCustomerCandidates = history.distinctCustomers;
+          }
+        },
+        error: (err) => {
+          this.logger.error('fetchVehicleHistory error', err);
+        }
+      });
+  }
+
+  private applyKnownCustomer(customer: IVehicleHistoryCustomer): void {
+    this.workOrder.patchValue({
+      customerId: customer.customerId,
+      customerName: customer.customerName,
+      customerTelephone: customer.customerTelephone || '',
+      customerEmail: customer.customerEmail || '',
+    });
+    this.selectedCustomerName = customer.customerName;
+    this.knownFields.add('customerId');
+  }
+
+  /** Vehicle history showed more than one distinct customer for this plate - the receptionist picked one. */
+  resolveHistoryCustomer(customer: IVehicleHistoryCustomer): void {
+    this.applyKnownCustomer(customer);
+    this.historyCustomerCandidates = [];
+  }
+
+  isKnownFact(field: string): boolean {
+    return this.knownFields.has(field);
   }
 
   /**
@@ -538,9 +614,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     return this.aiSuggestedFields.has(field);
   }
 
-  /** Called on manual edit of an AI-populated field so the "AI-suggested" badge only shows until the human touches it. */
+  /** Called on manual edit of an AI-populated or known-fact field so its badge only shows until the human touches it. */
   clearAiSuggestion(field: string): void {
     this.aiSuggestedFields.delete(field);
+    this.knownFields.delete(field);
   }
 
   /** Direct dictation into the description field - the user's own words, appended as-is, not routed through the AI-assist parse flow and not marked "AI-suggested" (it's not a model guess). */
@@ -833,6 +910,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     this.showSpinner = true;
     this.aiSuggestedFields.clear();
+    this.knownFields.clear();
     this.logger.info(this.selectedProducts);
 
     var submittedWorkOrder: IWorkOrder = this.workOrder.value;
