@@ -19,18 +19,14 @@
   <p-toast position="top-right" />
   <p-confirmDialog></p-confirmDialog>
 
-  <div class="mt-5 mb-3">
-    <app-ai-assist-input [loading]="isAiAssistLoading" (submitText)="onAiAssistSubmit($event)" />
-    <div *ngIf="aiCustomerCandidates.length" class="flex flex-wrap items-center gap-2 mt-2 p-3 border border-border rounded bg-white">
-      <span class="text-sm">{{ sharedService.T('aiMultipleCustomerMatches') }}</span>
-      <p-button *ngFor="let candidate of aiCustomerCandidates" size="small" [text]="true"
-        [label]="candidate.label" (onClick)="resolveAiCustomerCandidate(candidate)"></p-button>
-    </div>
-  </div>
+  <div class="grid grid-cols-12 gap-5 items-start">
+
+  <!-- Main form column -->
+  <div class="col-span-12 lg:col-span-8 order-2 lg:order-1">
 
   <div class="mb-10 p-8 gap-3 rounded border border-border bg-white">
     <div class="grid grid-cols-12 gap-5">
-      <div class="col-span-3">
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <div class="flex items-center gap-2 mb-2">
           <label class="block mb-0" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
           <p-tag *ngIf="isAiSuggested('vehiclePlate')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
@@ -53,26 +49,6 @@
       </div>
 
       <ng-container *ngIf="showFullForm">
-      <div *ngIf="vehicleHistory" class="col-span-9 flex items-center gap-2 p-3 rounded border border-border bg-bg-light">
-        <ng-container *ngIf="vehicleHistory.isFirstVisit; else returningVehicle">
-          <i class="pi pi-star text-primary"></i>
-          <span class="text-sm">{{ sharedService.T('firstVisitBanner') }}</span>
-        </ng-container>
-        <ng-template #returningVehicle>
-          <i class="pi pi-history text-primary"></i>
-          <span class="text-sm">
-            {{ sharedService.T('returningVehicleBanner') }}
-            <span *ngIf="vehicleHistory.lastVisitDate">{{ sharedService.T('lastVisit') }}: {{ vehicleHistory.lastVisitDate }}.</span>
-            <span *ngIf="vehicleHistory.previousServicesSummary">{{ sharedService.T('previousServices') }}: {{ vehicleHistory.previousServicesSummary }}.</span>
-          </span>
-        </ng-template>
-      </div>
-
-      <div *ngIf="historyCustomerCandidates.length" class="col-span-9 flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white">
-        <span class="text-sm">{{ sharedService.T('vehicleHistoryMultipleCustomers') }}</span>
-        <p-button *ngFor="let candidate of historyCustomerCandidates" size="small" [text]="true"
-          [label]="candidate.customerName" (onClick)="resolveHistoryCustomer(candidate)"></p-button>
-      </div>
 
       <!-- Vehicle Manufacturer -->
       <div class="col-span-2">
@@ -470,6 +446,48 @@
         <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
         (click)="onCancelForm()"></p-button>
     </div>
+  </div>
+  <!-- /card (mb-10 p-8...) -->
+  </div>
+  <!-- /Main form column -->
+
+  <!-- Sticky AI panel -->
+  <div class="col-span-12 lg:col-span-4 order-1 lg:order-2">
+    <div class="lg:sticky lg:top-4 flex flex-col gap-3">
+      <div class="p-4 rounded border border-border bg-white">
+        <app-ai-assist-input [loading]="isAiAssistLoading" (submitText)="onAiAssistSubmit($event)" />
+      </div>
+
+      <div *ngIf="aiCustomerCandidates.length" class="flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white">
+        <span class="text-sm">{{ sharedService.T('aiMultipleCustomerMatches') }}</span>
+        <p-button *ngFor="let candidate of aiCustomerCandidates" size="small" [text]="true"
+          [label]="candidate.label" (onClick)="resolveAiCustomerCandidate(candidate)"></p-button>
+      </div>
+
+      <div *ngIf="vehicleHistory && showFullForm" class="flex items-center gap-2 p-3 rounded border border-border bg-bg-light">
+        <ng-container *ngIf="vehicleHistory.isFirstVisit; else returningVehicle">
+          <i class="pi pi-star text-primary"></i>
+          <span class="text-sm">{{ sharedService.T('firstVisitBanner') }}</span>
+        </ng-container>
+        <ng-template #returningVehicle>
+          <i class="pi pi-history text-primary"></i>
+          <span class="text-sm">
+            {{ sharedService.T('returningVehicleBanner') }}
+            <span *ngIf="vehicleHistory.lastVisitDate">{{ sharedService.T('lastVisit') }}: {{ vehicleHistory.lastVisitDate }}.</span>
+            <span *ngIf="vehicleHistory.previousServicesSummary">{{ sharedService.T('previousServices') }}: {{ vehicleHistory.previousServicesSummary }}.</span>
+          </span>
+        </ng-template>
+      </div>
+
+      <div *ngIf="historyCustomerCandidates.length" class="flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white">
+        <span class="text-sm">{{ sharedService.T('vehicleHistoryMultipleCustomers') }}</span>
+        <p-button *ngFor="let candidate of historyCustomerCandidates" size="small" [text]="true"
+          [label]="candidate.customerName" (onClick)="resolveHistoryCustomer(candidate)"></p-button>
+      </div>
+    </div>
+  </div>
+  <!-- /Sticky AI panel -->
+
   </div>
 </form>
 </section>
