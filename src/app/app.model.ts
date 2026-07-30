@@ -817,6 +817,39 @@ export interface IVehicleHistoryCustomer {
   customerEmail?: string;
 }
 
+///// Reminders
+
+export interface IReminder {
+  wmsId: string;
+  reminderId: number;
+  status: string;
+  textContent: string;
+  assignedToEmployeeId?: number;
+  /** Assigned employee's full name. Read-only, looked up from assignedToEmployeeId. */
+  assignedToEmployeeName?: string;
+  customerId?: number;
+  vehiclePlate?: string;
+  createdOn?: string;
+  createdBy?: string;
+}
+
+export interface ICreateReminderRequest {
+  wmsId: string;
+  textContent: string;
+  assignedToEmployeeId?: number;
+  customerId?: number;
+  vehiclePlate?: string;
+}
+
+export interface IReminderIntentResponse {
+  text: string;
+  /** Resolved employee id, set only when exactly one employee matched the name mentioned. */
+  assignedToEmployeeId?: number;
+  assignedToEmployeeName?: string;
+  /** Populated instead of assignedToEmployeeId when the transcript matched more than one employee - never guessed. */
+  employeeCandidates?: IWorkOrderIntentCandidate[];
+}
+
 export interface IVehicleHistorySummary {
   isFirstVisit: boolean;
   lastVisitDate?: string;

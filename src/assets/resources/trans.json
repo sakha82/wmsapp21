@@ -160,14 +160,29 @@
         "sv": "Prova ett av exempelförslagen eller snabbknapparna nedan."
     },
     {
-        "tkey": "aiRouteRemindersNotAvailableTitle",
-        "en": "Reminders coming soon",
-        "sv": "Påminnelser kommer snart"
+        "tkey": "reminders",
+        "en": "Reminders",
+        "sv": "Påminnelser"
     },
     {
-        "tkey": "aiRouteRemindersNotAvailable",
-        "en": "Reminders aren't available yet - this feature is still being built.",
-        "sv": "Påminnelser är inte tillgängliga än - funktionen håller fortfarande på att byggas."
+        "tkey": "reminderQuickCapturePlaceholder",
+        "en": "Remember to... e.g. \"Change brake pads for the Toyota, assign to Yousaf\"",
+        "sv": "Kom ihåg att... t.ex. \"Byt bromsbelägg på Toyotan, tilldela Yousaf\""
+    },
+    {
+        "tkey": "reminderMultipleEmployeeMatches",
+        "en": "Multiple matching employees, please pick one:",
+        "sv": "Flera matchande medarbetare, välj en:"
+    },
+    {
+        "tkey": "noOpenReminders",
+        "en": "No open reminders.",
+        "sv": "Inga öppna påminnelser."
+    },
+    {
+        "tkey": "resolve",
+        "en": "Resolve",
+        "sv": "Markera som klar"
     },
     {
         "tkey": "voiceInputStart",

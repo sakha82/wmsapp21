@@ -1,17 +1,22 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ITodayWorkshopSummary, IOutStandingBalance } from 'app/app.model';
+import { FormsModule } from '@angular/forms';
+import { IOutStandingBalance, IReminder, ITodayWorkshopSummary, IWorkOrderIntentCandidate } from 'app/app.model';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
 import { DashboardService } from 'app/services/dashboard.service';
+import { ReminderService } from 'app/services/reminder.service';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { AiAssistInputComponent } from 'app/components/shared/ai-assist-input/ai-assist-input.component';
+import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 import { Subject, finalize, takeUntil } from 'rxjs';
 
 interface AiSuggestion {
@@ -22,18 +27,24 @@ interface AiSuggestion {
 /**
  * Dashboard rebuilt as an AI workspace (Initiative 4's "New Dashboard" revamp, 2026-07-30). The sales charts/
  * top-customers/top-manufacturers/unpaid-invoices-table/waiting-offers-table/month-metrics content that used to
- * live here moved verbatim to statistics-list - see StatisticsListComponent.
+ * live here moved verbatim to statistics-list - see StatisticsListComponent. The Reminders section (Initiative
+ * 4's Intelligent Reminders, added 2026-07-30) is capture + list + resolve only - "intelligent" reminders (the
+ * AI reading/acting on open reminders) is an explicit future direction, not built here.
  */
 @Component({
   selector: 'app-dashboard-list',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ButtonModule,
     ToastModule,
     TagModule,
+    InputTextModule,
+    TooltipModule,
     GenericLoaderComponent,
     AiAssistInputComponent,
+    VoiceInputButtonComponent,
   ],
   templateUrl: './dashboard-list.component.html',
   styleUrl: './dashboard-list.component.css',
@@ -51,12 +62,22 @@ export class DashboardListComponent implements OnInit, OnDestroy {
 
   examplePrompts: string[] = [];
 
+  // Reminders
+  reminders: IReminder[] = [];
+  isLoadingReminders = false;
+  isReminderSubmitting = false;
+  reminderText = '';
+  /** More than one employee matched the name mentioned - the receptionist must pick one before the reminder is created. */
+  reminderEmployeeCandidates: IWorkOrderIntentCandidate[] = [];
+  private pendingReminderText = '';
+
   constructor(
     private readonly router: Router,
     private readonly logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     public readonly dashboardService: DashboardService,
+    private readonly reminderService: ReminderService,
     private readonly messageService: MessageService,
   ) {}
 
@@ -68,6 +89,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       this.sharedService.T('aiExamplePromptInvoice'),
     ];
     this.loadTodayWorkshopSummary();
+    this.loadReminders();
   }
 
   ngOnDestroy(): void {
@@ -143,8 +165,9 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   /**
    * Dashboard's AI input does lightweight client-side keyword routing, not a second backend AI call -
    * consistent with "no multi-agent, one parsing capability per feature" (the workorder-crud AI-assist input
-   * already owns the one real parsing call). "Reminders" isn't built yet (Intelligent Reminders, a separate,
-   * not-yet-started initiative) - that keyword is recognized but has nowhere to route to yet.
+   * already owns the one real parsing call). "Reminders" is the one keyword that doesn't navigate anywhere -
+   * it feeds the same quick-capture pipeline as the Reminders section's own input, since there's nowhere to
+   * navigate a reminder capture to (it happens right here on the dashboard).
    */
   onAiAssistSubmit(transcript: string): void {
     this.isAiRouting = true;
@@ -154,7 +177,9 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       this.router.navigate([path]);
     };
 
-    if (text.includes('boka') || text.includes('booking') || text.includes('book')) {
+    if (text.includes('kom ihåg') || text.includes('kom ihag') || text.includes('remember') || text.includes('reminder') || text.includes('påminn')) {
+      this.submitReminderTranscript(transcript);
+    } else if (text.includes('boka') || text.includes('booking') || text.includes('book')) {
       route('sv/workorder/crud');
     } else if (text.includes('fordon') || text.includes('vehicle') || text.includes('bil')) {
       route('sv/vehicle');
@@ -166,13 +191,6 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       route('sv/offer');
     } else if (text.includes('produkt') || text.includes('product')) {
       route('sv/product');
-    } else if (text.includes('kom ihåg') || text.includes('kom ihag') || text.includes('remember') || text.includes('reminder') || text.includes('påminn')) {
-      this.messageService.add({
-        severity: 'info',
-        summary: this.sharedService.T('aiRouteRemindersNotAvailableTitle'),
-        detail: this.sharedService.T('aiRouteRemindersNotAvailable'),
-        life: 4000,
-      });
     } else {
       this.messageService.add({
         severity: 'warn',
@@ -207,5 +225,95 @@ export class DashboardListComponent implements OnInit, OnDestroy {
 
   redirectToProductCrudComponent() {
     this.router.navigate(['sv/product', {}]);
+  }
+
+  // ---- Reminders ----
+
+  private loadReminders(): void {
+    this.isLoadingReminders = true;
+    this.reminderService.getReminders('Open')
+      .pipe(
+        finalize(() => { this.isLoadingReminders = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => { this.reminders = res.objectList; },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadReminders', 'Failed to load reminders.');
+        }
+      });
+  }
+
+  /** Typing skips straight to parsing - same pipeline the voice button and the dashboard's main AI input use. */
+  onReminderTextSubmit(): void {
+    const text = this.reminderText.trim();
+    if (!text || this.isReminderSubmitting) return;
+    this.reminderText = '';
+    this.submitReminderTranscript(text);
+  }
+
+  onReminderVoiceTranscribed(transcript: string): void {
+    this.submitReminderTranscript(transcript);
+  }
+
+  private submitReminderTranscript(transcript: string): void {
+    this.isReminderSubmitting = true;
+    this.reminderEmployeeCandidates = [];
+    this.reminderService.parseReminderIntent(transcript)
+      .pipe(
+        finalize(() => { this.isReminderSubmitting = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (result) => {
+          if (result.employeeCandidates?.length) {
+            this.pendingReminderText = result.text;
+            this.reminderEmployeeCandidates = result.employeeCandidates;
+          } else {
+            this.createReminder(result.text, result.assignedToEmployeeId);
+          }
+        },
+        error: (err) => {
+          this.logger.error('parseReminderIntent error', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('aiAssistFailed'),
+            life: 4000
+          });
+        }
+      });
+  }
+
+  /** Reminder's transcript matched more than one employee - the receptionist picked one. */
+  resolveReminderCandidate(candidate: IWorkOrderIntentCandidate): void {
+    this.createReminder(this.pendingReminderText, candidate.id);
+    this.reminderEmployeeCandidates = [];
+  }
+
+  private createReminder(text: string, assignedToEmployeeId?: number): void {
+    this.reminderService.createReminder(text, assignedToEmployeeId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (reminder) => {
+          this.reminders = [reminder, ...this.reminders];
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'createReminder', 'Failed to create reminder.');
+        }
+      });
+  }
+
+  /** One-tap resolve - removes it from the list immediately (optimistic) and it stays gone on reload. */
+  resolveReminder(reminder: IReminder): void {
+    this.reminders = this.reminders.filter((r) => r.reminderId !== reminder.reminderId);
+    this.reminderService.resolveReminder(reminder.reminderId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        error: (err) => {
+          this.errorHandler.handleError(err, 'resolveReminder', 'Failed to resolve reminder.');
+          this.reminders = [reminder, ...this.reminders];
+        }
+      });
   }
 }
