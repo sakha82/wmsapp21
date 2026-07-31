@@ -80,36 +80,6 @@
         "sv": "God kväll"
     },
     {
-        "tkey": "aiWorkspaceSubtitle",
-        "en": "How can I help you today?",
-        "sv": "Hur kan jag hjälpa dig idag?"
-    },
-    {
-        "tkey": "aiWorkspacePlaceholder",
-        "en": "Try \"Book a service for ABC123\" or \"Show unpaid invoices\"",
-        "sv": "Prova \"Boka service för ABC123\" eller \"Visa obetalda fakturor\""
-    },
-    {
-        "tkey": "aiExamplePromptBooking",
-        "en": "Book a work order",
-        "sv": "Boka en arbetsorder"
-    },
-    {
-        "tkey": "aiExamplePromptVehicle",
-        "en": "Search for a vehicle",
-        "sv": "Sök efter ett fordon"
-    },
-    {
-        "tkey": "aiExamplePromptCustomer",
-        "en": "Find a customer",
-        "sv": "Hitta en kund"
-    },
-    {
-        "tkey": "aiExamplePromptInvoice",
-        "en": "Create an invoice",
-        "sv": "Skapa en faktura"
-    },
-    {
         "tkey": "todaysWorkshop",
         "en": "Today's Workshop",
         "sv": "Dagens verkstad"
@@ -140,24 +110,79 @@
         "sv": "AI-förslag"
     },
     {
-        "tkey": "aiSuggestionMissingMechanic",
-        "en": "{count} of today's bookings have no mechanic assigned yet.",
-        "sv": "{count} av dagens bokningar saknar tilldelad mekaniker."
+        "tkey": "registrationModeSubtitle",
+        "en": "Enter a vehicle registration number to start a booking",
+        "sv": "Ange ett registreringsnummer för att starta en bokning"
     },
     {
-        "tkey": "aiSuggestionOverdueInvoices",
-        "en": "{count} invoices are overdue.",
-        "sv": "{count} fakturor är förfallna."
+        "tkey": "enterRegistrationNumber",
+        "en": "e.g. ABC123",
+        "sv": "t.ex. ABC123"
     },
     {
-        "tkey": "aiRouteNotFoundTitle",
-        "en": "Not sure what you mean",
-        "sv": "Osäker på vad du menar"
+        "tkey": "ok",
+        "en": "OK",
+        "sv": "OK"
     },
     {
-        "tkey": "aiRouteNotFound",
-        "en": "Try one of the example prompts or the quick action buttons below.",
-        "sv": "Prova ett av exempelförslagen eller snabbknapparna nedan."
+        "tkey": "registrationMode",
+        "en": "Registration",
+        "sv": "Registrering"
+    },
+    {
+        "tkey": "queryMode",
+        "en": "Query",
+        "sv": "Fråga"
+    },
+    {
+        "tkey": "queryModeComingSoon",
+        "en": "Coming soon - describe a request in your own words",
+        "sv": "Kommer snart - beskriv ett ärende med egna ord"
+    },
+    {
+        "tkey": "changeVehicle",
+        "en": "Change",
+        "sv": "Byt"
+    },
+    {
+        "tkey": "fuelType",
+        "en": "Fuel type",
+        "sv": "Bränsletyp"
+    },
+    {
+        "tkey": "existingWorkOrders",
+        "en": "Existing work orders",
+        "sv": "Befintliga arbetsordrar"
+    },
+    {
+        "tkey": "noExistingWorkOrders",
+        "en": "No previous work orders for this vehicle.",
+        "sv": "Inga tidigare arbetsordrar för det här fordonet."
+    },
+    {
+        "tkey": "booking",
+        "en": "Booking",
+        "sv": "Bokning"
+    },
+    {
+        "tkey": "quickLinks",
+        "en": "Quick Links",
+        "sv": "Snabblänkar"
+    },
+    {
+        "tkey": "aiSuggestionDummyReturning",
+        "en": "Returning customer detected — Lindqvist booked for 14:30, last visit 8 months ago",
+        "sv": "Återkommande kund upptäckt — Lindqvist bokad kl 14:30, senaste besök för 8 månader sedan"
+    },
+    {
+        "tkey": "aiSuggestionDummyMechanic",
+        "en": "2 work orders today have no mechanic assigned",
+        "sv": "2 arbetsordrar idag saknar tilldelad mekaniker"
+    },
+    {
+        "tkey": "aiSuggestionDummyInvoices",
+        "en": "3 overdue invoices, 42,150 kr total",
+        "sv": "3 förfallna fakturor, totalt 42 150 kr"
     },
     {
         "tkey": "reminders",

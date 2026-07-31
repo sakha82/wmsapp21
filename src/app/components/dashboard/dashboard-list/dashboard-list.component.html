@@ -1,110 +1,252 @@
-<app-generic-loader [visible]="isLoading" />
+<app-generic-loader [visible]="isLookingUpVehicle && !hasSearched" />
 <p-toast position="top-right" />
 
 <header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
   <div class="">
-    <p class="font-normal text-2xl">{{ this.sharedService.T('dashboard') }} - {{ this.sharedService.workshopName }}</p>
+    <p class="font-normal text-2xl">{{ this.sharedService.workshopName }}</p>
   </div>
 </header>
 
 <section class="p-6 pb-12">
   <div class="max-w-5xl mx-auto">
 
-    <!-- Hero -->
-    <div class="text-center mb-8 mt-4">
-      <h1 class="text-2xl font-semibold mb-1">{{ greeting }}</h1>
-      <p class="text-gray-dark text-sm mb-6">{{ this.sharedService.T('aiWorkspaceSubtitle') }}</p>
-
-      <app-ai-assist-input [placeholder]="sharedService.T('aiWorkspacePlaceholder')" [loading]="isAiRouting"
-        (submitText)="onAiAssistSubmit($event)" />
-
-      <div class="flex flex-wrap justify-center gap-2 mt-3">
-        <p-button *ngFor="let prompt of examplePrompts" [text]="true" size="small" [label]="prompt"
-          styleClass="rounded border border-border" (onClick)="onAiAssistSubmit(prompt)"></p-button>
-      </div>
+    <!-- Hero / Chat -->
+    <div class="text-center mb-3 mt-4">
+      <h1 class="text-2xl font-semibold mb-1">{{ greeting }}<ng-container *ngIf="sharedService.userName">, {{ sharedService.userName }}</ng-container></h1>
+      <p class="text-gray-dark text-sm mb-6">{{ this.sharedService.T('registrationModeSubtitle') }}</p>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="flex flex-wrap gap-3 justify-center mb-8">
-      <p-button label="{{ this.sharedService.T('searchVehicle') }}" (click)="redirectToVehicleComponent()" icon="pi pi-search" styleClass="rounded"></p-button>
-      <p-button label="{{ this.sharedService.T('createWorkorder') }}" (click)="redirectToOrderCrudComponent()" icon="pi pi-plus" styleClass="rounded"></p-button>
-      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createCustomer') }}" (click)="redirectToCustomerCrudComponent()" styleClass="rounded"></p-button>
-      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createOffer') }}" (click)="redirectToOfferCrudComponent()" styleClass="rounded"></p-button>
-      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createInvoice') }}" (click)="redirectToInvoiceCrudComponent()" styleClass="rounded"></p-button>
-      <p-button icon="pi pi-plus" label="{{ this.sharedService.T('createProduct') }}" (click)="redirectToProductCrudComponent()" styleClass="rounded"></p-button>
-    </div>
-
-    <!-- Reminders -->
-    <div class="mb-8">
-      <h2 class="text-lg font-semibold mb-3">{{ this.sharedService.T('reminders') }}</h2>
-
-      <div class="rounded border border-border bg-white p-3 mb-2">
+    <div class="max-w-xl mx-auto mb-10">
+      <div class="rounded border border-border bg-white p-3">
         <div class="flex items-center gap-2">
-          <input pInputText type="text" [(ngModel)]="reminderText" [disabled]="isReminderSubmitting"
-            (keydown.enter)="onReminderTextSubmit()" class="w-full"
-            placeholder="{{ this.sharedService.T('reminderQuickCapturePlaceholder') }}" />
-          <app-voice-input-button (transcribed)="onReminderVoiceTranscribed($event)"></app-voice-input-button>
-          <p-button icon="pi pi-plus" [loading]="isReminderSubmitting" [disabled]="!reminderText.trim()"
-            (onClick)="onReminderTextSubmit()" styleClass="rounded"></p-button>
+          <i class="pi pi-car text-primary"></i>
+          <input #plateInputEl pInputText type="text" [(ngModel)]="plateInput" maxlength="10"
+            placeholder="{{ this.sharedService.T('enterRegistrationNumber') }}"
+            (input)="onPlateInputChange($event)" (keydown.enter)="onPlateSubmit()"
+            class="uppercase w-full" style="font-weight:600; letter-spacing:.04em;" />
+          <p-button [label]="sharedService.T('ok')" [loading]="isLookingUpVehicle" [disabled]="!plateInput.trim()"
+            (onClick)="onPlateSubmit()" styleClass="rounded"></p-button>
+        </div>
+
+        <!-- Mode selector -->
+        <div class="flex items-center gap-1 mt-3 p-1 rounded bg-bg-light border border-border w-fit">
+          <button type="button" (click)="setMode('registration')"
+            class="text-xs font-semibold px-3 py-1.5 rounded transition-colors"
+            [ngClass]="mode === 'registration' ? 'bg-white text-gray-header shadow-sm' : 'text-gray-dark'">
+            {{ this.sharedService.T('registrationMode') }}
+          </button>
+          <button type="button" disabled [pTooltip]="sharedService.T('queryModeComingSoon')" tooltipPosition="top"
+            class="text-xs font-semibold px-3 py-1.5 rounded text-gray-dark opacity-50 cursor-not-allowed">
+            {{ this.sharedService.T('queryMode') }}
+          </button>
         </div>
       </div>
+    </div>
 
-      <div *ngIf="reminderEmployeeCandidates.length" class="flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white mb-2">
-        <span class="text-sm">{{ sharedService.T('reminderMultipleEmployeeMatches') }}</span>
-        <p-button *ngFor="let candidate of reminderEmployeeCandidates" size="small" [text]="true"
-          [label]="candidate.label" (onClick)="resolveReminderCandidate(candidate)"></p-button>
+    <!-- Registration result -->
+    <div class="max-w-xl mx-auto mb-10" *ngIf="hasSearched">
+
+      <div *ngIf="lookupFailed" class="rounded border border-border bg-white p-4 text-center text-sm text-gray-dark">
+        {{ this.sharedService.T('vehicleLookupFailed') }}
       </div>
 
-      <div *ngIf="!isLoadingReminders && !reminders.length" class="text-sm text-gray-dark px-1">
-        {{ this.sharedService.T('noOpenReminders') }}
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <div *ngFor="let reminder of reminders" class="flex items-center justify-between gap-3 rounded border border-border bg-white p-3">
-          <div class="flex flex-col">
-            <span class="text-sm">{{ reminder.textContent }}</span>
-            <span class="text-xs text-gray-dark">
-              <span *ngIf="reminder.assignedToEmployeeName">{{ reminder.assignedToEmployeeName }}<ng-container *ngIf="reminder.createdOn"> · </ng-container></span>
-              <span *ngIf="reminder.createdOn">{{ reminder.createdOn | date:'yyyy-MM-dd HH:mm' }}</span>
-            </span>
+      <ng-container *ngIf="!lookupFailed && vehicleInfo">
+        <div class="rounded border border-border bg-white p-4 mb-3">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-semibold uppercase tracking-wide" style="letter-spacing:.04em;">{{ plateInput }}</span>
+            <a href="#" class="crud-inline-action-link text-sm" (click)="changePlate(); $event.preventDefault()">{{ this.sharedService.T('changeVehicle') }}</a>
           </div>
-          <p-button icon="pi pi-check" size="small" [text]="true" [pTooltip]="sharedService.T('resolve')"
-            (onClick)="resolveReminder(reminder)"></p-button>
+          <div class="grid grid-cols-4 gap-3">
+            <div>
+              <div class="text-xs text-gray-dark uppercase" style="letter-spacing:.04em;">{{ this.sharedService.T('vehicleMake') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ vehicleInfo.make || '-' }}</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-dark uppercase" style="letter-spacing:.04em;">{{ this.sharedService.T('vehicleModel') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ vehicleInfo.model || '-' }}</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-dark uppercase" style="letter-spacing:.04em;">{{ this.sharedService.T('vehicleYear') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ vehicleInfo.year || '-' }}</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-dark uppercase" style="letter-spacing:.04em;">{{ this.sharedService.T('fuelType') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ vehicleInfo.fuelType || '-' }}</div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <!-- First-visit / returning banner -->
+        <div *ngIf="vehicleHistory" class="flex items-center gap-2 p-3 rounded border border-border bg-bg-light mb-3">
+          <ng-container *ngIf="vehicleHistory.isFirstVisit; else returningVehicle">
+            <i class="pi pi-star text-primary"></i>
+            <span class="text-sm">{{ sharedService.T('firstVisitBanner') }}</span>
+          </ng-container>
+          <ng-template #returningVehicle>
+            <i class="pi pi-history text-primary"></i>
+            <span class="text-sm">
+              {{ sharedService.T('returningVehicleBanner') }}
+              <span *ngIf="vehicleHistory.lastVisitDate">{{ sharedService.T('lastVisit') }}: {{ vehicleHistory.lastVisitDate }}.</span>
+              <span *ngIf="vehicleHistory.previousServicesSummary">{{ sharedService.T('previousServices') }}: {{ vehicleHistory.previousServicesSummary }}.</span>
+            </span>
+          </ng-template>
+        </div>
+
+        <!-- Multi-customer picker -->
+        <div *ngIf="!selectedCustomer && vehicleHistory && vehicleHistory.distinctCustomers.length > 1"
+          class="flex flex-col gap-2 p-3 border border-border rounded bg-white mb-3">
+          <span class="text-sm">{{ sharedService.T('vehicleHistoryMultipleCustomers') }}</span>
+          <button type="button" *ngFor="let candidate of vehicleHistory.distinctCustomers" (click)="selectCustomer(candidate)"
+            class="flex items-center justify-between text-left px-3 py-2 rounded border border-border hover:border-primary transition-colors">
+            <span class="text-sm font-semibold">{{ candidate.customerName }}</span>
+            <i class="pi pi-chevron-right text-gray-dark"></i>
+          </button>
+        </div>
+
+        <!-- Selected customer -->
+        <div *ngIf="selectedCustomer" class="rounded border border-border bg-white p-4 mb-3">
+          <div class="text-xs text-gray-dark uppercase mb-2" style="letter-spacing:.04em;">{{ this.sharedService.T('customer') }}</div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <div class="text-xs text-gray-dark">{{ this.sharedService.T('customerName') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ selectedCustomer.customerName }}</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-dark">{{ this.sharedService.T('customerTelephone') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ selectedCustomer.customerTelephone || '-' }}</div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-dark">{{ this.sharedService.T('customerEmail') }}</div>
+              <div class="text-sm font-semibold mt-1">{{ selectedCustomer.customerEmail || '-' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking CTA -->
+        <div class="text-center mb-3" *ngIf="selectedCustomer || (vehicleHistory && vehicleHistory.isFirstVisit)">
+          <p-button [label]="sharedService.T('booking')" icon="pi pi-plus" [raised]="true" size="large"
+            (onClick)="startBooking()" styleClass="rounded"></p-button>
+        </div>
+
+        <!-- Existing work orders -->
+        <div *ngIf="selectedCustomer">
+          <h3 class="text-sm font-semibold mb-2">{{ this.sharedService.T('existingWorkOrders') }}</h3>
+          <div *ngIf="!isLoadingWorkOrders && !existingWorkOrders.length" class="text-sm text-gray-dark px-1">
+            {{ this.sharedService.T('noExistingWorkOrders') }}
+          </div>
+          <div class="flex flex-col gap-2">
+            <button type="button" *ngFor="let wo of existingWorkOrders" (click)="goToWorkOrderDetails(wo)"
+              class="flex items-center justify-between text-left rounded border border-border bg-white p-3 hover:border-primary transition-colors">
+              <div class="flex flex-col">
+                <span class="text-sm">{{ wo.serviceTypes || wo.description || ('#' + wo.workOrderId) }}</span>
+                <span class="text-xs text-gray-dark">{{ wo.workOrderDate }}</span>
+              </div>
+              <p-tag [value]="wo.workOrderStatus" severity="secondary"></p-tag>
+            </button>
+          </div>
+        </div>
+      </ng-container>
     </div>
 
-    <!-- Today's Workshop -->
-    <div class="mb-8" *ngIf="todayWorkshopSummary">
-      <h2 class="text-lg font-semibold mb-3">{{ this.sharedService.T('todaysWorkshop') }}</h2>
-      <div class="grid grid-cols-4 gap-4">
-        <div class="rounded border border-border bg-white p-4">
-          <p class="text-gray-dark text-sm">{{ this.sharedService.T('arrivingToday') }}</p>
-          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.arrivingToday }}</h3>
-        </div>
-        <div class="rounded border border-border bg-white p-4">
-          <p class="text-gray-dark text-sm">{{ this.sharedService.T('inWorkshop') }}</p>
-          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.inWorkshop }}</h3>
-        </div>
-        <div class="rounded border border-border bg-white p-4">
-          <p class="text-gray-dark text-sm">{{ this.sharedService.T('readyForPickup') }}</p>
-          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.readyForPickup }}</h3>
-        </div>
-        <div class="rounded border border-border bg-white p-4">
-          <p class="text-gray-dark text-sm">{{ this.sharedService.T('customersToContact') }}</p>
-          <h3 class="text-2xl font-bold mt-1">{{ todayWorkshopSummary.customersToContact }}</h3>
-        </div>
-      </div>
-    </div>
+    <!-- Widgets -->
+    <div class="grid grid-cols-12 gap-5">
 
-    <!-- AI Suggestions -->
-    <div class="mb-8" *ngIf="aiSuggestions.length">
-      <h2 class="text-lg font-semibold mb-3">{{ this.sharedService.T('aiSuggestions') }}</h2>
-      <div class="flex flex-col gap-2">
-        <div *ngFor="let suggestion of aiSuggestions" class="flex items-center gap-3 rounded border border-border bg-white p-3">
-          <i [class]="suggestion.icon + ' text-primary'"></i>
-          <span class="text-sm">{{ suggestion.text }}</span>
+      <div class="col-span-12 lg:col-span-7 flex flex-col gap-5">
+
+        <!-- Today's Workshop -->
+        <div class="rounded border border-border bg-white p-4">
+          <h2 class="text-sm font-semibold mb-3 flex items-center gap-2">
+            <i class="pi pi-warehouse text-primary"></i>{{ this.sharedService.T('todaysWorkshop') }}
+          </h2>
+          <div class="grid grid-cols-4 gap-3">
+            <div class="rounded border border-border bg-bg-light p-3">
+              <div class="text-2xl font-bold">{{ todayWorkshopDummy.arrivingToday }}</div>
+              <div class="text-xs text-gray-dark mt-1"><i class="pi pi-car"></i> {{ this.sharedService.T('arrivingToday') }}</div>
+            </div>
+            <div class="rounded border border-border bg-bg-light p-3">
+              <div class="text-2xl font-bold">{{ todayWorkshopDummy.inWorkshop }}</div>
+              <div class="text-xs text-gray-dark mt-1"><i class="pi pi-wrench"></i> {{ this.sharedService.T('inWorkshop') }}</div>
+            </div>
+            <div class="rounded border border-border bg-bg-light p-3">
+              <div class="text-2xl font-bold">{{ todayWorkshopDummy.readyForPickup }}</div>
+              <div class="text-xs text-gray-dark mt-1"><i class="pi pi-check-circle"></i> {{ this.sharedService.T('readyForPickup') }}</div>
+            </div>
+            <div class="rounded border border-border bg-bg-light p-3">
+              <div class="text-2xl font-bold">{{ todayWorkshopDummy.customersToContact }}</div>
+              <div class="text-xs text-gray-dark mt-1"><i class="pi pi-phone"></i> {{ this.sharedService.T('customersToContact') }}</div>
+            </div>
+          </div>
         </div>
+
+        <!-- AI Suggestions -->
+        <div class="rounded border border-border bg-white p-4">
+          <h2 class="text-sm font-semibold mb-3 flex items-center gap-2">
+            <i class="pi pi-sparkles text-primary"></i>{{ this.sharedService.T('aiSuggestions') }}
+          </h2>
+          <div class="flex flex-col">
+            <div *ngFor="let suggestion of aiSuggestionsDummy" class="flex items-center gap-3 py-2 border-t border-border first:border-t-0 first:pt-0">
+              <i [class]="suggestion.icon + ' text-primary'"></i>
+              <span class="text-sm">{{ suggestion.text }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-span-12 lg:col-span-5 flex flex-col gap-5">
+
+        <!-- Reminders -->
+        <div class="rounded border border-border bg-white p-4">
+          <h2 class="text-sm font-semibold mb-3 flex items-center gap-2">
+            <i class="pi pi-bell text-primary"></i>{{ this.sharedService.T('reminders') }}
+          </h2>
+
+          <div class="flex items-center gap-2 mb-3">
+            <input pInputText type="text" [(ngModel)]="reminderText" [disabled]="isReminderSubmitting"
+              (keydown.enter)="onReminderTextSubmit()" class="w-full"
+              placeholder="{{ this.sharedService.T('reminderQuickCapturePlaceholder') }}" />
+            <app-voice-input-button (transcribed)="onReminderVoiceTranscribed($event)"></app-voice-input-button>
+            <p-button icon="pi pi-plus" [loading]="isReminderSubmitting" [disabled]="!reminderText.trim()"
+              (onClick)="onReminderTextSubmit()" styleClass="rounded"></p-button>
+          </div>
+
+          <div *ngIf="reminderEmployeeCandidates.length" class="flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-bg-light mb-2">
+            <span class="text-sm">{{ sharedService.T('reminderMultipleEmployeeMatches') }}</span>
+            <p-button *ngFor="let candidate of reminderEmployeeCandidates" size="small" [text]="true"
+              [label]="candidate.label" (onClick)="resolveReminderCandidate(candidate)"></p-button>
+          </div>
+
+          <div *ngIf="!isLoadingReminders && !reminders.length" class="text-sm text-gray-dark px-1">
+            {{ this.sharedService.T('noOpenReminders') }}
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div *ngFor="let reminder of reminders" class="flex items-start justify-between gap-3 rounded border border-border bg-bg-light p-3">
+              <div class="flex flex-col">
+                <span class="text-sm">{{ reminder.textContent }}</span>
+                <span class="text-xs text-gray-dark mt-0.5">
+                  <span *ngIf="reminder.assignedToEmployeeName">{{ reminder.assignedToEmployeeName }}<ng-container *ngIf="reminder.createdOn"> · </ng-container></span>
+                  <span *ngIf="reminder.createdOn">{{ reminder.createdOn | date:'yyyy-MM-dd HH:mm' }}</span>
+                </span>
+              </div>
+              <button type="button" (click)="resolveReminder(reminder)" [pTooltip]="sharedService.T('resolve')"
+                class="w-6 h-6 rounded-full border border-border bg-white flex items-center justify-center flex-none hover:border-primary hover:text-primary text-transparent">
+                <i class="pi pi-check text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="rounded border border-border bg-white p-4">
+          <h2 class="text-sm font-semibold mb-3">{{ this.sharedService.T('quickLinks') }}</h2>
+          <div class="flex flex-col">
+            <a routerLink="/sv/statistics" class="text-sm text-primary py-1.5">{{ this.sharedService.T('statistics') }} →</a>
+            <a routerLink="/sv/digitalservice" class="text-sm text-primary py-1.5">{{ this.sharedService.T('digitalServiceBook') }} →</a>
+            <a routerLink="/sv/product" class="text-sm text-primary py-1.5">{{ this.sharedService.T('products') }} →</a>
+          </div>
+        </div>
+
       </div>
     </div>
 

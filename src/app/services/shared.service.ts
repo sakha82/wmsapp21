@@ -41,6 +41,10 @@ export class SharedService {
     if (!workshopName) this.logger.warn('Missing workshopname');
     return workshopName;
   }
+  /** Logged-in user's display name, e.g. for a personalized dashboard greeting. Empty string if not set - callers should fall back gracefully, not warn (not every screen needs it). */
+  get userName(): string {
+    return sessionStorage.getItem('userName') || '';
+  }
   get country(): string {
     const country = sessionStorage.getItem('country') || '';
     if (!country) this.logger.warn('Missing country');

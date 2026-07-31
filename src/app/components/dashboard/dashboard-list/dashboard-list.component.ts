@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IOutStandingBalance, IReminder, ITodayWorkshopSummary, IWorkOrderIntentCandidate } from 'app/app.model';
+import { IReminder, IVehicleDetails, IVehicleHistoryCustomer, IVehicleHistorySummary, IWorkOrder, IWorkOrderIntentCandidate } from 'app/app.model';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
-import { DashboardService } from 'app/services/dashboard.service';
 import { ReminderService } from 'app/services/reminder.service';
+import { CoreService } from 'app/services/core.service';
+import { WorkOrderService } from 'app/services/workorder.service';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -15,9 +16,8 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-import { AiAssistInputComponent } from 'app/components/shared/ai-assist-input/ai-assist-input.component';
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
-import { Subject, finalize, takeUntil } from 'rxjs';
+import { forkJoin, Subject, finalize, takeUntil } from 'rxjs';
 
 interface AiSuggestion {
   icon: string;
@@ -25,11 +25,13 @@ interface AiSuggestion {
 }
 
 /**
- * Dashboard rebuilt as an AI workspace (Initiative 4's "New Dashboard" revamp, 2026-07-30). The sales charts/
- * top-customers/top-manufacturers/unpaid-invoices-table/waiting-offers-table/month-metrics content that used to
- * live here moved verbatim to statistics-list - see StatisticsListComponent. The Reminders section (Initiative
- * 4's Intelligent Reminders, added 2026-07-30) is capture + list + resolve only - "intelligent" reminders (the
- * AI reading/acting on open reminders) is an explicit future direction, not built here.
+ * Dashboard rebuilt as the primary entry point for creating a new booking/work order (2026-07-31 redesign, see
+ * DashboardPage_Redesign.md). The chat interface has two modes: Registration (plate-only, implemented) and Query
+ * (free-text, deliberately not implemented yet - the mode selector is built now so it can be switched on later
+ * without redesigning this component). Today's Workshop and AI Suggestions show placeholder/dummy data until
+ * their backend integration is scoped; Reminders is fully live. The Statistics/top-customers/top-manufacturers/
+ * unpaid-invoices/waiting-offers content that used to live here moved to StatisticsListComponent in an earlier
+ * pass and stays there.
  */
 @Component({
   selector: 'app-dashboard-list',
@@ -37,13 +39,13 @@ interface AiSuggestion {
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     ButtonModule,
     ToastModule,
     TagModule,
     InputTextModule,
     TooltipModule,
     GenericLoaderComponent,
-    AiAssistInputComponent,
     VoiceInputButtonComponent,
   ],
   templateUrl: './dashboard-list.component.html',
@@ -51,18 +53,29 @@ interface AiSuggestion {
   providers: [MessageService]
 })
 export class DashboardListComponent implements OnInit, OnDestroy {
+  @ViewChild('plateInputEl') plateInputEl?: ElementRef<HTMLInputElement>;
+
   private destroy$ = new Subject<void>();
 
-  isLoading = false;
-  isAiRouting = false;
+  /** Registration Mode is the only functional mode today - Query Mode is visible but disabled, see class doc. */
+  mode: 'registration' | 'query' = 'registration';
 
-  todayWorkshopSummary: ITodayWorkshopSummary | null = null;
-  outStandingInvoices: IOutStandingBalance | null = null;
-  aiSuggestions: AiSuggestion[] = [];
+  // Registration workflow
+  plateInput = '';
+  isLookingUpVehicle = false;
+  hasSearched = false;
+  lookupFailed = false;
+  vehicleInfo: IVehicleDetails | null = null;
+  vehicleHistory: IVehicleHistorySummary | null = null;
+  selectedCustomer: IVehicleHistoryCustomer | null = null;
+  existingWorkOrders: IWorkOrder[] = [];
+  isLoadingWorkOrders = false;
 
-  examplePrompts: string[] = [];
+  // Today's Workshop / AI Suggestions - dummy data, backend integration deferred (see class doc)
+  readonly todayWorkshopDummy = { arrivingToday: 6, inWorkshop: 4, readyForPickup: 3, customersToContact: 2 };
+  aiSuggestionsDummy: AiSuggestion[] = [];
 
-  // Reminders
+  // Reminders (fully functional)
   reminders: IReminder[] = [];
   isLoadingReminders = false;
   isReminderSubmitting = false;
@@ -76,19 +89,18 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     private readonly logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
-    public readonly dashboardService: DashboardService,
     private readonly reminderService: ReminderService,
+    private readonly coreService: CoreService,
+    private readonly workOrderService: WorkOrderService,
     private readonly messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
-    this.examplePrompts = [
-      this.sharedService.T('aiExamplePromptBooking'),
-      this.sharedService.T('aiExamplePromptVehicle'),
-      this.sharedService.T('aiExamplePromptCustomer'),
-      this.sharedService.T('aiExamplePromptInvoice'),
+    this.aiSuggestionsDummy = [
+      { icon: 'pi pi-info-circle', text: this.sharedService.T('aiSuggestionDummyReturning') },
+      { icon: 'pi pi-user-minus', text: this.sharedService.T('aiSuggestionDummyMechanic') },
+      { icon: 'pi pi-exclamation-circle', text: this.sharedService.T('aiSuggestionDummyInvoices') },
     ];
-    this.loadTodayWorkshopSummary();
     this.loadReminders();
   }
 
@@ -104,127 +116,110 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     return this.sharedService.T('goodEvening');
   }
 
-  private loadTodayWorkshopSummary(): void {
-    this.isLoading = true;
-    this.dashboardService.getTodayWorkshopSummary()
+  // ---- Mode selector ----
+
+  setMode(mode: 'registration' | 'query'): void {
+    if (mode === 'query') return; // not implemented yet - see class doc
+    this.mode = mode;
+  }
+
+  // ---- Registration workflow ----
+
+  onPlateInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const sanitized = input.value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+    input.value = sanitized;
+    this.plateInput = sanitized;
+  }
+
+  onPlateSubmit(): void {
+    const plate = this.plateInput.trim();
+    if (!plate || this.isLookingUpVehicle) return;
+
+    this.resetLookupState();
+    this.isLookingUpVehicle = true;
+
+    forkJoin({
+      vehicle: this.coreService.getVehicle(plate),
+      history: this.workOrderService.getVehicleHistory(plate),
+    })
       .pipe(
-        finalize(() => { this.isLoading = false; }),
+        finalize(() => { this.isLookingUpVehicle = false; }),
         takeUntil(this.destroy$)
       )
       .subscribe({
-        next: (summary) => {
-          this.todayWorkshopSummary = summary;
-          this.buildAiSuggestions();
+        next: ({ vehicle, history }) => {
+          this.hasSearched = true;
+          this.vehicleInfo = vehicle;
+          this.vehicleHistory = history;
+
+          if (history.distinctCustomers.length === 1) {
+            this.selectCustomer(history.distinctCustomers[0]);
+          }
         },
         error: (err) => {
-          this.errorHandler.handleError(err, 'loadTodayWorkshopSummary', 'Failed to load today\'s workshop summary.');
+          this.logger.error('Vehicle lookup error', err);
+          this.hasSearched = true;
+          this.lookupFailed = true;
+          this.messageService.add({
+            severity: 'error',
+            summary: this.sharedService.T('error'),
+            detail: this.sharedService.T('vehicleLookupFailed'),
+            life: 4000
+          });
         }
       });
+  }
 
-    this.dashboardService.getOutStandingInvoices()
-      .pipe(takeUntil(this.destroy$))
+  /** Vehicle history showed more than one distinct customer for this plate, or the AI resolved a single match automatically - either way, the receptionist ends up with one selected customer before booking. */
+  selectCustomer(customer: IVehicleHistoryCustomer): void {
+    this.selectedCustomer = customer;
+    this.loadWorkOrdersForCustomer(customer.customerId);
+  }
+
+  private loadWorkOrdersForCustomer(customerId: number): void {
+    this.isLoadingWorkOrders = true;
+    const plate = this.plateInput.trim().toUpperCase();
+    this.workOrderService.getWorkOrdersByCustomerId(customerId)
+      .pipe(
+        finalize(() => { this.isLoadingWorkOrders = false; }),
+        takeUntil(this.destroy$)
+      )
       .subscribe({
-        next: (balance) => {
-          this.outStandingInvoices = balance;
-          this.buildAiSuggestions();
+        next: (workOrders) => {
+          this.existingWorkOrders = workOrders
+            .filter((w) => (w.vehiclePlate || '').toUpperCase() === plate)
+            .sort((a, b) => (a.workOrderDate < b.workOrderDate ? 1 : -1));
         },
         error: (err) => {
-          this.logger.error('getOutStandingInvoices error', err);
+          this.logger.error('getWorkOrdersByCustomerId error', err);
         }
       });
   }
 
-  /**
-   * Rule-based, not LLM-generated: each suggestion is a plain threshold check against already-loaded data.
-   * "Vehicles due for service" is deliberately not included - it needs service-interval domain rules that
-   * don't exist in the data model yet (see the revamp plan's "Deferred" section). "Returning customer
-   * detected" is also not included here - it has no standing trigger on a dashboard with no specific
-   * customer/vehicle context; that signal already surfaces where it belongs, in workorder-crud's vehicle-
-   * history banner.
-   */
-  private buildAiSuggestions(): void {
-    const suggestions: AiSuggestion[] = [];
-
-    if (this.todayWorkshopSummary && this.todayWorkshopSummary.missingMechanicAssignments > 0) {
-      suggestions.push({
-        icon: 'pi pi-user-minus',
-        text: this.sharedService.T('aiSuggestionMissingMechanic').replace('{count}', String(this.todayWorkshopSummary.missingMechanicAssignments)),
-      });
-    }
-
-    if (this.outStandingInvoices && this.outStandingInvoices.orderCount > 0) {
-      suggestions.push({
-        icon: 'pi pi-exclamation-circle',
-        text: this.sharedService.T('aiSuggestionOverdueInvoices').replace('{count}', String(this.outStandingInvoices.orderCount)),
-      });
-    }
-
-    this.aiSuggestions = suggestions;
+  /** Starts a new booking for the looked-up plate/customer. The Create Work Order page still owns the actual form - see DashboardPage_Redesign.md's "Next Step" for the plan to fold that in here directly. */
+  startBooking(): void {
+    const matrixParams = this.selectedCustomer ? { customerId: this.selectedCustomer.customerId } : {};
+    this.router.navigate(['sv/workorder/crud', matrixParams]);
   }
 
-  /**
-   * Dashboard's AI input does lightweight client-side keyword routing, not a second backend AI call -
-   * consistent with "no multi-agent, one parsing capability per feature" (the workorder-crud AI-assist input
-   * already owns the one real parsing call). "Reminders" is the one keyword that doesn't navigate anywhere -
-   * it feeds the same quick-capture pipeline as the Reminders section's own input, since there's nowhere to
-   * navigate a reminder capture to (it happens right here on the dashboard).
-   */
-  onAiAssistSubmit(transcript: string): void {
-    this.isAiRouting = true;
-    const text = transcript.toLowerCase();
-
-    const route = (path: string) => {
-      this.router.navigate([path]);
-    };
-
-    if (text.includes('kom ihåg') || text.includes('kom ihag') || text.includes('remember') || text.includes('reminder') || text.includes('påminn')) {
-      this.submitReminderTranscript(transcript);
-    } else if (text.includes('boka') || text.includes('booking') || text.includes('book')) {
-      route('sv/workorder/crud');
-    } else if (text.includes('fordon') || text.includes('vehicle') || text.includes('bil')) {
-      route('sv/vehicle');
-    } else if (text.includes('kund') || text.includes('customer')) {
-      route('sv/customer');
-    } else if (text.includes('faktura') || text.includes('invoice')) {
-      route('sv/invoice');
-    } else if (text.includes('offert') || text.includes('offer')) {
-      route('sv/offer');
-    } else if (text.includes('produkt') || text.includes('product')) {
-      route('sv/product');
-    } else {
-      this.messageService.add({
-        severity: 'warn',
-        summary: this.sharedService.T('aiRouteNotFoundTitle'),
-        detail: this.sharedService.T('aiRouteNotFound'),
-        life: 4000,
-      });
-    }
-
-    this.isAiRouting = false;
+  changePlate(): void {
+    this.plateInput = '';
+    this.resetLookupState();
+    setTimeout(() => this.plateInputEl?.nativeElement.focus());
   }
 
-  redirectToOrderCrudComponent() {
-    this.router.navigate(['sv/workorder/crud']);
+  private resetLookupState(): void {
+    this.hasSearched = false;
+    this.lookupFailed = false;
+    this.vehicleInfo = null;
+    this.vehicleHistory = null;
+    this.selectedCustomer = null;
+    this.existingWorkOrders = [];
   }
 
-  redirectToOfferCrudComponent() {
-    this.router.navigate(['sv/offer/crud', {}]);
-  }
-
-  redirectToInvoiceCrudComponent() {
-    this.router.navigate(['sv/invoice/crud', {}]);
-  }
-
-  redirectToCustomerCrudComponent() {
-    this.router.navigate(['sv/customer/crud', {}]);
-  }
-
-  redirectToVehicleComponent() {
-    this.router.navigate(['sv/vehicle', {}]);
-  }
-
-  redirectToProductCrudComponent() {
-    this.router.navigate(['sv/product', {}]);
+  goToWorkOrderDetails(workOrder: IWorkOrder): void {
+    this.router.navigate(['sv/workorder/details', workOrder.workOrderId]);
   }
 
   // ---- Reminders ----
@@ -244,7 +239,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /** Typing skips straight to parsing - same pipeline the voice button and the dashboard's main AI input use. */
+  /** Typing skips straight to parsing - same pipeline the voice button uses. */
   onReminderTextSubmit(): void {
     const text = this.reminderText.trim();
     if (!text || this.isReminderSubmitting) return;
