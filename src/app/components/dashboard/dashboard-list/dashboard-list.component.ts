@@ -17,11 +17,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
+import { WorkOrderHandoffService } from 'app/services/workorder-handoff.service';
 import { forkJoin, Subject, finalize, takeUntil } from 'rxjs';
 
 interface AiSuggestion {
   icon: string;
   text: string;
+}
+
+interface VehicleDetailField {
+  label: string;
+  value: string;
 }
 
 /**
@@ -92,6 +98,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     private readonly reminderService: ReminderService,
     private readonly coreService: CoreService,
     private readonly workOrderService: WorkOrderService,
+    private readonly workOrderHandoffService: WorkOrderHandoffService,
     private readonly messageService: MessageService,
   ) {}
 
@@ -197,8 +204,51 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /** Starts a new booking for the looked-up plate/customer. The Create Work Order page still owns the actual form - see DashboardPage_Redesign.md's "Next Step" for the plan to fold that in here directly. */
+  /**
+   * Every non-empty Vehicle.cs field for the receptionist to see - only Make/Model/Year/Plate actually carry
+   * over onto the work order (see DashboardPage_Redesign.md's "Vehicle→WorkOrder scope" decision); the rest is
+   * reference information only, since WorkOrder has no columns for VIN/engine/tyres/etc.
+   */
+  get vehicleDetailFields(): VehicleDetailField[] {
+    if (!this.vehicleInfo) return [];
+    const v = this.vehicleInfo;
+    const fields: [string, string | undefined | null][] = [
+      [this.sharedService.T('vehicleMake'), v.make],
+      [this.sharedService.T('vehicleModel'), v.model],
+      [this.sharedService.T('vehicleYear'), v.year],
+      [this.sharedService.T('fuelType'), v.fuelType],
+      [this.sharedService.T('vehicleColor'), v.color],
+      [this.sharedService.T('vehicleBodyType'), v.chassis],
+      [this.sharedService.T('vehicleCategory'), v.vehicleType],
+      [this.sharedService.T('vehicleVin'), v.vin],
+      [this.sharedService.T('vehicleEngineCode'), v.engineCode],
+      [this.sharedService.T('vehicleTransmission'), v.transmission],
+      [this.sharedService.T('vehiclePower'), v.effect],
+      [this.sharedService.T('vehicleHorsepower'), v.horsepower],
+      [this.sharedService.T('vehicleDrivetrain'), v.driving],
+      [this.sharedService.T('vehicleFrontTyre'), v.frontWheelDimension],
+      [this.sharedService.T('vehicleBackTyre'), v.backWheelDimension],
+      [this.sharedService.T('vehicleOilCapacityScraped'), v.oilCapacity],
+      [this.sharedService.T('vehicleOilSpec'), v.oilSpecifications1],
+      [this.sharedService.T('vehicleOilClassification'), v.oilClassification1],
+      [this.sharedService.T('vehicleOilSpecAlt'), v.oilSpecifications2],
+      [this.sharedService.T('vehicleOilClassificationAlt'), v.oilClassification2],
+    ];
+    return fields
+      .filter(([, value]) => !!value)
+      .map(([label, value]) => ({ label, value: value as string }));
+  }
+
+  /** Starts a new booking for the looked-up plate/customer - hands the whole lookup off to the Create Work Order page (WorkOrderHandoffService) so the receptionist never repeats it. Per DashboardPage_Redesign.md's "Next Step", that page's own form is still the actual booking UI for now. */
   startBooking(): void {
+    if (this.vehicleInfo && this.vehicleHistory) {
+      this.workOrderHandoffService.setPending({
+        vehiclePlate: this.plateInput.trim().toUpperCase(),
+        vehicleInfo: this.vehicleInfo,
+        vehicleHistory: this.vehicleHistory,
+        customer: this.selectedCustomer || undefined,
+      });
+    }
     const matrixParams = this.selectedCustomer ? { customerId: this.selectedCustomer.customerId } : {};
     this.router.navigate(['sv/workorder/crud', matrixParams]);
   }

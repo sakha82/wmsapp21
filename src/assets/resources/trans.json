@@ -110,6 +110,86 @@
         "sv": "AI-förslag"
     },
     {
+        "tkey": "vehicleColor",
+        "en": "Color",
+        "sv": "Färg"
+    },
+    {
+        "tkey": "vehicleBodyType",
+        "en": "Body type",
+        "sv": "Kaross"
+    },
+    {
+        "tkey": "vehicleCategory",
+        "en": "Vehicle type",
+        "sv": "Fordonstyp"
+    },
+    {
+        "tkey": "vehicleVin",
+        "en": "VIN / Chassis no.",
+        "sv": "Chassinummer"
+    },
+    {
+        "tkey": "vehicleEngineCode",
+        "en": "Engine code",
+        "sv": "Motorkod"
+    },
+    {
+        "tkey": "vehicleTransmission",
+        "en": "Transmission",
+        "sv": "Växellåda"
+    },
+    {
+        "tkey": "vehiclePower",
+        "en": "Power (kW)",
+        "sv": "Effekt (kW)"
+    },
+    {
+        "tkey": "vehicleHorsepower",
+        "en": "Horsepower",
+        "sv": "Hästkrafter"
+    },
+    {
+        "tkey": "vehicleDrivetrain",
+        "en": "Drivetrain",
+        "sv": "Drivning"
+    },
+    {
+        "tkey": "vehicleFrontTyre",
+        "en": "Front tyre",
+        "sv": "Dimension fram"
+    },
+    {
+        "tkey": "vehicleBackTyre",
+        "en": "Back tyre",
+        "sv": "Däckdimension bak"
+    },
+    {
+        "tkey": "vehicleOilCapacityScraped",
+        "en": "Oil capacity (reference)",
+        "sv": "Oljevolym (referens)"
+    },
+    {
+        "tkey": "vehicleOilSpec",
+        "en": "Oil specification",
+        "sv": "Oljekvalitet"
+    },
+    {
+        "tkey": "vehicleOilClassification",
+        "en": "Oil classification",
+        "sv": "Oljeklassificering"
+    },
+    {
+        "tkey": "vehicleOilSpecAlt",
+        "en": "Oil specification (alt.)",
+        "sv": "Oljekvalitet (alt.)"
+    },
+    {
+        "tkey": "vehicleOilClassificationAlt",
+        "en": "Oil classification (alt.)",
+        "sv": "Oljeklassificering (alt.)"
+    },
+    {
         "tkey": "registrationModeSubtitle",
         "en": "Enter a vehicle registration number to start a booking",
         "sv": "Ange ett registreringsnummer för att starta en bokning"

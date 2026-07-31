@@ -27,16 +27,13 @@
   <div class="mb-10 p-8 gap-3 rounded border border-border bg-white">
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <div class="flex items-center gap-2 mb-2">
-          <label class="block mb-0" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
-          <p-tag *ngIf="isAiSuggested('vehiclePlate')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
-        </div>
+        <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
         <p-inputgroup>
           <p-inputgroup-addon>
             <i class="icon-primary pi pi-car"></i>
           </p-inputgroup-addon>
           <input pInputText type="text" formControlName="vehiclePlate" maxlength="10" placeholder="ABC123"
-            (input)="onInputChange($event); clearAiSuggestion('vehiclePlate')"
+            (input)="onInputChange($event)"
             class="uppercase p-2 w-full"
             [invalid]="isFieldInvalid('vehiclePlate')" />
           <button pButton type="button" icon="pi pi-search" [loading]="isVehicleLookupLoading || isVehicleHistoryLoading"
@@ -83,7 +80,6 @@
         <div class="flex items-center justify-between gap-2 mb-2">
           <div class="flex items-center gap-2">
             <label class="block mb-0">{{ this.sharedService.T('customerName') }}</label>
-            <p-tag *ngIf="isAiSuggested('customerId')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
             <p-tag *ngIf="isKnownFact('customerId')" severity="secondary" [value]="sharedService.T('knownCustomer')"></p-tag>
           </div>
           <a
@@ -99,7 +95,7 @@
 
           <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
             [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
-            (onSelect)="onSelect($event); clearAiSuggestion('customerId')" (onClear)="onUnselectCustomer(); clearAiSuggestion('customerId')" [showClear]="true"
+            (onSelect)="onSelect($event); clearKnownFact('customerId')" (onClear)="onUnselectCustomer(); clearKnownFact('customerId')" [showClear]="true"
             [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full"
             [invalid]="isFieldInvalid('customerId')">
             <ng-template let-customer #item>
@@ -260,12 +256,9 @@
         </p-select>
       </div>       
       <div class="col-span-3">
-        <div class="flex items-center gap-2 mb-2">
-          <label class="block mb-0">{{ this.sharedService.T('mechanic') }}</label>
-          <p-tag *ngIf="isAiSuggested('employeeId')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
-        </div>
+        <label class="block mb-2">{{ this.sharedService.T('mechanic') }}</label>
         <p-select [options]="employees" formControlName="employeeId" optionLabel="fullName" optionValue="employeeId"
-          [showClear]="true" class="w-full" (onChange)="clearAiSuggestion('employeeId')" (onClear)="clearAiSuggestion('employeeId')"
+          [showClear]="true" class="w-full"
           [invalid]="isFieldInvalid('employeeId')"></p-select>
       </div>
       <div class="col-span-2">
@@ -287,7 +280,6 @@
             icon="pi pi-plus" (onClick)="servicesPopover.toggle($event);resetServiceProduct()"
             [pTooltip]="sharedService.T('servicesRequiredHint')" tooltipPosition="top" />
           <span class="text-sm font-medium">{{ this.sharedService.T('addedServices') }} *</span>
-          <p-tag *ngIf="isAiSuggested('services')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
           <span class="flex items-center gap-1 font-semibold text-sm">
             <i class="pi pi-clock" style="font-size: 0.75rem;"></i>
             {{ this.workOrder.get('serviceDuration')?.value || 0 }} {{ this.sharedService.T('hours') }}
@@ -420,13 +412,10 @@
       </div>
       </div>
       <div class="col-span-12">
-        <div class="flex items-center gap-2 mb-2">
-          <label class="block mb-0">{{ this.sharedService.T('description') }}</label>
-          <p-tag *ngIf="isAiSuggested('description')" severity="info" [value]="sharedService.T('aiSuggested')"></p-tag>
-        </div>
+        <label class="block mb-2">{{ this.sharedService.T('description') }}</label>
         <div class="relative">
           <textarea class="w-full" formControlName="description" rows="5" cols="30" pTextarea
-            [autoResize]="true" (input)="clearAiSuggestion('description')">
+            [autoResize]="true">
           </textarea>
           <div class="absolute bottom-2 right-2">
             <app-voice-input-button (transcribed)="onDescriptionTranscribed($event)"></app-voice-input-button>
@@ -451,18 +440,9 @@
   </div>
   <!-- /Main form column -->
 
-  <!-- Sticky AI panel -->
+  <!-- Sticky vehicle-history panel -->
   <div class="col-span-12 lg:col-span-4 order-1 lg:order-2">
     <div class="lg:sticky lg:top-4 flex flex-col gap-3">
-      <div class="p-4 rounded border border-border bg-white">
-        <app-ai-assist-input [loading]="isAiAssistLoading" (submitText)="onAiAssistSubmit($event)" />
-      </div>
-
-      <div *ngIf="aiCustomerCandidates.length" class="flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white">
-        <span class="text-sm">{{ sharedService.T('aiMultipleCustomerMatches') }}</span>
-        <p-button *ngFor="let candidate of aiCustomerCandidates" size="small" [text]="true"
-          [label]="candidate.label" (onClick)="resolveAiCustomerCandidate(candidate)"></p-button>
-      </div>
 
       <div *ngIf="vehicleHistory && showFullForm" class="flex items-center gap-2 p-3 rounded border border-border bg-bg-light">
         <ng-container *ngIf="vehicleHistory.isFirstVisit; else returningVehicle">
@@ -486,7 +466,7 @@
       </div>
     </div>
   </div>
-  <!-- /Sticky AI panel -->
+  <!-- /Sticky vehicle-history panel -->
 
   </div>
 </form>

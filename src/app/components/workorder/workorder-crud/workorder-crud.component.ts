@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IWorkOrderIntentCandidate, IWorkOrderIntentResponse, IVehicleHistorySummary, IVehicleHistoryCustomer } from 'app/app.model';
+import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -54,8 +54,9 @@ import { isFormControlInvalid, showValidationErrorToast } from 'app/validators/m
 import { DigitalServiceService } from 'app/services/digitalservice.service';
 import { PickListModule } from 'primeng/picklist';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
-import { AiAssistInputComponent } from 'app/components/shared/ai-assist-input/ai-assist-input.component';
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
+import { IWorkOrderHandoff, WorkOrderHandoffService } from 'app/services/workorder-handoff.service';
+import { parseOilCapacity, parseOilType } from 'app/utils/vehicle-oil.util';
 
 @Component({
   selector: 'app-order-crud',
@@ -90,7 +91,6 @@ import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-but
     TooltipModule,
     PickListModule,
     GenericLoaderComponent,
-    AiAssistInputComponent,
     VoiceInputButtonComponent
   ],
   templateUrl: './workorder-crud.component.html',
@@ -108,12 +108,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   showCustomerSpinner:boolean = false;
   duplicateCustomerName: boolean = false;
   isVehicleLookupLoading: boolean = false;
-  isAiAssistLoading: boolean = false;
-  /** Form control names (plus 'services') the AI last populated, shown with an "AI-suggested" badge until edited or saved. */
-  aiSuggestedFields = new Set<string>();
-  aiCustomerCandidates: IWorkOrderIntentCandidate[] = [];
 
-  /** Form control names auto-filled from a deterministic vehicle-history DB fact (not an AI guess) - shown with a lighter "known" badge until edited. */
+  /** Form control names auto-filled from a deterministic vehicle-history DB fact or the Dashboard handoff (not an AI guess) - shown with a lighter "known" badge until edited. */
   knownFields = new Set<string>();
   isVehicleHistoryLoading: boolean = false;
   vehicleHistory: IVehicleHistorySummary | null = null;
@@ -184,6 +180,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     private readonly productService: ProductService,
     private cdr: ChangeDetectorRef,
     private readonly customerService: CustomerService,
+    private readonly workOrderHandoffService: WorkOrderHandoffService,
 
   ) {
 
@@ -294,6 +291,14 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           this.workOrder.patchValue(response.data);
           this.logger.info('WORKORDERS-0', response.data);
           this.logger.info('WORKORDERS', this.workOrder.value);
+
+          if (response.isNewObject) {
+            const handoff = this.workOrderHandoffService.consumePending();
+            if (handoff) {
+              this.applyHandoff(handoff);
+            }
+          }
+
           this.getAllEmployees();
           if (response.data.bookingDate)
             this.getBookings(response.data.bookingDate);
@@ -475,6 +480,40 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Applies the plate/vehicle/customer lookup already done on the Dashboard's Registration-mode chat, so the
+   * receptionist doesn't repeat it here - see WorkOrderHandoffService. Oil fields are a best-effort parse of
+   * Vehicle.cs's free-text scraped data (DashboardPage_Redesign.md's "Oil field auto-fill" decision) - the
+   * receptionist should still glance at them, not treated as gospel.
+   */
+  private applyHandoff(handoff: IWorkOrderHandoff): void {
+    const vehicle = handoff.vehicleInfo;
+    const patch: Record<string, unknown> = {
+      vehiclePlate: handoff.vehiclePlate,
+      vehicleManufacturer: vehicle.make || null,
+      vehicleModel: vehicle.model || null,
+      vehicleYear: vehicle.year ? Number(vehicle.year) : null,
+    };
+
+    const oilType = parseOilType(vehicle.oilClassification1, this.oilTypes);
+    if (oilType) patch['oilType'] = oilType;
+    const oilCapacity = parseOilCapacity(vehicle.oilCapacity);
+    if (oilCapacity !== null) patch['oilCapacity'] = oilCapacity;
+
+    if (handoff.customer) {
+      patch['customerId'] = handoff.customer.customerId;
+      patch['customerName'] = handoff.customer.customerName;
+      patch['customerTelephone'] = handoff.customer.customerTelephone || '';
+      patch['customerEmail'] = handoff.customer.customerEmail || '';
+      this.selectedCustomerName = handoff.customer.customerName;
+      this.knownFields.add('customerId');
+    }
+
+    this.workOrder.patchValue(patch);
+    this.vehicleHistory = handoff.vehicleHistory;
+    this.hasResolvedVehicle = true;
+  }
+
+  /**
    * First-visit vs. returning-vehicle lookup, run alongside (not instead of) the make/model/year scrape lookup.
    * A plate is not a reliable 1:1 proxy for a customer, so more than one distinct customer on file means the
    * receptionist is asked which one this visit is for rather than the form guessing.
@@ -524,108 +563,16 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     return this.knownFields.has(field);
   }
 
-  /**
-   * Text-only AI-assist: parses a typed description into work order field
-   * suggestions and patches the (unsaved) form. Never saves anything itself —
-   * the user still has to review and click the normal Save button, same as
-   * every other field on this form.
-   */
-  onAiAssistSubmit(transcript: string): void {
-    this.isAiAssistLoading = true;
-    this.aiCustomerCandidates = [];
-    this.coreService.parseWorkOrderIntent(transcript)
-      .pipe(
-        finalize(() => { this.isAiAssistLoading = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (result) => this.applyAiIntentResult(result),
-        error: (err) => {
-          this.logger.error('parseWorkOrderIntent error', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: this.sharedService.T('error'),
-            detail: this.sharedService.T('aiAssistFailed'),
-            life: 4000
-          });
-        }
-      });
-  }
-
-  private applyAiIntentResult(result: IWorkOrderIntentResponse): void {
-    const patch: Record<string, unknown> = {};
-
-    if (result.vehiclePlate) {
-      patch['vehiclePlate'] = result.vehiclePlate;
-    }
-    if (result.customerId && result.customerName) {
-      patch['customerId'] = result.customerId;
-      patch['customerName'] = result.customerName;
-      this.selectedCustomerName = result.customerName;
-    }
-    if (result.employeeId) {
-      patch['employeeId'] = result.employeeId;
-    }
-    if (result.professionalDescription) {
-      patch['description'] = result.professionalDescription;
-    }
-
-    this.workOrder.patchValue(patch);
-    // filledFields from wms-ai names the response field it populated (e.g. "vehiclePlate",
-    // "employeeId"), which already matches this form's control names for most fields — except
-    // professionalDescription, which patches the "description" control, so map that one
-    // explicitly rather than relying on the two names to coincide.
-    (result.filledFields || []).forEach((field) =>
-      this.aiSuggestedFields.add(field === 'professionalDescription' ? 'description' : field)
-    );
-
-    if (result.vehiclePlate) {
-      this.lookupVehicle();
-    }
-    if (result.customerCandidates?.length) {
-      this.aiCustomerCandidates = result.customerCandidates;
-    }
-    if (result.serviceLines?.length) {
-      this.applyAiServiceLines(result.serviceLines);
-    }
-  }
-
-  private applyAiServiceLines(lines: NonNullable<IWorkOrderIntentResponse['serviceLines']>): void {
-    for (const line of lines) {
-      const match = line.productId
-        ? this.products.find((p) => p.productId === line.productId)
-        : this.products.find((p) => p.productName.toLowerCase() === line.productName.toLowerCase());
-      if (match) {
-        this.selectedProducts.push({ ...match, quantity: line.quantity || 1 });
-      }
-    }
-    if (lines.length) {
-      this.aiSuggestedFields.add('services');
-    }
-  }
-
-  resolveAiCustomerCandidate(candidate: IWorkOrderIntentCandidate): void {
-    this.workOrder.patchValue({ customerId: candidate.id, customerName: candidate.label });
-    this.selectedCustomerName = candidate.label;
-    this.aiCustomerCandidates = [];
-  }
-
-  isAiSuggested(field: string): boolean {
-    return this.aiSuggestedFields.has(field);
-  }
-
-  /** Called on manual edit of an AI-populated or known-fact field so its badge only shows until the human touches it. */
-  clearAiSuggestion(field: string): void {
-    this.aiSuggestedFields.delete(field);
+  /** Called on manual edit of a known-fact field (vehicle-history match or Dashboard handoff) so its "Known" badge only shows until the human touches it. */
+  clearKnownFact(field: string): void {
     this.knownFields.delete(field);
   }
 
-  /** Direct dictation into the description field - the user's own words, appended as-is, not routed through the AI-assist parse flow and not marked "AI-suggested" (it's not a model guess). */
+  /** Voice dictation into the description field - appended as-is to whatever's already there. */
   onDescriptionTranscribed(transcript: string): void {
     const current = this.workOrder.get('description')?.value || '';
     const next = current ? `${current} ${transcript}` : transcript;
     this.workOrder.patchValue({ description: next });
-    this.clearAiSuggestion('description');
   }
 
   filterSuppliers(event: any): void {
@@ -909,7 +856,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     }
 
     this.showSpinner = true;
-    this.aiSuggestedFields.clear();
     this.knownFields.clear();
     this.logger.info(this.selectedProducts);
 
