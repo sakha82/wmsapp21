@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer } from 'app/app.model';
+import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -57,6 +57,7 @@ import { GenericLoaderComponent } from 'app/components/shared/generic-loader/gen
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 import { IWorkOrderHandoff, WorkOrderHandoffService } from 'app/services/workorder-handoff.service';
 import { parseOilCapacity, parseOilType } from 'app/utils/vehicle-oil.util';
+import { buildVehicleDetailFields } from 'app/utils/vehicle-detail-fields.util';
 
 @Component({
   selector: 'app-order-crud',
@@ -113,10 +114,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   knownFields = new Set<string>();
   isVehicleHistoryLoading: boolean = false;
   vehicleHistory: IVehicleHistorySummary | null = null;
-  /** More than one distinct customer has this plate on file - the user must pick one, nothing is auto-filled until they do. */
-  historyCustomerCandidates: IVehicleHistoryCustomer[] = [];
   /** True once a plate lookup has resolved (success or failure) or the record already had a plate on load - gates the progressive-disclosure reveal of the rest of the form for new work orders. */
   hasResolvedVehicle: boolean = false;
+  /** Scraped vehicle reference data (VIN, engine code, tyres, oil spec, etc.) shown as a single readonly line - see vehicleDetailsLine. Not persisted onto WorkOrder itself. */
+  vehicleDetails: IVehicleDetails | null = null;
 
   products: IProduct[] = [];
   selectedProduct:FormGroup;
@@ -160,6 +161,14 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
    */
   get showFullForm(): boolean {
     return !this.isNewObject || this.hasResolvedVehicle;
+  }
+
+  /** Single-line readonly summary of scraped vehicle reference data (VIN, engine, tyres, oil spec, etc.) - empty string hides the row. */
+  get vehicleDetailsLine(): string {
+    if (!this.vehicleDetails) return '';
+    return buildVehicleDetailFields(this.vehicleDetails, (key) => this.sharedService.T(key))
+      .map((field) => `${field.label}: ${field.value}`)
+      .join('  •  ');
   }
 
   constructor(
@@ -299,11 +308,12 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
             }
           }
 
+          if (this.isNewObject && !this.workOrder.get('bookingDate')?.value) {
+            this.workOrder.patchValue({ bookingDate: this.getStockholmNow().date });
+          }
+
           this.getAllEmployees();
-          if (response.data.bookingDate)
-            this.getBookings(response.data.bookingDate);
-          else
-            this.getBookings(new Date().toISOString().split('T')[0]);
+          this.getBookings(this.workOrder.get('bookingDate')?.value || this.getStockholmNow().date);
         }
         this.cdr.detectChanges();
       });
@@ -398,6 +408,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           if (res) {
             this.employees = res;
             this.logger.info('Printing Employees', this.employees);
+            if (this.isNewObject && !this.workOrder.get('employeeId')?.value && this.employees.length) {
+              this.workOrder.patchValue({ employeeId: this.employees[0].employeeId });
+            }
           }
         },
         error: (err) => {
@@ -418,11 +431,43 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         next: (res) => {
           this.logger.info(res);
           this.dayBookings = res;
+          if (this.isNewObject && !this.workOrder.get('bookingTime')?.value && this.dayBookings.length) {
+            const targetTime = this.computeNextHalfHourSlot();
+            const nextSlot = this.dayBookings.find((b) => b.cTime >= targetTime) || this.dayBookings[0];
+            this.workOrder.patchValue({ bookingTime: nextSlot.cTime });
+          }
         },
         error: (err) => {
           this.logger.error('getBookings error', err);
         }
       });
+  }
+
+  /** Current date/time in Europe/Stockholm, independent of the browser's own timezone. */
+  private getStockholmNow(): { date: string; hour: number; minute: number } {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Stockholm',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false,
+    }).formatToParts(new Date());
+    const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+    return {
+      date: `${get('year')}-${get('month')}-${get('day')}`,
+      hour: Number(get('hour')),
+      minute: Number(get('minute')),
+    };
+  }
+
+  /** Next upcoming half-hour booking window in Sweden time, e.g. 14:12 -> "14:30", 14:31 -> "15:00". */
+  private computeNextHalfHourSlot(): string {
+    const { hour, minute } = this.getStockholmNow();
+    let h = hour;
+    let m = minute === 0 ? 0 : minute <= 30 ? 30 : 60;
+    if (m === 60) {
+      m = 0;
+      h = (h + 1) % 24;
+    }
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
   }
 
   onChangeCustomer($event: any) {
@@ -454,11 +499,17 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (vehicle) => {
-          this.workOrder.patchValue({
+          const patch: Record<string, unknown> = {
             vehicleManufacturer: vehicle.make,
             vehicleModel: vehicle.model,
             vehicleYear: vehicle.year ? Number(vehicle.year) : null,
-          });
+          };
+          const oilType = parseOilType(vehicle.oilClassification1, this.oilTypes);
+          if (oilType) patch['oilType'] = oilType;
+          const oilCapacity = parseOilCapacity(vehicle.oilCapacity);
+          if (oilCapacity !== null) patch['oilCapacity'] = oilCapacity;
+          this.workOrder.patchValue(patch);
+          this.vehicleDetails = vehicle;
         },
         error: (err) => {
           this.logger.error('lookupVehicle error', err);
@@ -510,6 +561,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     this.workOrder.patchValue(patch);
     this.vehicleHistory = handoff.vehicleHistory;
+    this.vehicleDetails = vehicle;
     this.hasResolvedVehicle = true;
   }
 
@@ -521,7 +573,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   private fetchVehicleHistory(vehiclePlate: string): void {
     this.isVehicleHistoryLoading = true;
     this.vehicleHistory = null;
-    this.historyCustomerCandidates = [];
     this.workOrderService.getVehicleHistory(vehiclePlate)
       .pipe(
         finalize(() => { this.isVehicleHistoryLoading = false; }),
@@ -532,8 +583,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           this.vehicleHistory = history;
           if (history.distinctCustomers.length === 1) {
             this.applyKnownCustomer(history.distinctCustomers[0]);
-          } else if (history.distinctCustomers.length > 1) {
-            this.historyCustomerCandidates = history.distinctCustomers;
           }
         },
         error: (err) => {
@@ -551,12 +600,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     });
     this.selectedCustomerName = customer.customerName;
     this.knownFields.add('customerId');
-  }
-
-  /** Vehicle history showed more than one distinct customer for this plate - the receptionist picked one. */
-  resolveHistoryCustomer(customer: IVehicleHistoryCustomer): void {
-    this.applyKnownCustomer(customer);
-    this.historyCustomerCandidates = [];
   }
 
   isKnownFact(field: string): boolean {

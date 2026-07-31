@@ -25,11 +25,6 @@ interface AiSuggestion {
   text: string;
 }
 
-interface VehicleDetailField {
-  label: string;
-  value: string;
-}
-
 /**
  * Dashboard rebuilt as the primary entry point for creating a new booking/work order (2026-07-31 redesign, see
  * DashboardPage_Redesign.md). The chat interface has two modes: Registration (plate-only, implemented) and Query
@@ -62,6 +57,8 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   @ViewChild('plateInputEl') plateInputEl?: ElementRef<HTMLInputElement>;
 
   private destroy$ = new Subject<void>();
+  /** Session-scoped so navigating away (e.g. to start a booking) and back via the browser Back button restores the last lookup instead of resetting to a blank plate. Cleared on changePlate() or a fresh submit. */
+  private readonly lookupStateStorageKey = 'wms.dashboard.lastLookup';
 
   /** Registration Mode is the only functional mode today - Query Mode is visible but disabled, see class doc. */
   mode: 'registration' | 'query' = 'registration';
@@ -109,6 +106,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       { icon: 'pi pi-exclamation-circle', text: this.sharedService.T('aiSuggestionDummyInvoices') },
     ];
     this.loadReminders();
+    this.restoreLookupState();
   }
 
   ngOnDestroy(): void {
@@ -163,6 +161,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
           if (history.distinctCustomers.length === 1) {
             this.selectCustomer(history.distinctCustomers[0]);
           }
+          this.persistLookupState();
         },
         error: (err) => {
           this.logger.error('Vehicle lookup error', err);
@@ -174,6 +173,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
             detail: this.sharedService.T('vehicleLookupFailed'),
             life: 4000
           });
+          this.persistLookupState();
         }
       });
   }
@@ -182,6 +182,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   selectCustomer(customer: IVehicleHistoryCustomer): void {
     this.selectedCustomer = customer;
     this.loadWorkOrdersForCustomer(customer.customerId);
+    this.persistLookupState();
   }
 
   private loadWorkOrdersForCustomer(customerId: number): void {
@@ -204,41 +205,6 @@ export class DashboardListComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Every non-empty Vehicle.cs field for the receptionist to see - only Make/Model/Year/Plate actually carry
-   * over onto the work order (see DashboardPage_Redesign.md's "Vehicle→WorkOrder scope" decision); the rest is
-   * reference information only, since WorkOrder has no columns for VIN/engine/tyres/etc.
-   */
-  get vehicleDetailFields(): VehicleDetailField[] {
-    if (!this.vehicleInfo) return [];
-    const v = this.vehicleInfo;
-    const fields: [string, string | undefined | null][] = [
-      [this.sharedService.T('vehicleMake'), v.make],
-      [this.sharedService.T('vehicleModel'), v.model],
-      [this.sharedService.T('vehicleYear'), v.year],
-      [this.sharedService.T('fuelType'), v.fuelType],
-      [this.sharedService.T('vehicleColor'), v.color],
-      [this.sharedService.T('vehicleBodyType'), v.chassis],
-      [this.sharedService.T('vehicleCategory'), v.vehicleType],
-      [this.sharedService.T('vehicleVin'), v.vin],
-      [this.sharedService.T('vehicleEngineCode'), v.engineCode],
-      [this.sharedService.T('vehicleTransmission'), v.transmission],
-      [this.sharedService.T('vehiclePower'), v.effect],
-      [this.sharedService.T('vehicleHorsepower'), v.horsepower],
-      [this.sharedService.T('vehicleDrivetrain'), v.driving],
-      [this.sharedService.T('vehicleFrontTyre'), v.frontWheelDimension],
-      [this.sharedService.T('vehicleBackTyre'), v.backWheelDimension],
-      [this.sharedService.T('vehicleOilCapacityScraped'), v.oilCapacity],
-      [this.sharedService.T('vehicleOilSpec'), v.oilSpecifications1],
-      [this.sharedService.T('vehicleOilClassification'), v.oilClassification1],
-      [this.sharedService.T('vehicleOilSpecAlt'), v.oilSpecifications2],
-      [this.sharedService.T('vehicleOilClassificationAlt'), v.oilClassification2],
-    ];
-    return fields
-      .filter(([, value]) => !!value)
-      .map(([label, value]) => ({ label, value: value as string }));
-  }
-
   /** Starts a new booking for the looked-up plate/customer - hands the whole lookup off to the Create Work Order page (WorkOrderHandoffService) so the receptionist never repeats it. Per DashboardPage_Redesign.md's "Next Step", that page's own form is still the actual booking UI for now. */
   startBooking(): void {
     if (this.vehicleInfo && this.vehicleHistory) {
@@ -256,6 +222,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   changePlate(): void {
     this.plateInput = '';
     this.resetLookupState();
+    sessionStorage.removeItem(this.lookupStateStorageKey);
     setTimeout(() => this.plateInputEl?.nativeElement.focus());
   }
 
@@ -266,6 +233,39 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     this.vehicleHistory = null;
     this.selectedCustomer = null;
     this.existingWorkOrders = [];
+  }
+
+  /** Saves the current plate lookup so a browser Back navigation (e.g. from Create Work Order) restores it instead of showing a blank Dashboard. */
+  private persistLookupState(): void {
+    const state = {
+      plateInput: this.plateInput,
+      hasSearched: this.hasSearched,
+      lookupFailed: this.lookupFailed,
+      vehicleInfo: this.vehicleInfo,
+      vehicleHistory: this.vehicleHistory,
+      selectedCustomer: this.selectedCustomer,
+    };
+    sessionStorage.setItem(this.lookupStateStorageKey, JSON.stringify(state));
+  }
+
+  private restoreLookupState(): void {
+    const raw = sessionStorage.getItem(this.lookupStateStorageKey);
+    if (!raw) return;
+    try {
+      const state = JSON.parse(raw);
+      this.plateInput = state.plateInput || '';
+      this.hasSearched = !!state.hasSearched;
+      this.lookupFailed = !!state.lookupFailed;
+      this.vehicleInfo = state.vehicleInfo || null;
+      this.vehicleHistory = state.vehicleHistory || null;
+      this.selectedCustomer = state.selectedCustomer || null;
+      if (this.selectedCustomer) {
+        this.loadWorkOrdersForCustomer(this.selectedCustomer.customerId);
+      }
+    } catch (err) {
+      this.logger.error('restoreLookupState error', err);
+      sessionStorage.removeItem(this.lookupStateStorageKey);
+    }
   }
 
   goToWorkOrderDetails(workOrder: IWorkOrder): void {

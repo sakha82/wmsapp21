@@ -22,7 +22,7 @@
   <div class="grid grid-cols-12 gap-5 items-start">
 
   <!-- Main form column -->
-  <div class="col-span-12 lg:col-span-8 order-2 lg:order-1">
+  <div class="col-span-12">
 
   <div class="mb-10 p-8 gap-3 rounded border border-border bg-white">
     <div class="grid grid-cols-12 gap-5">
@@ -74,6 +74,12 @@
         <input type="number" pInputText formControlName="vehicleMileage"
           class="w-full" />
       </div>
+
+      <!-- Readonly scraped vehicle reference info - one line, see vehicleDetailsLine -->
+      <div class="col-span-12" *ngIf="vehicleDetailsLine">
+        <div class="text-xs text-gray-dark truncate" [title]="vehicleDetailsLine">{{ vehicleDetailsLine }}</div>
+      </div>
+
       <!-- LINE 2: Customer Name to Service Duration -->
 
       <div class="col-span-3">
@@ -439,34 +445,6 @@
   <!-- /card (mb-10 p-8...) -->
   </div>
   <!-- /Main form column -->
-
-  <!-- Sticky vehicle-history panel -->
-  <div class="col-span-12 lg:col-span-4 order-1 lg:order-2">
-    <div class="lg:sticky lg:top-4 flex flex-col gap-3">
-
-      <div *ngIf="vehicleHistory && showFullForm" class="flex items-center gap-2 p-3 rounded border border-border bg-bg-light">
-        <ng-container *ngIf="vehicleHistory.isFirstVisit; else returningVehicle">
-          <i class="pi pi-star text-primary"></i>
-          <span class="text-sm">{{ sharedService.T('firstVisitBanner') }}</span>
-        </ng-container>
-        <ng-template #returningVehicle>
-          <i class="pi pi-history text-primary"></i>
-          <span class="text-sm">
-            {{ sharedService.T('returningVehicleBanner') }}
-            <span *ngIf="vehicleHistory.lastVisitDate">{{ sharedService.T('lastVisit') }}: {{ vehicleHistory.lastVisitDate }}.</span>
-            <span *ngIf="vehicleHistory.previousServicesSummary">{{ sharedService.T('previousServices') }}: {{ vehicleHistory.previousServicesSummary }}.</span>
-          </span>
-        </ng-template>
-      </div>
-
-      <div *ngIf="historyCustomerCandidates.length" class="flex flex-wrap items-center gap-2 p-3 border border-border rounded bg-white">
-        <span class="text-sm">{{ sharedService.T('vehicleHistoryMultipleCustomers') }}</span>
-        <p-button *ngFor="let candidate of historyCustomerCandidates" size="small" [text]="true"
-          [label]="candidate.customerName" (onClick)="resolveHistoryCustomer(candidate)"></p-button>
-      </div>
-    </div>
-  </div>
-  <!-- /Sticky vehicle-history panel -->
 
   </div>
 </form>
