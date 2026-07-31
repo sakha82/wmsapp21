@@ -12,9 +12,14 @@ export function parseOilCapacity(raw?: string | null): number | null {
   return match ? Number(match[1]) : null;
 }
 
-/** Matches a scraped oil classification (e.g. "5W-30") against the fixed WorkOrder oilType dropdown (e.g. "5W30") by stripping non-alphanumeric characters. Returns null if nothing matches. */
+/** Matches a scraped oil classification (e.g. "0W-20 (SAE)", "5W-30") against the fixed WorkOrder oilType dropdown
+ * (e.g. "0W20", "5W30") - extracts just the viscosity grade (ignoring trailing standard suffixes like "(SAE)")
+ * and compares by stripping non-alphanumeric characters. Returns null if nothing matches, so the dropdown is
+ * left blank rather than guessing. */
 export function parseOilType(raw: string | null | undefined, options: readonly string[]): string | null {
   if (!raw) return null;
-  const normalized = raw.toUpperCase().replace(/[^0-9A-Z]/g, '');
+  const grade = raw.toUpperCase().match(/\d+W-?\d+/);
+  if (!grade) return null;
+  const normalized = grade[0].replace(/[^0-9A-Z]/g, '');
   return options.find((option) => option.toUpperCase().replace(/[^0-9A-Z]/g, '') === normalized) || null;
 }

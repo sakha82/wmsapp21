@@ -200,7 +200,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       customerTelephone: '',
       customerEmail: ['', [Validators.email]],
       serviceDuration: [null],
-      oilType: '5W30',
+      oilType: null,
       oilCapacity: null,
       workOrderDate: ['', Validators.required],
       vehiclePlate: [null, Validators.required],
