@@ -58,6 +58,12 @@
           </div>
           <a href="#" class="crud-inline-action-link text-sm" (click)="changePlate(); $event.preventDefault()">{{ this.sharedService.T('changeVehicle') }}</a>
         </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div *ngFor="let field of vehicleDetailFields" class="rounded border border-border p-2.5">
+            <div class="text-xs text-gray-dark uppercase" style="letter-spacing:.04em;">{{ field.label }}</div>
+            <div class="text-sm font-semibold mt-1 truncate" [title]="field.value">{{ field.value }}</div>
+          </div>
+        </div>
       </div>
 
       <!-- First-visit / returning banner -->
