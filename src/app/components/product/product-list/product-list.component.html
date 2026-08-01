@@ -38,26 +38,6 @@
                 </div>
             </div>
             <hr class="border-border" />
-            <!-- Legend and Filter together -->
-            <div class="flex gap-8 mt-4 mb-4 justify-between items-center">
-                <div class="flex gap-8">
-                    <div class="flex items-center gap-2">
-                        <span class="text-icon base-icon">B</span>
-                        <span class="text-sm text-gray-header">{{this.sharedService.T('baseProducts')}}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-icon workshop-icon">V</span>
-                        <span class="text-sm text-gray-header">{{this.sharedService.T('workshopProducts')}}</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2 whitespace-nowrap">
-                    <p-checkbox [(ngModel)]="includeBaseProducts" [binary]="true"
-                        [ngModelOptions]="{standalone: true}" (onChange)="onChangeIncludeBaseProducts($event)">
-                    </p-checkbox>
-                    <label class="text-sm text-gray-header">{{this.sharedService.T('includeBaseProducts')}}</label>
-                </div>
-            </div>
-
         </div>
 
         <div class="mb-10">
@@ -89,9 +69,7 @@
 
                 <ng-template #header>
                     <tr>
-                        <th>
-                        </th>
-                        <th>{{ this.sharedService.T('category') }}</th>
+                        <th class="rounded-l-xl">{{ this.sharedService.T('category') }}</th>
                         <th pSortableColumn="productName">
                             {{ this.sharedService.T('productService') }}
                             <p-sortIcon field="productName" />
@@ -116,13 +94,7 @@
                         'bg-green-100': product.productId === latestProductId
                     }" style="transition: background-color 0.8s ease;" class="p-selectable-row">
 
-                        <td class="rounded-l-lg">
-                          <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
-                          <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
-
-                        </td>
-
-                        <td>{{ this.sharedService.getEnumByValue('detailCategory',product.category).text }}</td>
+                        <td class="rounded-l-lg">{{ this.sharedService.getEnumByValue('detailCategory',product.category).text }}</td>
                         <td>
                             <div class="flex items-center gap-2 cursor-pointer"
                                 (click)="redirectToProductDetail(product.productId)">
@@ -139,8 +111,7 @@
                         <td>{{ product.invoiceQuantity }}</td>
                         <td>{{ product.invoiceSum }}</td>
                         <td>
-                            
-                            <div *ngIf="!product.isBaseProduct" class="flex gap-2 justify-center">
+                            <div class="flex gap-2 justify-center">
                                 <p-button size="small" icon="pi pi-pencil" severity="secondary"
                                     data-testid="edit-product-button"
                                     [disabled]="product.isActive === 0" (onClick)="getProduct(product.productId)">

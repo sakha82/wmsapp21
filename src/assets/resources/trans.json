@@ -2025,31 +2025,6 @@
         "sv": "Lägg till bokning kl."
     },
     {
-        "tkey": "lock_slot",
-        "en": "Block time slot",
-        "sv": "Blockera tid"
-    },
-    {
-        "tkey": "unlock_slot",
-        "en": "Unblock time slot",
-        "sv": "Avblockera tid"
-    },
-    {
-        "tkey": "slot_locked",
-        "en": "Blocked",
-        "sv": "Blockerad"
-    },
-    {
-        "tkey": "lock_slot_success",
-        "en": "Time slot blocked.",
-        "sv": "Tiden är blockerad."
-    },
-    {
-        "tkey": "unlock_slot_success",
-        "en": "Time slot unblocked.",
-        "sv": "Tiden är avblockerad."
-    },
-    {
         "tkey": "offerHistory",
         "en": "Offer History",
         "sv": "Offerthistorik"

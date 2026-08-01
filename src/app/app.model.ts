@@ -124,19 +124,6 @@ export interface IWeeklyCalendar {
   fridayBookings: IWorkOrder[];
   saturdayBookings: IWorkOrder[];
   sundayBookings: IWorkOrder[];
-  mondayLocked?: boolean;
-  tuesdayLocked?: boolean;
-  wednesdayLocked?: boolean;
-  thursdayLocked?: boolean;
-  fridayLocked?: boolean;
-  saturdayLocked?: boolean;
-  sundayLocked?: boolean;
-}
-
-export interface IBookingLockRequest {
-  wmsId: string;
-  bookingDate: string;
-  bookingTime: string;
 }
 
 export interface IDailyCalendar {

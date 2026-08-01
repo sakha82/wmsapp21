@@ -48,7 +48,6 @@ export class ProductListComponent implements OnDestroy {
   isLoading: boolean = true;
   showProductDialog = false;
   isInventoryChecked: boolean = false;
-  includeBaseProducts: boolean = false;
   isSelingProductChecked: boolean = false;
   isNewObject: boolean = true;
   showInventoryDialog = false;
@@ -72,8 +71,7 @@ export class ProductListComponent implements OnDestroy {
       category: null,
       inventory: false,
       sale: false,
-      isActive: 1,
-      includeBase:false
+      isActive: 1
     });
 
     this.product = this.fb.group({
@@ -289,15 +287,6 @@ export class ProductListComponent implements OnDestroy {
     this.getProducts();
   }
 
-  onChangeIncludeBaseProducts(event: any): void {
-    
-    this.includeBaseProducts = event.checked;
-    this.filters.patchValue({ includeBase: this.includeBaseProducts });
-    this.filters.patchValue({ currentPage: 1 });
-    this.sharedService.updateFiltersInNavigation(this.filters);
-    this.getProducts();
-  }
-  
   redirectToProductDetail(productId: number) {
     this.router.navigate(['sv/product/details', productId]);
   }

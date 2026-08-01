@@ -55,17 +55,6 @@
     vertical-align: top;
 }
 
-.booking-slot-locked {
-    background-color: #f1f5f9;
-    background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 6px,
-        rgba(148, 163, 184, 0.12) 6px,
-        rgba(148, 163, 184, 0.12) 12px
-    );
-}
-
 .booking-slot-actions {
     display: flex;
     flex-direction: row;
@@ -97,14 +86,5 @@
     white-space: nowrap;
     width: auto;
     max-width: 100%;
-}
-
-.booking-locked-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.25rem;
-    color: #64748b;
 }
 

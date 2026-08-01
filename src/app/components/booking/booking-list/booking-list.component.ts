@@ -106,8 +106,6 @@ export class BookingListComponent implements OnInit, OnDestroy {
   selectedBooking: IWorkOrder = {} as IWorkOrder;
   isDialogVisible: boolean = false;
   openMenuKey: string | null = null;
-  lockedSlots = new Set<string>();
-  slotLockInProgress: string | null = null;
 
   constructor(private logger: LogService,
     private readonly errorHandler: ErrorHandlerService,
@@ -205,7 +203,6 @@ export class BookingListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res) {
-            this.syncLockedSlotsFromCalendar(res);
             this.weekCalendar = this.processMultiSlotBookings(res);
             this.logger.info('getBookings success', { weekCalendar: this.weekCalendar });
 
@@ -559,130 +556,9 @@ export class BookingListComponent implements OnInit, OnDestroy {
     this.router.navigate(['sv/workorder/crud', { bookingDate: bookingDate, bookingTime: bookingTime }]);
   }
 
-  slotKey(day: string, calendar: { cTime: string; [key: string]: unknown }): string {
-    return `${calendar[day + 'Date']}|${calendar.cTime}`;
-  }
-
-  hasSlotBookings(day: string, calendar: { [key: string]: unknown }): boolean {
-    const bookings = calendar[day + 'Bookings'] as unknown[] | undefined;
-    return (bookings?.length ?? 0) > 0;
-  }
-
-  isSlotLocked(day: string, calendar: { cTime: string; [key: string]: unknown }): boolean {
-    const key = this.slotKey(day, calendar);
-    if (this.lockedSlots.has(key)) {
-      return true;
-    }
-    return calendar[day + 'Locked'] === true;
-  }
-
-  canLockSlot(day: string, calendar: { cTime: string; [key: string]: unknown }): boolean {
-    return !this.hasSlotBookings(day, calendar) && !this.isSlotLocked(day, calendar);
-  }
-
-  canUnlockSlot(day: string, calendar: { cTime: string; [key: string]: unknown }): boolean {
-    return this.isSlotLocked(day, calendar) && !this.hasSlotBookings(day, calendar);
-  }
-
   isSlotHovered(day: string, time: string): boolean {
     return this.hoveredSlot?.day === day && this.hoveredSlot?.time === time;
   }
-
-  private syncLockedSlotsFromCalendar(data: any[]): void {
-    const fromApi = new Set<string>();
-    let apiReportsLocks = false;
-
-    for (const row of data) {
-      for (const day of this.days) {
-        const date = row[day + 'Date'] as string | undefined;
-        if (!date) {
-          continue;
-        }
-        const locked = row[day + 'Locked'] === true || row[day + 'IsLocked'] === true;
-        if (locked) {
-          apiReportsLocks = true;
-          fromApi.add(`${date}|${row.cTime}`);
-        }
-      }
-    }
-
-    if (apiReportsLocks) {
-      this.lockedSlots = fromApi;
-    }
-  }
-
-  lockSlot(day: string, calendar: { cTime: string; [key: string]: unknown }, event: Event): void {
-    event.stopPropagation();
-    const bookingDate = calendar[day + 'Date'] as string;
-    const bookingTime = calendar.cTime;
-    const key = this.slotKey(day, calendar);
-    if (this.slotLockInProgress === key) {
-      return;
-    }
-    this.slotLockInProgress = key;
-
-    this.bookingService
-      .lockBooking(bookingDate, bookingTime)
-      .pipe(
-        finalize(() => {
-          this.slotLockInProgress = null;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: () => {
-          this.lockedSlots.add(key);
-          calendar[day + 'Locked'] = true;
-          this.messageService.add({
-            severity: 'success',
-            summary: '',
-            detail: this.sharedService.T('lock_slot_success'),
-            life: 3000,
-          });
-          this.getBookings();
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'lockSlot', 'Failed to block time slot. Please try again.');
-        },
-      });
-  }
-
-  unlockSlot(day: string, calendar: { cTime: string; [key: string]: unknown }, event: Event): void {
-    event.stopPropagation();
-    const bookingDate = calendar[day + 'Date'] as string;
-    const bookingTime = calendar.cTime;
-    const key = this.slotKey(day, calendar);
-    if (this.slotLockInProgress === key) {
-      return;
-    }
-    this.slotLockInProgress = key;
-
-    this.bookingService
-      .unlockBooking(bookingDate, bookingTime)
-      .pipe(
-        finalize(() => {
-          this.slotLockInProgress = null;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: () => {
-          this.lockedSlots.delete(key);
-          calendar[day + 'Locked'] = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: '',
-            detail: this.sharedService.T('unlock_slot_success'),
-            life: 3000,
-          });
-          this.getBookings();
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'unlockSlot', 'Failed to unblock time slot. Please try again.');
-        },
-      });
-  }
-
 
   printBookings(selectedDate: any) {
     this.logger.info('printBookings called', { selectedDate });

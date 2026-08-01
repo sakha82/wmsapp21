@@ -75,16 +75,4 @@ export class WorkOrderService {
     return this.http.get<IVehicleHistorySummary>(`${this.baseUrl}/vehicle-history?${queryParams}`);
   }
 
-  getServiceHours(make: string, model: string, year: number = 0) {
-    this.logger.info('Fetching service hours for vehicle type:', { make, model, year });
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    queryParams.append("make", make ?? '');
-    queryParams.append("model", model ?? '');
-    queryParams.append("year", (year ?? 0).toString());
-    return this.http.get<IProduct[]>(`${this.baseUrl}/work-hours?${queryParams}`);
-  }
-
-  
-  
 }

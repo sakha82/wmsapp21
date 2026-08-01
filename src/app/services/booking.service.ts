@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { IWorkOrder } from 'app/app.model'
-import { IDailyCalendar, IBookingLockRequest, IWeeklyCalendar} from 'app/app.model';
+import { IDailyCalendar, IWeeklyCalendar} from 'app/app.model';
 import { environment } from 'environments/environment';
 import { SharedService } from 'app/services/shared.service';
 import { LogService } from 'app/services/log.service';
@@ -54,24 +54,6 @@ export class BookingService {
   {
     const url = `${this.baseUrl}/${this.sharedService.wmsId}/${workorderId}`;
     return this.http.delete<boolean>(url);
-  }
-
-  lockBooking(bookingDate: string, bookingTime: string) {
-    const body: IBookingLockRequest = {
-      wmsId: this.sharedService.wmsId,
-      bookingDate,
-      bookingTime,
-    };
-    return this.http.post<boolean>(`${this.baseUrl}/lock-booking`, body);
-  }
-
-  unlockBooking(bookingDate: string, bookingTime: string) {
-    const body: IBookingLockRequest = {
-      wmsId: this.sharedService.wmsId,
-      bookingDate,
-      bookingTime,
-    };
-    return this.http.post<boolean>(`${this.baseUrl}/unlock-booking`, body);
   }
 
 }
