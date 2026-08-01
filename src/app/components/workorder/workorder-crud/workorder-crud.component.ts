@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ICustomer, IDailyCalendar, IEnum, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails } from 'app/app.model';
+import { IWorkOrder, ICustomer, IDailyCalendar, IEnum, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -131,7 +131,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
   customer: FormGroup;
   creditDays: number[] = [0, 7, 14, 21, 30];
-  customerTypes: ICustomerType[] = [];
   customerTags: ICustomerTag[] = [];
 
   /**
@@ -200,7 +199,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.customer = this.fb.group({
       customerId: [0, Validators.required],
       customerName: ['', Validators.required],
-      customerType: [],
+      customerType: [this.sharedService.getDefaultEnum('customerType')?.value],
       customerTag: [],
       organizationNo: [],
       vatId: [],
@@ -218,7 +217,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     const param: any = this.route.snapshot.params;
-    this.loadCustomerTypes();
     this.loadCustomerTags();
   
     this.workOrderService
@@ -286,29 +284,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadCustomerTypes() {
-    this.workshopService
-      .getCustomerTypes()
-      .pipe(
-        finalize(() => {
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.customerTypes = response;
-            this.logger.info('Customer Types', this.customerTypes);
-
-            if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
-              this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
-          }
-        },
-        error: (err) => {
-          this.logger.error('loadCustomerTypes error', err);
-        }
-      });
-  }
   onChangeCustomerType(event: SelectChangeEvent) {
     this.customer.patchValue({ customerType: event.value });
   }
@@ -638,10 +613,10 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           if (res) {
                   this.loadCustomerTags();
-                  this.loadCustomerTypes();
                   this.customer.patchValue({
                     customerId: res.data.customerId,
                     customerName: '',
+                    customerType: this.sharedService.getDefaultEnum('customerType')?.value,
                     organizationNo:'',
                     vatId: '',
                     invoiceCreditDays: 0 ,

@@ -121,8 +121,8 @@
                   <div class="mb-6">
                     <label class="block mb-2" for="customerType">{{ this.sharedService.T('customerType')
                       }}</label>
-                    <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"
-                      optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)" class="w-full"></p-select>
+                    <p-select [options]="this.sharedService.getEnums('customerType')" formControlName="customerType" optionLabel="text"
+                      optionValue="value" (onChange)="onChangeCustomerType($event)" class="w-full"></p-select>
                   </div>
                   <div class="mb-6">
                     <label class="block mb-2" for="customerTag">{{ this.sharedService.T('customerTag')

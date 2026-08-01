@@ -13,8 +13,8 @@
                 (click)="redirectToCustomerCrudComponent()" data-testid="create-customer-button"></p-button>
 
               <!-- Filters -->
-              <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"
-                optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)"
+              <p-select [options]="this.sharedService.getEnums('customerType')" formControlName="customerType" optionLabel="text"
+                optionValue="value" (onChange)="onChangeCustomerType($event)"
                 [checkmark]="true" [showClear]="true" [placeholder]="this.sharedService.T('choose') + ' ' + this.sharedService.T('customerType')"
                 (onClear)="onClearCustomerType()"></p-select>
               <p-select [options]="customerTags" formControlName="customerTag" optionLabel="customerTagName"
@@ -123,7 +123,7 @@
                    {{ customer.customerName.length > 25 ? (customer.customerName | slice: 0:25) + '...' :
                     customer.customerName }} 
                 </td>
-                <td>{{ customer.customerTypeName }}</td>
+                <td>{{ this.sharedService.getEnumByValue('customerType', customer.customerType).text }}</td>
                 <td>{{ customer.customerTagName }}</td>
                 
                 <td>{{customer.isCreditAllowed ? this.sharedService.T('yes') : this.sharedService.T('no') }}

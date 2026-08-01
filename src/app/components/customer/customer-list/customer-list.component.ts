@@ -4,7 +4,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { filter, Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
-import { ICustomer, ICustomerTag, ICustomerType } from 'app/app.model';
+import { ICustomer, ICustomerTag } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { CustomerService } from 'app/services/customer.service';
 import { LogService } from 'app/services/log.service';
@@ -34,7 +34,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
   customers: ICustomer[] = [];
   customerTags: ICustomerTag[] = [];
-  customerTypes: ICustomerType[] = [];
   private destroy$ = new Subject<void>();
 
   customerCities: string[] = [];
@@ -90,7 +89,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
       });
     this.getCustomers();
     this.loadCustomerTags();
-    this.loadCustomerTypes();
     this.getCustomerCities();
 
   }
@@ -137,28 +135,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
         }
       });
   }
-  loadCustomerTypes() {
-    this.workshopService
-      .getCustomerTypes()
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.customerTypes = response;
-            this.logger.info('loadCustomerTypes success', { customerTypes: this.customerTypes });
-          }
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'loadCustomerTypes', 'Failed to load customer types.');
-        }
-      });
-  }
-
   getCustomerCities() {
     this.customerService
       .getCustomerCities(this.filters)

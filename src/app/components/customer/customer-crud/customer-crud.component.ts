@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ICustomerTag, ICustomerType, IEnum } from 'app/app.model';
+import { ICustomerTag, IEnum } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
@@ -43,7 +43,6 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
 
   customer: FormGroup;
   creditDays: number[] = [0, 7, 14, 21, 30];
-  customerTypes: ICustomerType[] = [];
   customerTags: ICustomerTag[] = [];
   countries: IEnum[] = [];
   isNewObject: boolean = true;
@@ -70,7 +69,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
     this.customer = this.fb.group({
       customerId: [0, Validators.required],
       customerName: ['', [Validators.required, Validators.maxLength(255)]],
-      customerType: [null, [Validators.required, Validators.min(1)]],
+      customerType: [this.sharedService.getDefaultEnum('customerType')?.value, Validators.required],
       customerTag: [],
       organizationNo: [],
       vatId: [],
@@ -103,9 +102,8 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
             this.isNewObject = response.isNewObject;
             this.customer.patchValue(response.data);
             this.logger.info('Loaded customer data', { isNewObject: this.isNewObject, customerId: response.data?.customerId });
-            this.loadCustomerTypes();
             this.loadCustomerTags();
-            this.logger.info('Tags and Types loaded');
+            this.logger.info('Tags loaded');
           }
         },
         error: (err) => {
@@ -148,30 +146,6 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadCustomerTypes() {
-    this.isLoading = true;
-    this.workshopService
-      .getCustomerTypes()
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.customerTypes = response;
-            this.logger.info('loadCustomerTypes success', { customerTypes: this.customerTypes });
-            if (!(this.customer.get('customerType') && Number(this.customer.get('customerType')) > 0))
-              this.customer.patchValue({ 'customerType': this.customerTypes[0].customerTypeId });
-          }
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'loadCustomerTypes', 'Failed to load customer types.');
-        }
-      });
-  }
   fetchCompanyInfo() {
     const companyId = this.customer.get('organizationNo')?.value;
     this.showFetchCompanySpinner = true;
@@ -222,9 +196,6 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
       });
   }
 
-  onChangeCustomerType(event: SelectChangeEvent) {
-    this.customer.patchValue({ customerType: event.value });
-  }
   onChangeCustomerTag(event: SelectChangeEvent) {
     this.customer.patchValue({ customerTag: event.value });
   }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICustomerTag, ICustomerType, IWorkshop, ISale } from 'app/app.model';
+import { ICustomerTag, IWorkshop, ISale } from 'app/app.model';
 import { IEnums, ISelect } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, tap } from 'rxjs';
@@ -45,12 +45,6 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
     const url = `${this.baseUrl}/customer-tags?${queryParams}`;
     return this.http.get<ICustomerTag[]>(url);
   }
-  getCustomerTypes() {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    const url = `${this.baseUrl}/customer-types?${queryParams}`;
-    return this.http.get<ICustomerType[]>(url);
-  }
   createCustomerTag(customerTag: ICustomerTag) {
     customerTag.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
@@ -69,23 +63,6 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
       : this.updateCustomerTag(customerTag);
   }
 
-  createCustomerType(customerType: ICustomerType) {
-    customerType.wmsId = this.sharedService.wmsId;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<ICustomerType>(`${this.baseUrl}/create-customer-type`, customerType, { headers });
-  }
-
-  updateCustomerType(customerType: ICustomerType) {
-    customerType.wmsId = this.sharedService.wmsId;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.put<ICustomerType>(`${this.baseUrl}/update-customer-type`, customerType, { headers });
-  }
-
-  saveCustomerType(customerType: ICustomerType) {
-    return (!customerType.customerTypeId || customerType.customerTypeId <= 0)
-      ? this.createCustomerType(customerType)
-      : this.updateCustomerType(customerType);
-  }
   // getServices() {
   //   const queryParams = new URLSearchParams();
   //   queryParams.append("wmsId", this.sharedService.wmsId);
@@ -120,15 +97,6 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
     const url = `${this.baseUrl}/delete-customer-tag?${queryParams.toString()}`;
     return this.http.delete(url, {});
   }
-  deleteCustomerType(customerTypeId: number) {
-    const queryParams = new URLSearchParams();
-    queryParams.append('wmsId', this.sharedService.wmsId);
-    queryParams.append('customerTypeId', customerTypeId.toString()); // convert to string for URL
-
-    const url = `${this.baseUrl}/delete-customer-type?${queryParams.toString()}`;
-    return this.http.delete(url, {});
-  }
-
 
   isWorkshopServiceExists(serviceName: string): Observable<boolean> {
     const queryParams = new URLSearchParams();

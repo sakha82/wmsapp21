@@ -16,7 +16,7 @@
         class="h-[70px] w-[70px] rounded-full mx-auto border border-border flex items-center justify-center font-medium text-2xl">
         <p>UM</p>
       </div>
-      <p-tag [value]="customer.customerTypeName" severity="info" />
+      <p-tag [value]="this.sharedService.getEnumByValue('customerType', customer.customerType).text" severity="info" />
       <p class="text-2xl font-semibold">{{ customer.customerName }}</p>
       <p class="text-xs text-gray-dark">
         Tag: <span class="font-bold">{{ customer.customerTagName }}</span>

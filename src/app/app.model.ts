@@ -163,7 +163,7 @@ export interface ICustomer {
   wmsId: string;
   customerId: number;
   customerName: string;
-  customerType: number;
+  customerType: string;
   customerTag: number;
   organizationNo: string;
   vatId: string;
@@ -182,7 +182,6 @@ export interface ICustomer {
   totalOffers: number;
   totalAccepted: number;
   totalRejected: number;
-  customerTypeName: string;
   customerTagName: string;
   isEdit: boolean;
 }
@@ -517,13 +516,6 @@ export interface ICustomerTag {
   wmsId: string;
   customerTagId: number;
   customerTagName: string;
-  isDefault: boolean;
-  customerCount: number;
-}
-export interface ICustomerType {
-  wmsId: string;
-  customerTypeId: number;
-  customerTypeName: string;
   isDefault: boolean;
   customerCount: number;
 }

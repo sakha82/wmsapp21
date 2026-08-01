@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ICustomerTag, ICustomerType, IWorkshop, ISelect, IPager, IWorkShopService, IEnums } from 'app/app.model';
+import { ICustomerTag, IWorkshop, ISelect, IPager, IWorkShopService, IEnums } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { CoreService } from 'app/services/core.service';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
@@ -96,18 +96,8 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     isDefault: false
   };
 
-  customerTypes: ICustomerType[] = [];
-  newCustomerType: ICustomerType = {
-    wmsId: '',
-    customerTypeId: 0,
-    customerTypeName: '',
-    customerCount: 0,
-    isDefault: false
-  };
   isTagEditing: boolean = false;
   editingTagIndex: number | null = null;
-  isTypeEditing: boolean = false;
-  editingTypeIndex: number | null = null;
   imageUrl: string = '';
   fileKey: string = '';
   invoiceTemplates:any[] = [{value: 'basic', name: 'Basic Template' }, {value: 'modern', name: 'Modern Template'}];
@@ -187,7 +177,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       
 
     this.loadCustomerTags();
-    this.loadCustomerTypes();
     this.loadLogo();
     this.loadSaleTargets(this.selectedSaleYear);
   }
@@ -449,135 +438,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       });
   }
 
-   loadCustomerTypes() {
-    this.workshopService
-      .getCustomerTypes()
-      .pipe(
-        finalize(() => {}),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response)
-            this.customerTypes = response;
-        },
-        error: (err) => {
-          this.logger.error('Error loading customer types:', err);
-        }
-      });
-  }
-  saveCustomerType(): void {
-
-    const alreadyDefault = this.customerTypes.some((t, i) =>
-      t.isDefault && (!this.isTagEditing || i !== this.editingTypeIndex)
-    );
-
-    if (this.newCustomerType.isDefault && alreadyDefault) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Default Type Error',
-        detail: 'A default Type already exists. Only one default Type allowed.',
-        life: 3000
-      });
-      return;
-    }
-
-    if (this.newCustomerType.customerTypeName.trim()) {
-
-      let isUpdate = false;   // ⭐ FIX #1 — track update before modifying flags
-
-      if (this.isTypeEditing && this.editingTypeIndex !== null) {
-        isUpdate = true;      // ⭐ FIX #2 — now message will be correct
-        this.customerTypes[this.editingTypeIndex] = { ...this.newCustomerType };
-        this.isTypeEditing = false;
-        this.editingTagIndex = null;
-      } else {
-        this.newCustomerType.customerTypeId = 0;
-      }
-
-      this.isLoading = true;
-
-      this.workshopService
-        .saveCustomerType(this.newCustomerType)
-        .pipe(
-          finalize(() => { this.isLoading = false; }),
-          takeUntil(this.destroy$)
-        )
-        .subscribe({
-          next: (response: any) => {
-            if (response) {
-              this.loadCustomerTypes();
-              this.messageService.add({
-                severity: 'success',
-                summary: this.sharedService.T('success'),
-                icon: 'pi pi-check-circle',
-                life: 2000
-              });
-            }
-            this.resetCustomerType();
-          },
-          error: (err) => {
-            this.logger.error('Error saving type:', err);
-          }
-        });
-    }
-  }
-
-  editCustomerType(index: number): void {
-    const customerType = this.customerTypes[index];
-    this.newCustomerType = { ...customerType };
-    this.isTypeEditing = true;
-    this.editingTypeIndex = index;
-  }
-
-  resetCustomerType(): void {
-    this.newCustomerType = {
-      wmsId: '',
-      customerTypeId: 0,
-      customerTypeName: '',
-      customerCount: 0,
-      isDefault: false
-    };
-    this.isTypeEditing = false;
-    this.editingTypeIndex = null;
-  }
-  removeCustomerType(index: number): void {
-    const type = this.customerTypes[index];
-    if (type.customerCount > 0) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Cannot Delete Type',
-        detail: `This type is used by ${type.customerCount} customers.`,
-        life: 3000
-      });
-      return;
-    }
-    this.isLoading = true;
-
-    this.workshopService.deleteCustomerType(type.customerTypeId)
-      .pipe(
-        finalize(() => { this.isLoading = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: () => {
-          this.customerTypes.splice(index, 1);
-          if (this.isTypeEditing && this.editingTypeIndex === index) {
-            this.resetCustomerType();
-          }
-          this.messageService.add({
-            severity: 'success',
-            summary: this.sharedService.T('success'),
-            icon: 'pi pi-check-circle',
-            life: 2000
-          });
-        },
-        error: (err) => {
-          this.logger.error('Error deleting type:', err);
-        }
-      });
-  }
- 
   // workorder Tab
   get isCreateMode(): boolean {
     return !this.editingService;

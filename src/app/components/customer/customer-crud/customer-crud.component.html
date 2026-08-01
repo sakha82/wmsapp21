@@ -22,8 +22,8 @@
             <div class="mb-6">
               <label class="mb-2 block" for="customerType">{{ this.sharedService.T('customerType')}}</label>
 
-              <p-select [options]="customerTypes" formControlName="customerType" optionLabel="customerTypeName"
-                optionValue="customerTypeId" (onChange)="onChangeCustomerType($event)" class="w-full"
+              <p-select [options]="this.sharedService.getEnums('customerType')" formControlName="customerType"
+                optionLabel="text" optionValue="value" class="w-full"
                 [invalid]="isCustomerControlInvalid('customerType')"></p-select>
             </div>
             <div class="mb-6">
