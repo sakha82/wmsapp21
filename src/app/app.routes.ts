@@ -8,7 +8,6 @@ import { InvoiceListComponent } from 'app/components/invoice/invoice-list/invoic
 import { InvoiceCrudComponent } from 'app/components/invoice/invoice-crud/invoice-crud.component';
 import { InvoiceDetailComponent } from 'app/components/invoice/invoice-detail/invoice-detail.component';
 import { BookingListComponent } from 'app/components/booking/booking-list/booking-list.component';
-import { ProductListComponent } from 'app/components/product/product-list/product-list.component';
 import { CustomerListComponent } from 'app/components/customer/customer-list/customer-list.component';
 import { CustomerDetailComponent } from 'app/components/customer/customer-detail/customer-detail.component';
 import { CustomerCrudComponent } from 'app/components/customer/customer-crud/customer-crud.component';
@@ -32,7 +31,6 @@ import { ForgetPasswordViewComponent } from './components/webview/password-forge
 import { EmployeeCrudComponent } from './components/employee/employee-crud/employee-crud.component';
 import { PrivacypolicyComponent } from './components/privacypolicy/privacypolicy.component';
 import { OptOutComponent } from './components/opt-out/opt-out.component';
-import { ProductDetailComponent } from './components/product/product-list/product-detail/product-detail.component';
 import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
 import { StatisticsListComponent } from './components/statistics/statistics-list/statistics-list.component';
@@ -65,8 +63,6 @@ export const routes: Routes =  [
               {path: 'workorder/crud',component:WorkOrderCrudComponent},
               {path: 'digitalservice',component:DigitalServiceListComponent},
               {path: 'digitalservice/details/:vehiclePlate/:userId',component:DigitalServiceDetailComponent},   
-              {path: 'product',component:ProductListComponent},
-              {path: 'product/details/:id',component:ProductDetailComponent},
               {path: 'supplier',component:SupplierListComponent},
               {path: 'employee',component:EmployeeListComponent},
               {path: 'employee/crud',component:EmployeeCrudComponent},

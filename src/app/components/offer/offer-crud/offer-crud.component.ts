@@ -3,16 +3,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ICustomer, IEnums, IInvoiceDetailPrompt, IOffer, IProduct } from 'app/app.model';
+import { ICustomer, IEnums, IInvoiceDetailPrompt, IOffer } from 'app/app.model';
 import { CustomerService } from 'app/services/customer.service';
 import { SharedService } from 'app/services/shared.service';
 import { CoreService } from 'app/services/core.service';
 import { OfferService } from 'app/services/offer.service';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
-import { ProductService } from 'app/services/product.service';
 import { MenuItem, MessageService,ConfirmationService } from 'primeng/api';
-import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { catchError, finalize, takeUntil, Subject } from 'rxjs';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
@@ -77,7 +75,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
   details: any = new FormArray([])
 
   templates: MenuItem[] = [];
-  products: IProduct[] = [];
 
   isNewObject: boolean = true;
   createOffer: boolean = true;
@@ -106,7 +103,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     private readonly location: Location,
     private messageService: MessageService,
     private workshopService: WorkshopService,
-    private productService: ProductService,
     private externalService: ExternalService,) {
 
     this.offer = this.fb.group({
@@ -168,7 +164,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
           this.priceMode = response.data.priceMode;
           this.isNewObject = response.isNewObject;
           this.loadOfferToEdit(response.data, 'editinvoice');
-          this.getTemplates();
         },
         error: (err) => {
           this.logger.error('ngOnInit getOffer error', err);
@@ -204,29 +199,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
 
   }
 
-  getTemplates() {
-    this.isLoading = true;
-    this.productService
-      .getDetailTemplates()
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res) => {
-          if (res) {
-            res.forEach(selectOption => {
-              this.templates.push({ label: selectOption.productTemplateName, command: () => { this.addTemplate(selectOption.productTemplateId); } });
-            });
-          }
-        },
-        error: (err) => {
-          this.logger.error('getTemplates error', err);
-        }
-      });
-  }
   onDragStart(event: any, detail: any) {
     detail.isDragging = true;
   }
@@ -298,55 +270,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
           });
         }
       });
-  }
-
-  // detail selection
-    getProducts(detail:any, event: AutoCompleteCompleteEvent) {
-      
-      let category = detail.get('category').value;
-      this.logger.info(category);
-      let query = event.query;
-      const make = this.offer.get('vehicleManufacturer')?.value;
-      const model = this.offer.get('vehicleModel')?.value;
-      const year = this.offer.get('vehicleYear')?.value;
-
-      this.productService.getProductsByprefix(category,query,make,model,year)
-        .pipe(
-          finalize(() => { this.isSpinnerLoading = false; }),
-          takeUntil(this.destroy$)
-        )
-        .subscribe({
-          next: (response) => {
-            this.products = response
-              .filter((product: any) => product.category === category)
-              .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
-            this.logger.info(this.products);
-          },
-          error: (err) => {
-            this.logger.error('Error loading products', err);
-            this.isSpinnerLoading = false;
-          }
-        });
-    }
-  
-
-  onSelectProduct(detail: any, e: any) {
-    const item = e.value;
-    if (e.value) {
-      const { wmsId, productId, category, productName, productDescription, quantity, unit, unitPrice, vatPercentage, price, vat, priceIncVat } = e.value;
-      detail.patchValue({
-        category: category,
-        productId: productId,
-        product: productName,
-        description: productDescription,
-        quantity: quantity,
-        unit: unit,
-        unitPrice: (category == 'labour' && unit == 'hour' && !unitPrice) ? Number(sessionStorage.getItem('HourlyRate')) : unitPrice,
-        vatPercentage: vatPercentage
-      })
-      this.updateDetailRow(detail);
-      this.isSpinnerLoading = false;
-    }
   }
 
   addDetailRow(isTextRow: boolean) {
@@ -465,62 +388,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTemplate(templateId: number) {
-    this.isLoading = true;
-    this.productService
-      .getDetailTemplate(templateId)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          this.logger.info('salman-response', response);
-          response.forEach((element: any) => {
-            this.logger.info('element', element);
-            var productRow: any = {};
-            productRow.offerId = this.offer.get('offerId')?.value;
-            productRow.rowIndex = this.details.length;
-            if (element.isTextRow) {
-              productRow.textContent = element.textContent;
-              productRow.isTextRow = true;
-              productRow.category = '';
-              productRow.isProductValid = true;
-              productRow.isUnitPriceValid = true;
-            }
-            else {
-              productRow.category = element.category;
-              productRow.productId = element.productId;
-              productRow.product = element.product;
-              productRow.isProductValid = true;
-              productRow.description = element.description;
-              productRow.quantity = element.quantity;
-              productRow.unit = element.unit;
-              productRow.unitPrice = (this.priceMode == 0) ? element.priceIncVat : element.unitPrice;
-              productRow.isUnitPriceValid = true;
-              productRow.vatPercentage = element.vatPercentage;
-              productRow.discountPercentage = 0;
-              productRow.price = element.price;
-              productRow.vat = element.vat;
-              productRow.priceIncVat = element.priceIncVat;
-              productRow.textContent = undefined;
-              productRow.isTextRow = false;
-            }
-            this.details.push(this.fb.group(productRow));
-            let lastIndex = this.details.length - 1;
-            this.updateDetailRow(this.details.controls[lastIndex] as FormGroup);
-
-          });
-          this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
-        },
-        error: (err) => {
-          this.logger.error('addTemplate error', err);
-        }
-      });
-  }
-
   onEnter(event: any): void {
     const keyboardEvent = event as KeyboardEvent;
     event.preventDefault();  // Prevents form submission
@@ -570,11 +437,6 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
         }
       });
   }
-  onBlurProduct(event: any, detail: AbstractControl): void {
-  const typedValue = event.target.value; // Get the typed value from the input
-  detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
-}
-
   onFormSubmit() {
     this.isLoading = true;
     this.errorOnCustomer = false;

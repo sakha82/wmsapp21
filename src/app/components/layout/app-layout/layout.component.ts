@@ -181,12 +181,6 @@ palettes = [
                         styleClass: this.selectedRoute === '/sv/digitalservice' ? 'active-menu-item' : ''
                     },
                     {
-                        label: this.sharedService.T('products'),
-                        materialIcon: 'box',
-                        routerLink: '/sv/product',
-                        styleClass: this.selectedRoute === '/sv/product' ? 'active-menu-item' : ''
-                    },
-                    {
                         label: this.sharedService.T('suppliers'),
                         materialIcon: 'shop',
                         routerLink: '/sv/supplier',
@@ -267,8 +261,6 @@ palettes = [
       return this.sharedService.T('invoices');
     } else if (this.selectedRoute.startsWith('/sv/digitalservice')) {
       return this.sharedService.T('digitalServiceBook');
-    } else if (this.selectedRoute.startsWith('/sv/product')) {
-      return this.sharedService.T('products');
     } else if (this.selectedRoute.startsWith('/sv/supplier')) {
       return this.sharedService.T('suppliers');
     } else if (this.selectedRoute.startsWith('/sv/employee')) {

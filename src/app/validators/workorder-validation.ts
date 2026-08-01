@@ -35,16 +35,8 @@ export function isWorkOrderFieldInvalid(
   return isWorkOrderControlEmpty(form, controlName);
 }
 
-export function isWorkOrderServicesMissing(
-  selectedProducts: unknown[],
-  formSubmitted: boolean
-): boolean {
-  return formSubmitted && selectedProducts.length === 0;
-}
-
 export function collectWorkOrderValidationFieldLabels(
   form: FormGroup,
-  selectedProducts: unknown[],
   translate: (key: string) => string
 ): string[] {
   const missing: string[] = [];
@@ -61,21 +53,12 @@ export function collectWorkOrderValidationFieldLabels(
   if (isWorkOrderControlEmpty(form, 'employeeId')) {
     missing.push(translate('mechanic'));
   }
-  if (selectedProducts.length === 0) {
-    missing.push(translate('service'));
-  }
 
   return missing;
 }
 
-export function isWorkOrderFormValid(
-  form: FormGroup,
-  selectedProducts: unknown[]
-): boolean {
+export function isWorkOrderFormValid(form: FormGroup): boolean {
   if (form.invalid) {
-    return false;
-  }
-  if (selectedProducts.length === 0) {
     return false;
   }
   return WORKORDER_REQUIRED_FIELDS.every(

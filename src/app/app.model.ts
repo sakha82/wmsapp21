@@ -391,38 +391,6 @@ export interface IOfferHistory {
   actionType: string;
   actionText: string;
 }
-export interface IProduct {
-  wmsId: string;
-  productId: number;
-  category: string;
-  productName: string;
-  productDescription: string;
-  quantity: number;
-  unit: string;
-  unitPrice: number;
-  vatPercentage: number;
-  price: number;
-  vat: number;
-  isBaseProduct: boolean;
-  priceIncVat: number;
-  invoiceQuantity:number;
-  invoiceSum:number;
-  inHouseQuantity:number;
-}
-export interface IProductChart{
- monthName:string;
- totalQuantity:number;
- totalPrice:number; 
- 
-}
-export interface IInventory {
-  wmsId: string;
-  productId: number;
-  inventoryId: number;
-  inventoryDate: string;
-  inventoryQuantity: number;
-  inventoryNote: string;
-}
 export interface ISupplier {
   wmsId: string,
   supplierId: number,
@@ -462,8 +430,6 @@ export interface IWorkOrder {
   purchaseCount: string,
   estimatedHours: string,
   serviceTypes: string,
-  woPurchases: IWOPurchase[],
-  woServices: IWOService[],
   isActive: number,
   /** How this work order was created. Absent/undefined for ordinary manually-created orders. */
   createdVia?: 'app' | 'whatsapp-bot' | 'telegram-bot',
@@ -473,22 +439,6 @@ export interface IWorkOrder {
 //deliveryDate: string,
   //deliveryTime: string,
 }
-
-export interface IWOPurchase {
-  woPurchaseId:number,
-  supplierName: string,
-  purchaseReference: string,
-  purchaseNote?: string
-}
-export interface IWOService {
-  index: number;
-  productId: number;
-  category: string;
-  productName: string;
-  productDescription: string;
-  quantity: number;
-}
-
 
 export interface ISignup {
   wmsId: string;
@@ -570,29 +520,6 @@ export interface ICustomerTag {
   isDefault: boolean;
   customerCount: number;
 }
-export interface IProductTemplate {
-  wmsId: string,
-  productTemplateId: number,
-  productTemplateName: string,
-  details: IProductDetailTemplate[]
-}
-export interface IProductDetailTemplate {
-  rowIndex: number;
-  category: string;
-  product: string;
-  description: string;
-  quantity: number;
-  unit: string;
-  unitPrice: number;
-  vatPercentage: number;
-  discountPercentage: number;
-  price: number;
-  vat: number;
-  priceIncVat: number;
-  textContent: string | null; 
-  isTextRow: boolean;
-}
-
 export interface ICustomerType {
   wmsId: string;
   customerTypeId: number;

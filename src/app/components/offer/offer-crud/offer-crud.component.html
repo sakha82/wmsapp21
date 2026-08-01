@@ -212,27 +212,8 @@
                                     formControlName="category" optionLabel="text" optionValue="value" class="w-full" />
                             </div>
                             <div class="w-[15%]">
-                                <p-autoComplete class="white_bg_input" formControlName="product"
-                                    placeholder="Väjl en produkt" [maxlength]="38" [suggestions]="products"
-                                    (completeMethod)="getProducts(detail,$event)" (onSelect)="onSelectProduct(detail,$event)"
-                                    optionLabel="productName" optionValue="productId" [showClear]="false"
-                                    [forceSelection]="false" [showEmptyMessage]="false"
-                                    (onBlur)="onBlurProduct($event, detail)"
-                                    [inputStyle]="{ 'background-color': 'white', 'width': '100%', 'display': 'block' }"
-                                    [inputStyleClass]="detail.get('productName')?.value ? 'ng-invalid ng-dirty' : ''">
-                                   <ng-template let-product pTemplate="item">
-                                    <div class="flex gap-3 w-full">
-                                        <div class="flex-shrink-0 pt-1">
-                                            <span *ngIf="!product.isBaseProduct" class="text-icon workshop-icon">V</span>
-                                            <span *ngIf="product.isBaseProduct" class="text-icon base-icon">B</span>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="font-semibold text-sm truncate">{{ product.productName }}</div>
-                                            <div class="text-xs text-gray-dark truncate">{{ product.productDescription }}{{ product.productDescription ? ' | ' : '' }}{{ product.quantity }} {{ this.sharedService.getEnumByValue('productUnit', product.unit).text }}</div>
-                                       </div>
-                                    </div>
-                                </ng-template>
-                                </p-autoComplete>
+                                <input formControlName="product" placeholder="Väjl en produkt" maxlength="38"
+                                    type="text" style="width: 100%; background-color: white;" pInputText />
                             </div>
                             <div class="w-[15%]">
                                 <input formControlName="description" placeholder="Extra information" type="text"

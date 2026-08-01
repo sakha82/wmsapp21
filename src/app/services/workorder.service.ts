@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {ISelect, IWorkOrder,IPageList, IVehicleType, IProduct, IVehicleHistorySummary } from 'app/app.model';
+import {ISelect, IWorkOrder,IPageList, IVehicleType, IVehicleHistorySummary } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { SharedService} from 'app/services/shared.service';
 import { LogService } from './log.service';

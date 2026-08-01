@@ -241,9 +241,7 @@ export class BookingListComponent implements OnInit, OnDestroy {
                       return bookingTotal;
                     }
 
-                    // Calculate total hours from woServices
-                    const serviceHours = booking.woServices?.reduce((woTotal: number, service: any) =>
-                      woTotal + (service.quantity ?? 0), 0) ?? 0;
+                    const serviceHours = Number.parseFloat(booking.estimatedHours ?? '') || 0;
 
                     // Mark this WO as counted
                     countedWorkOrders.add(booking.workOrderId);
@@ -506,12 +504,6 @@ export class BookingListComponent implements OnInit, OnDestroy {
     const hours = Number.parseFloat(booking.estimatedHours ?? '');
     if (Number.isFinite(hours) && hours > 0) {
       return Math.round(hours * 60);
-    }
-    if (booking.woServices?.length) {
-      const sum = booking.woServices.reduce((total, service) => total + (service.quantity || 0), 0);
-      if (sum > 0) {
-        return Math.round(sum * 60);
-      }
     }
     return null;
   }

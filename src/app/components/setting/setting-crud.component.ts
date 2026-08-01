@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import { ICustomerTag, ICustomerType, IWorkshop, ISelect, IPager,IInvoiceDetailPrompt, IWorkShopService, IProductTemplate, IProduct, IEnums } from 'app/app.model';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ICustomerTag, ICustomerType, IWorkshop, ISelect, IPager, IWorkShopService, IEnums } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { CoreService } from 'app/services/core.service';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
@@ -11,17 +10,12 @@ import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, Observable, finalize, takeUntil, Subject } from 'rxjs';
-import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
-import { ProductService } from 'app/services/product.service';
-import { SplitterModule } from 'primeng/splitter';
-import { ExternalService } from 'app/services/external.service';
 import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ImageModule } from 'primeng/image';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -29,7 +23,6 @@ import { TableModule } from 'primeng/table';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
-import { PopoverModule } from 'primeng/popover';
 import { DatePickerModule } from 'primeng/datepicker';
 import { RadioButtonModule } from 'primeng/radiobutton';
 @Component({
@@ -45,17 +38,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     ButtonModule,
     SelectModule,
     InputTextModule,
-    AutoCompleteModule,
     ToastModule,
     MessageModule,
-    DragDropModule,
-    SplitterModule,
     ConfirmDialogModule,
     TableModule,
     InputNumberModule,
      TooltipModule,
      CheckboxModule,
-     PopoverModule,
      DatePickerModule,
      RadioButtonModule,
      GenericLoaderComponent
@@ -66,7 +55,6 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 })
 export class SettingCrudComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  selectedTemplateIndex: number  = 0;
   langCode: string = 'en';
   
   palettes = [
@@ -94,15 +82,11 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
 
   customerTags: ICustomerTag[] = [];
-  products: IProduct[] = [];
-  ProductTemplates: IProductTemplate[] = [];
   fTaxOptions = [
     { label: 'Ja', value: true },
     { label: 'Nej', value: false }
   ];
   //priceModeOptions: IEnums[] = [];
-  details: any = new FormArray([])
-  draggingRowIndex: number | null = null;
   unitOptions: IEnums[] = [];
   newCustomerTag: ICustomerTag = {
     wmsId: '',
@@ -110,14 +94,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     customerTagName: '',
     customerCount: 0,
     isDefault: false
-  };
-
-  newProductTemplate: IProductTemplate = {
-    wmsId: '',
-    productTemplateId: 0,
-    productTemplateName: '',
-    details: [],
-
   };
 
   customerTypes: ICustomerType[] = [];
@@ -128,18 +104,15 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     customerCount: 0,
     isDefault: false
   };
-  selectedContext:IEnums[] | null = null;
   isTagEditing: boolean = false;
-  isTemplateEditing: boolean = false;
   editingTagIndex: number | null = null;
-  editingTemplateIndex: number | null = null;
   isTypeEditing: boolean = false;
   editingTypeIndex: number | null = null;
   imageUrl: string = '';
   fileKey: string = '';
   invoiceTemplates:any[] = [{value: 'basic', name: 'Basic Template' }, {value: 'modern', name: 'Modern Template'}];
   selectedTemplateCardIndex: number = -1;
-  
+
   constructor(
     private logger: LogService,
     public readonly sharedService: SharedService,
@@ -150,8 +123,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     private readonly workshopService: WorkshopService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private productService: ProductService,
-    private externalService: ExternalService,
   ) {
     this.workshop = this.fb.group({
       workshopName: [],
@@ -218,7 +189,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     this.loadCustomerTags();
     this.loadCustomerTypes();
     this.loadLogo();
-    this.loadProductTemplates();
     this.loadSaleTargets(this.selectedSaleYear);
   }
 
@@ -613,401 +583,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     return !this.editingService;
   }
 
-  // Invoice Template
-
-
-  loadProductTemplates() {
-    this.productService
-      .getProductTemplates()
-      .pipe(
-        finalize(() => {}),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.ProductTemplates = response;
-            this.logger.info('Product Templates Loaded', this.ProductTemplates);
-            this.selectedTemplateIndex = 0;
-            this.showProductTemplate(0);
-          }
-        },
-        error: (err) => {
-          this.logger.error('Error loading product templates:', err);
-        }
-      });
-  }
-  
-
-  addProductTemplate(): void {
-        this.newProductTemplate = {
-          wmsId: this.sharedService.wmsId,
-          productTemplateId:  0,
-          productTemplateName: '',
-          details: []
-        };
-  }
-
-  saveProductTemplate(): void {
-     this.logger.info('Saving Product Template:', this.newProductTemplate);
-     this.productService
-      .saveProductTemplate(this.newProductTemplate)
-      .pipe(
-        finalize(() => { this.isLoading = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          this.logger.info('Save Product Template Response:', response);
-          if (response) {
-            this.loadProductTemplates();
-            this.messageService.add({
-              severity: 'success',
-              summary: this.sharedService.T('success'),
-              icon: 'pi pi-check-circle',
-              life: 2000
-            });
-          }
-        },
-        error: (err) => {
-          this.logger.error('Error saving template:', err);
-        }
-      });
-  }
-
-  saveProductTemplateDetails(): void {
-    // 1. Validation for Name
-    const selectedTemplate = this.ProductTemplates[this.selectedTemplateIndex];
-    const detailsPayload = this.details.controls.map((control: AbstractControl, index: number) => {
-      const row = control.value;
-
-      if (row.isTextRow) {
-        return {
-          rowIndex: index,
-          isTextRow: true,
-          textContent: row.textContent,
-          quantity: 0,
-          unitPrice: 0,
-          price: 0,
-          vat: 0,
-          priceIncVat: 0
-        };
-      } else {
-        const pName = (row.product && row.product.productName) ? row.product.productName : row.product;
-        return {
-          rowIndex: index,
-          isTextRow: false,
-          product: pName,
-          category: row.category,
-          // productName: (typeof row.product === 'object' && row.product !== null) ? row.product.productName : row.product,
-          description: row.description,
-          productId: row.productId || 0,
-          quantity: row.quantity,
-          unit: row.unit,
-          unitPrice: row.unitPrice,
-          vatPercentage: row.vatPercentage,
-          discountPercentage: row.discountPercentage,
-          totalPrice: row.price,        // Ex VAT
-          vatAmount: row.vat,           // VAT Amount
-          totalPriceIncVat: row.priceIncVat // Inc VAT
-        };
-      }
-    });
-    selectedTemplate.details = detailsPayload;
-    this.productService
-      .updateProductTemplate(selectedTemplate)
-      .pipe(
-        finalize(() => { this.isLoading = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.loadProductTemplates();
-            this.messageService.add({
-              severity: 'success',
-              summary: this.sharedService.T('success'),
-              icon: 'pi pi-check-circle',
-              life: 2000
-            });
-          }
-        },
-        error: (err) => {
-          this.logger.error('Error updating template:', err);
-        }
-      });
-  }
-  
-  deleteProductTemplate(templateId: number,templateName:string): void {
-   this.confirmationService.confirm({
-    message: `Are you sure you want to delete "${templateName}"?`,
-    header: 'Confirm Deletion',
-    accept: () => {
-      this.isLoading = true;
-      this.productService.deleteProductTemplate(templateId)
-        .pipe(
-          finalize(() => { this.isLoading = false; }),
-          takeUntil(this.destroy$)
-        )
-        .subscribe({
-          next: () => {
-            this.messageService.add({ severity: 'success', summary: this.sharedService.T('success'), icon: 'pi pi-check-circle' });
-            this.loadProductTemplates();
-          },
-          error: (err) => {
-            this.logger.error('Error deleting template:', err);
-          }
-        });
-    }
-  });
-  }
- 
-  showProductTemplate(index: number): void {
-    this.selectedTemplateIndex = index;
-    const productTemplateId = this.ProductTemplates[this.selectedTemplateIndex].productTemplateId;
-    this.productService.getProductTemplateDetail(productTemplateId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response: any) => {
-          this.details.clear();
-
-          if (response && response.length > 0) {
-            response.sort((a: any, b: any) => a.rowIndex - b.rowIndex);
-
-            response.forEach((item: any, idx: number) => {
-              let productObj = null;
-              if (item.product) {
-                productObj = {
-                  productName: item.product,
-                  productId: item.productId || 0
-                };
-              }
-
-              const detailRow = this.fb.group({
-                rowIndex: [idx],
-                isTextRow: [item.isTextRow],
-                textContent: [item.textContent],
-                category: [item.category],
-
-                product: [productObj],
-                productId: [item.productId],
-
-                description: [item.description],
-                quantity: [item.quantity],
-                unit: [item.unit],
-                unitPrice: [item.unitPrice],
-                isUnitPriceValid: [true],
-
-                vatPercentage: [item.vatPercentage ? item.vatPercentage.toString() : '25'],
-                discountPercentage: [item.discountPercentage],
-
-                price: [item.price || 0],
-                vat: [item.vat || 0],
-                priceIncVat: [item.priceIncVat || 0]
-              });
-
-              this.details.push(detailRow);
-            });
-          }
-        },
-        error: (err) => {
-          this.logger.error('Error loading template details:', err);
-        }
-      });
-  }
-  
-  // Invoice Detail Template
-
-  trackByFn(index: number, detail: AbstractControl | null | undefined): number {
-    if (detail && detail.get('rowIndex')) {
-      return detail.get('rowIndex')?.value ?? index;
-    }
-    return index;
-  }
-  addDetailRow(isTextRow: boolean) {
-    const detailRow = this.fb.group({
-      rowIndex: this.details.controls.length,
-      category: this.sharedService.getDefaultEnum('detailCategory').value,
-      product: '',
-      isProductValid: true,
-      description: '',
-      quantity: 1,
-      unit: '',
-      unitPrice: null,
-      isUnitPriceValid: true,
-      vatPercentage: this.sharedService.getDefaultEnum('vatPercentage').value,
-      discountPercentage: null,
-      price: 0.00,
-      vat: 0.00,
-      priceIncVat: 0.00,
-      textContent: undefined,
-      isTextRow: isTextRow
-    });
-    this.details.push(detailRow);
-  }
-
-  onDragStart(event: any, detail: any) {
-    detail.isDragging = true;
-  }
-
-  onDragEnd(event: any, detail: any) {
-    detail.isDragging = false;
-  }
-
-  onDrop(event: CdkDragDrop<any[]>) {
-    if (event.previousIndex !== event.currentIndex) {
-      moveItemInArray(this.details.controls, event.previousIndex, event.currentIndex);
-      this.details.controls.forEach((item: any, index: number) => {
-        item.patchValue({ rowIndex: index });
-      });
-    }
-  }
-
-  removeDetailRow(rowIndex: number) {
-    this.details.removeAt(rowIndex);
-    this.details.controls.forEach((item: any, rowIndex: number) => {
-      item.patchValue({ rowIndex: rowIndex });
-    });
-  }
-
-    getProducts(detail:any, event: AutoCompleteCompleteEvent) {
-    this.isSpinnerLoading = true;
-    let category = detail.get('category').value;
-    this.logger.info(category);
-    let query = event.query;
-    this.productService.getProductsByprefix(category,query,'','',0)
-      .pipe(
-        finalize(() => { this.isSpinnerLoading = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response) => {
-          this.products = response
-            .filter((product: any) => product.category === category)
-            .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
-          this.logger.info(this.products);
-        },
-        error: (err) => {
-          this.logger.error('Error loading products', err);
-          this.isSpinnerLoading = false;
-        }
-      });
-  }
-
-
-  onSelectProduct(detail: any, e: any) {
-    const item = e.value;
-    this.logger.info('Selected product:', item);
-    if (e.value) {
-      const { wmsId, productId, category, productName, productDescription, quantity, unit, unitPrice, vatPercentage, price, vat, priceIncVat } = e.value;
-      detail.patchValue({
-        category: category,
-        productId: productId,
-        product: productName,
-        description: productDescription,
-        quantity: quantity,
-        unit: unit,
-        unitPrice: unitPrice,
-        vatPercentage: vatPercentage
-      })
-      this.updateDetailRow(detail);
-      this.isSpinnerLoading = false;
-    }
-  }
-  onBlurProduct(event: any, detail: AbstractControl): void {
-  const typedValue = event.target.value; // Get the typed value from the input
-  detail.get('product')?.setValue(typedValue); // Update the form control with the typed value
-}
-
-  updateDetailRow(detail: any) {
-    if (Number(detail.get('unitPrice').value) > 0)
-      detail.patchValue({ isUnitPriceValid: true });
-
-    const quantity = Number(detail.get('quantity').value) < 0 ? 0 : Number(detail.get('quantity').value);
-    const discountPercentage = Number(detail.get('discountPercentage').value) / 100;
-    const vatPercentage = Number(detail.get('vatPercentage').value) / 100;
-
-    this.logger.info('vatPercentage==' + vatPercentage);
-
-    let unitPrice = 0.00;
-    //if(this.priceMode == 1 || (this.priceMode == 2 && (this.customerType == 'company' || this.customerType == '' )))              
-    if (this.selectedPriceMode == 1)
-      unitPrice = Number(detail.get('unitPrice').value);
-
-    //if(this.priceMode == 0 || (this.priceMode == 2 && (this.customerType == 'private' )))        
-    if (this.selectedPriceMode   == 0)
-      unitPrice = Math.round((Number(detail.get('unitPrice').value) / (1 + vatPercentage)) * 100) / 100;
-
-    unitPrice = unitPrice < 0 ? 0 : unitPrice;
-    const totalPrice = Math.round(quantity * unitPrice * 100) / 100;
-    const totalDiscount = Math.round(totalPrice * discountPercentage * 100) / 100;
-    const price = (Math.round((totalPrice - totalDiscount) * 100) / 100);
-    const vat = (Math.round(Number(price) * vatPercentage * 100) / 100).toFixed(2);
-
-    this.logger.info('vat==' + vat);
-
-    const priceIncVat = (Math.round((Number(price) + Number(vat)) * 100) / 100).toFixed(2);
-
-    detail.patchValue({ price: price, vat: vat, priceIncVat: priceIncVat, vatPercentage: detail.get('vatPercentage').value.toString() });
-    this.logger.info('detail patched with new values');
-    this.logger.info(detail.value);
-
-  }
-
-  onChangeVat(detail: any) {
-    this.logger.info(detail.value.vatPercentage);
-
-    detail.patchValue({ vatPercentage: detail.value.vatPercentage })
-    this.updateDetailRow(detail);
-  }
-
-GenerateInvoiceDescription(event:any,selectedCategory:IEnums,index:number) {
-    this.selectedContext = [selectedCategory];
-    let selectectContextValue = '';
-    if (this.selectedContext) {
-      selectectContextValue = this.selectedContext[0].value; 
-    }
-  const items: IInvoiceDetailPrompt[] = this.details.controls.map((item:any) => ({
-  type: item.get('category')?.value,
-  name: item.get('product')?.value,
-  description: item.get('description')?.value,
-  quantity: item.get('quantity')?.value,
-  unit: item.get('unit')?.value,
-  }));
-  this.logger.info('index=' + index);
-  const textareaControl = this.details.controls[index].get('textContent');
-  this.externalService
-      .getInvoiceDescription({context: selectectContextValue,items:items})
-      .pipe(
-        finalize(() => { this.isLoading = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res: any) => {
-          if (res) {
-            textareaControl.setValue(res.text);
-            this.messageService.add({
-              severity: 'success',
-              summary: this.sharedService.T('success'),
-              icon: 'pi pi-check-circle'
-            });
-          } else {
-            this.messageService.add({
-              severity: 'error',
-              detail: this.sharedService.T('errorMessage'),
-            });
-          }
-        },
-        error: (err) => {
-          this.logger.error('Error generating description:', err);
-        }
-      });
-  }
-
-  getFormGroup(control: AbstractControl): FormGroup {
-    return control as FormGroup;
-  }
-
   // Sale Target Tab
   loadSaleTargets(saleYear:string) {
   this.isLoading = true;
@@ -1082,13 +657,9 @@ deleteSaleTarget(sale: any) {
   });
 }
 
-  onTemplateCardHover(index: number, isHovering: boolean): void {
-    if (isHovering) {
-      this.selectedTemplateCardIndex = index;
-    } else {
-      this.selectedTemplateCardIndex = -1;
-    }
-  }
+onTemplateCardHover(index: number, isHovering: boolean): void {
+  this.selectedTemplateCardIndex = isHovering ? index : -1;
+}
 
 ngOnDestroy(): void {
   this.destroy$.next();

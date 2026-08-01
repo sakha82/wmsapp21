@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ISupplier, ICustomer, IDailyCalendar, IEnum, IWOPurchase, IProduct, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails } from 'app/app.model';
+import { IWorkOrder, ICustomer, IDailyCalendar, IEnum, ICustomerType, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -10,12 +10,10 @@ import { SharedService } from 'app/services/shared.service';
 import { CoreService } from 'app/services/core.service';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
-import { SupplierService } from 'app/services/supplier.service';
 import { BookingService } from 'app/services/booking.service';
-import { ProductService } from 'app/services/product.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { EMPTY, of, Subject } from 'rxjs';
-import { catchError, map, switchMap, tap, finalize, takeUntil } from 'rxjs/operators';
+import { catchError, switchMap, finalize, takeUntil } from 'rxjs/operators';
 import { SelectChangeEvent } from 'primeng/select';
 import { CustomerService } from 'app/services/customer.service';
 import { Popover } from 'primeng/popover';
@@ -25,7 +23,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -46,7 +44,6 @@ import { emailOrTelephoneRequiredValidator } from 'app/validators/validator';
 import {
   collectWorkOrderValidationFieldLabels,
   isWorkOrderFieldInvalid,
-  isWorkOrderServicesMissing,
   isWorkOrderFormValid,
   WorkOrderRequiredField,
 } from 'app/validators/workorder-validation';
@@ -119,11 +116,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   /** Scraped vehicle reference data (VIN, engine code, tyres, oil spec, etc.) shown as a single readonly line - see vehicleDetailsLine. Not persisted onto WorkOrder itself. */
   vehicleDetails: IVehicleDetails | null = null;
 
-  products: IProduct[] = [];
-  selectedProduct:FormGroup;
-  selectedProducts: IProduct[] = [];
-  
-
   employees: IEmployee[] = [];
   dayBookings: IDailyCalendar[] = [];
   vehicles: string[] = [];
@@ -134,21 +126,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   oilTypes: string[] = ['5W30', '0W20', '5W40', '0W30', '10W30', '10W40'];
   isCreate: boolean = true;
   isNewObject: boolean = true;
-  suppliers: ISupplier[] = [];
-  //products: any[] = [];
   selectedCustomerName: any = null;
   formSubmitted = false;
 
-
-  /*** */
-
-  woPurchases: IWOPurchase[] = [];
-  newWOPurchase: IWOPurchase = {
-    woPurchaseId: 0,
-    supplierName: '',
-    purchaseReference: '',
-    purchaseNote: ''
-  }
   customer: FormGroup;
   creditDays: number[] = [0, 7, 14, 21, 30];
   customerTypes: ICustomerType[] = [];
@@ -184,9 +164,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     private readonly location: Location,
     private readonly workshopService: WorkshopService,
     private readonly employeeService: EmployeeService,
-    private readonly supplierService: SupplierService,
     private readonly bookingService: BookingService,
-    private readonly productService: ProductService,
     private cdr: ChangeDetectorRef,
     private readonly customerService: CustomerService,
     private readonly workOrderHandoffService: WorkOrderHandoffService,
@@ -237,13 +215,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     }
   );
 
-  this.selectedProduct = this.fb.group({
-    productId:0,
-    productName:['',Validators.required],
-    productDescription:'',
-    quantity:1.0  
-  });
-
   }
   ngOnInit() {
     const param: any = this.route.snapshot.params;
@@ -256,44 +227,15 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         catchError((err) => {
           throw err; // Handle the error
         }),
-        switchMap((response: any) => {
-          if (response.data) {
-            this.logger.info('WorkOrder Loaded', response.data);
-            return this.productService.getProductsByCategory('labour').pipe(
-              tap((response: IProduct[]) => {
-                this.products = response;
-                this.products.sort((a, b) => {  
-                  if (a.productName && b.productName) {
-                     return a.productName.localeCompare(b.productName, undefined, { sensitivity: 'base' });
-                  }
-                  return 0;
-                });
-              }),
-              map(() => response)
-            );
-          }
-          return of(null);
-        })
+        finalize(() => { })
       )
-      .pipe(finalize(() => { }))
       .subscribe((response: any) => {
         if (response.data) {
           if (param.bookingDate)
             response.data.bookingDate = param.bookingDate;
           if (param.bookingTime)
             response.data.bookingTime = param.bookingTime;
-          this.woPurchases = response.data.woPurchases || [];
 
-          this.logger.info('WO Purchases', this.woPurchases);
-          this.logger.info('WO Services', response.data.woServices);
-          
-          response.data.woServices.forEach((s: any) => {
-            const matchingProduct = this.products.find(product => product.productId === s.productId);
-            if (matchingProduct) {
-              this.selectedProducts.push(matchingProduct);
-            }
-          });
-          
           this.selectedCustomerName = response.data.customerName;
           this.isNewObject = response.isNewObject;
           this.hasResolvedVehicle = !!response.data.vehiclePlate;
@@ -374,26 +316,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.customer.patchValue({ customerTag: event.value });
   }
 
-  getSuppliers() {
-    this.supplierService
-      .getAllSuppliers()
-      .pipe(
-        finalize(() => {
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res: any) => {
-          if (res) {
-            this.suppliers = res;
-            this.logger.info('Printing Suppliers', this.suppliers);
-          }
-        },
-        error: (err) => {
-          this.logger.error('getSuppliers error', err);
-        }
-      });
-  }
 
   getAllEmployees() {
     this.employeeService
@@ -618,200 +540,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.workOrder.patchValue({ description: next });
   }
 
-  filterSuppliers(event: any): void {
-    this.supplierService
-      .getSuppliersByprefix(event.query.toUpperCase())
-      .pipe(
-        finalize(() => {
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res: any) => {
-          if (res) {
-            this.suppliers = res;
-            this.logger.info('Printing Suppliers', this.suppliers);
-          }
-        },
-        error: (err) => {
-          this.logger.error('filterSuppliers error', err);
-        }
-      });
-  }
-
-    getProducts(event: AutoCompleteCompleteEvent) {
-    let query = event.query;
-    const make = this.workOrder.get('vehicleManufacturer')?.value;
-    const model = this.workOrder.get('vehicleModel')?.value;
-    const year = this.workOrder.get('vehicleYear')?.value;
-    
-    this.productService.getProductsByprefix('labour',query,make,model,year)
-      .pipe(
-        finalize(() => { }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (response) => {
-          this.products = response
-            .sort((a: any, b: any) => a.productName.localeCompare(b.productName));
-          this.logger.info(this.products);
-        },
-        error: (err) => {
-          this.logger.error('Error loading products', err);
-        }
-      });
-  }
-  resetServiceProduct() {
-    this.selectedProduct.reset({ productId: 0, productName: '', productDescription: '', quantity: 1 });
-  }
-
-  onSelectProduct(event: any) {
-    const selectedProduct = event.value as IProduct;
-    this.selectedProduct.patchValue({
-      productId: selectedProduct.productId,
-      productName: selectedProduct.productName,
-      productDescription: selectedProduct.productDescription,
-      quantity: selectedProduct.quantity
-    });
-  }
-
-  registerManualProduct(productName: string, productDescription: string, autoAdd: boolean = false) {
-    // First, get the next ProductId from the service (it's an Observable)
-    this.coreService.getNextId('Product').pipe(
-      switchMap((productId: number) => {
-        // Now that we have the productId, create the product object
-        const newProduct: any = {
-          productId: productId,
-          productName: productName,
-          productDescription: productDescription,
-          quantity: this.selectedProduct.get('quantity')?.value || 1,
-          unit: 'hour',
-          isBaseProduct: false,
-          category: 'labour'
-        };
-        
-        this.logger.info('Calling createProduct for a new manual/labour line:', productId, 'productName:', productName);
-
-        // Always a brand-new ad-hoc labour line — never an edit of an existing product.
-        // Note: create-product ignores/reassigns ProductId server-side (see ProductController's
-        // doc comment), so this pre-fetched id is only used for the optimistic local push below,
-        // not what actually gets persisted.
-        return this.productService.createProduct(newProduct).pipe(
-          map((response) => ({ response, newProduct }))
-        );
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: (result: any) => {
-        const { response, newProduct } = result;
-
-        {
-          // Reaching here means the HTTP call succeeded — createProduct returns the new
-          // ProductId (a number), not true/{success:true}.
-          this.selectedProduct.patchValue({
-            productId: newProduct.productId,
-            productName: newProduct.productName,
-            productDescription: newProduct.productDescription,
-            quantity: newProduct.quantity
-          });
-          // Add the new product to products list
-          this.products.push(newProduct);
-          
-          // Always add the new product to selectedProducts
-          this.selectedProducts.push(newProduct);
-          this.sumServiceDuration();
-          
-          // reset form
-          if (autoAdd) {
-            this.resetServiceProduct();
-          }
-          
-          this.messageService.add({
-            severity: 'success',
-            summary: this.sharedService.T('success'),
-            icon: 'pi pi-check-circle',
-            life: 3000
-          });
-          
-          this.logger.info('Manual product registered successfully', newProduct);
-        }
-      },
-      error: (error: any) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: this.sharedService.T('error'),
-          detail: this.sharedService.T('errorMessage'),
-          life: 3000
-        });
-        this.selectedProduct.reset({ productId: 0, productName: '',productDescription:'', quantity: 1 });
-      }
-    });
-  }
-  saveProduct() {
-    this.logger.info('Saving product:', this.selectedProduct.value);
-    const productId = this.selectedProduct.get('productId')?.value;
-    const productName = this.selectedProduct.get('productName')?.value;
-    const productDescription = this.selectedProduct.get('productDescription')?.value;
-    // Check if product has a valid productId
-    if (!productId || productId === 0) {
-      // No productId means user entered it manually without selecting from dropdown
-      if (!productName || !productName.trim()) {
-        return; // User didn't enter anything
-      }
-      this.logger.info('confirming...:');
-      // Trigger manual product entry workflow with confirmation
-      this.confirmationService.confirm({
-        message: `${this.sharedService.T('confirmCreateService')}`,
-        header: this.sharedService.T('confirmation'),
-        icon: 'pi pi-info-circle',
-        accept: () => {
-          this.registerManualProduct(productName, productDescription, true); // Pass true to auto-add after registration
-        },
-        reject: () => {
-          // Reset the form on rejection
-          this.selectedProduct.reset({ productId: 0, productName: '', productDescription: '', quantity: 1 });
-        }
-      });
-    } else {
-      // Product has valid ID, add it to the list
-      this.selectedProducts.push(this.selectedProduct.value);
-      this.sumServiceDuration();
-      this.resetServiceProduct();
-    }
-  }
-  removeWOService(index: number) {
-    if (index >= 0 && index < this.selectedProducts.length) {
-      const removedService = this.selectedProducts[index];
-      this.selectedProducts.splice(index, 1);
-
-      // Add back to available products
-      this.products.push(removedService);
-      this.products.sort((a, b) => {
-        if (a.productName && b.productName) {
-          return a.productName.localeCompare(b.productName, undefined, { sensitivity: 'base' });
-        }
-        return 0;
-      });
-
-      // Recalculate duration
-      this.sumServiceDuration();
-
-      this.logger.info('Service removed', this.selectedProducts);
-    }
-  }
-  
-  sumServiceDuration(){
-    let hoursSum = 0;
-    this.selectedProducts.forEach(element => {
-      hoursSum += element.quantity || 0;
-    });
-    // Round to 1 decimal place
-    hoursSum = Math.round(hoursSum * 10) / 10;
-    this.workOrder.patchValue({ serviceDuration: hoursSum });
-
-  }
-
-  
   onSelectCalendarDate() {
     const bookingDate = this.workOrder.get('bookingDate')?.value;
     if (bookingDate) {
@@ -820,23 +548,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.getBookings(bookingDate);
   }
 
-  saveWOPurchase() {
-    const newPurchase = { ...this.newWOPurchase, woPurchaseId: this.woPurchases.length + 1 };
-    this.woPurchases.push(newPurchase);
-    this.newWOPurchase = { woPurchaseId: 0, supplierName: '', purchaseReference: '', purchaseNote: '' };
-  }
-  removeWOPurchase(woPurchase: any): void {
-
-    this.logger.info('WO Purchases', this.woPurchases);
-    this.logger.info('Received Purchases', woPurchase);
-    this.woPurchases = this.woPurchases.filter(purchase => purchase.woPurchaseId !== woPurchase.woPurchaseId);
-
-    this.logger.info('Remaining WO Purchases', this.woPurchases);
-
-    this.woPurchases.forEach((order, index) => {
-      order.woPurchaseId = index + 1; // Reassign index starting from 1
-    });
-  }
   isFieldInvalid(controlName: WorkOrderRequiredField): boolean {
     return isWorkOrderFieldInvalid(this.workOrder, controlName, this.formSubmitted);
   }
@@ -845,14 +556,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     return isFormControlInvalid(this.workOrder, controlName, this.formSubmitted);
   }
 
-  showServicesError(): boolean {
-    return isWorkOrderServicesMissing(this.selectedProducts, this.formSubmitted);
-  }
-
   private showWorkOrderValidationMessages(): void {
     const missingLabels = collectWorkOrderValidationFieldLabels(
       this.workOrder,
-      this.selectedProducts,
       (key) => this.sharedService.T(key)
     );
 
@@ -860,26 +566,12 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.selectedProducts.length === 0) {
-      showValidationErrorToast(
-        this.messageService,
-        (key) => this.sharedService.T(key),
-        'servicesRequired',
-        6000
-      );
-    }
-
-    const formMissing = missingLabels.filter(
-      (label) => label !== this.sharedService.T('service')
+    showValidationErrorToast(
+      this.messageService,
+      (key) => this.sharedService.T(key),
+      'fillRequiredFieldsCorrectly',
+      6000
     );
-    if (formMissing.length > 0) {
-      showValidationErrorToast(
-        this.messageService,
-        (key) => this.sharedService.T(key),
-        'fillRequiredFieldsCorrectly',
-        6000
-      );
-    }
   }
 
   saveWorkOrder() {
@@ -892,7 +584,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     this.workOrder.markAllAsTouched();
 
-    if (!isWorkOrderFormValid(this.workOrder, this.selectedProducts)) {
+    if (!isWorkOrderFormValid(this.workOrder)) {
       this.showWorkOrderValidationMessages();
       this.showSpinner = false;
       return;
@@ -900,35 +592,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
     this.showSpinner = true;
     this.knownFields.clear();
-    this.logger.info(this.selectedProducts);
 
     var submittedWorkOrder: IWorkOrder = this.workOrder.value;
-    submittedWorkOrder.woPurchases = [];
-    this.woPurchases.forEach(p =>
-      submittedWorkOrder.woPurchases.push({
-        woPurchaseId: p.woPurchaseId,
-        supplierName: p.supplierName,
-        purchaseReference: p.purchaseReference,
-        purchaseNote: p.purchaseNote
-      }
-      ));
 
-
-    submittedWorkOrder.woServices = [];
-    let i = 1; // Initialize the index to start from 1
-    this.selectedProducts.forEach(s => {
-      submittedWorkOrder.woServices.push({
-        index: i,
-        productId: s.productId,
-        productName: s.productName,
-        productDescription: s.productDescription,
-        category: s.category,
-        quantity: s.quantity
-      });
-      i++;
-    });
-
-    
     (this.isNewObject
       ? this.workOrderService.createWorkOrder(submittedWorkOrder)
       : this.workOrderService.updateWorkOrder(submittedWorkOrder)
