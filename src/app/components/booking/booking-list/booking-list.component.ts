@@ -415,9 +415,9 @@ export class BookingListComponent implements OnInit, OnDestroy {
   bookingLabel(booking: IWorkOrder): string {
     const parts = [
       booking.vehiclePlate,
-      booking.vehicleManufacturer,
-      booking.vehicleModel,
-      booking.vehicleYear,
+      booking.vehicle?.make,
+      booking.vehicle?.model,
+      booking.vehicle?.year,
     ].filter(Boolean);
     return parts.join(' ');
   }

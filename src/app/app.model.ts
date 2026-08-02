@@ -413,14 +413,9 @@ export interface IWorkOrder {
   workOrderDate: string,
   vehiclePlate: string,
   vehicleMileage: number,
-  vehicleManufacturer: string,
-  vehicleModel: string,
-  vehicleYear: number,
   paymentType: string,
   workOrderStatus: string,
   description: string,
-  oilType: string,
-  oilCapacity: number,
   offerId: number,
   employeeId: number,
   employeeName: string,
@@ -430,13 +425,22 @@ export interface IWorkOrder {
   estimatedHours: string,
   serviceTypes: string,
   isActive: number,
-  /** How this work order was created. Absent/undefined for ordinary manually-created orders. */
-  createdVia?: 'app' | 'whatsapp-bot' | 'telegram-bot',
-  /** Name of the mechanic who created it via a bot channel, for the provenance badge. */
-  createdByName?: string
+  /** Vehicle record for vehiclePlate - make/model/year/oil info all come from here, not
+   * stored redundantly on WorkOrder. Read-only, looked up server-side. */
+  vehicle?: IVehicleDetails,
+  /** Ids of the service categories selected for this work order (many-to-many). Write it to
+   * change the selection on create/update, which replaces the whole set. */
+  serviceCategoryIds: number[],
+  /** Display names matching serviceCategoryIds, in the same order. Read-only. */
+  serviceCategoryNames?: string[],
   // workOrderStatusItems: MenuItem[],
 //deliveryDate: string,
   //deliveryTime: string,
+}
+
+export interface IServiceCategory {
+  serviceId: number;
+  serviceName: string;
 }
 
 export interface ISignup {

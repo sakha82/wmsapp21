@@ -1,9 +1,11 @@
 import { FormGroup } from '@angular/forms';
 
-/** Work order form control names that are required when creating or updating a booking. */
+/** Work order form control names that are required when creating or updating a booking.
+ * vehicleManufacturer is no longer a form control - it's read-only, sourced from the Vehicle
+ * record once vehiclePlate resolves (see WorkOrderCrudComponent.vehicleDetails) - a required
+ * vehiclePlate is what actually guarantees a vehicle now, via the DB FK. */
 export const WORKORDER_REQUIRED_FIELDS = [
   'vehiclePlate',
-  'vehicleManufacturer',
   'customerId',
   'employeeId',
 ] as const;
@@ -43,9 +45,6 @@ export function collectWorkOrderValidationFieldLabels(
 
   if (isWorkOrderControlEmpty(form, 'vehiclePlate')) {
     missing.push(translate('vehiclePlate'));
-  }
-  if (isWorkOrderControlEmpty(form, 'vehicleManufacturer')) {
-    missing.push(translate('vehicleMake'));
   }
   if (isWorkOrderControlEmpty(form, 'customerId')) {
     missing.push(translate('customerName'));

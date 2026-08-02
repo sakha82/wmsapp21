@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkOrder, ICustomer, IDailyCalendar, IEnum, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails } from 'app/app.model';
+import { IWorkOrder, ICustomer, IDailyCalendar, IEnum, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails, IServiceCategory } from 'app/app.model';
 import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
@@ -53,7 +53,6 @@ import { PickListModule } from 'primeng/picklist';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 import { IWorkOrderHandoff, WorkOrderHandoffService } from 'app/services/workorder-handoff.service';
-import { parseOilCapacity, parseOilType } from 'app/utils/vehicle-oil.util';
 import { buildVehicleDetailFields } from 'app/utils/vehicle-detail-fields.util';
 
 @Component({
@@ -123,7 +122,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   paymentType: IEnum[] = [];
   workOrderStatus: IEnum[] = [];
   workOrder: FormGroup;
-  oilTypes: string[] = ['5W30', '0W20', '5W40', '0W30', '10W30', '10W40'];
+  serviceCategories: IServiceCategory[] = [];
   isCreate: boolean = true;
   isNewObject: boolean = true;
   selectedCustomerName: any = null;
@@ -177,14 +176,9 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       customerTelephone: '',
       customerEmail: ['', [Validators.email]],
       serviceDuration: [null],
-      oilType: null,
-      oilCapacity: null,
       workOrderDate: ['', Validators.required],
       vehiclePlate: [null, Validators.required],
       vehicleMileage: null,
-      vehicleManufacturer: [null, Validators.required],
-      vehicleModel: [null],
-      vehicleYear: null,
       paymentType: [this.sharedService.getDefaultEnum('paymentType')?.value, Validators.required],
       workOrderStatus: [this.sharedService.getDefaultEnum('workOrderStatus')?.value, Validators.required],
       description: null,
@@ -192,8 +186,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       bookingTime: null,
       employeeId: [null, [Validators.required, Validators.min(1)]],
       offerId: null,
-      createdVia: [null],
-      createdByName: [null],
+      serviceCategoryIds: [[]],
     });
 
     this.customer = this.fb.group({
@@ -218,7 +211,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const param: any = this.route.snapshot.params;
     this.loadCustomerTags();
-  
+    this.loadServiceCategories();
+
     this.workOrderService
       .getWorkOrder(param.offerId, param.customerId, param.workOrderId, param.isDuplicate)
       .pipe(
@@ -237,6 +231,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
           this.selectedCustomerName = response.data.customerName;
           this.isNewObject = response.isNewObject;
           this.hasResolvedVehicle = !!response.data.vehiclePlate;
+          this.vehicleDetails = response.data.vehicle || null;
           this.workOrder.patchValue(response.data);
           this.logger.info('WORKORDERS-0', response.data);
           this.logger.info('WORKORDERS', this.workOrder.value);
@@ -280,6 +275,22 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.logger.error('loadCustomerTags error', err);
+        }
+      });
+  }
+
+  loadServiceCategories() {
+    this.coreService
+      .getServiceCategories()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response) {
+            this.serviceCategories = response;
+          }
+        },
+        error: (err) => {
+          this.logger.error('loadServiceCategories error', err);
         }
       });
   }
@@ -396,16 +407,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (vehicle) => {
-          const patch: Record<string, unknown> = {
-            vehicleManufacturer: vehicle.make,
-            vehicleModel: vehicle.model,
-            vehicleYear: vehicle.year ? Number(vehicle.year) : null,
-          };
-          const oilType = parseOilType(vehicle.oilClassification1, this.oilTypes);
-          if (oilType) patch['oilType'] = oilType;
-          const oilCapacity = parseOilCapacity(vehicle.oilCapacity);
-          if (oilCapacity !== null) patch['oilCapacity'] = oilCapacity;
-          this.workOrder.patchValue(patch);
           this.vehicleDetails = vehicle;
         },
         error: (err) => {
@@ -429,23 +430,14 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
 
   /**
    * Applies the plate/vehicle/customer lookup already done on the Dashboard's Registration-mode chat, so the
-   * receptionist doesn't repeat it here - see WorkOrderHandoffService. Oil fields are a best-effort parse of
-   * Vehicle.cs's free-text scraped data (DashboardPage_Redesign.md's "Oil field auto-fill" decision) - the
-   * receptionist should still glance at them, not treated as gospel.
+   * receptionist doesn't repeat it here - see WorkOrderHandoffService. Vehicle attribute fields (make/model/
+   * year/oil info) are read-only from the Vehicle record itself, not copied onto the work order.
    */
   private applyHandoff(handoff: IWorkOrderHandoff): void {
     const vehicle = handoff.vehicleInfo;
     const patch: Record<string, unknown> = {
       vehiclePlate: handoff.vehiclePlate,
-      vehicleManufacturer: vehicle.make || null,
-      vehicleModel: vehicle.model || null,
-      vehicleYear: vehicle.year ? Number(vehicle.year) : null,
     };
-
-    const oilType = parseOilType(vehicle.oilClassification1, this.oilTypes);
-    if (oilType) patch['oilType'] = oilType;
-    const oilCapacity = parseOilCapacity(vehicle.oilCapacity);
-    if (oilCapacity !== null) patch['oilCapacity'] = oilCapacity;
 
     if (handoff.customer) {
       patch['customerId'] = handoff.customer.customerId;

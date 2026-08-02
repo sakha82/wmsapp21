@@ -310,19 +310,9 @@
         "sv": "Kunde inte transkribera inspelningen. Försök igen eller skriv istället."
     },
     {
-        "tkey": "createdVia",
-        "en": "Created via",
-        "sv": "Skapad via"
-    },
-    {
-        "tkey": "createdViaBot",
-        "en": "Created via bot",
-        "sv": "Skapad via bot"
-    },
-    {
-        "tkey": "createdViaBotHint",
-        "en": "This work order was created from a mechanic's WhatsApp/Telegram message.",
-        "sv": "Denna arbetsorder skapades från ett meddelande från en mekaniker via WhatsApp/Telegram."
+        "tkey": "serviceCategories",
+        "en": "Service Categories",
+        "sv": "Servicekategorier"
     },
     {
         "tkey": "achieved",

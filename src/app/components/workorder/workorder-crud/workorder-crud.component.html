@@ -6,9 +6,6 @@
       this.sharedService.T('editWorkorder')}}
 
       #{{workOrder.get('workOrderId')?.value}}</p>
-    <p-tag *ngIf="workOrder.get('createdVia')?.value" severity="info" icon="pi pi-whatsapp"
-      [value]="workOrder.get('createdByName')?.value ? (sharedService.T('createdVia') + ': ' + workOrder.get('createdByName')?.value) : sharedService.T('createdViaBot')"
-      [pTooltip]="sharedService.T('createdViaBotHint')"></p-tag>
   </div>
 </header>
 <!-- header end -->
@@ -52,25 +49,22 @@
 
       <ng-container *ngIf="showFullForm">
 
-      <!-- Vehicle Manufacturer -->
+      <!-- Vehicle Manufacturer - read-only, sourced from the Vehicle record (see vehicleDetails) -->
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
-        <input pInputText type="text" formControlName="vehicleManufacturer" class="w-full"
-          [invalid]="isFieldInvalid('vehicleManufacturer')" />
+        <input pInputText type="text" [value]="vehicleDetails?.make || '-'" [disabled]="true" class="w-full" />
       </div>
 
-      <!-- Vehicle Model -->
+      <!-- Vehicle Model - read-only -->
       <div class="col-span-3">
         <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
-        <input pInputText type="text" formControlName="vehicleModel" class="w-full" />
+        <input pInputText type="text" [value]="vehicleDetails?.model || '-'" [disabled]="true" class="w-full" />
       </div>
 
-      <!-- Gap Between First 3 and Last 2 -->
+      <!-- Vehicle Year - read-only -->
       <div class="col-span-2">
-        <!-- Vehicle Year -->
         <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }}</label>
-        <p-inputnumber formControlName="vehicleYear" placeholder="2015" mode="decimal" [min]="1960" [max]="2040"
-          [useGrouping]="false" ></p-inputnumber>
+        <input pInputText type="text" [value]="vehicleDetails?.year || '-'" [disabled]="true" class="w-full" />
       </div>
 
       <!-- Vehicle Mileage -->
@@ -267,16 +261,22 @@
           [showClear]="true" class="w-full"
           [invalid]="isFieldInvalid('employeeId')"></p-select>
       </div>
+      <!-- Oil type/capacity - read-only, sourced from the Vehicle record (see vehicleDetails) -->
       <div class="col-span-2">
         <label class="block mb-2">{{this.sharedService.T('oilType')}}</label>
-        <p-select [options]="oilTypes" formControlName="oilType" class="w-full"></p-select>
+        <input pInputText type="text" [value]="vehicleDetails?.oilSpecifications1 || '-'" [disabled]="true" class="w-full" />
       </div>
 
       <div class="col-span-2">
         <label class="block mb-2">{{ this.sharedService.T('oilCapacity') }}</label>
-        <p-inputnumber formControlName="oilCapacity" inputId="minmaxfraction" [minFractionDigits]="1"
-          [maxFractionDigits]="1" suffix=" litre" mode="decimal" [min]="0" [max]="25" class="w-full text-black"
-          [locale]="this.sharedService.currentLocale"></p-inputnumber>
+        <input pInputText type="text" [value]="vehicleDetails?.oilCapacity || '-'" [disabled]="true" class="w-full" />
+      </div>
+
+      <div class="col-span-4">
+        <label class="block mb-2">{{ this.sharedService.T('serviceCategories') }}</label>
+        <p-multiSelect [options]="serviceCategories" formControlName="serviceCategoryIds" optionLabel="serviceName"
+          optionValue="serviceId" [placeholder]="sharedService.T('choose') + ' ' + sharedService.T('serviceCategories')"
+          class="w-full" display="chip"></p-multiSelect>
       </div>
 
       <div class="col-span-12">

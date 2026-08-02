@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IEmail, IFileUploadRequest, IFileUploadResponse, IPdf, IVehicleDetails, IWorkOrderIntentRequest, IWorkOrderIntentResponse, VehicleSearch, VehicleSearchResponse } from 'app/app.model';
+import { IEmail, IFileUploadRequest, IFileUploadResponse, IPdf, IServiceCategory, IVehicleDetails, IWorkOrderIntentRequest, IWorkOrderIntentResponse, VehicleSearch, VehicleSearchResponse } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 import { SharedService } from './shared.service';
@@ -49,6 +49,11 @@ export class CoreService {
     if (registrationNumber) queryParams.append('id', registrationNumber);
     const url = `${this.coreUrl}/vehicle?${queryParams}`;
     return this.http.get<IVehicleDetails>(url);
+  }
+
+  /** Global, tenant-free lookup - the service categories a work order can be tagged with. */
+  getServiceCategories() {
+    return this.http.get<IServiceCategory[]>(`${this.coreUrl}/service-categories`);
   }
 
   /** Parses a free-text description (e.g. "BMH565, oil change, assign to Amir") into work order field suggestions. Never saves anything — the caller patches a form and the user still has to click Save. */

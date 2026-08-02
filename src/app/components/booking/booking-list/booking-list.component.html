@@ -131,8 +131,8 @@
                 <div>
                     <h2 class="text-xl font-bold text-gray-header">{{ selectedBooking.vehiclePlate }}</h2>
                     <div class="booking-modal-sub">
-                        {{selectedBooking.vehicleManufacturer + ' ' + selectedBooking.vehicleModel + ' ' +
-                        selectedBooking.vehicleYear }}
+                        {{selectedBooking.vehicle?.make + ' ' + selectedBooking.vehicle?.model + ' ' +
+                        selectedBooking.vehicle?.year }}
                     </div>
                 </div>
                 <p-button class="text-end my-auto pe-3" aria-label="Print booking"
@@ -203,8 +203,8 @@
                 <div>
                     <div class="booking-modal-title">{{ selectedBooking.vehiclePlate }}</div>
                     <div class="booking-modal-sub">
-                        {{selectedBooking.vehicleManufacturer + ' ' + selectedBooking.vehicleModel + ' ' +
-                        selectedBooking.vehicleYear }}
+                        {{selectedBooking.vehicle?.make + ' ' + selectedBooking.vehicle?.model + ' ' +
+                        selectedBooking.vehicle?.year }}
                     </div>
                 </div>
                 <div class="booking-modal-actions">
