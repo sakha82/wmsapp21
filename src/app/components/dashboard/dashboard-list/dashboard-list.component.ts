@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/co
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IDashboardOverview, IReminder, IUnpaidInvoice, IVehicleDetails, IVehicleHistoryCustomer, IVehicleHistorySummary, IWorkOrder, IWorkOrderIntentCandidate } from 'app/app.model';
+import { IDashboardOverview, IReminder, IVehicleDetails, IVehicleHistoryCustomer, IVehicleHistorySummary, IWorkOrder, IWorkOrderIntentCandidate } from 'app/app.model';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
@@ -17,9 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 import { WorkOrderHandoffService } from 'app/services/workorder-handoff.service';
@@ -32,15 +30,16 @@ interface VehicleDetailField {
 
 /**
  * Dashboard: the primary entry point for creating a new booking/work order (2026-07-31 redesign, see
- * DashboardPage_Redesign.md), plus "Today's Workshop"/"AI-förslag"/"Sales this month"/"Unpaid invoices" (backed by
- * DashboardService.getOverview()/getUnpaidInvoices()) and Reminders. The chat interface has two modes: Registration
+ * DashboardPage_Redesign.md), plus "Today's Workshop"/"AI-förslag"/"Sales this month" (backed by
+ * DashboardService.getOverview()) and Reminders. The chat interface has two modes: Registration
  * (plate-only, implemented) and Query (free-text, deliberately not implemented yet - the mode selector is built now
  * so it can be switched on later without redesigning this component). The Statistics page (revenue panel + raw
- * sales chart + unpaid-invoices table) was retired 2026-08-03: the revenue panel and unpaid-invoices table moved
- * here as their own widgets, and the raw sales chart was replaced by a month-over-month sales trend sentence folded
- * into AI-förslag (see DashboardService.GetOverview's PreviousMonthSale signal) - a raw multi-series chart wasn't
- * legible to the target audience (small workshop owners/mechanics), a plain-language reading is. Every "Dagens
- * verkstad" tile and AI-förslag suggestion with an actionUrl deep-links to the real filtered underlying data
+ * sales chart + unpaid-invoices table) was retired 2026-08-03: the revenue panel moved here as its own widget, the
+ * raw sales chart was replaced by a month-over-month sales trend sentence folded into AI-förslag (see
+ * DashboardService.GetOverview's PreviousMonthSale signal) - a raw multi-series chart wasn't legible to the target
+ * audience (small workshop owners/mechanics), a plain-language reading is - and the unpaid-invoices-per-customer
+ * table was dropped outright (judged not to add value beyond the AI-förslag unpaid-invoice suggestion it duplicated).
+ * Every "Dagens verkstad" tile and AI-förslag suggestion with an actionUrl deep-links to the real filtered underlying data
  * (Invoice/Offer/WorkOrder list) rather than just displaying a number - "Kunder att kontakta" is the one
  * exception, since it's a union of 3 different sources with no single accurate filtered destination; its
  * breakdown is covered by the individual AI-förslag suggestions instead.
@@ -59,9 +58,7 @@ interface VehicleDetailField {
     TooltipModule,
     GenericLoaderComponent,
     VoiceInputButtonComponent,
-    TableModule,
     ProgressBarModule,
-    InputNumberModule,
   ],
   templateUrl: './dashboard-list.component.html',
   styleUrl: './dashboard-list.component.css',
@@ -92,10 +89,6 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   overview: IDashboardOverview | null = null;
   isLoadingOverview = false;
 
-  // Unpaid invoices by customer - ported from the retired Statistics page
-  unpaidInvoices: IUnpaidInvoice[] = [];
-  isLoadingUnpaidInvoices = false;
-
   // Reminders (fully functional)
   reminders: IReminder[] = [];
   isLoadingReminders = false;
@@ -122,7 +115,6 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadOverview();
     this.loadReminders();
-    this.loadUnpaidInvoices();
     this.restoreLookupState();
   }
 
@@ -378,28 +370,6 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     const sale = this.overview?.currentMonth?.sale ?? 0;
     const orders = this.overview?.currentMonth?.orders ?? 0;
     return orders > 0 ? sale / orders : 0;
-  }
-
-  // ---- Unpaid invoices (ported from the retired Statistics page) ----
-
-  private loadUnpaidInvoices(): void {
-    this.isLoadingUnpaidInvoices = true;
-    this.dashboardService.getUnpaidInvoices()
-      .pipe(
-        finalize(() => { this.isLoadingUnpaidInvoices = false; }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res) => { this.unpaidInvoices = res; },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'loadUnpaidInvoices', 'Failed to load unpaid invoices.');
-        }
-      });
-  }
-
-  /** Navigates to the Invoice list, pre-filtered to this customer's unpaid invoices. */
-  goToUnpaidInvoices(invoice: IUnpaidInvoice): void {
-    this.router.navigate(['/sv/invoice'], { queryParams: { type: 'unpaid', customerId: invoice.customerId } });
   }
 
   // ---- Reminders ----

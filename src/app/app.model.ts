@@ -518,13 +518,6 @@ export interface IWorkShopService {
   workshopServiceId?: number;
 }
 
-export interface IUnpaidInvoice {
-  customerId: number;
-  customerName: string;
-  invoiceCount: number;
-  priceIncVat: number;
-  vat: number;
-}
 export interface IMonthSummary {
   sale: number;
   orderCount: number;

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import { IDashboardOverview, IPageList, ISelect, IUnpaidInvoice } from 'app/app.model'
+import { IDashboardOverview, IPageList, ISelect } from 'app/app.model'
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 
@@ -15,12 +15,5 @@ export class DashboardService {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);
     return this.http.get<IDashboardOverview>(`${this.baseUrl}/overview?${queryParams}`);
-  }
-
-  getUnpaidInvoices() {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    const url = `${this.baseUrl}/unpaid-invoices?${queryParams}`;
-    return this.http.get<IUnpaidInvoice[]>(url);
   }
 }
