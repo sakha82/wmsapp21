@@ -11,7 +11,6 @@ import { filter, finalize, takeUntil, Subject } from 'rxjs';
 import { PrimeNG } from 'primeng/config';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { ThemeService } from 'app/services/theme.service';
 import { Menu } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
@@ -56,16 +55,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   workshops: IWorkshop[] = [];
   selectedLang:string = '';
   version = '';
-  selectedTheme = '';  
   imagesUrl = 'assets/images/';
-palettes = [
-  { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     
-  { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },
-  { label: 'Industrial Teal',   value: 'teal', color: '#0d9488' },
-  { label: 'Minimal Slate',     value: 'slate', color: '#64748b' },
-  { label: 'Deep Red',          value: 'red', color: '#b91c1c' },
-  { label: 'Industrial Amber',  value: 'amber', color: '#f59e0b' }
-];
   currentUser:string |null = '' ;
    selectedRoute: string = '';
    currentMenuLabel: string = '';
@@ -77,8 +67,7 @@ palettes = [
               private logger: LogService,
               private config: PrimeNG,
               private http: HttpClient,
-              private workshopService:WorkshopService,
-              private theme: ThemeService
+              private workshopService:WorkshopService
   ) {
       this.version = environment.Version; 
         this.router.events
@@ -112,8 +101,6 @@ palettes = [
             sessionStorage.setItem('HourlyRate', this.workshop.hourlyRate.toString());
             this.workshops.push(this.workshop);
             this.selectedWorkshop = this.workshops[0];
-            this.theme.setPrimaryPalette(this.selectedWorkshop.defaultTheme);
-            this.selectedTheme = this.selectedWorkshop.defaultTheme;
             this.selectedLang = sessionStorage.getItem('lang') || this.selectedWorkshop.defaultLang;
             this.currentUser = sessionStorage.getItem('userName');
             this.logger.info(this.workshop);
@@ -207,10 +194,6 @@ palettes = [
   window.location.reload();
 }
 
- onPaletteChange(palette: any) {
-   this.logger.info('change value to::',palette);
-    this.theme.setPrimaryPalette(palette);
-  }
 
   onLogout() {
     this.authService

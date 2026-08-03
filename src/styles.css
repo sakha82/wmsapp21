@@ -4,9 +4,9 @@
    THEME
 ========================= */
 @theme {
-  --color-primary: #4F39F6;
-  --color-primary-soft: #7e6ef81A;
-  --color-primary-accent: #7e6ef833;
+  --color-primary: #0969DA;
+  --color-primary-soft: #0969DA1A;
+  --color-primary-accent: #0969DA33;
   --color-bg-light: #F7F9FB;
   --color-gray-dark: #555555;
   --color-gray-header: #222222;

@@ -91,47 +91,6 @@
     </div>
   </div>
 
-  <!-- Pinned bottom language select -->
-  <div class="px-4 pb-4 space-y-4 border-t border-border pt-4">
-
-    <!-- Theme Select -->
-    <div>
-      <label class="mb-3 block text-sm font-semibold text-gray-header">{{ this.sharedService.T('colorTheme')}}</label>
-      <p-select
-        class="w-full"
-        [options]="palettes"
-        [(ngModel)]="selectedTheme"
-        optionLabel="label"
-        optionValue="value"
-        (onChange)="onPaletteChange($event.value)"
-        styleClass="w-full"
-        [showClear]="false"
-      >
-        <!-- Dropdown items -->
-        <ng-template pTemplate="item" let-opt>
-          <div class="flex items-center gap-3">
-            <span
-              class="inline-block w-5 h-5 rounded-full border-2 border-border shadow-sm"
-              [ngStyle]="{ 'background-color': opt.color }"
-            ></span>
-            <span class="font-medium">{{ opt.label }}</span>
-          </div>
-        </ng-template>
-
-        <!-- Selected value -->
-        <ng-template pTemplate="selectedItem" let-opt>
-          <div class="flex items-center gap-3" *ngIf="opt">
-            <span
-              class="inline-block w-5 h-5 rounded-full border-2 border-border shadow-sm"
-              [ngStyle]="{ 'background-color': opt.color }"
-            ></span>
-            <span class="font-medium">{{ opt.label }}</span>
-          </div>
-        </ng-template>
-      </p-select>
-    </div>
-
-  </div>
 </aside>
 
 

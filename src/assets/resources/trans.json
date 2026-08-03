@@ -595,11 +595,6 @@
         "sv": "Skapa digital service"
     },
     {
-        "tkey": "colorTheme",
-        "en": "Color Theme",
-        "sv": "Färgtema"
-    },
-    {
         "tkey": "createNewCustomer",
         "en": "Create New Customer",
         "sv": "Skapa ny kund"
@@ -2038,11 +2033,6 @@
         "tkey": "defaultLanguage",
         "en": "Default language",
         "sv": "Standardspråk"
-    },
-    {
-        "tkey": "defaultColorTheme",
-        "en": "Default color theme",
-        "sv": "Standardfärgtema"
     },
     {
         "tkey": "paymentInformation",

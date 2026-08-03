@@ -58,16 +58,6 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   langCode: string = 'en';
   
-  palettes = [
-  { label: 'Professional Blue', value: 'blue', color: '#3b82f6' },     // Default
-  { label: 'Modern Indigo',     value: 'indigo', color: '#4f46e5' },
-  { label: 'Industrial Teal',   value: 'teal', color: '#0d9488' },
-  { label: 'Minimal Slate',     value: 'slate', color: '#64748b' },
-  { label: 'Fresh Emerald',     value: 'emerald', color: '#10b981' },
-  { label: 'Deep Red',          value: 'red', color: '#b91c1c' }       // Muted red (not alert red)
-];
-
-
  selectedPriceMode:any = '';
  selectedInvoiceTemplate:any = '';
  selectedSaleYear:string = new Date().getFullYear().toString();
@@ -133,8 +123,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       hourlyRate:'',
       
       isFskat: [false],
-      defaultLang: '',
-      defaultTheme: ''
+      defaultLang: ''
     });
 
     this.workshopServiceForm = this.fb.group({

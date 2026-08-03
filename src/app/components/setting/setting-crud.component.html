@@ -76,13 +76,10 @@
               </div>
             </div>
 
-            <!-- language and appearance Sections -->
+            <!-- Language Section -->
             <div class="grid grid-cols-2 gap-8 mt-8">
-              <!-- Left Section - Language -->
               <div class="p-6 border border-border rounded-lg">
                 <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('defaultLanguage') }}</p>
-                <div class="mb-6">
-                <!-- Language Select -->
                 <div class="mb-6">
                   <p-select formControlName="defaultLang" class="w-full" [options]="sharedService.getEnums('lang')" optionLabel="text" optionValue="value">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -95,28 +92,6 @@
                       <div class="flex items-center gap-2">
                         <img [src]="'assets/images/' + language.value + '.png'" class="w-4 h-4" />
                         <div class="text-sm">{{ language.text }}</div>
-                      </div>
-                    </ng-template>
-                  </p-select>
-                </div>
-              </div>
-            </div>
-              <!-- Right Section - Appearance Settings -->
-              <div class="p-6 border border-border rounded-lg">
-                <p class="text-2xl font-semibold mb-6 text-gray-header">{{ this.sharedService.T('defaultColorTheme') }}</p>
-                <!-- Color Theme Select -->
-                <div class="mb-6">
-                  <p-select formControlName="defaultTheme" class="w-full" [options]="palettes" optionLabel="label" optionValue="value" [showClear]="false">
-                    <ng-template pTemplate="item" let-opt>
-                      <div class="flex items-center gap-2">
-                        <span class="inline-block w-4 h-4 rounded-full border-2 border-border" [ngStyle]="{ 'background-color': opt.color }"></span>
-                        <span class="text-sm">{{ opt.label }}</span>
-                      </div>
-                    </ng-template>
-                    <ng-template pTemplate="selectedItem" let-opt>
-                      <div class="flex items-center gap-2" *ngIf="opt">
-                        <span class="inline-block w-4 h-4 rounded-full border-2 border-border" [ngStyle]="{ 'background-color': opt.color }"></span>
-                        <span class="text-sm">{{ opt.label }}</span>
                       </div>
                     </ng-template>
                   </p-select>

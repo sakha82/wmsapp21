@@ -466,7 +466,6 @@ export interface IWorkshop {
   priceMode: number;
   isFskat: boolean;
   defaultLang: string;
-  defaultTheme: string;
   defaultInvoiceTemplate: string;
   hourlyRate: number;
 }
