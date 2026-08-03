@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { IInvoicePromptRequest } from 'app/app.model';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -8,11 +7,6 @@ export class ExternalService {
   private baseUrl: string = environment.BASE_URL + '/api/external';
 
   constructor(private http: HttpClient) {}
-
-  getInvoiceDescription(prompt: IInvoicePromptRequest) {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<string>(`${this.baseUrl}/invoice-description`, prompt, { headers });
-  }
 
   getCompanyInfo(companyId:string)
     {

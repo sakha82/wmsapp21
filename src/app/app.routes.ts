@@ -31,9 +31,7 @@ import { ForgetPasswordViewComponent } from './components/webview/password-forge
 import { EmployeeCrudComponent } from './components/employee/employee-crud/employee-crud.component';
 import { PrivacypolicyComponent } from './components/privacypolicy/privacypolicy.component';
 import { OptOutComponent } from './components/opt-out/opt-out.component';
-import { SupplierListComponent } from './components/supplier/supplier-list/supplier-list.component';
 import { VehicleListComponent } from './components/vehicle/vehicle-list/vehicle-list.component';
-import { StatisticsListComponent } from './components/statistics/statistics-list/statistics-list.component';
 
 export const routes: Routes =  [
   { path: '', component:HomeComponent},
@@ -48,7 +46,6 @@ export const routes: Routes =  [
     canActivate: [ ResourcesLoadedGuard],
     children: [ 
               {path: 'dashboard',component:DashboardListComponent},
-              {path: 'statistics',component:StatisticsListComponent},
               {path: 'customer',component:CustomerListComponent},
               {path: 'customer/details/:customerId',component:CustomerDetailComponent},                
               {path: 'customer/crud',component:CustomerCrudComponent},
@@ -63,7 +60,6 @@ export const routes: Routes =  [
               {path: 'workorder/crud',component:WorkOrderCrudComponent},
               {path: 'digitalservice',component:DigitalServiceListComponent},
               {path: 'digitalservice/details/:vehiclePlate/:userId',component:DigitalServiceDetailComponent},   
-              {path: 'supplier',component:SupplierListComponent},
               {path: 'employee',component:EmployeeListComponent},
               {path: 'employee/crud',component:EmployeeCrudComponent},
                {path: 'employee/crud/:id',component:EmployeeCrudComponent},

@@ -66,7 +66,6 @@ export class WorkOrderDetailComponent implements OnInit, OnDestroy {
   uploadedFiles: any[] = []; // List of all uploaded files
   uploadUrl: string = '/api/workorder/upload';
   showDigitalServiceDialog: boolean = false;
-  isDigitalServiceExists: boolean = false;
   isEmailSent: boolean | null = null;
   selectedServices!: WorkshopService[];
   services!: WorkshopService[];

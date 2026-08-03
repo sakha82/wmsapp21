@@ -390,11 +390,6 @@ export interface IOfferHistory {
   actionType: string;
   actionText: string;
 }
-export interface ISupplier {
-  wmsId: string,
-  supplierId: number,
-  supplierName: string
-}
 export interface ISale {
   wmsId: string,
   saleYear: number,
@@ -416,6 +411,8 @@ export interface IWorkOrder {
   paymentType: string,
   workOrderStatus: string,
   description: string,
+  customerNote: string,
+  purchaseNote: string,
   offerId: number,
   employeeId: number,
   employeeName: string,
@@ -479,43 +476,34 @@ export interface IWorkshop {
 export interface ITodayWorkshopSummary {
   arrivingToday: number;
   inWorkshop: number;
+  /** Completed and still active, no date restriction - no separate "delivered" event is tracked. */
   readyForPickup: number;
-  /** Customers with an unpaid/overdue invoice - a provisional definition, not a confirmed one. */
+  /** Union of: unpaid invoice, offer awaiting a decision 5+ days, or an open reminder that names the customer. */
   customersToContact: number;
   /** Work orders booked in for today with no mechanic assigned yet - backs the "missing mechanic assignments" AI Suggestion. */
   missingMechanicAssignments: number;
 }
 
-export interface ITopManufacturer {
-  vehicleManufacturer:string;
-  sale: string;
-  orderCount: number;
+/** This calendar month's sale/target/order count - the Dashboard's "Sales this month" widget. */
+export interface IMonthOverview {
+  sale: number;
+  saleTarget: number;
+  orders: number;
 }
-export interface ITopSale {
-  monthYear: string;
-  partsSale: string;
-  workSale: string;
-  otherSale: string;
 
+/** A single AI-förslag suggestion card. */
+export interface IDashboardSuggestion {
+  severity: string;
+  text: string;
+  actionUrl?: string;
 }
-export interface ITopCustomer {
-  customerId: number;
-  customerName: string;
-  sale: string;
-  orderCount: number;
 
+/** Single aggregate response backing the Dashboard's "Today's Workshop"/"AI-förslag"/"Sales this month" widgets. */
+export interface IDashboardOverview {
+  todayWorkshop: ITodayWorkshopSummary;
+  currentMonth: IMonthOverview;
+  aiSuggestions: IDashboardSuggestion[];
 }
-// export interface ITopModel {
-//   vehicleManufacturer: string;
-//   vehicleModel: string;
-//   visitCount: string;
-// }
-
-// export interface ITopDashboardItem {
-//   type: string;
-//   sum: string;
-//   count: string;
-// }
 export interface ICustomerTag {
   wmsId: string;
   customerTagId: number;
@@ -530,11 +518,6 @@ export interface IWorkShopService {
   workshopServiceId?: number;
 }
 
-export interface IOutStandingBalance {
-        priceIncVat:number;
-        vat:number;
-        orderCount:number;
-}
 export interface IUnpaidInvoice {
   customerId: number;
   customerName: string;

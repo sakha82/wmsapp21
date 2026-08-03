@@ -10,21 +10,28 @@
                     <div class="">
 
                     </div>
-                    <div class="flex flex-wrap items-center gap-6 lg:ml-auto">
-                        @for (emp of employees; track emp.employeeId) {
-                        <div class="employee-filter-item flex items-center gap-2">
-                            <p-checkbox [inputId]="'emp-' + emp.employeeId" [value]="emp"
-                                [(ngModel)]="selectedEmployees" [ngModelOptions]="{standalone: true}"
-                                (onChange)="onChangeEmployee()" [binary]="false">
-                            </p-checkbox>
-                            <span [style.background-color]="emp.calendarColor"
-                                class="employee-color-swatch shrink-0"></span>
-                            <label [for]="'emp-' + emp.employeeId"
-                                class="employee-filter-label cursor-pointer text-sm font-medium text-gray-header">
-                                {{ emp.fullName }}
-                            </label>
-                        </div>
-                        }
+                    <div class="lg:ml-auto" style="min-width: 260px;">
+                        <p-select [options]="employeeOptions" [(ngModel)]="selectedEmployee"
+                            [ngModelOptions]="{standalone: true}" optionLabel="fullName" [filter]="true"
+                            filterBy="fullName" [placeholder]="sharedService.T('chooseEmployee')"
+                            (onChange)="onChangeEmployee($event)" class="w-full">
+                            <ng-template let-emp #selectedItem>
+                                <div class="flex items-center gap-2">
+                                    <span *ngIf="emp.employeeId !== ALL_EMPLOYEES_ID"
+                                        [style.background-color]="emp.calendarColor"
+                                        class="employee-color-swatch shrink-0"></span>
+                                    <span>{{ emp.fullName }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template let-emp #item>
+                                <div class="flex items-center gap-2">
+                                    <span *ngIf="emp.employeeId !== ALL_EMPLOYEES_ID"
+                                        [style.background-color]="emp.calendarColor"
+                                        class="employee-color-swatch shrink-0"></span>
+                                    <span>{{ emp.fullName }}</span>
+                                </div>
+                            </ng-template>
+                        </p-select>
                     </div>
                 </div>
                 <hr class="border-border">

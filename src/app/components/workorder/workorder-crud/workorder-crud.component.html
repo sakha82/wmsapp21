@@ -1,19 +1,26 @@
 <app-generic-loader [visible]="showSpinner" />
 <!-- header start -->
-<header class="flex items-center justify-between lg:px-6 px-3 py-2 h-16 bg-white">
-  <div class="flex items-center gap-3">
-    <p class="font-normal text-2xl">{{isNewObject ? this.sharedService.T('newWorkorder') :
-      this.sharedService.T('editWorkorder')}}
+<header class="flex flex-col gap-1 lg:px-6 px-3 py-3 bg-white">
+  <p class="font-normal text-2xl text-gray-header">
+    {{ isNewObject ? sharedService.T('newWorkorder') : sharedService.T('editWorkorder') }}
+    <span *ngIf="workOrder.get('workOrderId')?.value" class="text-gray-dark">#{{ workOrder.get('workOrderId')?.value }}</span>
+  </p>
 
-      #{{workOrder.get('workOrderId')?.value}}</p>
+  <!-- Bilinfo: single-line resolved-vehicle headline (plate - make model -year, oil type/capacity) -->
+  <div *ngIf="showFullForm && bilinfoLine" class="flex items-center gap-3">
+    <span class="text-sm font-semibold text-gray-dark truncate" [title]="bilinfoLine">{{ bilinfoLine }}</span>
+    <a href="#" class="crud-inline-action-link text-sm shrink-0"
+      (click)="toggleEditVehicle(); $event.preventDefault()">
+      {{ sharedService.T('changeVehicle') }}
+    </a>
+  </div>
+
+  <!-- Supplementary scraped vehicle reference data (VIN, engine, tyres, etc.) -->
+  <div *ngIf="showFullForm && vehicleDetailsLine" class="text-xs text-gray-dark truncate" [title]="vehicleDetailsLine">
+    {{ vehicleDetailsLine }}
   </div>
 </header>
 <!-- header end -->
-
-<div *ngIf="vehicleDetailsLine" class="lg:px-6 px-3 pb-2 bg-white">
-  <div class="text-xs font-bold text-gray-dark truncate" [title]="vehicleDetailsLine">{{ vehicleDetailsLine }}</div>
-</div>
-<!-- readonly vehicle details end -->
 
 <section class="px-5 pb-10">
 
@@ -21,15 +28,12 @@
   <p-toast position="top-right" />
   <p-confirmDialog></p-confirmDialog>
 
-  <div class="grid grid-cols-12 gap-5 items-start">
+  <div class="mb-6 p-6 rounded-sm border border-border bg-white">
+    <div class="grid grid-cols-12 gap-4">
 
-  <!-- Main form column -->
-  <div class="col-span-12">
-
-  <div class="mb-10 p-8 gap-3 rounded border border-border bg-white">
-    <div class="grid grid-cols-12 gap-5">
-      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block mb-2" for="vehiclePlate">{{ this.sharedService.T('vehiclePlate') }}</label>
+      <!-- Plate lookup: shown until a vehicle is resolved, or while correcting a resolved one -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4" *ngIf="!showFullForm || editingVehicle">
+        <label class="block mb-2" for="vehiclePlate">{{ sharedService.T('vehiclePlate') }}</label>
         <p-inputgroup>
           <p-inputgroup-addon>
             <i class="icon-primary pi pi-car"></i>
@@ -39,73 +43,46 @@
             class="uppercase p-2 w-full"
             [invalid]="isFieldInvalid('vehiclePlate')" />
           <button pButton type="button" icon="pi pi-search" [loading]="isVehicleLookupLoading || isVehicleHistoryLoading"
-            (click)="lookupVehicle()" pTooltip="{{ this.sharedService.T('lookupVehicle') }}"></button>
+            (click)="lookupVehicle()" pTooltip="{{ sharedService.T('lookupVehicle') }}"></button>
         </p-inputgroup>
         <a *ngIf="!showFullForm" href="#" class="crud-inline-action-link text-sm"
           (click)="skipVehicleLookup(); $event.preventDefault()">
-          {{ this.sharedService.T('enterVehicleManually') }}
+          {{ sharedService.T('enterVehicleManually') }}
         </a>
       </div>
 
       <ng-container *ngIf="showFullForm">
 
-      <!-- Vehicle Manufacturer - read-only, sourced from the Vehicle record (see vehicleDetails) -->
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('vehicleMake') }}</label>
-        <input pInputText type="text" [value]="vehicleDetails?.make || '-'" [disabled]="true" class="w-full" />
-      </div>
-
-      <!-- Vehicle Model - read-only -->
-      <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('vehicleModel') }}</label>
-        <input pInputText type="text" [value]="vehicleDetails?.model || '-'" [disabled]="true" class="w-full" />
-      </div>
-
-      <!-- Vehicle Year - read-only -->
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('vehicleYear') }}</label>
-        <input pInputText type="text" [value]="vehicleDetails?.year || '-'" [disabled]="true" class="w-full" />
-      </div>
-
-      <!-- Vehicle Mileage -->
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('vehicleMileage') }}</label>
-        <input type="number" pInputText formControlName="vehicleMileage"
-          class="w-full" />
-      </div>
-
-      <!-- LINE 2: Customer Name to Service Duration -->
-
-      <div class="col-span-3">
-        <div class="flex items-center justify-between gap-2 mb-2">
-          <div class="flex items-center gap-2">
-            <label class="block mb-0">{{ this.sharedService.T('customerName') }}</label>
-            <p-tag *ngIf="isKnownFact('customerId')" severity="secondary" [value]="sharedService.T('knownCustomer')"></p-tag>
+        <!-- Row 1: Kund, Telefon, E-post, Status -->
+        <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2">
+              <label class="block mb-0">{{ sharedService.T('customerName') }}</label>
+              <p-tag *ngIf="isKnownFact('customerId')" severity="secondary" [value]="sharedService.T('knownCustomer')"></p-tag>
+            </div>
+            <a
+              href="#"
+              class="crud-inline-action-link"
+              (click)="openCustomerDialog($event); $event.preventDefault()">
+              + {{ sharedService.T('createNewCustomer') }}
+            </a>
           </div>
-          <a
-            href="#"
-            class="crud-inline-action-link"
-            (click)="openCustomerDialog($event); $event.preventDefault()">
-            + {{ this.sharedService.T('createNewCustomer') }}
-          </a>
-        </div>
-        <div>
-                    <p-iconfield>
-                    <p-inputicon class=" icon-primary pi pi-user" />
-
-          <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
-            [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
-            (onSelect)="onSelect($event); clearKnownFact('customerId')" (onClear)="onUnselectCustomer(); clearKnownFact('customerId')" [showClear]="true"
-            [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full"
-            [invalid]="isFieldInvalid('customerId')">
-            <ng-template let-customer #item>
-              <div class="flex items-center gap-2">
-                <div>{{ customer.customerName }}</div>
-              </div>
-            </ng-template>
-          </p-autocomplete>
-          </p-iconfield>
-        </div>
+          <div>
+            <p-iconfield>
+              <p-inputicon class="icon-primary pi pi-user" />
+              <p-autocomplete [(ngModel)]="selectedCustomerName" [ngModelOptions]="{standalone: true}"
+                [suggestions]="customers" (completeMethod)="filterCustomer($event)" optionLabel="customerName"
+                (onSelect)="onSelect($event); clearKnownFact('customerId')" (onClear)="onUnselectCustomer(); clearKnownFact('customerId')" [showClear]="true"
+                [placeholder]="sharedService.T('chooseCustomer')" styleClass="w-full" class="w-full"
+                [invalid]="isFieldInvalid('customerId')">
+                <ng-template let-customer #item>
+                  <div class="flex items-center gap-2">
+                    <div>{{ customer.customerName }}</div>
+                  </div>
+                </ng-template>
+              </p-autocomplete>
+            </p-iconfield>
+          </div>
 
           <p-popover #customerPopup>
             <ng-template pTemplate="content">
@@ -113,13 +90,13 @@
                 <!-- Customer Type and Tag -->
                 <div class="grid grid-cols-2 gap-6">
                   <div class="mb-6">
-                    <label class="block mb-2" for="customerType">{{ this.sharedService.T('customerType')
+                    <label class="block mb-2" for="customerType">{{ sharedService.T('customerType')
                       }}</label>
-                    <p-select [options]="this.sharedService.getEnums('customerType')" formControlName="customerType" optionLabel="text"
+                    <p-select [options]="sharedService.getEnums('customerType')" formControlName="customerType" optionLabel="text"
                       optionValue="value" (onChange)="onChangeCustomerType($event)" class="w-full"></p-select>
                   </div>
                   <div class="mb-6">
-                    <label class="block mb-2" for="customerTag">{{ this.sharedService.T('customerTag')
+                    <label class="block mb-2" for="customerTag">{{ sharedService.T('customerTag')
                       }}</label>
                     <p-select [options]="customerTags" formControlName="customerTag" optionLabel="customerTagName"
                       optionValue="customerTagId" (onChange)="onChangeCustomerTag($event)" class="w-full"></p-select>
@@ -127,7 +104,7 @@
                 </div>
                 <!-- Customer Name -->
                 <div class="mb-6">
-                  <label class="block mb-2" for="customerName">{{ this.sharedService.T('customerName') }}</label>
+                  <label class="block mb-2" for="customerName">{{ sharedService.T('customerName') }}</label>
                   <input type="text" formControlName="customerName"
                     [invalid]="!customer.get('customerName')?.value || duplicateCustomerName"
                     class="w-full" pInputText />
@@ -137,14 +114,14 @@
                 <div class="grid grid-cols-2 gap-6">
                   <div class="mb-6">
                     <label class="block mb-2" for="organizationNo">{{
-                      this.sharedService.T('organizationNumber')
+                      sharedService.T('organizationNumber')
                       }}</label>
                     <input type="text" formControlName="organizationNo"
                        class="w-full"
                       pInputText />
                   </div>
                   <div class="mb-6">
-                    <label class="block mb-2" for="vatId">{{ this.sharedService.T('vatRegistrationNumber') }}</label>
+                    <label class="block mb-2" for="vatId">{{ sharedService.T('vatRegistrationNumber') }}</label>
                     <input type="text" formControlName="vatId"
                       class="w-full" pInputText />
                   </div>
@@ -153,11 +130,11 @@
                 <div class="grid grid-cols-2 gap-6">
                   <div class="mb-6">
                     <label class="block mb-2" for="Invoice.InvoiceYourRef">{{
-                      this.sharedService.T('paymentTerms') }}({{ this.sharedService.T('days') }})</label>
+                      sharedService.T('paymentTerms') }}({{ sharedService.T('days') }})</label>
                     <p-select [options]="creditDays" formControlName="invoiceCreditDays" class="w-full "></p-select>
                   </div>
                   <div class="mb-6">
-                    <label class="block mb-2" for="telephone">{{ this.sharedService.T('telephone')
+                    <label class="block mb-2" for="telephone">{{ sharedService.T('telephone')
                       }}</label>
                     <input type="tel" formControlName="telephone"
                       class="w-full" pInputText />
@@ -166,7 +143,7 @@
 
                 <div class="mb-6">
                   <label class="block mb-2" for="email">
-                    {{ this.sharedService.T('email') }}
+                    {{ sharedService.T('email') }}
                   </label>
 
                   <input type="text" formControlName="email"
@@ -177,137 +154,156 @@
                 <!-- digitalServiceId -->
                 <div class="mb-6">
                   <label class="mb-2 text-gray-dark block" for="digitalserviceid">{{
-                    this.sharedService.T('digitalWorkshopId') }}</label>
+                    sharedService.T('digitalWorkshopId') }}</label>
                   <input type="text" formControlName="digitalServiceId"
                     class="w-full" pInputText />
 
                 </div>
                 <div class="mb-6">
-                  <p-button 
-                  [raised]="true" 
-                  label="{{ this.sharedService.T('createCustomer') }}" 
+                  <p-button
+                  [raised]="true"
+                  label="{{ sharedService.T('createCustomer') }}"
                   size="large"
-                  icon="{{ showCustomerSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}" 
+                  icon="{{ showCustomerSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}"
                   (click)="saveCustomer()"
                   [disabled]="showCustomerSpinner"
                   ></p-button>
 
 
 
-                  <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
+                  <p-button size="large" severity="secondary" class="ms-4" label="{{ sharedService.T('cancel') }}"
                     (click)="onCancelCreateCustomer()"></p-button>
                 </div>
               </form>
             </ng-template>
           </p-popover>
-      </div>
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('customerTelephone') }}</label>
-        <p-iconfield>
-        <p-inputicon class=" icon-primary pi pi-phone" />
-        <input type="text" pInputText formControlName="customerTelephone" class="w-full">
-        </p-iconfield>
-      </div>
-      <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('customerEmail') }}</label>
-        <p-iconfield>
-        <p-inputicon class=" icon-primary pi pi-envelope" />
-        <input type="email" pInputText formControlName="customerEmail" class="w-full">
-        </p-iconfield>
-      </div>
+        </div>
 
-      <div class="col-span-2">
-        <label class="block mb-2">Status</label>
-        <p-select [options]="sharedService.getEnums('workOrderStatus')" formControlName="workOrderStatus"
-          optionLabel="text" optionValue="value" class="w-full"
-          [invalid]="isControlInvalid('workOrderStatus')"></p-select>
-      </div>
+        <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+          <label class="block mb-2">{{ sharedService.T('customerTelephone') }}</label>
+          <p-iconfield>
+            <p-inputicon class="icon-primary pi pi-phone" />
+            <input type="text" pInputText formControlName="customerTelephone" class="w-full">
+          </p-iconfield>
+        </div>
 
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('paymentType') }}</label>
-        <p-select [options]="sharedService.getEnums('paymentType')" formControlName="paymentType" optionLabel="text"
-          optionValue="value" editable="true" class="w-full"
-          [invalid]="isControlInvalid('paymentType')"></p-select>
-      </div>
+        <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+          <label class="block mb-2">{{ sharedService.T('customerEmail') }}</label>
+          <p-iconfield>
+            <p-inputicon class="icon-primary pi pi-envelope" />
+            <input type="email" pInputText formControlName="customerEmail" class="w-full">
+          </p-iconfield>
+        </div>
 
-      <!-- LINE 3: Status, Payment Type, Mechanic -->
- <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('bookingDate') }}</label>
-        <p-date-picker formControlName="bookingDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
-          (onSelect)="onSelectCalendarDate()" class="w-full"
-          [invalid]="isControlInvalid('workOrderDate') || isControlInvalid('bookingDate')">
-        </p-date-picker>
-      </div>
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('bookingTime') }}</label>
-        <p-select [options]="dayBookings" formControlName="bookingTime" optionValue="cTime" class="w-full">
-          <ng-template #selectedItem let-selected>
-            <div>{{ selected.cTime }}</div>
-          </ng-template>
-          <ng-template let-booking #item>
-            <div>
-              <span class="font-semibold">{{ booking.cTime }}</span>
-              <span *ngIf="booking.workOrders.length > 0" class="text-danger"> ({{ booking.workOrders.length }}
-                bokningar)</span>
-              <span *ngIf="booking.workOrders.length === 0" class="text-success"> {{ this.sharedService.T('free')
-                }}</span>
+        <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+          <label class="block mb-2">{{ sharedService.T('status') }}</label>
+          <p-select [options]="sharedService.getEnums('workOrderStatus')" formControlName="workOrderStatus"
+            optionLabel="text" optionValue="value" class="w-full"
+            [invalid]="isControlInvalid('workOrderStatus')"></p-select>
+        </div>
+
+        <!-- Row 2: Bokningsdatum, tid, Mekaniker, Betalningsmetod -->
+        <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+          <label class="block mb-2">{{ sharedService.T('bookingDate') }}</label>
+          <p-date-picker formControlName="bookingDate" dataType="string" dateFormat="yy-mm-dd" icon="pi pi-calendar"
+            (onSelect)="onSelectCalendarDate()" class="w-full"
+            [invalid]="isControlInvalid('workOrderDate') || isControlInvalid('bookingDate')">
+          </p-date-picker>
+        </div>
+        <div class="col-span-6 sm:col-span-3 lg:col-span-2">
+          <label class="block mb-2">{{ sharedService.T('bookingTime') }}</label>
+          <p-select [options]="dayBookings" formControlName="bookingTime" optionValue="cTime" class="w-full">
+            <ng-template #selectedItem let-selected>
+              <div>{{ selected.cTime }}</div>
+            </ng-template>
+            <ng-template let-booking #item>
+              <div>
+                <span class="font-semibold">{{ booking.cTime }}</span>
+                <span *ngIf="booking.workOrders.length > 0" class="text-danger"> ({{ booking.workOrders.length }}
+                  bokningar)</span>
+                <span *ngIf="booking.workOrders.length === 0" class="text-success"> {{ sharedService.T('free')
+                  }}</span>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+        <div class="col-span-6 sm:col-span-3 lg:col-span-3">
+          <label class="block mb-2">{{ sharedService.T('mechanic') }}</label>
+          <p-select [options]="employees" formControlName="employeeId" optionLabel="fullName" optionValue="employeeId"
+            [showClear]="true" class="w-full"
+            [invalid]="isFieldInvalid('employeeId')"></p-select>
+        </div>
+        <div class="col-span-6 sm:col-span-3 lg:col-span-4">
+          <label class="block mb-2">{{ sharedService.T('paymentType') }}</label>
+          <p-select [options]="sharedService.getEnums('paymentType')" formControlName="paymentType" optionLabel="text"
+            optionValue="value" editable="true" class="w-full"
+            [invalid]="isControlInvalid('paymentType')"></p-select>
+        </div>
+
+        <!-- Row 3: Servicekategori, Miltal -->
+        <div class="col-span-12 sm:col-span-8 lg:col-span-8">
+          <label class="block mb-2">{{ sharedService.T('serviceCategories') }}</label>
+          <p-multiSelect [options]="serviceCategories" formControlName="serviceCategoryIds" optionLabel="serviceName"
+            optionValue="serviceId" [placeholder]="sharedService.T('choose') + ' ' + sharedService.T('serviceCategories')"
+            class="w-full" display="chip"></p-multiSelect>
+        </div>
+        <div class="col-span-12 sm:col-span-4 lg:col-span-4">
+          <label class="block mb-2">{{ sharedService.T('vehicleMileage') }}</label>
+          <input type="number" pInputText formControlName="vehicleMileage"
+            class="w-full" />
+        </div>
+
+        <!-- Row 4: Beskrivning -->
+        <div class="col-span-12">
+          <label class="block mb-2">{{ sharedService.T('description') }}</label>
+          <div class="relative">
+            <textarea class="w-full" formControlName="description" rows="5" cols="30" pTextarea
+              [autoResize]="true">
+            </textarea>
+            <div class="absolute bottom-2 right-2">
+              <app-voice-input-button (transcribed)="onDescriptionTranscribed($event)"></app-voice-input-button>
             </div>
-          </ng-template>
-        </p-select>
-      </div>       
-      <div class="col-span-3">
-        <label class="block mb-2">{{ this.sharedService.T('mechanic') }}</label>
-        <p-select [options]="employees" formControlName="employeeId" optionLabel="fullName" optionValue="employeeId"
-          [showClear]="true" class="w-full"
-          [invalid]="isFieldInvalid('employeeId')"></p-select>
-      </div>
-      <!-- Oil type/capacity - read-only, sourced from the Vehicle record (see vehicleDetails) -->
-      <div class="col-span-2">
-        <label class="block mb-2">{{this.sharedService.T('oilType')}}</label>
-        <input pInputText type="text" [value]="vehicleDetails?.oilSpecifications1 || '-'" [disabled]="true" class="w-full" />
-      </div>
-
-      <div class="col-span-2">
-        <label class="block mb-2">{{ this.sharedService.T('oilCapacity') }}</label>
-        <input pInputText type="text" [value]="vehicleDetails?.oilCapacity || '-'" [disabled]="true" class="w-full" />
-      </div>
-
-      <div class="col-span-4">
-        <label class="block mb-2">{{ this.sharedService.T('serviceCategories') }}</label>
-        <p-multiSelect [options]="serviceCategories" formControlName="serviceCategoryIds" optionLabel="serviceName"
-          optionValue="serviceId" [placeholder]="sharedService.T('choose') + ' ' + sharedService.T('serviceCategories')"
-          class="w-full" display="chip"></p-multiSelect>
-      </div>
-
-      <div class="col-span-12">
-        <label class="block mb-2">{{ this.sharedService.T('description') }}</label>
-        <div class="relative">
-          <textarea class="w-full" formControlName="description" rows="5" cols="30" pTextarea
-            [autoResize]="true">
-          </textarea>
-          <div class="absolute bottom-2 right-2">
-            <app-voice-input-button (transcribed)="onDescriptionTranscribed($event)"></app-voice-input-button>
           </div>
         </div>
-      </div>
+
+        <!-- Row 5: Kundens innehåll -->
+        <div class="col-span-12">
+          <label class="block mb-2">{{ sharedService.T('customerNote') }}</label>
+          <div class="relative">
+            <textarea class="w-full" formControlName="customerNote" rows="5" cols="30" pTextarea
+              [autoResize]="true">
+            </textarea>
+            <div class="absolute bottom-2 right-2">
+              <app-voice-input-button (transcribed)="onCustomerNoteTranscribed($event)"></app-voice-input-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 6: Inköp -->
+        <div class="col-span-12">
+          <label class="block mb-2">{{ sharedService.T('purchaseNote') }}</label>
+          <div class="relative">
+            <textarea class="w-full" formControlName="purchaseNote" rows="5" cols="30" pTextarea
+              [autoResize]="true">
+            </textarea>
+            <div class="absolute bottom-2 right-2">
+              <app-voice-input-button (transcribed)="onPurchaseNoteTranscribed($event)"></app-voice-input-button>
+            </div>
+          </div>
+        </div>
       </ng-container>
 
     </div>
 
-    <div *ngIf="showFullForm" class="mt-4">
+    <div *ngIf="showFullForm" class="mt-6 flex items-center gap-4">
       <p-button [raised]="true"
-        label="{{ isNewObject ? this.sharedService.T('create') : this.sharedService.T('update') }} {{ this.sharedService.T('workorder') }}"
+        label="{{ isNewObject ? sharedService.T('create') : sharedService.T('update') }} {{ sharedService.T('workorder') }}"
         icon="{{ showSpinner ? 'pi pi-spinner pi-spin' : 'pi pi-plus' }}"
         [disabled]="showSpinner"
         size="large" (click)="saveWorkOrder()"></p-button>
-        <p-button size="large" severity="secondary" class="ms-4" label="{{ this.sharedService.T('cancel') }}"
+      <p-button size="large" severity="secondary" label="{{ sharedService.T('cancel') }}"
         (click)="onCancelForm()"></p-button>
     </div>
-  </div>
-  <!-- /card (mb-10 p-8...) -->
-  </div>
-  <!-- /Main form column -->
-
   </div>
 </form>
 </section>

@@ -23,7 +23,6 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { CheckboxModule } from 'primeng/checkbox';
 import { BadgeModule } from 'primeng/badge';
 import { PanelModule } from 'primeng/panel';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -46,7 +45,6 @@ import { TooltipModule } from 'primeng/tooltip';
     IconFieldModule,
     InputIconModule,
     DatePickerModule,
-    CheckboxModule,
     CarouselModule,
     BadgeModule,
     PanelModule,
@@ -101,8 +99,11 @@ export class BookingListComponent implements OnInit, OnDestroy {
   currentWeekSundayDate: string = '';
 
   date: Date[] | undefined;
+  /** Sentinel employeeId for the "All employees" option in the single-select filter - never a real employee. */
+  readonly ALL_EMPLOYEES_ID = 0;
   employees: IEmployee[] = [];
-  selectedEmployees: IEmployee[] = [];
+  employeeOptions: IEmployee[] = [];
+  selectedEmployee: IEmployee | null = null;
   selectedBooking: IWorkOrder = {} as IWorkOrder;
   isDialogVisible: boolean = false;
   openMenuKey: string | null = null;
@@ -143,11 +144,13 @@ export class BookingListComponent implements OnInit, OnDestroy {
 
     try {
       await this.getEmployees();
-      this.selectedEmployees = [...this.employees];
+      const allEmployeesOption = { employeeId: this.ALL_EMPLOYEES_ID, fullName: this.sharedService.T('allEmployees') } as IEmployee;
+      this.employeeOptions = [allEmployeesOption, ...this.employees];
+      this.selectedEmployee = allEmployeesOption;
       this.route.queryParams.subscribe((params) => { this.sharedService.updateFiltersFromQueryParams(this.filters, params) });
-      this.filters.patchValue({ employeeIds: this.selectedEmployees.map(employee => employee.employeeId).join(',') });
+      this.filters.patchValue({ employeeIds: this.employees.map(employee => employee.employeeId).join(',') });
       this.sharedService.updateFiltersInNavigation(this.filters);
-  
+
 
       this.getBookings();
     } catch (error) {
@@ -369,15 +372,11 @@ export class BookingListComponent implements OnInit, OnDestroy {
     this.getBookings();
   }
 
-  // onChangeEmployee(event: SelectChangeEvent) {
-  //   this.selectedEmployees = event.value;
-  //   this.filters.patchValue({ employeeIds: this.selectedEmployees.map(employee => employee.employeeId).join(',') });
-  //    this.sharedService.updateFiltersInNavigation(this.filters);
-  //   this.getBookings();
-  // }
-  onChangeEmployee() {
-    // selectedEmployees already updated hai ngModel ki wajah se
-    const ids = this.selectedEmployees.map((emp: any) => emp.employeeId).join(',');
+  onChangeEmployee(event: SelectChangeEvent) {
+    const selected: IEmployee = event.value;
+    const ids = selected.employeeId === this.ALL_EMPLOYEES_ID
+      ? this.employees.map((emp) => emp.employeeId).join(',')
+      : String(selected.employeeId);
 
     this.filters.patchValue({ employeeIds: ids });
     this.sharedService.updateFiltersInNavigation(this.filters);

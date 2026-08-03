@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
-import { CoreService } from 'app/services/core.service';
+import { AiService } from 'app/services/ai.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
@@ -13,7 +13,7 @@ import { SharedService } from 'app/services/shared.service';
  * Record-and-transcribe mic button, reused across the AI-assist input, the
  * work order description field, and the reminders quick-capture row.
  * Records via the browser's MediaRecorder API, uploads the clip to
- * CoreService.transcribeAudio() (wms-api -> wms-ai -> OpenAI), and emits the
+ * AiService.transcribeAudio() (wms-api -> wms-ai -> OpenAI), and emits the
  * returned text. Hides itself entirely when the browser doesn't support
  * MediaRecorder/getUserMedia — no broken button, no error state for that case.
  */
@@ -36,7 +36,7 @@ export class VoiceInputButtonComponent {
   private stream: MediaStream | null = null;
 
   constructor(
-    private readonly coreService: CoreService,
+    private readonly aiService: AiService,
     private readonly messageService: MessageService,
     private readonly errorHandler: ErrorHandlerService,
     private readonly logger: LogService,
@@ -87,7 +87,7 @@ export class VoiceInputButtonComponent {
     }
 
     this.transcribing = true;
-    this.coreService.transcribeAudio(blob)
+    this.aiService.transcribeAudio(blob)
       .pipe(finalize(() => { this.transcribing = false; }))
       .subscribe({
         next: (result) => {

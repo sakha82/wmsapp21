@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICreateReminderRequest, IPageList, IReminder, IReminderIntentResponse } from 'app/app.model';
+import { ICreateReminderRequest, IPageList, IReminder } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { SharedService } from 'app/services/shared.service';
 
@@ -8,7 +8,6 @@ import { SharedService } from 'app/services/shared.service';
 @Injectable({ providedIn: 'root' })
 export class ReminderService {
   private baseUrl: string = environment.BASE_URL + '/api/reminder';
-  private coreUrl: string = environment.BASE_URL + '/api/Core';
 
   constructor(private http: HttpClient, private sharedService: SharedService) {}
 
@@ -32,12 +31,5 @@ export class ReminderService {
     const request = { wmsId: this.sharedService.wmsId, reminderId };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(`${this.baseUrl}/resolve-reminder`, request, { headers });
-  }
-
-  /** Parses a free-text/spoken reminder into clean text plus a resolved assignee. Routed through CoreController like the other AI-parsing endpoints, not this controller. */
-  parseReminderIntent(transcript: string) {
-    const request = { transcript, wmsId: this.sharedService.wmsId };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<IReminderIntentResponse>(`${this.coreUrl}/ai/parse-reminder-intent`, request, { headers });
   }
 }

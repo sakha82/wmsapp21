@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICustomerTag, IWorkshop, ISale } from 'app/app.model';
+import { IWorkshop, ISale } from 'app/app.model';
 import { IEnums, ISelect } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, tap } from 'rxjs';
@@ -27,7 +27,7 @@ export class WorkshopService {
     workshop.wmsId = this.sharedService.wmsId;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
     this.logger.info('Updating workshop with data:', workshop);
-    return this.http.post<IWorkshop>(`${this.baseUrl}/update-workshop`, workshop, { headers });
+    return this.http.put<IWorkshop>(`${this.baseUrl}/update-workshop`, workshop, { headers });
   }
 
 updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
@@ -39,30 +39,6 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
   
      return this.http.get<boolean>(url);
   }
-  getCustomerTags() {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    const url = `${this.baseUrl}/customer-tags?${queryParams}`;
-    return this.http.get<ICustomerTag[]>(url);
-  }
-  createCustomerTag(customerTag: ICustomerTag) {
-    customerTag.wmsId = this.sharedService.wmsId;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.post<ICustomerTag>(`${this.baseUrl}/create-customer-tag`, customerTag, { headers });
-  }
-
-  updateCustomerTag(customerTag: ICustomerTag) {
-    customerTag.wmsId = this.sharedService.wmsId;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', });
-    return this.http.put<ICustomerTag>(`${this.baseUrl}/update-customer-tag`, customerTag, { headers });
-  }
-
-  saveCustomerTag(customerTag: ICustomerTag) {
-    return (!customerTag.customerTagId || customerTag.customerTagId <= 0)
-      ? this.createCustomerTag(customerTag)
-      : this.updateCustomerTag(customerTag);
-  }
-
   // getServices() {
   //   const queryParams = new URLSearchParams();
   //   queryParams.append("wmsId", this.sharedService.wmsId);
@@ -89,15 +65,6 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
     const url = `${this.baseUrl}/delete-workshop-service?${queryParams.toString()}`;
     return this.http.post(url, {});
   }
-  deleteCustomerTag(customerTagId: number) {
-    const queryParams = new URLSearchParams();
-    queryParams.append('wmsId', this.sharedService.wmsId);
-    queryParams.append('customerTagId', customerTagId.toString()); // convert to string for URL
-
-    const url = `${this.baseUrl}/delete-customer-tag?${queryParams.toString()}`;
-    return this.http.delete(url, {});
-  }
-
   isWorkshopServiceExists(serviceName: string): Observable<boolean> {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

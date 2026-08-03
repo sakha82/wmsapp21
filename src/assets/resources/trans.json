@@ -245,24 +245,34 @@
         "sv": "Bokning"
     },
     {
+        "tkey": "bilinfo",
+        "en": "Vehicle info",
+        "sv": "Bilinfo"
+    },
+    {
+        "tkey": "liter",
+        "en": "L",
+        "sv": "Liter"
+    },
+    {
         "tkey": "quickLinks",
         "en": "Quick Links",
         "sv": "Snabblänkar"
     },
     {
-        "tkey": "aiSuggestionDummyReturning",
-        "en": "Returning customer detected — Lindqvist booked for 14:30, last visit 8 months ago",
-        "sv": "Återkommande kund upptäckt — Lindqvist bokad kl 14:30, senaste besök för 8 månader sedan"
+        "tkey": "refreshSuggestions",
+        "en": "Refresh suggestions",
+        "sv": "Uppdatera förslag"
     },
     {
-        "tkey": "aiSuggestionDummyMechanic",
-        "en": "2 work orders today have no mechanic assigned",
-        "sv": "2 arbetsordrar idag saknar tilldelad mekaniker"
+        "tkey": "noAiSuggestions",
+        "en": "No suggestions right now.",
+        "sv": "Inga förslag just nu."
     },
     {
-        "tkey": "aiSuggestionDummyInvoices",
-        "en": "3 overdue invoices, 42,150 kr total",
-        "sv": "3 förfallna fakturor, totalt 42 150 kr"
+        "tkey": "newsAndUpdates",
+        "en": "News & Updates",
+        "sv": "Nyheter & Uppdateringar"
     },
     {
         "tkey": "reminders",
@@ -448,11 +458,6 @@
         "tkey": "addText",
         "en": "Add Text",
         "sv": "Lägg till text"
-    },
-    {
-        "tkey": "supplier",
-        "en": "Supplier",
-        "sv": "Leverantör"
     },
     {
         "tkey": "sendOffer",
@@ -720,6 +725,16 @@
         "sv": "Beskrivning"
     },
     {
+        "tkey": "customerNote",
+        "en": "Customer's belongings",
+        "sv": "Kundens innehåll"
+    },
+    {
+        "tkey": "purchaseNote",
+        "en": "Purchase note",
+        "sv": "Inköpsanteckning"
+    },
+    {
         "tkey": "digitalServiceBook",
         "en": "Digital Service Book",
         "sv": "Digital servicebok"
@@ -758,6 +773,16 @@
         "tkey": "employee",
         "en": "Employee",
         "sv": "Anställd"
+    },
+    {
+        "tkey": "allEmployees",
+        "en": "All employees",
+        "sv": "Alla anställda"
+    },
+    {
+        "tkey": "chooseEmployee",
+        "en": "Choose employee",
+        "sv": "Välj anställd"
     },
     {
         "tkey": "discount",
@@ -1515,16 +1540,6 @@
         "sv": "är nu markerad som "
     },
     {
-        "tkey": "supplier",
-        "en": "Supplier",
-        "sv": "Leverantör"
-    },
-    {
-        "tkey": "supplierReferenceNo",
-        "en": "Supplier Reference No.",
-        "sv": "Leverantörsreferensnr"
-    },
-    {
         "tkey": "telephone",
         "en": "Telephone",
         "sv": "Telefon"
@@ -2108,31 +2123,6 @@
         "tkey": "confirmation",
         "en": "Confirmation",
         "sv": "Bekräftelse"
-    },
-    {
-        "tkey": "createSupplier",
-        "en": "Create Supplier",
-        "sv": "Skapa Leverantör"
-    },
-    {
-        "tkey": "updateSupplier",
-        "en": "Update Supplier",
-        "sv": "Uppdatera leverantör"
-    },
-    {
-        "tkey": "supplierName",
-        "en": "Supplier Name",
-        "sv": "Leverantörnamn"
-    },
-    {
-        "tkey": "extraInfo",
-        "en": "Extra information",
-        "sv": "Extra information"
-    },
-    {
-        "tkey": "editSupplier",
-        "en": "Edit Supplier",
-        "sv": "Redigera leverantör"
     },
     {
         "tkey": "editWorkorder",

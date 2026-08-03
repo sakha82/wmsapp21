@@ -8,6 +8,7 @@ import { CoreService } from 'app/services/core.service';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { LogService } from 'app/services/log.service';
 import { WorkshopService } from 'app/services/workshop.service';
+import { CustomerService } from 'app/services/customer.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, Observable, finalize, takeUntil, Subject } from 'rxjs';
 import { TabsModule } from 'primeng/tabs';
@@ -111,6 +112,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
     private router: Router,
     private readonly fb: FormBuilder,
     private readonly workshopService: WorkshopService,
+    private readonly customerService: CustomerService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
   ) {
@@ -304,7 +306,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
 
   // Customer Tab
   loadCustomerTags() {
-    this.workshopService
+    this.customerService
       .getCustomerTags()
       .pipe(
         finalize(() => {}),
@@ -351,7 +353,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
 
       this.isLoading = true;
 
-      this.workshopService
+      this.customerService
         .saveCustomerTag(this.newCustomerTag)
         .pipe(
           finalize(() => { this.isLoading = false; }),
@@ -413,7 +415,7 @@ export class SettingCrudComponent implements OnInit, OnDestroy {
       return;
     }
     this.isLoading = true;
-    this.workshopService
+    this.customerService
       .deleteCustomerTag(tag.customerTagId)
       .pipe(
         finalize(() => { this.isLoading = false; }),

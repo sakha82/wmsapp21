@@ -16,7 +16,6 @@
     "test:e2e:invoice": "playwright test e2e/tests/invoice",
     "test:e2e:offer": "playwright test e2e/tests/offer",
     "test:e2e:product": "playwright test e2e/tests/product",
-    "test:e2e:supplier": "playwright test e2e/tests/supplier",
     "test:e2e:digitalservice": "playwright test e2e/tests/digitalservice",
     "test:e2e:vehicle": "playwright test e2e/tests/vehicle",
     "test:e2e:report": "playwright show-report",

@@ -68,21 +68,7 @@ export class TimesheetService {
         timesheet.wmsId = this.sharedService.wmsId;
         this.logger.info(timesheet);
         const headers = new HttpHeaders({'Content-Type': 'application/json',});
-        return this.http.post<boolean>(`${this.baseUrl}/update-comments`, timesheet, {headers});        
+        return this.http.post<boolean>(`${this.baseUrl}/update-comments`, timesheet, {headers});
       }
-
-    
-    // checkOut(timesheet: ITimesheet) {
-    //   timesheet.wmsId = this.wmsId;  
-    //   timesheet.endDateTime = timesheet.endDateTime == null ? '': this.sharedService.getDateTimeString(timesheet.endDateTime);
-
-    //   const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    //   return this.http.post<boolean>(`${this.baseUrl}/UpdateTimesheet`, timesheet, {headers});
-    // }
-
-    checkExistingEmployee(wmsId:string,employeeName:string){
-      const url = `${this.baseUrl}/isalreadyexists?wmsId=${wmsId}&employeeName=${employeeName}`;
-      return this.http.get<boolean>(url);
-    }
 
 }

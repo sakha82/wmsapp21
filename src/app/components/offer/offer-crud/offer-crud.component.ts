@@ -18,7 +18,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { ExternalService } from 'app/services/external.service';
+import { AiService } from 'app/services/ai.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -103,7 +103,7 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     private readonly location: Location,
     private messageService: MessageService,
     private workshopService: WorkshopService,
-    private externalService: ExternalService,) {
+    private aiService: AiService,) {
 
     this.offer = this.fb.group({
       offerId: '',
@@ -407,8 +407,8 @@ export class OfferCrudComponent implements OnInit, OnDestroy {
     }));
     this.logger.info('index=' + index);
     const textareaControl = this.details.controls[index].get('textContent');
-    this.externalService
-      .getInvoiceDescription({ context: selectectContextValue, items: items })
+    this.aiService
+      .generateInvoiceDescription({ context: selectectContextValue, items: items })
       .pipe(
         finalize(() => {
           this.isLoading = false;

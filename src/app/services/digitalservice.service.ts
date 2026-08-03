@@ -68,13 +68,6 @@ export class DigitalServiceService {
     return this.http.get<boolean>(`${this.baseUrl}/is-valid-digitalworkshopid?${queryParams}`);
   }
 
-  isDigitalServiceExists(invoiceId: number) {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    queryParams.append("invoiceId", invoiceId.toString());
-    const url = `${this.baseUrl}/isexists?${queryParams}`;
-    return this.http.get<boolean>(url);
-  }
    getPdf(requestBody: any): Observable<Blob> {
   return this.http.post(`${this.coreUrl}/pdf`, requestBody, {
     responseType: 'blob'

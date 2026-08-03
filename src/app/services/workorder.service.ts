@@ -5,6 +5,8 @@ import {ISelect, IWorkOrder,IPageList, IVehicleType, IVehicleHistorySummary } fr
 import { environment } from 'environments/environment';
 import { SharedService} from 'app/services/shared.service';
 import { LogService } from './log.service';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class WorkOrderService {
@@ -18,12 +20,35 @@ export class WorkOrderService {
     return this.http.get<IPageList<IWorkOrder>>(url);
   }
 
-  getWorkOrdersByCustomerId(customerId:number) {
-    const queryParams = new URLSearchParams();
-    queryParams.append("wmsId", this.sharedService.wmsId);
-    queryParams.append("customerId", customerId.toString());
-    const url = `${this.baseUrl}/list-by-customerid?${queryParams}`;
-    return this.http.get<IWorkOrder[]>(url);
+  /**
+   * Every work order for a customer, regardless of date or count. There is no separate
+   * list-by-customerid endpoint - this is `list`'s own customerId filter, with a wide date range to
+   * bypass its default 1-year window, paging through every page since `list` caps pageSize at 100.
+   */
+  getWorkOrdersByCustomerId(customerId: number): Observable<IWorkOrder[]> {
+    const pageSize = 100;
+    const fetchPage = (page: number) => {
+      const queryParams = new URLSearchParams();
+      queryParams.append("wmsId", this.sharedService.wmsId);
+      queryParams.append("customerId", customerId.toString());
+      queryParams.append("fromDate", "1970-01-01");
+      queryParams.append("toDate", "2099-12-31");
+      queryParams.append("currentPage", page.toString());
+      queryParams.append("pageSize", pageSize.toString());
+      return this.http.get<IPageList<IWorkOrder>>(`${this.baseUrl}/list?${queryParams}`);
+    };
+
+    return fetchPage(1).pipe(
+      switchMap((firstPage) => {
+        if (firstPage.pager.totalPages <= 1) {
+          return of(firstPage.objectList);
+        }
+        const remainingPages = Array.from({ length: firstPage.pager.totalPages - 1 }, (_, i) => fetchPage(i + 2));
+        return forkJoin(remainingPages).pipe(
+          map((pages) => [firstPage.objectList, ...pages.map((p) => p.objectList)].flat())
+        );
+      })
+    );
   }
 
   getWorkOrder(offerId:number | undefined,customerId:number | undefined,workOrderId:number | undefined,isDuplicate:boolean = false)
@@ -55,11 +80,6 @@ export class WorkOrderService {
     return this.http.put<IWorkOrder>(`${this.baseUrl}/update-workorder`, workOrder, {headers});
   }
 
-  updateWorkOrderStatus(workOrder:IWorkOrder){
-    workOrder.wmsId = this.sharedService.wmsId;
-    const headers = new HttpHeaders({'Content-Type': 'application/json',});
-    return this.http.post<IWorkOrder>(`${this.baseUrl}/set-status`, workOrder, {headers});
-  }
   getVehiclePlates(prefix:string) {
     const queryParams = new URLSearchParams();
     queryParams.append("wmsId", this.sharedService.wmsId);

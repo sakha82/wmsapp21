@@ -137,12 +137,6 @@ palettes = [
                         styleClass: this.selectedRoute.startsWith('/sv/dashboard') ? 'active-menu-item' : ''
                     },
                     {
-                        label: this.sharedService.T('statistics'),
-                        materialIcon: 'chart-bar',
-                        routerLink: '/sv/statistics',
-                        styleClass: this.selectedRoute.startsWith('/sv/statistics') ? 'active-menu-item' : ''
-                    },
-                    {
                         label: this.sharedService.T('customers'),
                         materialIcon: 'user',
                         routerLink:'/sv/customer',
@@ -180,13 +174,6 @@ palettes = [
                         routerLink: '/sv/digitalservice',
                         styleClass: this.selectedRoute === '/sv/digitalservice' ? 'active-menu-item' : ''
                     },
-                    {
-                        label: this.sharedService.T('suppliers'),
-                        materialIcon: 'shop',
-                        routerLink: '/sv/supplier',
-                        styleClass: this.selectedRoute.startsWith('/sv/supplier') ? 'active-menu-item' : ''
-                    },
-
                    {
                         label: this.sharedService.T('employees'),
                         materialIcon: 'id-card',
@@ -247,8 +234,6 @@ palettes = [
   getSelectedMenuLabel(): string {
     if (this.selectedRoute.startsWith('/sv/dashboard')) {
       return this.sharedService.T('welcome');
-    } else if (this.selectedRoute.startsWith('/sv/statistics')) {
-      return this.sharedService.T('statistics');
     } else if (this.selectedRoute.startsWith('/sv/customer')) {
       return this.sharedService.T('customers');
     } else if (this.selectedRoute.startsWith('/sv/booking')) {
@@ -261,8 +246,6 @@ palettes = [
       return this.sharedService.T('invoices');
     } else if (this.selectedRoute.startsWith('/sv/digitalservice')) {
       return this.sharedService.T('digitalServiceBook');
-    } else if (this.selectedRoute.startsWith('/sv/supplier')) {
-      return this.sharedService.T('suppliers');
     } else if (this.selectedRoute.startsWith('/sv/employee')) {
       return this.sharedService.T('employees');
     } else if (this.selectedRoute.startsWith('/sv/employment')) {

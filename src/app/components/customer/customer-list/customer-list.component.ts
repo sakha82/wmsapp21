@@ -8,7 +8,6 @@ import { ICustomer, ICustomerTag } from 'app/app.model';
 import { SharedService } from 'app/services/shared.service';
 import { CustomerService } from 'app/services/customer.service';
 import { LogService } from 'app/services/log.service';
-import { WorkshopService } from 'app/services/workshop.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -51,7 +50,6 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     public readonly sharedService: SharedService,
     private readonly customerService: CustomerService,
     private readonly route: ActivatedRoute,
-    private readonly workshopService: WorkshopService,
     private readonly cdr: ChangeDetectorRef) {
 
     this.filters = this.fb.group({
@@ -115,7 +113,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
   }
 
   loadCustomerTags() {
-    this.workshopService
+    this.customerService
       .getCustomerTags()
       .pipe(
         finalize(() => {

@@ -95,6 +95,8 @@ export class WorkOrderListComponent implements OnInit, OnDestroy {
       fromDate: this.sharedService.getDateString(oneYearBack),//(currentDate.getFullYear()) + '-01-01',
       toDate: this.sharedService.getDateString(currentDate),
       vehiclePlate: '',
+      /** Not shown in the UI filter form - only set via a deep link (e.g. Dashboard's "Anländer idag" tile) filtering to an exact booking date, independent of the fromDate/toDate work-order-date range above. */
+      bookingDate: '',
       currentPage: 1,
       pageSize: 10,
       sortBy: this.sortField,
@@ -164,7 +166,7 @@ export class WorkOrderListComponent implements OnInit, OnDestroy {
   setWorkOrderStatus(workOrder: IWorkOrder) {
     this.isLoading = true;
     this.workOrderService
-      .updateWorkOrderStatus(workOrder)
+      .updateWorkOrder(workOrder)
       .pipe(
         finalize(() => {
           this.isLoading = false;

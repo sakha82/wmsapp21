@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { environment } from 'environments/environment';
 import { IEmployee,ITimesheet } from 'app/app.model';
@@ -58,9 +59,12 @@ export class EmployeeService {
 
   
 
+    /** There is no separate isalreadyexists endpoint - the employee list is small/unpaged already, so this fetches it and matches client-side, case-insensitive. */
     checkExistingEmployee(wmsId:string,employeeName:string){
-      const url = `${this.baseUrl}/isalreadyexists?wmsId=${wmsId}&employeeName=${employeeName}`;
-      return this.http.get<boolean>(url);
+      const name = employeeName.trim().toLowerCase();
+      return this.getAllEmployees().pipe(
+        map((employees) => employees.some((e) => e.fullName?.trim().toLowerCase() === name))
+      );
     }
 
 }

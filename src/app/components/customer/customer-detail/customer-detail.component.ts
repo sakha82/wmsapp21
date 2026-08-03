@@ -146,6 +146,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
             this.getWorkOrders(this.customer.customerId);
             this.getOffers(this.customer.customerId);
             this.getInvoices(this.customer.customerId);
+            this.getSumByCustomer(this.customer.customerId);
           }
         },
         error: (err) => {
@@ -198,7 +199,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
   setWorkOrderStatus(workOrder: IWorkOrder) {
     this.isLoading = true;
     this.workOrderService
-      .updateWorkOrderStatus(workOrder)
+      .updateWorkOrder(workOrder)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -327,30 +328,33 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
               offerTypeValue = 'rejected';
             offer.selectedOfferType = offerTypeValue;
           });
-
-          // Nested Call
-          this.offerService
-            .offerSumByCustomer(this.customer.customerId)
-            .pipe(
-              finalize(() => {
-                this.isLoading = false;
-              }),
-              takeUntil(this.destroy$)
-            )
-            .subscribe({
-              next: (res) => {
-                this.offerTotal = res.total;;
-                this.offerAccepted = res.accepted;
-                this.offerRejected = res.rejected;
-                this.logger.info('offerSumByCustomer success', { total: this.offerTotal, accepted: this.offerAccepted, rejected: this.offerRejected });
-              },
-              error: (err) => {
-                this.errorHandler.handleError(err, 'offerSumByCustomer', 'Failed to load offer summary.');
-              }
-            });
+          this.isLoading = false;
         },
         error: (err) => {
+          this.isLoading = false;
           this.errorHandler.handleError(err, 'getOffers', 'Failed to load offers.');
+        }
+      });
+  }
+
+  getSumByCustomer(customerId: number) {
+    this.customerService
+      .sumByCustomer(customerId)
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => {
+          this.offerTotal = res.offer.total;
+          this.offerAccepted = res.offer.accepted;
+          this.offerRejected = res.offer.rejected;
+          this.invoiceTotal = res.invoice.total;
+          this.invoicePaid = res.invoice.paid;
+          this.invoiceBalance = res.invoice.balance;
+          this.logger.info('sumByCustomer success', { offer: res.offer, invoice: res.invoice });
+        },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'sumByCustomer', 'Failed to load customer summary.');
         }
       });
   }
@@ -407,6 +411,7 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
                 if (res) {
                   this.logger.info('updateOffer success', { offerId: offer.offerId });
                   this.getOffers(this.customer.customerId);
+                  this.getSumByCustomer(this.customer.customerId);
                 }
               },
               error: (err) => {
@@ -438,24 +443,6 @@ export class CustomerDetailComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.errorHandler.handleError(err, 'getInvoices', 'Failed to load invoices.');
-        }
-      });
-
-    // Secondary call - no loading control to avoid flickering
-    this.invoiceService
-      .invoiceSumByCustomer(this.customer.customerId)
-      .pipe(
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (res) => {
-          this.invoiceTotal = res.total;;
-          this.invoicePaid = res.paid;
-          this.invoiceBalance = res.balance;
-          this.logger.info('invoiceSumByCustomer success', { total: this.invoiceTotal, paid: this.invoicePaid, balance: this.invoiceBalance });
-        },
-        error: (err) => {
-          this.errorHandler.handleError(err, 'invoiceSumByCustomer', 'Failed to load invoice summary.');
         }
       });
   }

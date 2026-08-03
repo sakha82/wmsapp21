@@ -5,25 +5,11 @@
     background-color: transparent !important;
 }
 
-.employee-filter-item {
-    align-items: center;
-}
-
 .employee-color-swatch {
     display: inline-block;
     width: 1rem;
     height: 1rem;
     border-radius: 0.25rem;
-}
-
-.employee-filter-label {
-    margin: 0;
-    line-height: 1rem;
-}
-
-:host ::ng-deep .employee-filter-item .p-checkbox {
-    display: flex;
-    align-items: center;
 }
 
 /* new css  */

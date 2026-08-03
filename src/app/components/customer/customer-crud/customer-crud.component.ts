@@ -13,7 +13,6 @@ import { firstValueFrom, Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { LogService } from 'app/services/log.service';
 import { ExternalService } from 'app/services/external.service';
-import { WorkshopService } from 'app/services/workshop.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
@@ -57,7 +56,6 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
     private readonly userService: UserService,
     private router: Router,
     private readonly fb: FormBuilder,
-    private workshopService: WorkshopService,
     private customerService: CustomerService,
     private externalService: ExternalService,
     private readonly route: ActivatedRoute,
@@ -123,7 +121,7 @@ export class CustomerCrudComponent implements OnInit, OnDestroy {
 
   loadCustomerTags() {
     this.isLoading = true;
-    this.workshopService
+    this.customerService
       .getCustomerTags()
       .pipe(
         finalize(() => {

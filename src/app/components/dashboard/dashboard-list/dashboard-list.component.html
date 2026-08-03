@@ -153,36 +153,86 @@
           {{ this.sharedService.T('todaysWorkshop') }}
         </h2>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="rounded border border-border bg-bg-light p-4">
-            <div class="text-3xl font-bold">{{ todayWorkshopDummy.arrivingToday }}</div>
+          <button type="button" (click)="goToWorkOrdersArrivingToday()"
+            class="text-left rounded border border-border bg-bg-light p-4 hover:border-primary transition-colors">
+            <div class="text-3xl font-bold">{{ overview?.todayWorkshop?.arrivingToday ?? '-' }}</div>
             <div class="text-xs text-gray-dark mt-1.5 flex items-center gap-1"><i class="pi pi-car"></i> {{ this.sharedService.T('arrivingToday') }}</div>
-          </div>
-          <div class="rounded border border-border bg-bg-light p-4">
-            <div class="text-3xl font-bold">{{ todayWorkshopDummy.inWorkshop }}</div>
+          </button>
+          <button type="button" (click)="goToWorkOrdersByStatus('in-progress')"
+            class="text-left rounded border border-border bg-bg-light p-4 hover:border-primary transition-colors">
+            <div class="text-3xl font-bold">{{ overview?.todayWorkshop?.inWorkshop ?? '-' }}</div>
             <div class="text-xs text-gray-dark mt-1.5 flex items-center gap-1"><i class="pi pi-wrench"></i> {{ this.sharedService.T('inWorkshop') }}</div>
-          </div>
-          <div class="rounded border border-border bg-bg-light p-4">
-            <div class="text-3xl font-bold">{{ todayWorkshopDummy.readyForPickup }}</div>
+          </button>
+          <button type="button" (click)="goToWorkOrdersByStatus('completed')"
+            class="text-left rounded border border-border bg-bg-light p-4 hover:border-primary transition-colors">
+            <div class="text-3xl font-bold">{{ overview?.todayWorkshop?.readyForPickup ?? '-' }}</div>
             <div class="text-xs text-gray-dark mt-1.5 flex items-center gap-1"><i class="pi pi-check-circle"></i> {{ this.sharedService.T('readyForPickup') }}</div>
-          </div>
+          </button>
           <div class="rounded border border-border bg-bg-light p-4">
-            <div class="text-3xl font-bold">{{ todayWorkshopDummy.customersToContact }}</div>
+            <div class="text-3xl font-bold">{{ overview?.todayWorkshop?.customersToContact ?? '-' }}</div>
             <div class="text-xs text-gray-dark mt-1.5 flex items-center gap-1"><i class="pi pi-phone"></i> {{ this.sharedService.T('customersToContact') }}</div>
           </div>
         </div>
       </div>
 
-      <!-- AI Suggestions -->
+      <!-- Sales this month -->
       <div class="rounded border border-border bg-white p-5">
         <h2 class="text-base font-semibold mb-4 flex items-center gap-2">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-accent"><i class="pi pi-sparkles text-primary"></i></span>
-          {{ this.sharedService.T('aiSuggestions') }}
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-accent"><i class="pi pi-chart-bar text-primary"></i></span>
+          {{ this.sharedService.T('salePerformance') }}
         </h2>
-        <div class="flex flex-col gap-2">
-          <div *ngFor="let suggestion of aiSuggestionsDummy" class="flex items-center gap-3 rounded border border-border bg-bg-light p-3">
-            <i [class]="suggestion.icon + ' text-primary'"></i>
-            <span class="text-sm">{{ suggestion.text }}</span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="rounded border border-border bg-bg-light p-4">
+            <div class="text-2xl font-bold">{{ overview?.currentMonth?.sale ?? 0 | number:'1.0-0' }} SEK</div>
+            <div class="text-xs text-gray-dark mt-1.5">{{ this.sharedService.T('totalSales') }}</div>
           </div>
+          <div class="rounded border border-border bg-bg-light p-4">
+            <div class="text-2xl font-bold">{{ overview?.currentMonth?.orders ?? 0 }}</div>
+            <div class="text-xs text-gray-dark mt-1.5">{{ this.sharedService.T('totalOrders') }}</div>
+          </div>
+          <div class="rounded border border-border bg-bg-light p-4">
+            <div class="text-2xl font-bold">{{ avgOrderValue | number:'1.0-0' }} SEK</div>
+            <div class="text-xs text-gray-dark mt-1.5">{{ this.sharedService.T('avgOrderValue') }}</div>
+          </div>
+          <div class="rounded border border-border bg-bg-light p-4">
+            <p-progressbar [value]="monthlyTargetProgressPercentage" />
+            <div class="text-xs text-gray-dark mt-1.5">{{ monthlyTargetProgressPercentage }}% {{ this.sharedService.T('achieved') }} - {{ this.sharedService.T('monthlyTarget') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI-förslag -->
+      <div class="rounded border border-border bg-white p-5">
+        <h2 class="text-base font-semibold mb-4 flex items-center justify-between">
+          <span class="flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-accent"><i class="pi pi-sparkles text-primary"></i></span>
+            {{ this.sharedService.T('aiSuggestions') }}
+          </span>
+          <button type="button" (click)="loadOverview()" [disabled]="isLoadingOverview"
+            [pTooltip]="sharedService.T('refreshSuggestions')"
+            class="w-7 h-7 rounded-full border border-border bg-white flex items-center justify-center hover:border-primary hover:text-primary text-gray-dark">
+            <i class="pi pi-refresh text-xs" [ngClass]="{ 'pi-spin': isLoadingOverview }"></i>
+          </button>
+        </h2>
+        <div *ngIf="!isLoadingOverview && overview && !overview.aiSuggestions.length" class="text-sm text-gray-dark px-1">
+          {{ this.sharedService.T('noAiSuggestions') }}
+        </div>
+        <div class="flex flex-col gap-2">
+          <ng-container *ngFor="let suggestion of overview?.aiSuggestions">
+            <button *ngIf="suggestion.actionUrl; else suggestionStatic" type="button"
+              (click)="goToSuggestion(suggestion.actionUrl)"
+              class="flex items-center gap-3 text-left rounded border border-border bg-bg-light p-3 hover:border-primary transition-colors">
+              <i [class]="suggestionIcon(suggestion.severity) + ' text-primary'"></i>
+              <span class="text-sm flex-1">{{ suggestion.text }}</span>
+              <i class="pi pi-chevron-right text-gray-dark text-xs"></i>
+            </button>
+            <ng-template #suggestionStatic>
+              <div class="flex items-center gap-3 rounded border border-border bg-bg-light p-3">
+                <i [class]="suggestionIcon(suggestion.severity) + ' text-primary'"></i>
+                <span class="text-sm">{{ suggestion.text }}</span>
+              </div>
+            </ng-template>
+          </ng-container>
         </div>
       </div>
 
@@ -237,13 +287,140 @@
       <div class="rounded border border-border bg-white p-5">
         <h2 class="text-base font-semibold mb-3">{{ this.sharedService.T('quickLinks') }}</h2>
         <div class="flex flex-col">
-          <a routerLink="/sv/statistics" class="text-sm text-primary py-1.5 flex items-center gap-2"><i class="pi pi-chart-bar"></i>{{ this.sharedService.T('statistics') }}</a>
           <a routerLink="/sv/digitalservice" class="text-sm text-primary py-1.5 flex items-center gap-2"><i class="pi pi-book"></i>{{ this.sharedService.T('digitalServiceBook') }}</a>
           <a routerLink="/sv/product" class="text-sm text-primary py-1.5 flex items-center gap-2"><i class="pi pi-box"></i>{{ this.sharedService.T('products') }}</a>
         </div>
       </div>
 
+      <!-- News & Updates - static for now, see class doc; moved here from the Statistics page 2026-08-03 -->
+      <div class="rounded border border-border bg-white p-5">
+        <h2 class="text-base font-semibold mb-3">{{ this.sharedService.T('newsAndUpdates') }}</h2>
+        <div class="flex flex-col gap-1">
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Jun 10, 09:00</p>
+              <p class="text-sm">Funktion för skapande av lönespecifikationer är planerad</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">May 15, 11:30</p>
+              <p class="text-sm">Förbättringar i bokningsmodulen och webbplatsintegration pågår</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Apr 12, 08:45</p>
+              <p class="text-sm">Automatisk hämtning av bilens märke och modell har införts</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Feb 25, 14:10</p>
+              <p class="text-sm">Stora förbättringar i arbetsorder-modulen har implementerats</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Feb 05, 10:20</p>
+              <p class="text-sm">Integration med Bolagsverket är nu slutförd</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Jan 18, 09:40</p>
+              <p class="text-sm">Nya funktioner för kund- och fakturahantering tillagda</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Dec 12, 13:15</p>
+              <p class="text-sm">Förbättrad prestanda och stabilitet i hela systemet</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3 p-2 hover:bg-bg-light rounded-lg transition">
+            <div class="h-12 w-12 bg-bg-light rounded-lg flex-shrink-0"></div>
+            <div>
+              <p class="text-xs text-gray-dark">Nov 20, 08:00</p>
+              <p class="text-sm">Lansering av Digitalworkshop.nu har genomförts framgångsrikt</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
+  </div>
+
+  <!-- Unpaid invoices by customer -->
+  <div class="rounded border border-border bg-white p-5 mt-5">
+    <h2 class="text-base font-semibold mb-4 flex items-center gap-2">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-accent"><i class="pi pi-money-bill text-primary"></i></span>
+      {{ this.sharedService.T('unpaidInvoicesByCustomers') }}
+    </h2>
+    <p-table
+      [value]="unpaidInvoices"
+      [showGridlines]="false"
+      [rows]="5"
+      [first]="0"
+      [paginator]="true"
+      [rowsPerPageOptions]="[5, 10, 15]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} {{ this.sharedService.T('of') }} {totalRecords}"
+      [sortOrder]="-1"
+      sortField="customerId"
+    >
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="customerId">
+            <p-sortIcon field="customerId" />
+          </th>
+          <th>{{ this.sharedService.T('customerName') }}</th>
+          <th>{{ this.sharedService.T('unpaidInvoices') }}</th>
+          <th>{{ this.sharedService.T('totalAmountToPay') }}</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-invoice>
+        <tr class="p-selectable-row" (click)="goToUnpaidInvoices(invoice)" style="cursor: pointer;">
+          <td>
+            <div class="flex items-center gap-2">
+              <span>{{ invoice.customerId }}</span>
+              <i class="pi pi-external-link text-primary"></i>
+            </div>
+          </td>
+          <td title="{{ invoice.customerName }}">{{ invoice.customerName }}</td>
+          <td>{{ invoice.invoiceCount }}</td>
+          <td>
+            <p-inputnumber [(ngModel)]="invoice.priceIncVat" [ngModelOptions]="{ standalone: true }"
+              mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+              [locale]="this.sharedService.currentLocale"
+              [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
+              readonly="true"></p-inputnumber>
+            {{ this.sharedService.T('incVat') }}
+            <p-inputnumber [(ngModel)]="invoice.vat" [ngModelOptions]="{ standalone: true }"
+              mode="currency" currency="SEK" [minFractionDigits]="0" [maxFractionDigits]="0"
+              [locale]="this.sharedService.currentLocale"
+              [inputStyle]="{ 'background-color': 'transparent', 'width': '80px', 'display': 'block', 'padding': '0px', 'border': 'none' }"
+              readonly="true"></p-inputnumber>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
 </section>

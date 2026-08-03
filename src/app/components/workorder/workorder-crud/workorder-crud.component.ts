@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild 
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IWorkOrder, ICustomer, IDailyCalendar, IEnum, ICustomerTag, IEmployee, IVehicleType, IVehicleHistorySummary, IVehicleHistoryCustomer, IVehicleDetails, IServiceCategory } from 'app/app.model';
-import { WorkshopService } from 'app/services/workshop.service';
 import { EmployeeService } from 'app/services/employee.service';
 import { WorkOrderService } from 'app/services/workorder.service';
 import { SharedService } from 'app/services/shared.service';
@@ -114,6 +113,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   hasResolvedVehicle: boolean = false;
   /** Scraped vehicle reference data (VIN, engine code, tyres, oil spec, etc.) shown as a single readonly line - see vehicleDetailsLine. Not persisted onto WorkOrder itself. */
   vehicleDetails: IVehicleDetails | null = null;
+  /** True while the plate input is re-shown to correct/redo a lookup after one has already resolved - see toggleEditVehicle. */
+  editingVehicle: boolean = false;
 
   employees: IEmployee[] = [];
   dayBookings: IDailyCalendar[] = [];
@@ -149,6 +150,26 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       .join('  •  ');
   }
 
+  /**
+   * Single headline combining plate + make/model/year + oil type/capacity, e.g.
+   * "Bilinfo: PKG123 - Volvo V90(II) -2018    Oljetyp: 0W-20 Syntetisk(SAE) 5,2 Liter".
+   * Replaces the separate Registreringsnummer/Märke/Modell/Årsmodell fields as the resolved-vehicle summary.
+   */
+  get bilinfoLine(): string {
+    const plate = this.workOrder.get('vehiclePlate')?.value;
+    if (!plate) return '';
+    const v = this.vehicleDetails;
+    const carPart = v && (v.make || v.model || v.year)
+      ? ` - ${[v.make, v.model].filter(Boolean).join(' ')}${v.year ? ' -' + v.year : ''}`
+      : '';
+    let line = `${this.sharedService.T('bilinfo')}: ${plate}${carPart}`;
+    if (v?.oilSpecifications1) {
+      const capacity = v.oilCapacity ? ` ${v.oilCapacity} ${this.sharedService.T('liter')}` : '';
+      line += `    ${this.sharedService.T('oilType')}: ${v.oilSpecifications1}${capacity}`;
+    }
+    return line;
+  }
+
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -160,7 +181,6 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     private readonly workOrderService: WorkOrderService,
     private readonly route: ActivatedRoute,
     private readonly location: Location,
-    private readonly workshopService: WorkshopService,
     private readonly employeeService: EmployeeService,
     private readonly bookingService: BookingService,
     private cdr: ChangeDetectorRef,
@@ -182,6 +202,8 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       paymentType: [this.sharedService.getDefaultEnum('paymentType')?.value, Validators.required],
       workOrderStatus: [this.sharedService.getDefaultEnum('workOrderStatus')?.value, Validators.required],
       description: null,
+      customerNote: null,
+      purchaseNote: null,
       bookingDate: null,
       bookingTime: null,
       employeeId: [null, [Validators.required, Validators.min(1)]],
@@ -257,7 +279,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   }
 
   loadCustomerTags() {
-    this.workshopService
+    this.customerService
       .getCustomerTags()
       .pipe(
         finalize(() => {
@@ -408,6 +430,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (vehicle) => {
           this.vehicleDetails = vehicle;
+          this.editingVehicle = false;
         },
         error: (err) => {
           this.logger.error('lookupVehicle error', err);
@@ -426,6 +449,12 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
   /** Lets the receptionist skip straight to the full form without a plate lookup (e.g. plate unreadable/unknown yet). */
   skipVehicleLookup(): void {
     this.hasResolvedVehicle = true;
+    this.editingVehicle = false;
+  }
+
+  /** Re-shows the plate input (e.g. wrong plate resolved) so the receptionist can redo the lookup. */
+  toggleEditVehicle(): void {
+    this.editingVehicle = true;
   }
 
   /**
@@ -452,6 +481,7 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     this.vehicleHistory = handoff.vehicleHistory;
     this.vehicleDetails = vehicle;
     this.hasResolvedVehicle = true;
+    this.editingVehicle = false;
   }
 
   /**
@@ -505,6 +535,20 @@ export class WorkOrderCrudComponent implements OnInit, OnDestroy {
     const current = this.workOrder.get('description')?.value || '';
     const next = current ? `${current} ${transcript}` : transcript;
     this.workOrder.patchValue({ description: next });
+  }
+
+  /** Voice dictation into the customer note field - appended as-is to whatever's already there. */
+  onCustomerNoteTranscribed(transcript: string): void {
+    const current = this.workOrder.get('customerNote')?.value || '';
+    const next = current ? `${current} ${transcript}` : transcript;
+    this.workOrder.patchValue({ customerNote: next });
+  }
+
+  /** Voice dictation into the purchase note field - appended as-is to whatever's already there. */
+  onPurchaseNoteTranscribed(transcript: string): void {
+    const current = this.workOrder.get('purchaseNote')?.value || '';
+    const next = current ? `${current} ${transcript}` : transcript;
+    this.workOrder.patchValue({ purchaseNote: next });
   }
 
   onSelectCalendarDate() {

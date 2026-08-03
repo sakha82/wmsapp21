@@ -2,28 +2,28 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/co
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IReminder, IVehicleDetails, IVehicleHistoryCustomer, IVehicleHistorySummary, IWorkOrder, IWorkOrderIntentCandidate } from 'app/app.model';
+import { IDashboardOverview, IReminder, IUnpaidInvoice, IVehicleDetails, IVehicleHistoryCustomer, IVehicleHistorySummary, IWorkOrder, IWorkOrderIntentCandidate } from 'app/app.model';
 import { LogService } from 'app/services/log.service';
 import { ErrorHandlerService } from 'app/services/error-handler.service';
 import { SharedService } from 'app/services/shared.service';
 import { ReminderService } from 'app/services/reminder.service';
+import { AiService } from 'app/services/ai.service';
 import { CoreService } from 'app/services/core.service';
 import { WorkOrderService } from 'app/services/workorder.service';
+import { DashboardService } from 'app/services/dashboard.service';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
+import { TableModule } from 'primeng/table';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { GenericLoaderComponent } from 'app/components/shared/generic-loader/generic-loader.component';
 import { VoiceInputButtonComponent } from 'app/components/shared/voice-input-button/voice-input-button.component';
 import { WorkOrderHandoffService } from 'app/services/workorder-handoff.service';
 import { forkJoin, Subject, finalize, takeUntil } from 'rxjs';
-
-interface AiSuggestion {
-  icon: string;
-  text: string;
-}
 
 interface VehicleDetailField {
   label: string;
@@ -31,13 +31,19 @@ interface VehicleDetailField {
 }
 
 /**
- * Dashboard rebuilt as the primary entry point for creating a new booking/work order (2026-07-31 redesign, see
- * DashboardPage_Redesign.md). The chat interface has two modes: Registration (plate-only, implemented) and Query
- * (free-text, deliberately not implemented yet - the mode selector is built now so it can be switched on later
- * without redesigning this component). Today's Workshop and AI Suggestions show placeholder/dummy data until
- * their backend integration is scoped; Reminders is fully live. The Statistics/top-customers/top-manufacturers/
- * unpaid-invoices/waiting-offers content that used to live here moved to StatisticsListComponent in an earlier
- * pass and stays there.
+ * Dashboard: the primary entry point for creating a new booking/work order (2026-07-31 redesign, see
+ * DashboardPage_Redesign.md), plus "Today's Workshop"/"AI-förslag"/"Sales this month"/"Unpaid invoices" (backed by
+ * DashboardService.getOverview()/getUnpaidInvoices()) and Reminders. The chat interface has two modes: Registration
+ * (plate-only, implemented) and Query (free-text, deliberately not implemented yet - the mode selector is built now
+ * so it can be switched on later without redesigning this component). The Statistics page (revenue panel + raw
+ * sales chart + unpaid-invoices table) was retired 2026-08-03: the revenue panel and unpaid-invoices table moved
+ * here as their own widgets, and the raw sales chart was replaced by a month-over-month sales trend sentence folded
+ * into AI-förslag (see DashboardService.GetOverview's PreviousMonthSale signal) - a raw multi-series chart wasn't
+ * legible to the target audience (small workshop owners/mechanics), a plain-language reading is. Every "Dagens
+ * verkstad" tile and AI-förslag suggestion with an actionUrl deep-links to the real filtered underlying data
+ * (Invoice/Offer/WorkOrder list) rather than just displaying a number - "Kunder att kontakta" is the one
+ * exception, since it's a union of 3 different sources with no single accurate filtered destination; its
+ * breakdown is covered by the individual AI-förslag suggestions instead.
  */
 @Component({
   selector: 'app-dashboard-list',
@@ -53,6 +59,9 @@ interface VehicleDetailField {
     TooltipModule,
     GenericLoaderComponent,
     VoiceInputButtonComponent,
+    TableModule,
+    ProgressBarModule,
+    InputNumberModule,
   ],
   templateUrl: './dashboard-list.component.html',
   styleUrl: './dashboard-list.component.css',
@@ -79,9 +88,13 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   existingWorkOrders: IWorkOrder[] = [];
   isLoadingWorkOrders = false;
 
-  // Today's Workshop / AI Suggestions - dummy data, backend integration deferred (see class doc)
-  readonly todayWorkshopDummy = { arrivingToday: 6, inWorkshop: 4, readyForPickup: 3, customersToContact: 2 };
-  aiSuggestionsDummy: AiSuggestion[] = [];
+  // Today's Workshop / AI-förslag / Sales this month - single aggregate read, see DashboardService.getOverview()
+  overview: IDashboardOverview | null = null;
+  isLoadingOverview = false;
+
+  // Unpaid invoices by customer - ported from the retired Statistics page
+  unpaidInvoices: IUnpaidInvoice[] = [];
+  isLoadingUnpaidInvoices = false;
 
   // Reminders (fully functional)
   reminders: IReminder[] = [];
@@ -98,19 +111,18 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     private readonly errorHandler: ErrorHandlerService,
     public readonly sharedService: SharedService,
     private readonly reminderService: ReminderService,
+    private readonly aiService: AiService,
     private readonly coreService: CoreService,
     private readonly workOrderService: WorkOrderService,
     private readonly workOrderHandoffService: WorkOrderHandoffService,
+    private readonly dashboardService: DashboardService,
     private readonly messageService: MessageService,
   ) {}
 
   ngOnInit(): void {
-    this.aiSuggestionsDummy = [
-      { icon: 'pi pi-info-circle', text: this.sharedService.T('aiSuggestionDummyReturning') },
-      { icon: 'pi pi-user-minus', text: this.sharedService.T('aiSuggestionDummyMechanic') },
-      { icon: 'pi pi-exclamation-circle', text: this.sharedService.T('aiSuggestionDummyInvoices') },
-    ];
+    this.loadOverview();
     this.loadReminders();
+    this.loadUnpaidInvoices();
     this.restoreLookupState();
   }
 
@@ -312,6 +324,84 @@ export class DashboardListComponent implements OnInit, OnDestroy {
     this.router.navigate(['sv/workorder/details', workOrder.workOrderId]);
   }
 
+  // ---- Today's Workshop / AI-förslag ----
+
+  loadOverview(): void {
+    this.isLoadingOverview = true;
+    this.dashboardService.getOverview()
+      .pipe(
+        finalize(() => { this.isLoadingOverview = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => { this.overview = res; },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadOverview', 'Failed to load dashboard overview.');
+        }
+      });
+  }
+
+  /** Navigates to a work order list filtered to a given status - used by the "I verkstaden"/"Klar för avhämtning" tiles. */
+  goToWorkOrdersByStatus(status: string): void {
+    this.router.navigate(['sv/workorder'], { queryParams: { workOrderStatus: status } });
+  }
+
+  /** Navigates to a work order list filtered to today's booking date - used by the "Anländer idag" tile. */
+  goToWorkOrdersArrivingToday(): void {
+    this.router.navigate(['sv/workorder'], { queryParams: { bookingDate: this.sharedService.getDateString(new Date()) } });
+  }
+
+  /** An AI-förslag suggestion's actionUrl is a plain relative path (e.g. "/sv/workorder") - navigate to it directly. */
+  goToSuggestion(actionUrl: string): void {
+    this.router.navigateByUrl(actionUrl);
+  }
+
+  /** Icon matching a suggestion's severity, for the AI-förslag card. */
+  suggestionIcon(severity: string): string {
+    switch (severity) {
+      case 'danger': return 'pi pi-exclamation-circle';
+      case 'warn': return 'pi pi-exclamation-triangle';
+      case 'success': return 'pi pi-check-circle';
+      default: return 'pi pi-info-circle';
+    }
+  }
+
+  // ---- Sales this month (ported from the retired Statistics page) ----
+
+  get monthlyTargetProgressPercentage(): number {
+    const sale = this.overview?.currentMonth?.sale ?? 0;
+    const target = this.overview?.currentMonth?.saleTarget ?? 0;
+    return target > 0 ? Math.round(Math.min((sale / target) * 100, 100)) : 0;
+  }
+
+  get avgOrderValue(): number {
+    const sale = this.overview?.currentMonth?.sale ?? 0;
+    const orders = this.overview?.currentMonth?.orders ?? 0;
+    return orders > 0 ? sale / orders : 0;
+  }
+
+  // ---- Unpaid invoices (ported from the retired Statistics page) ----
+
+  private loadUnpaidInvoices(): void {
+    this.isLoadingUnpaidInvoices = true;
+    this.dashboardService.getUnpaidInvoices()
+      .pipe(
+        finalize(() => { this.isLoadingUnpaidInvoices = false; }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => { this.unpaidInvoices = res; },
+        error: (err) => {
+          this.errorHandler.handleError(err, 'loadUnpaidInvoices', 'Failed to load unpaid invoices.');
+        }
+      });
+  }
+
+  /** Navigates to the Invoice list, pre-filtered to this customer's unpaid invoices. */
+  goToUnpaidInvoices(invoice: IUnpaidInvoice): void {
+    this.router.navigate(['/sv/invoice'], { queryParams: { type: 'unpaid', customerId: invoice.customerId } });
+  }
+
   // ---- Reminders ----
 
   private loadReminders(): void {
@@ -344,7 +434,7 @@ export class DashboardListComponent implements OnInit, OnDestroy {
   private submitReminderTranscript(transcript: string): void {
     this.isReminderSubmitting = true;
     this.reminderEmployeeCandidates = [];
-    this.reminderService.parseReminderIntent(transcript)
+    this.aiService.parseReminderIntent(transcript)
       .pipe(
         finalize(() => { this.isReminderSubmitting = false; }),
         takeUntil(this.destroy$)
