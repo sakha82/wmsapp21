@@ -3,12 +3,18 @@ import { Injectable } from '@angular/core';
 import { IEmail, IFileUploadRequest, IFileUploadResponse, IPdf, IServiceCategory, IVehicleDetails, VehicleSearch, VehicleSearchResponse } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SharedService } from './shared.service';
 
-/** Wraps every `CoreController` endpoint (`/api/Core/*`) — file storage, vehicle lookups, email/PDF generation, signup, and next-id allocation. */
+/**
+ * Wraps every `CoreController` endpoint (`/api/Core/*`) — vehicle lookups, email/PDF generation,
+ * signup, and next-id allocation — plus the file-storage endpoints, which as of the MinIO cutover
+ * live on `FileController` (`/api/File/*`) instead, not `CoreController`.
+ */
 @Injectable({ providedIn: 'root' })
 export class CoreService {
   private coreUrl: string = environment.BASE_URL + '/api/Core';
+  private fileUrl: string = environment.BASE_URL + '/api/File';
 
   constructor(private http: HttpClient, private sharedService: SharedService) {}
 
@@ -19,12 +25,12 @@ export class CoreService {
     formData.append('id', uploadRequest.id.toString());
     formData.append('file', uploadRequest.file);
 
-    return this.http.post<IFileUploadResponse>(`${this.coreUrl}/upload-file`, formData);
+    return this.http.post<IFileUploadResponse>(`${this.fileUrl}/upload-file`, formData);
   }
 
   deleteFile(key: string) {
     return this.http.delete<boolean>(
-      `${this.coreUrl}/delete-file?key=${encodeURIComponent(key)}`
+      `${this.fileUrl}/delete-file?key=${encodeURIComponent(key)}`
     );
   }
 
@@ -58,7 +64,7 @@ export class CoreService {
 
   getPDFBlob(key: string): Observable<Blob> {
     const params = new HttpParams().set('key', key);
-    return this.http.get(`${this.coreUrl}/download-file`, {
+    return this.http.get(`${this.fileUrl}/download-file`, {
       params,
       responseType: 'blob'
     });
@@ -67,7 +73,7 @@ export class CoreService {
   downloadFile(key: string): void {
     const params = new HttpParams().set('key', key);
 
-    this.http.get(`${this.coreUrl}/download-file`, {
+    this.http.get(`${this.fileUrl}/download-file`, {
       params,
       responseType: 'blob',  // ensures we receive binary data
       observe: 'response'    // allows access to headers (e.g., file name)
@@ -99,12 +105,25 @@ export class CoreService {
     });
   }
 
+  /**
+   * `FileController`'s list-files response is the `wms.file` metadata shape (`originalFileName`,
+   * `storageKey`, `sizeInBytes`, `createdOn`, ...), not the old Azure-Blob-era `fileName`/`key`/
+   * `sizeInKb`/`lstModified` shape this method's callers (and the work-order-detail template) still
+   * expect - mapped here so those callers don't need to change.
+   */
   listFiles(workOrderId: number) {
     const queryParams = new URLSearchParams();
     queryParams.append('wmsId', this.sharedService.wmsId);
     queryParams.append('type', 'workorder');
     queryParams.append('id', workOrderId.toString());
-    return this.http.get<IFileUploadResponse[]>(`${this.coreUrl}/list-files?${queryParams}`);
+    return this.http.get<any[]>(`${this.fileUrl}/list-files?${queryParams}`).pipe(
+      map(files => (files ?? []).map(f => ({
+        fileName: f.originalFileName ?? f.fileName,
+        key: f.storageKey ?? f.key,
+        sizeInKb: f.sizeInBytes != null ? Math.round(f.sizeInBytes / 1024).toString() : f.sizeInKb,
+        lstModified: f.createdOn ?? f.lstModified
+      } as IFileUploadResponse)))
+    );
   }
 
   sendEmail(objectName: string, id: number, emailTo: string, customMessage: string) {

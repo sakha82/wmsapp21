@@ -4,6 +4,7 @@ import { IWorkshop, ISale } from 'app/app.model';
 import { IEnums, ISelect } from 'app/app.model';
 import { environment } from 'environments/environment';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { LogService } from 'app/services/log.service';
 import { SharedService } from 'app/services/shared.service';
 import { IDetailTemplate } from 'app/app.model';
@@ -75,13 +76,22 @@ updateInvoiceSettings(priceMode:number,defaultTemplate:string) {
   }
 
   // 🔹 List files for workshop
-  listFiles(type: string = 'logo'): Observable<any> {
+  // FileController's list-files response is the wms.file metadata shape (storageKey, originalFileName,
+  // ...), not the old Azure-Blob-era `key`/`fileName` shape callers (setting-crud's loadLogo) still
+  // expect - mapped here so those callers don't need to change.
+  listFiles(type: string = 'logo'): Observable<any[]> {
     const queryParams = new URLSearchParams();
-    queryParams.append('wmsid', this.sharedService.wmsId); 
+    queryParams.append('wmsid', this.sharedService.wmsId);
     queryParams.append('type', type);
 
     const url = `${environment.BASE_URL}/api/File/list-files?${queryParams.toString()}`;
-    return this.http.get(url);
+    return this.http.get<any[]>(url).pipe(
+      map(files => (files ?? []).map(f => ({
+        ...f,
+        key: f.storageKey ?? f.key,
+        fileName: f.originalFileName ?? f.fileName
+      })))
+    );
   }
 
 
